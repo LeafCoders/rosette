@@ -1,0 +1,15 @@
+[ {
+	"id" : "1",
+	"title" : "Gudstjänst 1",
+	"startTime" : null,
+	"endTime" : null,
+	"conductorOfMeeting" : null,
+	"soundTechnicians" : null
+}, {
+	"id" : "2",
+	"title" : "Gudstjänst 2",
+	"startTime" : null,
+	"endTime" : null,
+	"conductorOfMeeting" : null,
+	"soundTechnicians" : null
+} ]
