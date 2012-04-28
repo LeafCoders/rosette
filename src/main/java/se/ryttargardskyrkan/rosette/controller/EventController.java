@@ -31,19 +31,19 @@ public class EventController extends AbstractController {
 	public List<Event> getEvents() {
 //		checkPermission("events:get");
 		
-		List<Event> events = new ArrayList<Event>();
-		
-		Event event1 = new Event();
-		event1.setTitle("Gudstjänst 1");
-		event1.setId("1");
-		events.add(event1);
-		
-		Event event2 = new Event();
-		event2.setTitle("Gudstjänst 2");
-		event2.setId("2");
-		events.add(event2);
+//		List<Event> events = new ArrayList<Event>();
+//		
+//		Event event1 = new Event();
+//		event1.setTitle("Gudstjänst 1");
+//		event1.setId("1");
+//		events.add(event1);
+//		
+//		Event event2 = new Event();
+//		event2.setTitle("Gudstjänst 2");
+//		event2.setId("2");
+//		events.add(event2);
 				
-//		List<Event> events = mongoTemplate.findAll(Event.class);
+		List<Event> events = mongoTemplate.findAll(Event.class);
 		return events;
 	}
 
