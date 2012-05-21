@@ -1,7 +1,6 @@
 package se.ryttargardskyrkan.rosette.model;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,19 +9,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "events")
 public class Event {
-
 	@Id
 	private String id;
-	
+
 	@NotNull
 	private String title;
-	
+
+	@NotNull
 	private Date startTime;
+
 	private Date endTime;
-	
-	private EntityReference conductorOfMeeting;
-	
-	private List<EntityReference> soundTechnicians;
+
+	// Getters and setters
 
 	public String getId() {
 		return id;
@@ -55,23 +53,4 @@ public class Event {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-
-	public EntityReference getConductorOfMeeting() {
-		return conductorOfMeeting;
-	}
-
-	public void setConductorOfMeeting(EntityReference conductorOfMeeting) {
-		this.conductorOfMeeting = conductorOfMeeting;
-	}
-
-	public List<EntityReference> getSoundTechnicians() {
-		return soundTechnicians;
-	}
-
-	public void setSoundTechnicians(List<EntityReference> soundTechnicians) {
-		this.soundTechnicians = soundTechnicians;
-	}
-
-	
-	
 }

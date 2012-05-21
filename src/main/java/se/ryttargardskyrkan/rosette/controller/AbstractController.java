@@ -19,7 +19,7 @@ import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 
-@RequestMapping("v1")
+@RequestMapping("v1-snapshot")
 public abstract class AbstractController {
 	@Autowired
     private Validator validator;
