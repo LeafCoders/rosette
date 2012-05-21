@@ -17,6 +17,8 @@ abstract class AbstractIntegrationTest {
 	protected static HttpClient httpClient
 	protected static ObjectMapper mapper
 	
+	protected String baseUrl = "http://localhost:9000/api/v1-snapshot"
+	
 	@BeforeClass
 	static void beforeClass() throws UnknownHostException, MongoException {
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")

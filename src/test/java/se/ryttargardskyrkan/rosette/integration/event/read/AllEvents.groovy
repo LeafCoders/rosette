@@ -41,7 +41,7 @@ public class AllEvents extends AbstractIntegrationTest {
 		mongoTemplate.insert(TestUtil.eventsAsJsonToEventList(events), "events")
 
 		// When
-		HttpGet getRequest = new HttpGet("http://localhost:9000/api/v1-snapshot/events")
+		HttpGet getRequest = new HttpGet(baseUrl + "/events")
 		getRequest.addHeader("accept", "application/json")
 		HttpResponse response = httpClient.execute(getRequest)
 		

@@ -25,7 +25,7 @@ public class CreateBasicEventTest extends AbstractIntegrationTest {
 		mongoTemplate.dropCollection("events")	
 
 		// When
-		HttpPost postRequest = new HttpPost("http://localhost:9000/api/v1-snapshot/events")
+		HttpPost postRequest = new HttpPost(baseUrl + "/events")
 		String requestBody = """
 		{
 			"title" : "Gudstjänst",

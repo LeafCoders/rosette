@@ -46,7 +46,7 @@ public class AllEventsSinceTest extends AbstractIntegrationTest {
 		mongoTemplate.insert(TestUtil.eventsAsJsonToEventList(eventsInDatabase), "events")
 
 		// When
-		HttpGet getRequest = new HttpGet("http://localhost:9000/api/v1-snapshot/events?since=" + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00"))
+		HttpGet getRequest = new HttpGet(baseUrl + "/events?since=" + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00"))
 		getRequest.addHeader("accept", "application/json")
 		HttpResponse response = httpClient.execute(getRequest)
 		
