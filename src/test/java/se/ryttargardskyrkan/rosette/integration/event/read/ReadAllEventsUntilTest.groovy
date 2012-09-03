@@ -20,7 +20,6 @@ public class ReadAllEventsUntilTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		mongoTemplate.dropCollection("events")
 		String events = """
 		[{
 			"title" : "Gudstjänst 1",
