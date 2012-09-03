@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,9 +27,9 @@ public abstract class AbstractController {
     private Validator validator;
 
 	protected void checkPermission(String permission) {
-//		if (!SecurityUtils.getSubject().isPermitted(permission)) {
-//			throw new ForbiddenException();
-//		}
+		if (!SecurityUtils.getSubject().isPermitted(permission)) {
+			throw new ForbiddenException();
+		}
 	}
 	
 	protected void validate(Object object) {
@@ -64,6 +66,9 @@ public abstract class AbstractController {
 				errors.add(validationError);
 			}
 			responseBody = errors;
+		} else if (exception instanceof HttpMessageNotReadableException) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			responseBody = "Bad request";
 		}
 		return responseBody;
 	}

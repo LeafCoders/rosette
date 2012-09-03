@@ -1,12 +1,10 @@
-package se.ryttargardskyrkan.rosette.integration;
+package se.ryttargardskyrkan.rosette.integration.util;
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import static org.junit.Assert.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -17,27 +15,15 @@ import org.codehaus.jackson.type.TypeReference;
 
 import se.ryttargardskyrkan.rosette.model.Event;
 
-public class TestUtil {
-
-	public static String responseBodyAsString(HttpResponse httpResponse) throws IOException {
-		return IOUtils.toString(httpResponse.getEntity().getContent(), "utf-8");
-	}
-
-	public static long dateTimeAsUnixTime(String time) throws ParseException {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
-
-		return simpleDateFormat.parse(time).getTime();
-	}
-	
+public class EventTestUtil {
 	public static List<Event> eventResponseToEventList(HttpResponse response) throws IllegalStateException, IOException {
 		String json = IOUtils.toString(response.getEntity().getContent(), "utf-8");
-		return TestUtil.eventsAsJsonToEventList(json);
+		return eventsAsJsonToEventList(json);
 	}
 	
 	public static Event eventResponseToEvent(HttpResponse response) throws IllegalStateException, IOException {
 		String json = IOUtils.toString(response.getEntity().getContent(), "utf-8");
-		return TestUtil.eventsAsJsonToEvent(json);
+		return eventsAsJsonToEvent(json);
 	}
 	
 	public static List<Event> eventsAsJsonToEventList(String json) throws JsonParseException, JsonMappingException, IOException {
@@ -56,7 +42,7 @@ public class TestUtil {
 		String expectedEventsAsString = mapper.writeValueAsString(expectedEventsAsList);
 
 		// Actual
-		List<Event> actualEventsAsList = TestUtil.eventResponseToEventList(response);
+		List<Event> actualEventsAsList = eventResponseToEventList(response);
 		for (Event event : actualEventsAsList) {
 			event.setId(null);
 		}
@@ -73,7 +59,7 @@ public class TestUtil {
 		String expectedEventsAsString = mapper.writeValueAsString(expectedEventAsEvent);
 
 		// Actual
-		Event actualEvent = TestUtil.eventResponseToEvent(response);
+		Event actualEvent = eventResponseToEvent(response);
 		actualEvent.setId(null);
 		String actualEventsAsString = mapper.writeValueAsString(actualEvent);
 

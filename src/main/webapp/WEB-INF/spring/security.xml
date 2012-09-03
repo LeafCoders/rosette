@@ -18,8 +18,8 @@
 			</util:map> </property> -->
 		<property name="filterChainDefinitions">
 			<value>
-<!-- 				/** = noSessionCreation, authcBasic -->
-			</value>
+ 				/** = noSessionCreation, optionalAuthcBasic
+  			</value>
 		</property>
 	</bean>
 
@@ -42,5 +42,7 @@
 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager" />
 	</bean>
+	
+	<bean id="optionalAuthcBasic" class="se.ryttargardskyrkan.rosette.filter.OptionalBasicHttpAuthenticationFilter"/>
 
 </beans>

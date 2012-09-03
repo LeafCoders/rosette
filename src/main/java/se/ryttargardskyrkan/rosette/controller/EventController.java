@@ -34,8 +34,6 @@ public class EventController extends AbstractController {
 	public List<Event> getEvents(
 			@RequestParam(required = false) String since,
 			@RequestParam(required = false) String until) {
-		checkPermission("events:get");
-
 		Query query = new Query();
 
 		if (since != null)
@@ -52,7 +50,7 @@ public class EventController extends AbstractController {
 	@RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
-		checkPermission("events:post");
+		checkPermission("events:create");
 		validate(event);
 
 		mongoTemplate.insert(event);
