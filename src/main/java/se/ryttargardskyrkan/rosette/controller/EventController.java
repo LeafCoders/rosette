@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,5 +58,14 @@ public class EventController extends AbstractController {
 
 		response.setStatus(HttpStatus.CREATED.value());
 		return event;
+	}
+	
+	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE)
+	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
+		checkPermission("events:delete");
+
+		mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
+
+		response.setStatus(HttpStatus.OK.value());
 	}
 }
