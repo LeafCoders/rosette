@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Event;
 
 @Controller
@@ -62,10 +63,13 @@ public class EventController extends AbstractController {
 	
 	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE)
 	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("events:delete");
+		checkPermission("events:delete:" + id);
 
-		mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
-
-		response.setStatus(HttpStatus.OK.value());
+		Event deletedEvent = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
+		if (deletedEvent == null) {
+			throw new NotFoundException();
+		} else {
+			response.setStatus(HttpStatus.OK.value());	
+		}
 	}
 }
