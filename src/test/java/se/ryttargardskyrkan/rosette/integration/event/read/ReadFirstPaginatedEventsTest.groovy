@@ -18,7 +18,7 @@ import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 
-public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
+public class ReadFirstPaginatedEventsTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -64,7 +64,7 @@ public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/events?page=2&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00"))
+		HttpGet getRequest = new HttpGet(baseUrl + "/events?per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00"))
 		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
@@ -74,24 +74,22 @@ public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		String exptectedEvents = """
 		[{
-			"id" : "3",
-			"title" : "Gudstjänst 3",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"id" : "1",
+			"title" : "Gudstjänst 1",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
 			"endTime" : null
 		},
 		{
-			"id" : "4",
-			"title" : "Gudstjänst 4",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-06-25 11:00") + """,
+			"id" : "2",
+			"title" : "Gudstjänst 2",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
 			"endTime" : null
 		}]
 		"""
 		EventTestUtil.assertEventListResponseBodyIsCorrect(exptectedEvents, response)
 		
 		StringBuilder sb = new StringBuilder()
-		sb.append("<events?page=1&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + ">; rel=\"previous\"")
-		sb.append(",")
-		sb.append("<events?page=3&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + ">; rel=\"next\"")
+		sb.append("<events?page=2&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + ">; rel=\"next\"")
 		Header linkHeader = response.getFirstHeader("Link")
 		assertEquals(sb.toString(), linkHeader.getValue())
 	}

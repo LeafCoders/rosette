@@ -50,20 +50,23 @@ public class EventController extends AbstractController {
 			@RequestParam(required = false) String until,
 			@RequestParam(required = false) String themeId,
 			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer per_page) {
+			@RequestParam(required = false) Integer per_page,
+			HttpServletResponse response) {
 		Query query = new Query();
 		query.sort().on("startTime", Order.ASCENDING);
 		
-		int limit = 20;
-		int skip = 0;
+		int thePage = 1;
+		int thePerPage = 20;
 		
-		if (per_page != null)
-			limit = per_page;
-		if (page != null)
-			skip = (page - 1) * limit;
-
-		query.limit(limit);
-		query.skip(skip);
+		if (page != null && page > 0) {
+			thePage = page;
+		}
+		if (per_page != null && per_page > 0) {
+			thePerPage = per_page;
+		}		
+		
+		query.limit(thePerPage);
+		query.skip((thePage - 1) * thePerPage);
 		
 		Criteria criteria = new Criteria();
 		if (since != null) {
@@ -80,7 +83,53 @@ public class EventController extends AbstractController {
 			query.addCriteria(Criteria.where("themeId").is(themeId));
 		}
 		
+		// Events
 		List<Event> events = mongoTemplate.find(query, Event.class);
+		
+		// Header links
+		Query queryForLinks = new Query();
+		queryForLinks.addCriteria(criteria);
+		long numberOfEvents = mongoTemplate.count(queryForLinks, Event.class);
+		
+		if (numberOfEvents > 0) {
+			StringBuilder sb = new StringBuilder();
+			String delimiter = "";
+			
+			if (thePage - 1 > 0) {
+				sb.append(delimiter);
+				sb.append("<events?page=" + (thePage - 1));
+				if (per_page != null) {
+					sb.append("&per_page=" + per_page);
+				}
+				if (since != null) {
+					sb.append("&since=" + since);
+				}
+				if (until != null) {
+					sb.append("&until=" + until);
+				}
+				
+				sb.append(">; rel=\"previous\"");
+				delimiter = ",";
+			}
+			
+			if (numberOfEvents > thePage * thePerPage) {
+				sb.append(delimiter);
+				sb.append("<events?page=" + (thePage + 1));
+				if (per_page != null) {
+					sb.append("&per_page=" + per_page);
+				}
+				if (since != null) {
+					sb.append("&since=" + since);
+				}
+				if (until != null) {
+					sb.append("&until=" + until);
+				}
+				sb.append(">; rel=\"next\"");
+				delimiter = ",";
+			}
+			
+			response.setHeader("Link", sb.toString());
+		}
 
 		return events;
 	}
