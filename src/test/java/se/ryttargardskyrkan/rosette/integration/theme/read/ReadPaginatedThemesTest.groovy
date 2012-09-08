@@ -4,6 +4,7 @@ import static org.junit.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
+import org.apache.http.Header
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
@@ -14,7 +15,6 @@ import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.ThemeTestUtil
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Theme
 
 public class ReadPaginatedThemesTest extends AbstractIntegrationTest {
@@ -79,6 +79,11 @@ public class ReadPaginatedThemesTest extends AbstractIntegrationTest {
 		"""
 		ThemeTestUtil.assertThemeListResponseBodyIsCorrect(exptectedThemes, response)
 		
-		
+		StringBuilder sb = new StringBuilder()
+		sb.append("<themes?page=1&per_page=2>; rel=\"previous\"")
+		sb.append(",")
+		sb.append("<themes?page=3&per_page=2>; rel=\"next\"")
+		Header linkHeader = response.getFirstHeader("Link")
+		assertEquals(sb.toString(), linkHeader.getValue())
 	}
 }

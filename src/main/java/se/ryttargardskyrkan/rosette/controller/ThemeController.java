@@ -1,8 +1,8 @@
 package se.ryttargardskyrkan.rosette.controller;
 
-import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.model.Event;
 import se.ryttargardskyrkan.rosette.model.Theme;
 
 @Controller
@@ -32,7 +33,7 @@ public class ThemeController extends AbstractController {
 		super();
 		this.mongoTemplate = mongoTemplate;
 	}
-	
+
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Theme getTheme(@PathVariable String id) {
@@ -47,22 +48,57 @@ public class ThemeController extends AbstractController {
 	@ResponseBody
 	public List<Theme> getThemes(
 			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer per_page) {
+			@RequestParam(required = false) Integer per_page,
+			HttpServletResponse response) {
 		Query query = new Query();
 		query.sort().on("title", Order.ASCENDING);
 		
-		int limit = 20;
-		int skip = 0;
+		int thePage = 1;
+		int thePerPage = 20;
 		
-		if (per_page != null)
-			limit = per_page;
-		if (page != null)
-			skip = (page - 1) * limit;
-
-		query.limit(limit);
-		query.skip(skip);
+		if (page != null && page > 0) {
+			thePage = page;
+		}
+		if (per_page != null && per_page > 0) {
+			thePerPage = per_page;
+		}		
+		
+		query.limit(thePerPage);
+		query.skip((thePage - 1) * thePerPage);
 				
 		List<Theme> themes = mongoTemplate.find(query, Theme.class);
+
+		// Header links
+		Query queryForLinks = new Query();
+		long numberOfThemes = mongoTemplate.count(queryForLinks, Theme.class);
+
+		if (numberOfThemes > 0) {
+			StringBuilder sb = new StringBuilder();
+			String delimiter = "";
+
+			if (thePage - 1 > 0) {
+				sb.append(delimiter);
+				sb.append("<themes?page=" + (thePage - 1));
+				if (per_page != null) {
+					sb.append("&per_page=" + per_page);
+				}
+
+				sb.append(">; rel=\"previous\"");
+				delimiter = ",";
+			}
+
+			if (numberOfThemes > thePage * thePerPage) {
+				sb.append(delimiter);
+				sb.append("<themes?page=" + (thePage + 1));
+				if (per_page != null) {
+					sb.append("&per_page=" + per_page);
+				}
+				sb.append(">; rel=\"next\"");
+				delimiter = ",";
+			}
+
+			response.setHeader("Link", sb.toString());
+		}
 
 		return themes;
 	}
@@ -78,7 +114,7 @@ public class ThemeController extends AbstractController {
 		response.setStatus(HttpStatus.CREATED.value());
 		return theme;
 	}
-	
+
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putTheme(@PathVariable String id, @RequestBody Theme theme, HttpServletResponse response) {
 		checkPermission("themes:update");
@@ -89,14 +125,14 @@ public class ThemeController extends AbstractController {
 			update.set("title", theme.getTitle());
 		if (theme.getDescription() != null)
 			update.set("description", theme.getDescription());
-		
+
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Theme.class).getN() == 0) {
 			throw new NotFoundException();
 		}
-		
+
 		response.setStatus(HttpStatus.OK.value());
 	}
-	
+
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.DELETE, consumes = "application/json", produces = "application/json")
 	public void deleteTheme(@PathVariable String id, HttpServletResponse response) {
 		checkPermission("themes:delete:" + id);
@@ -105,7 +141,7 @@ public class ThemeController extends AbstractController {
 		if (deletedTheme == null) {
 			throw new NotFoundException();
 		} else {
-			response.setStatus(HttpStatus.OK.value());	
+			response.setStatus(HttpStatus.OK.value());
 		}
 	}
 }
