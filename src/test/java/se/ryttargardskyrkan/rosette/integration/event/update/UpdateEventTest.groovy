@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.delete;
+package se.ryttargardskyrkan.rosette.integration.event.update
 
 import static org.junit.Assert.*
 
@@ -7,21 +7,24 @@ import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpDelete
+import org.apache.http.client.methods.HttpPut
+import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.shiro.authc.credential.DefaultPasswordService
 import org.apache.shiro.authc.credential.PasswordService
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Order
+import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
+import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
-import se.ryttargardskyrkan.rosette.model.Group
-import se.ryttargardskyrkan.rosette.model.User
+import se.ryttargardskyrkan.rosette.model.*
 
-public class DeleteExistingEventTest extends AbstractIntegrationTest {
+public class UpdateEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -32,7 +35,7 @@ public class DeleteExistingEventTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"name" : "admin",
-			"permissions" : ["events:delete"]
+			"permissions" : ["events:update"]
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(groups, new TypeReference<ArrayList<Group>>() {}), "groups");
@@ -55,18 +58,46 @@ public class DeleteExistingEventTest extends AbstractIntegrationTest {
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : null,
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-26 11:00") + """,
 			"endTime" : null
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
 
 		// When
-		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/events/2")
-		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), deleteRequest));
-		HttpResponse response = httpClient.execute(deleteRequest)
+		HttpPut putRequest = new HttpPut(baseUrl + "/events/1")
+		String requestBody = """
+		{
+			"id" : "1",
+			"title" : "Gudstjänst 1 uppdaterad",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"endTime" : null
+		}
+		"""
+		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
+		putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), putRequest));
+		HttpResponse response = httpClient.execute(putRequest)
 
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
+		assertEquals(2L, mongoTemplate.count(new Query(), Event.class))
+		String expectedEvents = """
+		[{
+			"id" : "1",
+			"title" : "Gudstjänst 1 uppdaterad",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "2",
+			"title" : "Gudstjänst 2",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-26 11:00") + """,
+			"endTime" : null
+		}]
+		"""
+		Query query = new Query();
+		query.sort().on("startTime", Order.ASCENDING);
+		List<Event> eventsInDatabase = mongoTemplate.find(query, Event.class);
+		EventTestUtil.assertEventListIsCorrect(expectedEvents, eventsInDatabase);
 	}
 }

@@ -9,9 +9,11 @@ import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.junit.Test
+import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.ryttargardskyrkan.rosette.model.Event
 
 public class CreateEventWithoutAuthenticationTest extends AbstractIntegrationTest {
 
@@ -33,5 +35,6 @@ public class CreateEventWithoutAuthenticationTest extends AbstractIntegrationTes
 		// Then
 		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
 		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
+		assertEquals(0L, mongoTemplate.count(new Query(), Event.class))
 	}
 }

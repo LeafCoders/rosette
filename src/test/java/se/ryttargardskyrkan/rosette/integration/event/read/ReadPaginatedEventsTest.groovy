@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.read;
+package se.ryttargardskyrkan.rosette.integration.event.read
 
 import static org.junit.Assert.*
 
@@ -17,7 +17,7 @@ import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 
-public class ReadUpcomingEventsWithoutAuthenticationTest extends AbstractIntegrationTest {
+public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -32,20 +32,60 @@ public class ReadUpcomingEventsWithoutAuthenticationTest extends AbstractIntegra
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-26 11:00") + """,
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "3",
+			"title" : "Gudstjänst 3",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "4",
+			"title" : "Gudstjänst 4",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-06-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "5",
+			"title" : "Gudstjänst 5",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-07-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "6",
+			"title" : "Gudstjänst 6",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-08-25 11:00") + """,
 			"endTime" : null
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/events?since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00"))
+		HttpGet getRequest = new HttpGet(baseUrl + "/events?page=2&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00"))
 		getRequest.addHeader("accept", "application/json")
 		HttpResponse response = httpClient.execute(getRequest)
 
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		EventTestUtil.assertEventListResponseBodyIsCorrect(events, response)
+		String exptectedEvents = """
+		[{
+			"id" : "3",
+			"title" : "Gudstjänst 3",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "4",
+			"title" : "Gudstjänst 4",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-06-25 11:00") + """,
+			"endTime" : null
+		}]
+		"""
+		EventTestUtil.assertEventListResponseBodyIsCorrect(exptectedEvents, response)
+		
+		
 	}
 }

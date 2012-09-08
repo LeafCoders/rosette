@@ -2,44 +2,41 @@ package se.ryttargardskyrkan.rosette.integration.event.read
 
 import static org.junit.Assert.*
 
-import java.io.IOException
-import java.util.ArrayList;
-import java.util.List
+import javax.servlet.http.HttpServletResponse
 
-import org.apache.commons.io.IOUtils
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil;
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil;
+import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
-import se.ryttargardskyrkan.rosette.model.User;
 
-public class ReadAllEventsSinceTest extends AbstractIntegrationTest {
+public class ReadEventsUntilTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		String events = """
 		[{
+			"id" : "1",
 			"title" : "Gudstjänst 1",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
 			"endTime" : null
 		},
 		{
+			"id" : "2",
 			"title" : "Gudstjänst 2",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
 			"endTime" : null
 		},
 		{
+			"id" : "3",
 			"title" : "Gudstjänst 3",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
 			"endTime" : null
@@ -48,22 +45,24 @@ public class ReadAllEventsSinceTest extends AbstractIntegrationTest {
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/events?since=" + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00"))
+		HttpGet getRequest = new HttpGet(baseUrl + "/events?since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + "&until=" + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00"))
 		getRequest.addHeader("accept", "application/json")
 		HttpResponse response = httpClient.execute(getRequest)
 
 		// Then
-		assertEquals(200, response.getStatusLine().getStatusCode())
+		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		String expectedEvents = """
 		[{
-			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"id" : "1",
+			"title" : "Gudstjänst 1",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
 			"endTime" : null
 		},
 		{
-			"title" : "Gudstjänst 3",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"id" : "2",
+			"title" : "Gudstjänst 2",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
 			"endTime" : null
 		}]
 		"""

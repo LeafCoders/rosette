@@ -14,6 +14,7 @@ import org.apache.shiro.authc.credential.PasswordService
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
+import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
@@ -69,5 +70,6 @@ public class DeleteEventWithoutSpecificPermissionTest extends AbstractIntegratio
 		// Then
 		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
 		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
+		assertEquals(2L, mongoTemplate.count(new Query(), Event.class))
 	}
 }

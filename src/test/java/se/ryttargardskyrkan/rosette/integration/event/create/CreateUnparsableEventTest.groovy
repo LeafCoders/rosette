@@ -16,8 +16,10 @@ import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
+import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.User
 
@@ -61,5 +63,6 @@ public class CreateUnparsableEventTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatusLine().getStatusCode())
 		assertEquals("Bad Request", response.getStatusLine().getReasonPhrase())
+		assertEquals(0L, mongoTemplate.count(new Query(), Event.class))
 	}
 }

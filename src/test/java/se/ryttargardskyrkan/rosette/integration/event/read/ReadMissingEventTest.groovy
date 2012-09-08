@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.delete;
+package se.ryttargardskyrkan.rosette.integration.event.read
 
 import static org.junit.Assert.*
 
@@ -6,17 +6,17 @@ import javax.servlet.http.HttpServletResponse
 
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpDelete
+import org.apache.http.client.methods.HttpGet
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 
-public class DeleteEventWithoutAuthenticationTest extends AbstractIntegrationTest {
+public class ReadMissingEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -31,19 +31,25 @@ public class DeleteEventWithoutAuthenticationTest extends AbstractIntegrationTes
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : null,
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "3",
+			"title" : "Gudstjänst 3",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
 			"endTime" : null
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
 
 		// When
-		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/events/1")
-		HttpResponse response = httpClient.execute(deleteRequest)
+		HttpGet getRequest = new HttpGet(baseUrl + "/events/4")
+		getRequest.addHeader("accept", "application/json")
+		HttpResponse response = httpClient.execute(getRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-		assertEquals(2L, mongoTemplate.count(new Query(), Event.class))
+		assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatusLine().getStatusCode())
+		assertEquals("Not Found", response.getStatusLine().getReasonPhrase())
 	}
 }

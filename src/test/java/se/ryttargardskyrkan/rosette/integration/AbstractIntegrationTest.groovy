@@ -1,18 +1,14 @@
 package se.ryttargardskyrkan.rosette.integration
 
-import java.net.UnknownHostException;
-
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient
-import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.AfterClass;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Before;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.codehaus.jackson.map.ObjectMapper
+import org.junit.AfterClass
+import org.junit.Before
+import org.junit.BeforeClass
+import org.springframework.data.mongodb.core.MongoTemplate
 
 import com.mongodb.Mongo
-import com.mongodb.MongoException;
+import com.mongodb.MongoException
 
 abstract class AbstractIntegrationTest {
 	protected static MongoTemplate mongoTemplate
@@ -25,7 +21,7 @@ abstract class AbstractIntegrationTest {
 	static void beforeClass() throws UnknownHostException, MongoException {
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")
 		httpClient = new DefaultHttpClient()
-		mapper = new ObjectMapper()
+		mapper = new ObjectMapper()		
 	}
 	
 	@Before

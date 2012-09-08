@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.create
+package se.ryttargardskyrkan.rosette.integration.event.delete;
 
 import static org.junit.Assert.*
 
@@ -7,15 +7,13 @@ import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.entity.StringEntity
+import org.apache.http.client.methods.HttpDelete
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.shiro.authc.credential.DefaultPasswordService
 import org.apache.shiro.authc.credential.PasswordService
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
@@ -24,7 +22,7 @@ import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.User
 
-public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest {
+public class DeleteEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -35,7 +33,7 @@ public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest 
 		[{
 			"id" : "1",
 			"name" : "admin",
-			"permissions" : ["events:read"]
+			"permissions" : ["events:delete"]
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(groups, new TypeReference<ArrayList<Group>>() {}), "groups");
@@ -48,22 +46,29 @@ public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest 
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(users, new TypeReference<ArrayList<User>>() {}), "users")
-		
-		// When
-		HttpPost postRequest = new HttpPost(baseUrl + "/events")
-		String requestBody = """
+		String events = """
+		[{
+			"id" : "1",
+			"title" : "Gudstjänst 1",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"endTime" : null
+		},
 		{
-			"title" : "Gudstjänst",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """
-		}
+			"id" : "2",
+			"title" : "Gudstjänst 2",
+			"startTime" : null,
+			"endTime" : null
+		}]
 		"""
-		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
-		postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), postRequest));
-		HttpResponse response = httpClient.execute(postRequest)
+		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
+
+		// When
+		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/events/2")
+		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), deleteRequest));
+		HttpResponse response = httpClient.execute(deleteRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-		assertEquals(0L, mongoTemplate.count(new Query(), Event.class))
+		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
+		assertEquals(1L, mongoTemplate.count(new Query(), Event.class))
 	}
 }

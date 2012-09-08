@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.create
+package se.ryttargardskyrkan.rosette.integration.event.update
 
 import static org.junit.Assert.*
 
@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpPost
+import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.shiro.authc.credential.DefaultPasswordService
@@ -24,7 +24,7 @@ import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.User
 
-public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest {
+public class UpdateMissingEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -35,7 +35,7 @@ public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest 
 		[{
 			"id" : "1",
 			"name" : "admin",
-			"permissions" : ["events:read"]
+			"permissions" : ["events:update"]
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(groups, new TypeReference<ArrayList<Group>>() {}), "groups");
@@ -48,22 +48,39 @@ public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest 
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(users, new TypeReference<ArrayList<User>>() {}), "users")
-		
+		String events = """
+		[{
+			"id" : "1",
+			"title" : "Gudstjänst 1",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"endTime" : null
+		},
+		{
+			"id" : "2",
+			"title" : "Gudstjänst 2",
+			"startTime" : null,
+			"endTime" : null
+		}]
+		"""
+		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
+
 		// When
-		HttpPost postRequest = new HttpPost(baseUrl + "/events")
+		HttpPut putRequest = new HttpPut(baseUrl + "/events/3")
 		String requestBody = """
 		{
-			"title" : "Gudstjänst",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """
+			"id" : "1",
+			"title" : "Gudstjänst 1 uppdaterad",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"endTime" : null
 		}
 		"""
-		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
-		postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), postRequest));
-		HttpResponse response = httpClient.execute(postRequest)
+		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
+		putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), putRequest));
+		HttpResponse response = httpClient.execute(putRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-		assertEquals(0L, mongoTemplate.count(new Query(), Event.class))
+		assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatusLine().getStatusCode())
+		assertEquals("Not Found", response.getStatusLine().getReasonPhrase())
+		assertEquals(2L, mongoTemplate.count(new Query(), Event.class))
 	}
 }

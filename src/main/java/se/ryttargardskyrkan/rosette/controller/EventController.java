@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,19 +32,48 @@ public class EventController extends AbstractController {
 		super();
 		this.mongoTemplate = mongoTemplate;
 	}
+	
+	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public Event getEvent(@PathVariable String id) {
+		Event event = mongoTemplate.findById(id, Event.class);
+		if (event == null) {
+			throw new NotFoundException();
+		}
+		return event;
+	}
 
 	@RequestMapping(value = "events", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Event> getEvents(
 			@RequestParam(required = false) String since,
-			@RequestParam(required = false) String until) {
+			@RequestParam(required = false) String until,
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer per_page) {
 		Query query = new Query();
+		query.sort().on("startTime", Order.ASCENDING);
+		
+		int limit = 20;
+		int skip = 0;
+		
+		if (per_page != null)
+			limit = per_page;
+		if (page != null)
+			skip = (page - 1) * limit;
 
-		if (since != null)
-			query.addCriteria(Criteria.where("startTime").gte(new Date(Long.parseLong(since))));
-
-		if (until != null)
-			query.addCriteria(Criteria.where("startTime").lte(new Date(Long.parseLong(until))));
+		query.limit(limit);
+		query.skip(skip);
+		
+		Criteria criteria = new Criteria();
+		if (since != null) {
+			criteria = Criteria.where("startTime").gte(new Date(Long.parseLong(since)));
+		} else {
+			criteria = Criteria.where("startTime").gte(new Date());
+		}
+		if (until != null) {
+			criteria = criteria.lte(new Date(Long.parseLong(until)));
+		}
+		query.addCriteria(criteria);
 		
 		List<Event> events = mongoTemplate.find(query, Event.class);
 
@@ -59,6 +90,26 @@ public class EventController extends AbstractController {
 
 		response.setStatus(HttpStatus.CREATED.value());
 		return event;
+	}
+	
+	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServletResponse response) {
+		checkPermission("events:update");
+		validate(event);
+
+		Update update = new Update();
+		if (event.getTitle() != null)
+			update.set("title", event.getTitle());
+		if (event.getStartTime() != null)
+			update.set("startTime", event.getStartTime());
+		if (event.getEndTime() != null)
+			update.set("endTime", event.getEndTime());
+		
+		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
+			throw new NotFoundException();
+		}
+		
+		response.setStatus(HttpStatus.OK.value());
 	}
 	
 	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE)

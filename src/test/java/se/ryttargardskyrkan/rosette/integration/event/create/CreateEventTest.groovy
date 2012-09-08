@@ -2,6 +2,8 @@ package se.ryttargardskyrkan.rosette.integration.event.create
 
 import static org.junit.Assert.*
 
+import javax.servlet.http.HttpServletResponse
+
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
@@ -14,14 +16,16 @@ import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil;
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil;
+import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.User
 
-public class CreateValidEventTest extends AbstractIntegrationTest {
+public class CreateEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -59,16 +63,18 @@ public class CreateValidEventTest extends AbstractIntegrationTest {
 		HttpResponse response = httpClient.execute(postRequest)
 
 		// Then
-		assertEquals(201, response.getStatusLine().getStatusCode())
+		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-
-		String expectedEvents = """
+		String expectedEvent = """
 		{
 			"title" : "Gudstjänst",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
 			"endTime" : null
 		}
 		"""
-		EventTestUtil.assertEventResponseBodyIsCorrect(expectedEvents, response);
+		EventTestUtil.assertEventResponseBodyIsCorrect(expectedEvent, response)
+		assertEquals(1L, mongoTemplate.count(new Query(), Event.class))
+		Event eventInDatabase = mongoTemplate.findOne(new Query(), Event.class)
+		EventTestUtil.assertEventWithNoIdIsCorrect(expectedEvent, eventInDatabase);
 	}
 }
