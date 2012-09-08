@@ -1,5 +1,6 @@
 package se.ryttargardskyrkan.rosette.controller;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +73,13 @@ public class EventController extends AbstractController {
 		if (since != null) {
 			criteria = Criteria.where("startTime").gte(new Date(Long.parseLong(since)));
 		} else if (themeId == null) {
-			criteria = Criteria.where("startTime").gte(new Date());
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			criteria = Criteria.where("startTime").gte(calendar.getTime());
 		}
 		if (until != null) {
 			criteria = criteria.lte(new Date(Long.parseLong(until)));
