@@ -64,7 +64,8 @@ public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/events?page=2&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00"))
-		getRequest.addHeader("accept", "application/json")
+		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
+		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
 
 		// Then

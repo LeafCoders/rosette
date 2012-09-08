@@ -33,7 +33,7 @@ public class EventController extends AbstractController {
 		this.mongoTemplate = mongoTemplate;
 	}
 	
-	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Event getEvent(@PathVariable String id) {
 		Event event = mongoTemplate.findById(id, Event.class);
@@ -43,11 +43,12 @@ public class EventController extends AbstractController {
 		return event;
 	}
 
-	@RequestMapping(value = "events", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "events", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public List<Event> getEvents(
 			@RequestParam(required = false) String since,
 			@RequestParam(required = false) String until,
+			@RequestParam(required = false) String themeId,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer per_page) {
 		Query query = new Query();
@@ -67,13 +68,17 @@ public class EventController extends AbstractController {
 		Criteria criteria = new Criteria();
 		if (since != null) {
 			criteria = Criteria.where("startTime").gte(new Date(Long.parseLong(since)));
-		} else {
+		} else if (themeId == null) {
 			criteria = Criteria.where("startTime").gte(new Date());
 		}
 		if (until != null) {
 			criteria = criteria.lte(new Date(Long.parseLong(until)));
-		}
+		}		
 		query.addCriteria(criteria);
+
+		if (themeId != null) {
+			query.addCriteria(Criteria.where("themeId").is(themeId));
+		}
 		
 		List<Event> events = mongoTemplate.find(query, Event.class);
 

@@ -19,6 +19,8 @@ public class Event {
 	private Date startTime;
 
 	private Date endTime;
+	
+	private String themeId;
 
 	// Getters and setters
 
@@ -52,5 +54,13 @@ public class Event {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getThemeId() {
+		return themeId;
+	}
+
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
 	}
 }

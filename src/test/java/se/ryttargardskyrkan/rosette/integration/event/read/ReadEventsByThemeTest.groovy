@@ -16,36 +16,54 @@ import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.Theme
 
-public class ReadEventTest extends AbstractIntegrationTest {
+public class ReadEventsByThemeTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
+		String themes = """
+		[{
+			"id" : "1",
+			"title" : "Markusevangeliet",
+			"description" : "Vi läser igenom markusevangeliet"
+		},
+		{
+			"id" : "2",
+			"title" : "Johannesevangeliet",
+			"description" : "Vi läser igenom johannesevangeliet"
+		}]
+		"""
+		mongoTemplate.insert(new ObjectMapper().readValue(themes, new TypeReference<ArrayList<Theme>>() {}), "themes")
+		
 		String events = """
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : "1"
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : "2"
 		},
 		{
 			"id" : "3",
 			"title" : "Gudstjänst 3",
 			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : "1"
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/events/2")
+		HttpGet getRequest = new HttpGet(baseUrl + "/events?themeId=1")
 		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
@@ -53,13 +71,22 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		String expectedEvent = """
+		String expectedEvents = """
+		[{
+			"id" : "1",
+			"title" : "Gudstjänst 1",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"endTime" : null,
+			"themeId" : "1"
+		},
 		{
-			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
-			"endTime" : null
-		}
+			"id" : "3",
+			"title" : "Gudstjänst 3",
+			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"endTime" : null,
+			"themeId" : "1"
+		}]
 		"""
-		EventTestUtil.assertEventResponseBodyIsCorrect(expectedEvent, response)
+		EventTestUtil.assertEventListResponseBodyIsCorrect(expectedEvents, response)
 	}
 }

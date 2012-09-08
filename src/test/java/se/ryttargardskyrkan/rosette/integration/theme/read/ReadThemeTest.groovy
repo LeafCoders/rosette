@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.read;
+package se.ryttargardskyrkan.rosette.integration.theme.read
 
 import static org.junit.Assert.*
 
@@ -13,39 +13,44 @@ import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
+import se.ryttargardskyrkan.rosette.integration.util.ThemeTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.Theme
 
-public class ReadUpcomingEventsWithoutAuthenticationTest extends AbstractIntegrationTest {
+public class ReadThemeTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String events = """
+		String themes = """
 		[{
 			"id" : "1",
-			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
-			"endTime" : null
+			"title" : "Tema 1",
+			"description" : "Beskrivning av tema 1"
 		},
 		{
 			"id" : "2",
-			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-26 11:00") + """,
-			"endTime" : null
+			"title" : "Tema 2",
+			"description" : "Beskrivning av tema 2"
 		}]
 		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
+		mongoTemplate.insert(new ObjectMapper().readValue(themes, new TypeReference<ArrayList<Theme>>() {}), "themes")
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/events?since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00"))
-		getRequest.addHeader("accept", "application/json")
+		HttpGet getRequest = new HttpGet(baseUrl + "/themes/2")
+		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
+		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
 
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		EventTestUtil.assertEventListResponseBodyIsCorrect(events, response)
+		String expectedTheme = """
+		{
+			"title" : "Tema 2",
+			"description" : "Beskrivning av tema 2"
+		}
+		"""
+		ThemeTestUtil.assertThemeResponseBodyIsCorrect(expectedTheme, response)
 	}
 }

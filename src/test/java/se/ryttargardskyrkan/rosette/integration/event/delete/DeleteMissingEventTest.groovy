@@ -64,6 +64,8 @@ public class DeleteMissingEventTest extends AbstractIntegrationTest {
 
 		// When
 		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/events/3")
+		deleteRequest.setHeader("Accept", "application/json; charset=UTF-8")
+		deleteRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), deleteRequest));
 		HttpResponse response = httpClient.execute(deleteRequest)
 

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.delete;
+package se.ryttargardskyrkan.rosette.integration.theme.delete;
 
 import static org.junit.Assert.*
 
@@ -18,11 +18,11 @@ import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.Theme
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.User
 
-public class DeleteEventWithoutSpecificPermissionTest extends AbstractIntegrationTest {
+public class DeleteThemeWithWrongPasswordTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -33,7 +33,7 @@ public class DeleteEventWithoutSpecificPermissionTest extends AbstractIntegratio
 		[{
 			"id" : "1",
 			"name" : "admin",
-			"permissions" : ["events:delete:1"]
+			"permissions" : ["themes:create"]
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(groups, new TypeReference<ArrayList<Group>>() {}), "groups");
@@ -46,32 +46,31 @@ public class DeleteEventWithoutSpecificPermissionTest extends AbstractIntegratio
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(users, new TypeReference<ArrayList<User>>() {}), "users")
-		String events = """
+		String themes = """
 		[{
 			"id" : "1",
-			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
-			"endTime" : null
+			"title" : "Markusevangeliet",
+			"description" : "Vi läser igenom markusevangeliet"
 		},
 		{
 			"id" : "2",
-			"title" : "Gudstjänst 2",
-			"startTime" : null,
-			"endTime" : null
+			"title" : "Johannesevangeliet",
+			"description" : "Vi läser igenom johannesevangeliet"
 		}]
+
 		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
+		mongoTemplate.insert(new ObjectMapper().readValue(themes, new TypeReference<ArrayList<Theme>>() {}), "themes")
 
 		// When
-		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/events/2")
+		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/themes/1")
 		deleteRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		deleteRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
-		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), deleteRequest));
+		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "asdf"), deleteRequest));
 		HttpResponse response = httpClient.execute(deleteRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-		assertEquals(2L, mongoTemplate.count(new Query(), Event.class))
+		assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode())
+		assertEquals("Unauthorized", response.getStatusLine().getReasonPhrase())
+		assertEquals(2L, mongoTemplate.count(new Query(), Theme.class))
 	}
 }

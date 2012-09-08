@@ -26,9 +26,10 @@ abstract class AbstractIntegrationTest {
 	
 	@Before
 	public void before() {
-		mongoTemplate.dropCollection("events")
 		mongoTemplate.dropCollection("users")
 		mongoTemplate.dropCollection("groups")
+		mongoTemplate.dropCollection("events")
+		mongoTemplate.dropCollection("themes")
 	}
 	
 	@AfterClass

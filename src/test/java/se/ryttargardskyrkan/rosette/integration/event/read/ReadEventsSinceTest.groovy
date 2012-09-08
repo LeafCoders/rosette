@@ -46,7 +46,8 @@ public class ReadEventsSinceTest extends AbstractIntegrationTest {
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/events?since=" + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00"))
-		getRequest.addHeader("accept", "application/json")
+		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
+		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
 
 		// Then
