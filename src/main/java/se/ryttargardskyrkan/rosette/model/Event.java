@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "events")
@@ -16,10 +17,12 @@ public class Event {
 	private String title;
 
 	@NotNull
+	@Indexed
 	private Date startTime;
 
 	private Date endTime;
 	
+	@Indexed
 	private String themeId;
 
 	// Getters and setters
