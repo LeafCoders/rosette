@@ -34,7 +34,7 @@ public class ThemeController extends AbstractController {
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	@RequestMapping(value = "themes/{id}", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "themes/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Theme getTheme(@PathVariable String id) {
 		Theme theme = mongoTemplate.findById(id, Theme.class);
@@ -44,7 +44,7 @@ public class ThemeController extends AbstractController {
 		return theme;
 	}
 
-	@RequestMapping(value = "themes", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "themes", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Theme> getThemes(
 			@RequestParam(required = false) Integer page,
@@ -133,7 +133,7 @@ public class ThemeController extends AbstractController {
 		response.setStatus(HttpStatus.OK.value());
 	}
 
-	@RequestMapping(value = "themes/{id}", method = RequestMethod.DELETE, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "themes/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteTheme(@PathVariable String id, HttpServletResponse response) {
 		checkPermission("themes:delete:" + id);
 

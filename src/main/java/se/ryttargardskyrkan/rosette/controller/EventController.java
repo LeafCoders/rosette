@@ -34,7 +34,7 @@ public class EventController extends AbstractController {
 		this.mongoTemplate = mongoTemplate;
 	}
 	
-	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Event getEvent(@PathVariable String id) {
 		Event event = mongoTemplate.findById(id, Event.class);
@@ -44,7 +44,7 @@ public class EventController extends AbstractController {
 		return event;
 	}
 
-	@RequestMapping(value = "events", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "events", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Event> getEvents(
 			@RequestParam(required = false) String since,
@@ -173,7 +173,7 @@ public class EventController extends AbstractController {
 		response.setStatus(HttpStatus.OK.value());
 	}
 	
-	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
 		checkPermission("events:delete:" + id);
 
