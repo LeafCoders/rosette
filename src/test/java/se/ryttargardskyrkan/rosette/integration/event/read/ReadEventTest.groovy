@@ -26,19 +26,19 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "3",
 			"title" : "Gudstjänst 3",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"startTime" : "2012-05-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}]
 		"""
@@ -56,7 +56,7 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		String expectedEvent = """
 		{
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}
 		"""

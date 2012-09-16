@@ -27,37 +27,37 @@ public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "3",
 			"title" : "Gudstjänst 3",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"startTime" : "2012-05-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "4",
 			"title" : "Gudstjänst 4",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-06-25 11:00") + """,
+			"startTime" : "2012-06-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "5",
 			"title" : "Gudstjänst 5",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-07-25 11:00") + """,
+			"startTime" : "2012-07-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "6",
 			"title" : "Gudstjänst 6",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-08-25 11:00") + """,
+			"startTime" : "2012-08-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}]
 		"""
@@ -76,13 +76,13 @@ public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 		[{
 			"id" : "3",
 			"title" : "Gudstjänst 3",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"startTime" : "2012-05-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "4",
 			"title" : "Gudstjänst 4",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-06-25 11:00") + """,
+			"startTime" : "2012-06-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}]
 		"""

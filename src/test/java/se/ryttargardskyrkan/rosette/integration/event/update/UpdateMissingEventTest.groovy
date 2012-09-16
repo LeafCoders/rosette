@@ -52,7 +52,7 @@ public class UpdateMissingEventTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
@@ -70,7 +70,7 @@ public class UpdateMissingEventTest extends AbstractIntegrationTest {
 		{
 			"id" : "1",
 			"title" : "Gudstjänst 1 uppdaterad",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}
 		"""

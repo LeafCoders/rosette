@@ -4,9 +4,15 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import se.ryttargardskyrkan.rosette.converter.RosetteJsonDeserializer;
+import se.ryttargardskyrkan.rosette.converter.RosetteJsonSerializer;
 
 @Document(collection = "events")
 public class Event {
@@ -18,15 +24,27 @@ public class Event {
 
 	@NotNull
 	@Indexed
+	@JsonSerialize(using = RosetteJsonSerializer.class)
+	@JsonDeserialize(using = RosetteJsonDeserializer.class)
 	private Date startTime;
 
+	@JsonSerialize(using = RosetteJsonSerializer.class)
+	@JsonDeserialize(using = RosetteJsonDeserializer.class)
 	private Date endTime;
+	
+	@Transient
+	private String endTimeAtGivenTimeZone;
+	
+	@Transient
+	private String endTimeTimeZone;
 	
 	@Indexed
 	private String themeId;
+	
 
 	// Getters and setters
-
+	
+	
 	public String getId() {
 		return id;
 	}
@@ -57,6 +75,22 @@ public class Event {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getEndTimeAtGivenTimeZone() {
+		return endTimeAtGivenTimeZone;
+	}
+
+	public void setEndTimeAtGivenTimeZone(String endTimeAtGivenTimeZone) {
+		this.endTimeAtGivenTimeZone = endTimeAtGivenTimeZone;
+	}
+
+	public String getEndTimeTimeZone() {
+		return endTimeTimeZone;
+	}
+
+	public void setEndTimeTimeZone(String endTimeTimeZone) {
+		this.endTimeTimeZone = endTimeTimeZone;
 	}
 
 	public String getThemeId() {

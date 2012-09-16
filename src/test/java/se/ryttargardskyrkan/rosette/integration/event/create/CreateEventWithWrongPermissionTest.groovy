@@ -54,7 +54,7 @@ public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest 
 		String requestBody = """
 		{
 			"title" : "Gudstjänst",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm"
 		}
 		"""
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))

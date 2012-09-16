@@ -12,6 +12,7 @@ import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
+import se.ryttargardskyrkan.rosette.converter.RosetteDateConverter;
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
@@ -39,19 +40,19 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 			[{
 				"id" : "1",
 				"title" : "Gudstjänst 1",
-				"startTime" : """ + oneWeekAgo.getTime() + """,
+				"startTime" : "${RosetteDateConverter.dateToString(oneWeekAgo, "Europe/Stockholm")}",
 				"endTime" : null
 			},
 			{
 				"id" : "2",
 				"title" : "Gudstjänst 2",
-				"startTime" : """ + todayAtMidnight.getTime() + """,
+				"startTime" : "${RosetteDateConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
 				"endTime" : null
 			},
 			{
 				"id" : "3",
 				"title" : "Gudstjänst 3",
-				"startTime" : """ + twoWeeksAhead.getTime() + """,
+				"startTime" : "${RosetteDateConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
 				"endTime" : null
 			}]
 			"""
@@ -70,13 +71,13 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 			[{
 				"id" : "2",
 				"title" : "Gudstjänst 2",
-				"startTime" : """ + todayAtMidnight.getTime() + """,
+				"startTime" : "${RosetteDateConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
 				"endTime" : null
 			},
 			{
 				"id" : "3",
 				"title" : "Gudstjänst 3",
-				"startTime" : """ + twoWeeksAhead.getTime() + """,
+				"startTime" : "${RosetteDateConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
 				"endTime" : null
 			}]
 			"""

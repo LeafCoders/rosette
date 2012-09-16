@@ -52,13 +52,13 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-26 11:00") + """,
+			"startTime" : "2012-04-26 11:00 Europe/Stockholm",
 			"endTime" : null
 		}]
 		"""
@@ -70,7 +70,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		{
 			"id" : "1",
 			"title" : "Gudstjänst 1 uppdaterad",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}
 		"""
@@ -85,13 +85,13 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1 uppdaterad",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-26 11:00") + """,
+			"startTime" : "2012-04-26 11:00 Europe/Stockholm",
 			"endTime" : null
 		}]
 		"""

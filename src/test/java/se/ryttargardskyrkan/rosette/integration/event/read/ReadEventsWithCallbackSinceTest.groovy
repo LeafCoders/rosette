@@ -25,19 +25,19 @@ public class ReadEventsWithCallbackSinceTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + """,
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "3",
 			"title" : "Gudstjänst 3",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + """,
+			"startTime" : "2012-05-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : """ + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + """,
+			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null
 		}]
 		"""
@@ -52,7 +52,7 @@ public class ReadEventsWithCallbackSinceTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("text/javascript;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		String exptectedReponse = """handleJson([{"id":"2","title":"Gudstjänst 2","startTime":""" + TestUtil.dateTimeAsUnixTime("2012-04-25 11:00") + ""","endTime":null,"themeId":null},{"id":"3","title":"Gudstjänst 3","startTime":""" + TestUtil.dateTimeAsUnixTime("2012-05-25 11:00") + ""","endTime":null,"themeId":null}]);"""
+		String exptectedReponse = """handleJson([{"id":"2","title":"Gudstjänst 2","startTime":"2012-04-25 11:00 Europe/Stockholm","endTime":null,"themeId":null},{"id":"3","title":"Gudstjänst 3","startTime":"2012-05-25 11:00 Europe/Stockholm","endTime":null,"themeId":null}]);"""
 		String json = IOUtils.toString(response.getEntity().getContent(), "utf-8")
 		assertEquals(exptectedReponse, json)
 	}
