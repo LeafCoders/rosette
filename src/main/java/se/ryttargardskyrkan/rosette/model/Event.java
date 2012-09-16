@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -32,18 +31,11 @@ public class Event {
 	@JsonDeserialize(using = RosetteJsonDeserializer.class)
 	private Date endTime;
 	
-	@Transient
-	private String endTimeAtGivenTimeZone;
-	
-	@Transient
-	private String endTimeTimeZone;
-	
 	@Indexed
 	private String themeId;
-	
 
 	// Getters and setters
-	
+
 	
 	public String getId() {
 		return id;
@@ -75,22 +67,6 @@ public class Event {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
-	}
-
-	public String getEndTimeAtGivenTimeZone() {
-		return endTimeAtGivenTimeZone;
-	}
-
-	public void setEndTimeAtGivenTimeZone(String endTimeAtGivenTimeZone) {
-		this.endTimeAtGivenTimeZone = endTimeAtGivenTimeZone;
-	}
-
-	public String getEndTimeTimeZone() {
-		return endTimeTimeZone;
-	}
-
-	public void setEndTimeTimeZone(String endTimeTimeZone) {
-		this.endTimeTimeZone = endTimeTimeZone;
 	}
 
 	public String getThemeId() {
