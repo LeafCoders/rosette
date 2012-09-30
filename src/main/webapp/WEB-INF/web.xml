@@ -18,11 +18,6 @@
 	</filter>
 	
 	<filter>
-		<filter-name>jsonpCallbackFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	
-	<filter>
 		<filter-name>shiroFilter</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 		<init-param>
@@ -36,11 +31,6 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
-	<filter-mapping>
-		<filter-name>jsonpCallbackFilter</filter-name>
-		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-
 	<filter-mapping>
 		<filter-name>shiroFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
