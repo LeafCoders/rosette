@@ -1,9 +1,7 @@
 package se.ryttargardskyrkan.rosette.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,7 +39,7 @@ public class EventweekController extends AbstractController {
 		DateTime now = DateTime.now();
 		int year = now.getWeekyear();
 		int week = now.getWeekOfWeekyear();
-		String id = "" + year + "-" + (week < 10 ? "0" : "") + week;
+		String id = "" + year + "-W" + (week < 10 ? "0" : "") + week;
 		
 		return this.getEventweek(id, response);
 	}
@@ -49,22 +47,15 @@ public class EventweekController extends AbstractController {
 	@RequestMapping(value = "eventweek/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Eventweek getEventweek(@PathVariable String id, HttpServletResponse response) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-ww");
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-'W'ww");
 		DateTime since = fmt.parseDateTime(id);
 		
 		Eventweek eventweek = new Eventweek();
 		eventweek.setWeek(since.weekOfWeekyear().get());
+		eventweek.setSince(since.toDate());
+		eventweek.setUntil(since.plusDays(6).toDate());
 		
-		int monthOfFirstDay = since.getMonthOfYear();
-		int monthOfLastDay = since.plusDays(6).getMonthOfYear();
-		List<Integer> months = new ArrayList<Integer>();
-		months.add(monthOfFirstDay);
-		if (monthOfLastDay != monthOfFirstDay) {
-			months.add(monthOfLastDay);	
-		}
-		eventweek.setMonths(months);
-		
-		Map<Integer, Eventday> days = new HashMap<Integer, Eventday>();
+		List <Eventday> days = new ArrayList<Eventday>();
 		
 		for (int i = 1; i <= 7; i++) {
 			Eventday eventday = new Eventday();
@@ -76,22 +67,23 @@ public class EventweekController extends AbstractController {
 			query.sort().on("startTime", Order.ASCENDING);
 			Criteria criteria = new Criteria();
 			criteria = Criteria.where("startTime").gte(sinceDay.toDate());
-			criteria = criteria.lte(untilDay.toDate());
+			criteria = criteria.lt(untilDay.toDate());
 			query.addCriteria(criteria);
 			List<Event> events = mongoTemplate.find(query, Event.class);
 			
+			eventday.setDayNumber(i);
 			eventday.setDate(sinceDay.toDate());
 			eventday.setEvents(events);
 			
-			days.put(i, eventday);
+			days.add(eventday);
 		}		
 		eventweek.setDays(days);
 		
 		// Header links
 		StringBuilder sb = new StringBuilder();
-		sb.append("<eventweek/2012-01>; rel=\"previous\"");
+		sb.append("<eventweek/2012-W38>; rel=\"previous\"");
 		sb.append(",");
-		sb.append("<eventweek/2012-02>; rel=\"next\"");
+		sb.append("<eventweek/2012-W40>; rel=\"next\"");
 		response.setHeader("Link", sb.toString());
 
 		return eventweek;

@@ -4,72 +4,92 @@ import static org.junit.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
+import se.ryttargardskyrkan.rosette.converter.RosetteDateConverter;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneConverter
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
-import se.ryttargardskyrkan.rosette.model.Eventweek
 
 public class ReadEventweekTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
+		DateTime now = DateTime.now()
+		int year = now.getWeekyear()
+		int week = now.getWeekOfWeekyear()
+		String id = "" + year + "-W" + (week < 10 ? "0" : "") + week
+		
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-'W'ww")
+		DateTime monday = fmt.parseDateTime(id)
+		monday = monday.withTime(11, 0, 0, 0)
+		String previousSundayAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.minusDays(1).toDate(), "Europe/Stockholm")
+		String mondayEarlyAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.toDate(), "Europe/Stockholm")
+		String mondayLateAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.withTime(17, 0, 0, 0).toDate(), "Europe/Stockholm")
+		String tuesdayAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.plusDays(1).toDate(), "Europe/Stockholm")
+		String wednesdayAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.plusDays(2).toDate(), "Europe/Stockholm")
+		String saturdayAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.plusDays(5).toDate(), "Europe/Stockholm")
+		String sundayAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.plusDays(6).toDate(), "Europe/Stockholm")
+		String nextMondayAsString = RosetteDateTimeTimezoneConverter.dateToString(monday.plusDays(7).toDate(), "Europe/Stockholm")
+		
 		String events = """
 		[{
 			"id" : "1",
 			"title" : "Förra söndagens gudstjänst",
-			"startTime" : "2012-09-23 11:00 Europe/Stockholm",
+			"startTime" : "${previousSundayAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Måndagsgudstjänst 1",
-			"startTime" : "2012-09-24 11:00 Europe/Stockholm",
+			"startTime" : "${mondayEarlyAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "3",
 			"title" : "Måndagsgudstjänst 2",
-			"startTime" : "2012-09-24 17:00 Europe/Stockholm",
+			"startTime" : "${mondayLateAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "4",
 			"title" : "Tisdagsgudstjänst",
-			"startTime" : "2012-09-25 11:00 Europe/Stockholm",
+			"startTime" : "${tuesdayAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "5",
 			"title" : "Onsdagsgudstjänst",
-			"startTime" : "2012-09-26 11:00 Europe/Stockholm",
+			"startTime" : "${wednesdayAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "6",
 			"title" : "Lördagsgudstjänst",
-			"startTime" : "2012-09-29 11:00 Europe/Stockholm",
+			"startTime" : "${saturdayAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "7",
 			"title" : "Söndagsgudstjänst",
-			"startTime" : "2012-09-30 11:00 Europe/Stockholm",
+			"startTime" : "${sundayAsString}",
 			"endTime" : null
 		},
 		{
 			"id" : "8",
 			"title" : "Nästa måndagsgudstjänst",
-			"startTime" : "2012-10-01 11:00 Europe/Stockholm",
+			"startTime" : "${nextMondayAsString}",
 			"endTime" : null
 		}]
 		"""
@@ -84,80 +104,79 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		String responseJson = IOUtils.toString(response.getEntity().getContent(), "utf-8")
 		
 		String expectedEventweekAsJson = """
 		{
-		  "months": [9],
-		  "week": 39,
-		  "days": {
-		    "1": {
-		      "date": "2012-09-24 00:00 Europe/Stockholm",
-		      "events": [{
-		        "id": "2",
-		        "title": "Måndagsgudstjänst 1",
-		        "startTime": "2012-09-24 11:00 Europe/Stockholm",
-		        "endTime": null,
-		        "themeId": null
-		      }, {
-		        "id": "3",
-		        "title": "Måndagsgudstjänst 2",
-		        "startTime": "2012-09-24 17:00 Europe/Stockholm",
-		        "endTime": null,
-		        "themeId": null
-		      }]
-		    },
-		    "2": {
-		      "date": "2012-09-25 00:00 Europe/Stockholm",
-		      "events": [{
-		        "id": "4",
-		        "title": "Tisdagsgudstjänst",
-		        "startTime": "2012-09-25 11:00 Europe/Stockholm",
-		        "endTime": null,
-		        "themeId": null
-		      }]
-		    },
-		    "3": {
-		      "date": "2012-09-26 00:00 Europe/Stockholm",
-		      "events": [{
-		        "id": "5",
-		        "title": "Onsdagsgudstjänst",
-		        "startTime": "2012-09-26 11:00 Europe/Stockholm",
-		        "endTime": null,
-		        "themeId": null
-		      }]
-		    },
-		    "4": {
-		      "date": "2012-09-27 00:00 Europe/Stockholm",
-		      "events": []
-		    },
-		    "5": {
-		      "date": "2012-09-28 00:00 Europe/Stockholm",
-		      "events": []
-		    },
-		    "6": {
-		      "date": "2012-09-29 00:00 Europe/Stockholm",
-		      "events": [{
-		        "id": "6",
-		        "title": "Lördagsgudstjänst",
-		        "startTime": "2012-09-29 11:00 Europe/Stockholm",
-		        "endTime": null,
-		        "themeId": null
-		      }]
-		    },
-		    "7": {
-		      "date": "2012-09-30 00:00 Europe/Stockholm",
-		      "events": [{
-		        "id": "7",
-		        "title": "Söndagsgudstjänst",
-		        "startTime": "2012-09-30 11:00 Europe/Stockholm",
-		        "endTime": null,
-		        "themeId": null
-		      }]
-		    }
-		  }
+		    "week": 39,
+		    "since": "${RosetteDateConverter.dateToString(monday.toDate())}",
+		    "until": "${RosetteDateConverter.dateToString(monday.plusDays(6).toDate())}",
+		    "days": [{
+		        "date": "${RosetteDateConverter.dateToString(monday.toDate())}",
+		        "dayNumber": 1,
+		        "events": [{
+		            "id": "2",
+		            "title": "Måndagsgudstjänst 1",
+		            "startTime": "${mondayEarlyAsString}",
+		            "endTime": null,
+		            "themeId": null
+		        }, {
+		            "id": "3",
+		            "title": "Måndagsgudstjänst 2",
+		            "startTime": "${mondayLateAsString}",
+		            "endTime": null,
+		            "themeId": null
+		        }]
+		    }, {
+		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(1).toDate())}",
+		        "dayNumber": 2,
+		        "events": [{
+		            "id": "4",
+		            "title": "Tisdagsgudstjänst",
+		            "startTime": "${tuesdayAsString}",
+		            "endTime": null,
+		            "themeId": null
+		        }]
+		    }, {
+		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(2).toDate())}",
+		        "dayNumber": 3,
+		        "events": [{
+		            "id": "5",
+		            "title": "Onsdagsgudstjänst",
+		            "startTime": "${wednesdayAsString}",
+		            "endTime": null,
+		            "themeId": null
+		        }]
+		    }, {
+		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(3).toDate())}",
+		        "dayNumber": 4,
+		        "events": []
+		    }, {
+		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(4).toDate())}",
+		        "dayNumber": 5,
+		        "events": []
+		    }, {
+		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(5).toDate())}",
+		        "dayNumber": 6,
+		        "events": [{
+		            "id": "6",
+		            "title": "Lördagsgudstjänst",
+		            "startTime": "${saturdayAsString}",
+		            "endTime": null,
+		            "themeId": null
+		        }]
+		    }, {
+		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(6).toDate())}",
+		        "dayNumber": 7,
+		        "events": [{
+		            "id": "7",
+		            "title": "Söndagsgudstjänst",
+		            "startTime": "${sundayAsString}",
+		            "endTime": null,
+		            "themeId": null
+		        }]
+		    }]
 		}
 		"""	
-		TestUtil.assertJsonEquals(expectedEventweekAsJson, expectedEventweekAsJson)
+		TestUtil.assertJsonResponseEquals(expectedEventweekAsJson, response)
 	}
 }

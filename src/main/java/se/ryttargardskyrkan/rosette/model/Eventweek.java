@@ -1,12 +1,26 @@
 package se.ryttargardskyrkan.rosette.model;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import se.ryttargardskyrkan.rosette.converter.RosetteDateJsonDeserializer;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateJsonSerializer;
 
 public class Eventweek {
 	private Integer week;
-	private List<Integer> months;
-	private Map<Integer, Eventday> days;
+	
+	@JsonSerialize(using = RosetteDateJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateJsonDeserializer.class)
+	private Date since;
+	
+	@JsonSerialize(using = RosetteDateJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateJsonDeserializer.class)
+	private Date until;
+	
+	private List<Eventday> days;
 
 	// Getters and setters
 
@@ -18,19 +32,27 @@ public class Eventweek {
 		this.week = week;
 	}
 
-	public List<Integer> getMonths() {
-		return months;
+	public Date getSince() {
+		return since;
 	}
 
-	public void setMonths(List<Integer> months) {
-		this.months = months;
+	public void setSince(Date since) {
+		this.since = since;
 	}
 
-	public Map<Integer, Eventday> getDays() {
+	public Date getUntil() {
+		return until;
+	}
+
+	public void setUntil(Date until) {
+		this.until = until;
+	}
+
+	public List<Eventday> getDays() {
 		return days;
 	}
 
-	public void setDays(Map<Integer, Eventday> days) {
+	public void setDays(List<Eventday> days) {
 		this.days = days;
 	}
 }

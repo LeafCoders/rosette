@@ -12,7 +12,7 @@ import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
-import se.ryttargardskyrkan.rosette.converter.RosetteDateConverter;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneConverter;
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
@@ -39,19 +39,19 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 			[{
 				"id" : "1",
 				"title" : "Gudstjänst 1",
-				"startTime" : "${RosetteDateConverter.dateToString(oneWeekAgo, "Europe/Stockholm")}",
+				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(oneWeekAgo, "Europe/Stockholm")}",
 				"endTime" : null
 			},
 			{
 				"id" : "2",
 				"title" : "Gudstjänst 2",
-				"startTime" : "${RosetteDateConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
+				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
 				"endTime" : null
 			},
 			{
 				"id" : "3",
 				"title" : "Gudstjänst 3",
-				"startTime" : "${RosetteDateConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
+				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
 				"endTime" : null
 			}]
 			"""
@@ -70,14 +70,14 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 			[{
 				"id" : "2",
 				"title" : "Gudstjänst 2",
-				"startTime" : "${RosetteDateConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
+				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
 				"endTime" : null,
 				"themeId" : null
 			},
 			{
 				"id" : "3",
 				"title" : "Gudstjänst 3",
-				"startTime" : "${RosetteDateConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
+				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
 				"endTime" : null,
 				"themeId" : null
 			}]

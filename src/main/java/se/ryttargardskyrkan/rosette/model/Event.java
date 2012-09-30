@@ -10,8 +10,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import se.ryttargardskyrkan.rosette.converter.RosetteJsonDeserializer;
-import se.ryttargardskyrkan.rosette.converter.RosetteJsonSerializer;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 
 @Document(collection = "events")
 public class Event {
@@ -23,12 +23,12 @@ public class Event {
 
 	@NotNull
 	@Indexed
-	@JsonSerialize(using = RosetteJsonSerializer.class)
-	@JsonDeserialize(using = RosetteJsonDeserializer.class)
+	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date startTime;
 
-	@JsonSerialize(using = RosetteJsonSerializer.class)
-	@JsonDeserialize(using = RosetteJsonDeserializer.class)
+	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 	
 	@Indexed

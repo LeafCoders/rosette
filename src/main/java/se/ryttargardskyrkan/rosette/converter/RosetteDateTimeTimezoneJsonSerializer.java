@@ -8,11 +8,11 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 
-public class RosetteJsonSerializer extends JsonSerializer<Date> {
+public class RosetteDateTimeTimezoneJsonSerializer extends JsonSerializer<Date> {
 	
 	@Override
 	public void serialize(Date value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-		String json = RosetteDateConverter.dateToString(value, "Europe/Stockholm");
+		String json = RosetteDateTimeTimezoneConverter.dateToString(value, "Europe/Stockholm");
 		jgen.writeString(json);
 	}
 
