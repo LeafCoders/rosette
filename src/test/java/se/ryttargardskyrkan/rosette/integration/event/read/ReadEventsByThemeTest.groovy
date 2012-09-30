@@ -13,7 +13,6 @@ import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.model.Theme

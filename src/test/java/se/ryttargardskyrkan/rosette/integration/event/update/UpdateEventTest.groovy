@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.EventTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.*
 
@@ -86,18 +85,20 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"title" : "Gudstjänst 1 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
 			"startTime" : "2012-04-26 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		}]
 		"""
 		Query query = new Query();
 		query.sort().on("startTime", Order.ASCENDING);
 		List<Event> eventsInDatabase = mongoTemplate.find(query, Event.class);
-		EventTestUtil.assertEventListIsCorrect(expectedEvents, eventsInDatabase);
+		TestUtil.assertJsonEquals(expectedEvents, new ObjectMapper().writeValueAsString(eventsInDatabase))
 	}
 }

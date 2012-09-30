@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.ThemeTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.*
 
@@ -91,6 +90,6 @@ public class UpdateThemeTest extends AbstractIntegrationTest {
 		Query query = new Query();
 		query.sort().on("startTime", Order.ASCENDING);
 		List<Theme> themesInDatabase = mongoTemplate.find(query, Theme.class);
-		ThemeTestUtil.assertThemeListIsCorrect(expectedThemes, themesInDatabase);
+		TestUtil.assertJsonEquals(expectedThemes, new ObjectMapper().writeValueAsString(themesInDatabase))
 	}
 }

@@ -13,7 +13,6 @@ import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.ThemeTestUtil
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Theme
 
@@ -47,10 +46,11 @@ public class ReadThemeTest extends AbstractIntegrationTest {
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		String expectedTheme = """
 		{
+			"id" : "2",
 			"title" : "Tema 2",
 			"description" : "Beskrivning av tema 2"
 		}
 		"""
-		ThemeTestUtil.assertThemeResponseBodyIsCorrect(expectedTheme, response)
+		TestUtil.assertJsonResponseEquals(expectedTheme, response)
 	}
 }

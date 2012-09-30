@@ -14,7 +14,7 @@ import org.junit.Test
 import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.ThemeTestUtil
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Theme
 
 public class ReadPaginatedThemesTest extends AbstractIntegrationTest {
@@ -77,7 +77,7 @@ public class ReadPaginatedThemesTest extends AbstractIntegrationTest {
 			"description" : "Beskrivning av tema 4"
 		}]
 		"""
-		ThemeTestUtil.assertThemeListResponseBodyIsCorrect(exptectedThemes, response)
+		TestUtil.assertJsonResponseEquals(exptectedThemes, response)
 		
 		StringBuilder sb = new StringBuilder()
 		sb.append("<themes?page=1&per_page=2>; rel=\"previous\"")

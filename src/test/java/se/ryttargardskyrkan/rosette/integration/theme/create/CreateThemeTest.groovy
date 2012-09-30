@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.ThemeTestUtil
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.Theme
 import se.ryttargardskyrkan.rosette.model.User
@@ -64,15 +64,21 @@ public class CreateThemeTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
+		
+		String responseJson = TestUtil.responseBodyAsString(response)
+		Theme responseTheme = new ObjectMapper().readValue(responseJson, Theme.class)
+		
 		String expectedTheme = """
 		{
+			"id" : "${responseTheme.getId()}",
 			"title" : "Markusevangeliet",
 			"description" : "Vi läser igenom markusevangeliet"
 		}
 		"""
-		ThemeTestUtil.assertThemeResponseBodyIsCorrect(expectedTheme, response)
+		TestUtil.assertJsonEquals(expectedTheme, responseJson)
+		
 		assertEquals(1L, mongoTemplate.count(new Query(), Theme.class))
 		Theme themeInDatabase = mongoTemplate.findOne(new Query(), Theme.class)
-		ThemeTestUtil.assertThemeWithNoIdIsCorrect(expectedTheme, themeInDatabase);
+		TestUtil.assertJsonEquals(expectedTheme, new ObjectMapper().writeValueAsString(themeInDatabase))
 	}
 }
