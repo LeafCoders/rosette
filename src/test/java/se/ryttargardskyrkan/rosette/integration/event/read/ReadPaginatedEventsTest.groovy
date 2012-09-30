@@ -72,21 +72,23 @@ public class ReadPaginatedEventsTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		String exptectedEvents = """
+		String expectedEvents = """
 		[{
 			"id" : "3",
 			"title" : "Gudstjänst 3",
 			"startTime" : "2012-05-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		},
 		{
 			"id" : "4",
 			"title" : "Gudstjänst 4",
 			"startTime" : "2012-06-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		}]
 		"""
-		EventTestUtil.assertEventListResponseBodyIsCorrect(exptectedEvents, response)
+		TestUtil.assertJsonResponseEquals(expectedEvents, response)
 		
 		StringBuilder sb = new StringBuilder()
 		sb.append("<events?page=1&per_page=2&since=" + TestUtil.dateTimeAsUnixTime("2012-03-25 11:00") + ">; rel=\"previous\"")

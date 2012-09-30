@@ -62,8 +62,31 @@ public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest 
 		HttpResponse response = httpClient.execute(postRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-		assertEquals(0L, mongoTemplate.count(new Query(), Event.class))
+//		Authentication disabled for now
+//		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
+//		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
+//		assertEquals(0L, mongoTemplate.count(new Query(), Event.class))
+		
+		
+		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
+		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
+				
+		String responseJson = TestUtil.jsonFromResponse(response)
+		Event responseEvent = new ObjectMapper().readValue(responseJson, new TypeReference<Event>() {})
+		
+		String expectedEvent = """
+		{
+			"id" : "${responseEvent.getId()}",
+			"title" : "Gudstjänst",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"endTime" : null,
+			"themeId" : null
+		}
+		"""
+		TestUtil.assertJsonEquals(expectedEvent, responseJson)
+		
+		assertEquals(1L, mongoTemplate.count(new Query(), Event.class))
+		Event eventInDatabase = mongoTemplate.findOne(new Query(), Event.class)
+		TestUtil.assertJsonEquals(expectedEvent, new ObjectMapper().writeValueAsString(eventInDatabase))
 	}
 }

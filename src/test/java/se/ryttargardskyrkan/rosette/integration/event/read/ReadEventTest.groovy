@@ -55,11 +55,13 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		String expectedEvent = """
 		{
+			"id" : "2",
 			"title" : "Gudstjänst 2",
 			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		}
 		"""
-		EventTestUtil.assertEventResponseBodyIsCorrect(expectedEvent, response)
+		TestUtil.assertJsonResponseEquals(expectedEvent, response)
 	}
 }

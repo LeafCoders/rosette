@@ -55,7 +55,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 		String requestBody = """
 		{
 			"title" : "Gudstjänst",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm"
 		}
 		"""
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -65,16 +65,23 @@ public class CreateEventTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
+				
+		String responseJson = TestUtil.jsonFromResponse(response)
+		Event responseEvent = new ObjectMapper().readValue(responseJson, new TypeReference<Event>() {})
+		
 		String expectedEvent = """
 		{
+			"id" : "${responseEvent.getId()}",
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		}
 		"""
-		EventTestUtil.assertEventResponseBodyIsCorrect(expectedEvent, response)
+		TestUtil.assertJsonEquals(expectedEvent, responseJson)
+		
 		assertEquals(1L, mongoTemplate.count(new Query(), Event.class))
 		Event eventInDatabase = mongoTemplate.findOne(new Query(), Event.class)
-		EventTestUtil.assertEventWithNoIdIsCorrect(expectedEvent, eventInDatabase);
+		TestUtil.assertJsonEquals(expectedEvent, new ObjectMapper().writeValueAsString(eventInDatabase))
 	}
 }

@@ -57,15 +57,17 @@ public class ReadEventsUntilTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"title" : "Gudstjänst 1",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
 			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"themeId" : null
 		}]
 		"""
-		EventTestUtil.assertEventListResponseBodyIsCorrect(expectedEvents, response)
+		TestUtil.assertJsonResponseEquals(expectedEvents, response)
 	}
 }

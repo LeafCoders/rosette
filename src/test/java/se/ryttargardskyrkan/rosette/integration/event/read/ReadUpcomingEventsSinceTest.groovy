@@ -72,16 +72,18 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 				"id" : "2",
 				"title" : "Gudstjänst 2",
 				"startTime" : "${RosetteDateConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
-				"endTime" : null
+				"endTime" : null,
+				"themeId" : null
 			},
 			{
 				"id" : "3",
 				"title" : "Gudstjänst 3",
 				"startTime" : "${RosetteDateConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
-				"endTime" : null
+				"endTime" : null,
+				"themeId" : null
 			}]
 			"""
-			EventTestUtil.assertEventListResponseBodyIsCorrect(expectedEvents, response)
+			TestUtil.assertJsonResponseEquals(expectedEvents, response)
 		}
 	}
 }

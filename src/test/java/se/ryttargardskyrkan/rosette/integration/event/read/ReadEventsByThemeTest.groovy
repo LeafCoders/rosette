@@ -87,6 +87,6 @@ public class ReadEventsByThemeTest extends AbstractIntegrationTest {
 			"themeId" : "1"
 		}]
 		"""
-		EventTestUtil.assertEventListResponseBodyIsCorrect(expectedEvents, response)
+		TestUtil.assertJsonResponseEquals(expectedEvents, response)
 	}
 }
