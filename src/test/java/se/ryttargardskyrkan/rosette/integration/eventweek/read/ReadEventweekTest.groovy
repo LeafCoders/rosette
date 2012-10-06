@@ -107,7 +107,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		
 		String expectedEventweekAsJson = """
 		{
-		    "week": 39,
+		    "week": ${week},
 		    "since": "${RosetteDateConverter.dateToString(monday.toDate())}",
 		    "until": "${RosetteDateConverter.dateToString(monday.plusDays(6).toDate())}",
 		    "days": [{
