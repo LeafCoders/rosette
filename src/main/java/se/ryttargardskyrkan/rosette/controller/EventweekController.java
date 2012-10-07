@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,14 @@ public class EventweekController extends AbstractController {
 	@RequestMapping(value = "eventweek/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Eventweek getEventweek(@PathVariable String id, HttpServletResponse response) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-'W'ww");
-		DateTime since = fmt.parseDateTime(id);
+		int weekyear = Integer.parseInt(id.substring(0, 4));
+		int weekOfWeekyear = Integer.parseInt(id.substring(6, 8));
+		
+		DateTime since = new DateTime();
+		since = since.withWeekyear(weekyear);
+		since = since.withWeekOfWeekyear(weekOfWeekyear);
+		since = since.withTimeAtStartOfDay();
+		since = since.withDayOfWeek(DateTimeConstants.MONDAY);
 		
 		Eventweek eventweek = new Eventweek();
 		eventweek.setWeek(since.weekOfWeekyear().get());
@@ -78,14 +85,34 @@ public class EventweekController extends AbstractController {
 			days.add(eventday);
 		}		
 		eventweek.setDays(days);
-		
+
 		// Header links
-		StringBuilder sb = new StringBuilder();
-		sb.append("<eventweek/2012-W38>; rel=\"previous\"");
-		sb.append(",");
-		sb.append("<eventweek/2012-W40>; rel=\"next\"");
-		response.setHeader("Link", sb.toString());
+		DateTime previousWeek = since.minusWeeks(1);
+		DateTime nextWeek = since.plusWeeks(1);
+		String headerLink = this.headerLink(previousWeek, nextWeek);
+		response.setHeader("Link", headerLink);
 
 		return eventweek;
+	}
+	
+	String headerLink(DateTime previousWeek, DateTime nextWeek) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<eventweek/");
+		sb.append(previousWeek.weekyear().get());
+		sb.append("-W");
+		sb.append(previousWeek.weekOfWeekyear().get() < 10 ?  "0" : "");
+		sb.append(previousWeek.weekOfWeekyear().get());
+		sb.append(">; rel=\"previous\"");
+		
+		sb.append(", ");
+		
+		sb.append("<eventweek/");
+		sb.append(nextWeek.weekyear().get());
+		sb.append("-W");
+		sb.append(nextWeek.weekOfWeekyear().get() < 10 ?  "0" : "");
+		sb.append(nextWeek.weekOfWeekyear().get());
+		sb.append(">; rel=\"next\"");
+		
+		return sb.toString();
 	}
 }
