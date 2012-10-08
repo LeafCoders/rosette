@@ -33,7 +33,7 @@ public class EventController extends AbstractController {
 		super();
 		this.mongoTemplate = mongoTemplate;
 	}
-	
+
 	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Event getEvent(@PathVariable String id) {
@@ -55,20 +55,20 @@ public class EventController extends AbstractController {
 			HttpServletResponse response) {
 		Query query = new Query();
 		query.sort().on("startTime", Order.ASCENDING);
-		
+
 		int thePage = 1;
 		int thePerPage = 20;
-		
+
 		if (page != null && page > 0) {
 			thePage = page;
 		}
 		if (per_page != null && per_page > 0) {
 			thePerPage = per_page;
-		}		
-		
+		}
+
 		query.limit(thePerPage);
 		query.skip((thePage - 1) * thePerPage);
-		
+
 		Criteria criteria = new Criteria();
 		if (since != null) {
 			criteria = Criteria.where("startTime").gte(new Date(Long.parseLong(since)));
@@ -83,25 +83,25 @@ public class EventController extends AbstractController {
 		}
 		if (until != null) {
 			criteria = criteria.lte(new Date(Long.parseLong(until)));
-		}		
+		}
 		query.addCriteria(criteria);
 
 		if (themeId != null) {
 			query.addCriteria(Criteria.where("themeId").is(themeId));
 		}
-		
+
 		// Events
 		List<Event> events = mongoTemplate.find(query, Event.class);
-		
+
 		// Header links
 		Query queryForLinks = new Query();
 		queryForLinks.addCriteria(criteria);
 		long numberOfEvents = mongoTemplate.count(queryForLinks, Event.class);
-		
+
 		if (numberOfEvents > 0) {
 			StringBuilder sb = new StringBuilder();
 			String delimiter = "";
-			
+
 			if (thePage - 1 > 0) {
 				sb.append(delimiter);
 				sb.append("<events?page=" + (thePage - 1));
@@ -114,11 +114,11 @@ public class EventController extends AbstractController {
 				if (until != null) {
 					sb.append("&until=" + until);
 				}
-				
+
 				sb.append(">; rel=\"previous\"");
 				delimiter = ",";
 			}
-			
+
 			if (numberOfEvents > thePage * thePerPage) {
 				sb.append(delimiter);
 				sb.append("<events?page=" + (thePage + 1));
@@ -134,7 +134,7 @@ public class EventController extends AbstractController {
 				sb.append(">; rel=\"next\"");
 				delimiter = ",";
 			}
-			
+
 			response.setHeader("Link", sb.toString());
 		}
 
@@ -144,7 +144,7 @@ public class EventController extends AbstractController {
 	@RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
-//		checkPermission("events:create");
+		// checkPermission("events:create");
 		validate(event);
 
 		mongoTemplate.insert(event);
@@ -152,10 +152,10 @@ public class EventController extends AbstractController {
 		response.setStatus(HttpStatus.CREATED.value());
 		return event;
 	}
-	
+
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServletResponse response) {
-//		checkPermission("events:update");
+		// checkPermission("events:update");
 		validate(event);
 
 		Update update = new Update();
@@ -165,23 +165,25 @@ public class EventController extends AbstractController {
 			update.set("startTime", event.getStartTime());
 		if (event.getEndTime() != null)
 			update.set("endTime", event.getEndTime());
-		
+		if (event.getDescription() != null)
+			update.set("description", event.getDescription());
+
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
 			throw new NotFoundException();
 		}
-		
+
 		response.setStatus(HttpStatus.OK.value());
 	}
-	
+
 	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
-//		checkPermission("events:delete:" + id);
+		// checkPermission("events:delete:" + id);
 
 		Event deletedEvent = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
 		if (deletedEvent == null) {
 			throw new NotFoundException();
 		} else {
-			response.setStatus(HttpStatus.OK.value());	
+			response.setStatus(HttpStatus.OK.value());
 		}
 	}
 }

@@ -76,6 +76,7 @@ public class ReadEventsByThemeTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 1",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : "1"
 		},
 		{
@@ -83,6 +84,7 @@ public class ReadEventsByThemeTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 3",
 			"startTime" : "2012-05-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : "1"
 		}]
 		"""

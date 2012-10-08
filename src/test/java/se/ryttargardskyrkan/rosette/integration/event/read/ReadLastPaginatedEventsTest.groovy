@@ -77,6 +77,7 @@ public class ReadLastPaginatedEventsTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 5",
 			"startTime" : "2012-07-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : null
 		},
 		{
@@ -84,6 +85,7 @@ public class ReadLastPaginatedEventsTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 6",
 			"startTime" : "2012-08-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : null
 		}]
 		"""

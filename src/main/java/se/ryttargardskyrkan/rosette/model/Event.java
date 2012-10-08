@@ -31,6 +31,8 @@ public class Event {
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 	
+	private String description;
+	
 	@Indexed
 	private String themeId;
 
@@ -67,6 +69,14 @@ public class Event {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getThemeId() {

@@ -52,6 +52,7 @@ public class CreateEventWithoutAuthenticationTest extends AbstractIntegrationTes
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : null
 		}
 		"""

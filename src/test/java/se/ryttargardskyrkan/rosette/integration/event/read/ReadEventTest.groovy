@@ -58,6 +58,7 @@ public class ReadEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 2",
 			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : null
 		}
 		"""

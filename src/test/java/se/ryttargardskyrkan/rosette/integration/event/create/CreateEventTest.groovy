@@ -54,7 +54,8 @@ public class CreateEventTest extends AbstractIntegrationTest {
 		String requestBody = """
 		{
 			"title" : "Gudstjänst",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm"
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"description" : "Nattvard och dop"
 		}
 		"""
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -74,6 +75,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : "Nattvard och dop",
 			"themeId" : null
 		}
 		"""

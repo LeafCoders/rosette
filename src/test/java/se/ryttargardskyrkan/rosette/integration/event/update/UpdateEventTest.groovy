@@ -52,7 +52,8 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"title" : "Gudstjänst 1",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : null
+			"endTime" : null,
+			"description" : ""
 		},
 		{
 			"id" : "2",
@@ -70,6 +71,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"title" : "Gudstjänst 1 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"description" : "Nattvard",
 			"endTime" : null
 		}
 		"""
@@ -86,6 +88,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 1 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : "Nattvard",
 			"themeId" : null
 		},
 		{
@@ -93,6 +96,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 2",
 			"startTime" : "2012-04-26 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"description" : null,
 			"themeId" : null
 		}]
 		"""

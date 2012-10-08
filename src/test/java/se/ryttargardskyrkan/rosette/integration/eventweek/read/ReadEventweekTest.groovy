@@ -118,12 +118,14 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Måndagsgudstjänst 1",
 		            "startTime": "${mondayEarlyAsString}",
 		            "endTime": null,
+					"description" : null,
 		            "themeId": null
 		        }, {
 		            "id": "3",
 		            "title": "Måndagsgudstjänst 2",
 		            "startTime": "${mondayLateAsString}",
 		            "endTime": null,
+					"description" : null,
 		            "themeId": null
 		        }]
 		    }, {
@@ -134,6 +136,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Tisdagsgudstjänst",
 		            "startTime": "${tuesdayAsString}",
 		            "endTime": null,
+					"description" : null,
 		            "themeId": null
 		        }]
 		    }, {
@@ -144,6 +147,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Onsdagsgudstjänst",
 		            "startTime": "${wednesdayAsString}",
 		            "endTime": null,
+					"description" : null,
 		            "themeId": null
 		        }]
 		    }, {
@@ -162,6 +166,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Lördagsgudstjänst",
 		            "startTime": "${saturdayAsString}",
 		            "endTime": null,
+					"description" : null,
 		            "themeId": null
 		        }]
 		    }, {
@@ -172,6 +177,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Söndagsgudstjänst",
 		            "startTime": "${sundayAsString}",
 		            "endTime": null,
+					"description" : null,
 		            "themeId": null
 		        }]
 		    }]

@@ -72,6 +72,7 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 				"title" : "Gudstjänst 2",
 				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(todayAtMidnight, "Europe/Stockholm")}",
 				"endTime" : null,
+				"description" : null,
 				"themeId" : null
 			},
 			{
@@ -79,6 +80,7 @@ public class ReadUpcomingEventsSinceTest extends AbstractIntegrationTest {
 				"title" : "Gudstjänst 3",
 				"startTime" : "${RosetteDateTimeTimezoneConverter.dateToString(twoWeeksAhead, "Europe/Stockholm")}",
 				"endTime" : null,
+				"description" : null,
 				"themeId" : null
 			}]
 			"""
