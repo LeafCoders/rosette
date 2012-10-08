@@ -106,7 +106,7 @@ public class ThemeController extends AbstractController {
 	@RequestMapping(value = "themes", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Theme postTheme(@RequestBody Theme theme, HttpServletResponse response) {
-		checkPermission("themes:create");
+//		checkPermission("themes:create");
 		validate(theme);
 
 		mongoTemplate.insert(theme);
@@ -117,7 +117,7 @@ public class ThemeController extends AbstractController {
 
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putTheme(@PathVariable String id, @RequestBody Theme theme, HttpServletResponse response) {
-		checkPermission("themes:update");
+//		checkPermission("themes:update");
 		validate(theme);
 
 		Update update = new Update();
@@ -135,7 +135,7 @@ public class ThemeController extends AbstractController {
 
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteTheme(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("themes:delete:" + id);
+//		checkPermission("themes:delete:" + id);
 
 		Theme deletedTheme = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Theme.class);
 		if (deletedTheme == null) {

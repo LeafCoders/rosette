@@ -62,8 +62,29 @@ public class CreateThemeWithWrongPermissionTest extends AbstractIntegrationTest 
 		HttpResponse response = httpClient.execute(postRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-		assertEquals(0L, mongoTemplate.count(new Query(), Theme.class))
+//		Disabling permission check for now
+//		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
+//		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
+//		assertEquals(0L, mongoTemplate.count(new Query(), Theme.class))
+		
+		
+		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
+		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
+		
+		String responseJson = TestUtil.responseBodyAsString(response)
+		Theme responseTheme = new ObjectMapper().readValue(responseJson, Theme.class)
+		
+		String expectedTheme = """
+		{
+			"id" : "${responseTheme.getId()}",
+			"title" : "Markusevangeliet",
+			"description" : "Vi läser igenom markusevangeliet"
+		}
+		"""
+		TestUtil.assertJsonEquals(expectedTheme, responseJson)
+		
+		assertEquals(1L, mongoTemplate.count(new Query(), Theme.class))
+		Theme themeInDatabase = mongoTemplate.findOne(new Query(), Theme.class)
+		TestUtil.assertJsonEquals(expectedTheme, new ObjectMapper().writeValueAsString(themeInDatabase))
 	}
 }
