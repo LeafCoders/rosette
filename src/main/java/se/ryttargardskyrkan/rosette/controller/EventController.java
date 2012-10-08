@@ -167,6 +167,11 @@ public class EventController extends AbstractController {
 			update.set("endTime", event.getEndTime());
 		if (event.getDescription() != null)
 			update.set("description", event.getDescription());
+		if (event.getThemeId() != null) {
+			update.set("themeId", event.getThemeId());
+		} else {
+			update.unset("themeId");
+		}
 
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
 			throw new NotFoundException();
