@@ -20,31 +20,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.Theme;
+import se.ryttargardskyrkan.rosette.model.User;
 
 @Controller
-public class ThemeController extends AbstractController {
+public class UserController extends AbstractController {
 	private final MongoTemplate mongoTemplate;
 
 	@Autowired
-	public ThemeController(MongoTemplate mongoTemplate) {
+	public UserController(MongoTemplate mongoTemplate) {
 		super();
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	@RequestMapping(value = "themes/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public Theme getTheme(@PathVariable String id) {
-		Theme theme = mongoTemplate.findById(id, Theme.class);
-		if (theme == null) {
+	public User getUser(@PathVariable String id) {
+		User user = mongoTemplate.findById(id, User.class);
+		if (user == null) {
 			throw new NotFoundException();
 		}
-		return theme;
+		return user;
 	}
 
-	@RequestMapping(value = "themes", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "users", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Theme> getThemes(
+	public List<User> getUsers(
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer per_page,
 			HttpServletResponse response) {
@@ -64,19 +64,19 @@ public class ThemeController extends AbstractController {
 		query.limit(thePerPage);
 		query.skip((thePage - 1) * thePerPage);
 				
-		List<Theme> themes = mongoTemplate.find(query, Theme.class);
+		List<User> users = mongoTemplate.find(query, User.class);
 
 		// Header links
 		Query queryForLinks = new Query();
-		long numberOfThemes = mongoTemplate.count(queryForLinks, Theme.class);
+		long numberOfUsers = mongoTemplate.count(queryForLinks, User.class);
 
-		if (numberOfThemes > 0) {
+		if (numberOfUsers > 0) {
 			StringBuilder sb = new StringBuilder();
 			String delimiter = "";
 
 			if (thePage - 1 > 0) {
 				sb.append(delimiter);
-				sb.append("<themes?page=" + (thePage - 1));
+				sb.append("<users?page=" + (thePage - 1));
 				if (per_page != null) {
 					sb.append("&per_page=" + per_page);
 				}
@@ -85,9 +85,9 @@ public class ThemeController extends AbstractController {
 				delimiter = ",";
 			}
 
-			if (numberOfThemes > thePage * thePerPage) {
+			if (numberOfUsers > thePage * thePerPage) {
 				sb.append(delimiter);
-				sb.append("<themes?page=" + (thePage + 1));
+				sb.append("<users?page=" + (thePage + 1));
 				if (per_page != null) {
 					sb.append("&per_page=" + per_page);
 				}
@@ -98,45 +98,45 @@ public class ThemeController extends AbstractController {
 			response.setHeader("Link", sb.toString());
 		}
 
-		return themes;
+		return users;
 	}
 
-	@RequestMapping(value = "themes", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "users", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	public Theme postTheme(@RequestBody Theme theme, HttpServletResponse response) {
-//		checkPermission("themes:create");
-		validate(theme);
+	public User postUser(@RequestBody User user, HttpServletResponse response) {
+//		checkPermission("users:create");
+		validate(user);
 
-		mongoTemplate.insert(theme);
+		mongoTemplate.insert(user);
 
 		response.setStatus(HttpStatus.CREATED.value());
-		return theme;
+		return user;
 	}
 
-	@RequestMapping(value = "themes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putTheme(@PathVariable String id, @RequestBody Theme theme, HttpServletResponse response) {
-//		checkPermission("themes:update");
-		validate(theme);
+	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
+//		checkPermission("users:update");
+		validate(user);
 
 		Update update = new Update();
-		if (theme.getTitle() != null)
-			update.set("title", theme.getTitle());
-		if (theme.getDescription() != null)
-			update.set("description", theme.getDescription());
+		if (user.getUsername() != null)
+			update.set("username", user.getUsername());
+		if (user.getFirstName() != null)
+			update.set("firstName", user.getFirstName());
 
-		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Theme.class).getN() == 0) {
+		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, User.class).getN() == 0) {
 			throw new NotFoundException();
 		}
 
 		response.setStatus(HttpStatus.OK.value());
 	}
 
-	@RequestMapping(value = "themes/{id}", method = RequestMethod.DELETE, produces = "application/json")
-	public void deleteTheme(@PathVariable String id, HttpServletResponse response) {
-//		checkPermission("themes:delete:" + id);
+	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public void deleteUser(@PathVariable String id, HttpServletResponse response) {
+//		checkPermission("users:delete:" + id);
 
-		Theme deletedTheme = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Theme.class);
-		if (deletedTheme == null) {
+		User deletedUser = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), User.class);
+		if (deletedUser == null) {
 			throw new NotFoundException();
 		} else {
 			response.setStatus(HttpStatus.OK.value());

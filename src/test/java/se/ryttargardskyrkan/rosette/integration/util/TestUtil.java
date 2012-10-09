@@ -28,7 +28,7 @@ public class TestUtil {
 	public static void assertJsonEquals(String expectedJson, String actualJson) throws JsonProcessingException, IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		
-		assertEquals(objectMapper.readTree(expectedJson).toString(), objectMapper.readTree(actualJson).toString());
+		assertEquals(objectMapper.readTree(expectedJson), objectMapper.readTree(actualJson));
 	}
 	
 	public static void assertJsonResponseEquals(String expectedJson, HttpResponse response) throws JsonProcessingException, IOException {

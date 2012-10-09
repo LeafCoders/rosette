@@ -16,6 +16,8 @@ public class User {
 	private String username;
 	private String hashedPassword;
 	private String status;
+	private String firstName;
+	private String lastName;
 	private List<GroupMembership> groupMemberships;
 
 	// Getters and setters
@@ -50,6 +52,22 @@ public class User {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public List<GroupMembership> getGroupMemberships() {
