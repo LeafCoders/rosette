@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -106,6 +108,12 @@ public class UserController extends AbstractController {
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
 //		checkPermission("users:create");
 		validate(user);
+		
+		PasswordService passwordService = new DefaultPasswordService();
+		String hashedPassword = passwordService.encryptPassword(user.getPassword());
+		user.setHashedPassword(hashedPassword);
+		user.setPassword(null);
+		user.setStatus("active");
 
 		mongoTemplate.insert(user);
 

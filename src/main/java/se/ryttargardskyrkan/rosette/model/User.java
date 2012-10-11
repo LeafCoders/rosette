@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
@@ -14,6 +16,11 @@ public class User {
 	private String id;
 	@NotNull
 	private String username;
+	
+	@Transient
+	private String password;
+	
+	@JsonIgnore
 	private String hashedPassword;
 	private String status;
 	private String firstName;
@@ -36,6 +43,14 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getHashedPassword() {
