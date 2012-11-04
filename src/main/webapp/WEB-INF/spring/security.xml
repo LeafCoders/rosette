@@ -32,16 +32,6 @@
 		<!-- <property name="sessionMode" value="native"/> -->
 	</bean>
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-
-	<!-- Enable Shiro Annotations for Spring-configured beans. Only run after -->
-	<!-- the lifecycleBeanProcessor has run: -->
-	<bean
-		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-		depends-on="lifecycleBeanPostProcessor" />
-	<bean
-		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="securityManager" />
-	</bean>
 	
 	<bean id="optionalAuthcBasic" class="se.ryttargardskyrkan.rosette.filter.OptionalBasicHttpAuthenticationFilter"/>
 

@@ -7,6 +7,10 @@ import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 
 @Controller
 public class CatchAllController extends AbstractController {
+	
+	public CatchAllController() {
+		super();
+	}
 
 	@RequestMapping(produces = "application/json;charset=utf-8")
 	public void catchAll() {

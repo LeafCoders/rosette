@@ -22,11 +22,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Event;
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
 
 @Controller
 public class EventController extends AbstractController {
-	private final MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
+	
+	public EventController() {
+		super();
+	}
 
 	@Autowired
 	public EventController(MongoTemplate mongoTemplate) {

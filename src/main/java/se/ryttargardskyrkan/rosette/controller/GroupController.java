@@ -20,13 +20,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.Event;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 
 @Controller
 public class GroupController extends AbstractController {
-	private final MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
+
+	public GroupController() {
+		super();
+	}
 
 	@Autowired
 	public GroupController(MongoTemplate mongoTemplate) {

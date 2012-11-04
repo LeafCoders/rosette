@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.Theme;
 
 @Controller
 public class ThemeController extends AbstractController {
-	private final MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
+
+	public ThemeController() {
+		super();
+	}
 
 	@Autowired
 	public ThemeController(MongoTemplate mongoTemplate) {

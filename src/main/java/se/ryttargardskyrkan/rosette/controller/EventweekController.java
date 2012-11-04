@@ -24,8 +24,12 @@ import se.ryttargardskyrkan.rosette.model.Eventweek;
 
 @Controller
 public class EventweekController extends AbstractController {
-	private final MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 
+	public EventweekController() {
+		super();
+	}
+			
 	@Autowired
 	public EventweekController(MongoTemplate mongoTemplate) {
 		super();

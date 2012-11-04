@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authc.credential.DefaultPasswordService;
-import org.apache.shiro.authc.credential.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -23,12 +22,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.Theme;
 import se.ryttargardskyrkan.rosette.model.User;
 
 @Controller
 public class UserController extends AbstractController {
-	private final MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
+
+	public UserController() {
+		super();
+	}
 
 	@Autowired
 	public UserController(MongoTemplate mongoTemplate) {

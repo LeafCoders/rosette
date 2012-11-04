@@ -22,7 +22,11 @@ import se.ryttargardskyrkan.rosette.model.GroupMembership;
 
 @Controller
 public class GroupMembershipController extends AbstractController {
-	private final MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
+	
+	public GroupMembershipController() {
+		super();
+	}
 
 	@Autowired
 	public GroupMembershipController(MongoTemplate mongoTemplate) {
