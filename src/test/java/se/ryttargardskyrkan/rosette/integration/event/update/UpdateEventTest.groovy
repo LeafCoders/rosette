@@ -1,6 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration.event.update
 
-import static org.junit.Assert.*
+import static junit.framework.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
@@ -13,66 +13,68 @@ import org.apache.http.impl.auth.BasicScheme
 import org.apache.shiro.authc.credential.DefaultPasswordService
 import org.apache.shiro.authc.credential.PasswordService
 import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.*
+import se.ryttargardskyrkan.rosette.model.Event
+
+import com.mongodb.util.JSON
 
 public class UpdateEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		PasswordService passwordService = new DefaultPasswordService();
-		String hashedPassword = passwordService.encryptPassword("password");
-		String groups = """
+		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
-			"id" : "1",
-			"name" : "admin",
-			"permissions" : ["events:update"]
-		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(groups, new TypeReference<ArrayList<Group>>() {}), "groups");
-		String users = """
-		[{
+			"_id" : "1",
 			"username" : "lars.arvidsson@gmail.com",
 			"hashedPassword" : "${hashedPassword}",
-			"status" : "active",
-			"groupMemberships" : [{"groupId" : "1"}]
+			"status" : "active"
 		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(users, new TypeReference<ArrayList<User>>() {}), "users")
-		String events = """
+		"""));
+		 
+		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
-			"id" : "1",
-			"title" : "Gudstjänst 1",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : null,
-			"description" : ""
+			"_id" : "1",
+			"name" : "Admins",
+			"permissions" : ["*"]
+		}]
+		"""));
+		
+		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"groupId" : "1"
+		}]
+		"""));
+		
+		mongoTemplate.getCollection("events").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"title" : "Gudstjänst 1"
 		},
 		{
-			"id" : "2",
+			"_id" : "2",
 			"title" : "Gudstjänst 2",
-			"startTime" : "2012-04-26 11:00 Europe/Stockholm",
-			"endTime" : null
+			"startTime" : ${TestUtil.mongoDate("2012-04-25 11:00 Europe/Stockholm")},
+			"description" : "Dopgudstjänst"
 		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
+		"""))
 
 		// When
-		HttpPut putRequest = new HttpPut(baseUrl + "/events/1")
+		HttpPut putRequest = new HttpPut(baseUrl + "/events/2")
 		String requestBody = """
 		{
 			"id" : "1",
-			"title" : "Gudstjänst 1 uppdaterad",
+			"title" : "Gudstjänst 2 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"description" : "Nattvard",
-			"endTime" : null
+			"description" : "Nattvard"
 		}
 		"""
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -85,18 +87,18 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		String expectedEvents = """
 		[{
 			"id" : "1",
-			"title" : "Gudstjänst 1 uppdaterad",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"title" : "Gudstjänst 1",
+			"description" : null,			
+			"startTime" : null,
 			"endTime" : null,
-			"description" : "Nattvard",
 			"themeId" : null
 		},
 		{
 			"id" : "2",
-			"title" : "Gudstjänst 2",
-			"startTime" : "2012-04-26 11:00 Europe/Stockholm",
+			"title" : "Gudstjänst 2 uppdaterad",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
-			"description" : null,
+			"description" : "Nattvard",
 			"themeId" : null
 		}]
 		"""

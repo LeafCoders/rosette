@@ -5,8 +5,10 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.junit.Ignore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
@@ -15,6 +17,7 @@ public class User {
 	@Id
 	private String id;
 	@NotNull
+	@Indexed(unique = true)
 	private String username;
 	
 	@Transient
@@ -25,7 +28,6 @@ public class User {
 	private String status;
 	private String firstName;
 	private String lastName;
-	private List<GroupMembership> groupMemberships;
 
 	// Getters and setters
 
@@ -84,12 +86,24 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-	public List<GroupMembership> getGroupMemberships() {
-		return groupMemberships;
-	}
-
-	public void setGroupMemberships(List<GroupMembership> groupMemberships) {
-		this.groupMemberships = groupMemberships;
+	
+	// Helpers
+	
+	@JsonIgnore
+	public String getName() {
+		String name = "";
+		
+		String delimiter = "";
+		
+		if (this.getFirstName() != null) {
+			name =  this.getFirstName();
+			delimiter = " ";
+		}
+		
+		if (this.getLastName() != null) {
+			name += delimiter + this.getLastName();
+		}
+		
+		return name;
 	}
 }

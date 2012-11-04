@@ -25,6 +25,10 @@ import se.ryttargardskyrkan.rosette.model.ValidationError;
 public abstract class AbstractController {
 	@Autowired
     private Validator validator;
+	
+	protected boolean isPermitted(String permission) {
+		return SecurityUtils.getSubject().isPermitted(permission);
+	}
 
 	protected void checkPermission(String permission) {
 		if (!SecurityUtils.getSubject().isPermitted(permission)) {

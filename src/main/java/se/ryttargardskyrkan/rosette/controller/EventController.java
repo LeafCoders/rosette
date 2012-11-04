@@ -1,7 +1,6 @@
 package se.ryttargardskyrkan.rosette.controller;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Event;
+import se.ryttargardskyrkan.rosette.model.GroupMembership;
 
 @Controller
 public class EventController extends AbstractController {
@@ -37,6 +37,8 @@ public class EventController extends AbstractController {
 	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Event getEvent(@PathVariable String id) {
+		checkPermission("events:read:" + id);
+		
 		Event event = mongoTemplate.findById(id, Event.class);
 		if (event == null) {
 			throw new NotFoundException();
@@ -46,96 +48,22 @@ public class EventController extends AbstractController {
 
 	@RequestMapping(value = "events", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Event> getEvents(
-			@RequestParam(required = false) String since,
-			@RequestParam(required = false) String until,
-			@RequestParam(required = false) String themeId,
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer per_page,
-			HttpServletResponse response) {
+	public List<Event> getEvents(@RequestParam(required = false) String themeId, HttpServletResponse response) {
 		Query query = new Query();
 		query.sort().on("startTime", Order.ASCENDING);
-
-		int thePage = 1;
-		int thePerPage = 20;
-
-		if (page != null && page > 0) {
-			thePage = page;
-		}
-		if (per_page != null && per_page > 0) {
-			thePerPage = per_page;
-		}
-
-		query.limit(thePerPage);
-		query.skip((thePage - 1) * thePerPage);
-
-		Criteria criteria = new Criteria();
-		if (since != null) {
-			criteria = Criteria.where("startTime").gte(new Date(Long.parseLong(since)));
-		} else if (themeId == null) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(new Date());
-			calendar.set(Calendar.HOUR_OF_DAY, 0);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
-			criteria = Criteria.where("startTime").gte(calendar.getTime());
-		}
-		if (until != null) {
-			criteria = criteria.lte(new Date(Long.parseLong(until)));
-		}
-		query.addCriteria(criteria);
 
 		if (themeId != null) {
 			query.addCriteria(Criteria.where("themeId").is(themeId));
 		}
-
-		// Events
-		List<Event> events = mongoTemplate.find(query, Event.class);
-
-		// Header links
-		Query queryForLinks = new Query();
-		queryForLinks.addCriteria(criteria);
-		long numberOfEvents = mongoTemplate.count(queryForLinks, Event.class);
-
-		if (numberOfEvents > 0) {
-			StringBuilder sb = new StringBuilder();
-			String delimiter = "";
-
-			if (thePage - 1 > 0) {
-				sb.append(delimiter);
-				sb.append("<events?page=" + (thePage - 1));
-				if (per_page != null) {
-					sb.append("&per_page=" + per_page);
+		
+		List<Event> eventsInDatabase = mongoTemplate.find(query, Event.class);
+		List<Event> events = new ArrayList<Event>();
+		if (eventsInDatabase != null) {
+			for (Event eventInDatabase : eventsInDatabase) {
+				if (isPermitted("events:read:" + eventInDatabase.getId())) {
+					events.add(eventInDatabase);
 				}
-				if (since != null) {
-					sb.append("&since=" + since);
-				}
-				if (until != null) {
-					sb.append("&until=" + until);
-				}
-
-				sb.append(">; rel=\"previous\"");
-				delimiter = ",";
 			}
-
-			if (numberOfEvents > thePage * thePerPage) {
-				sb.append(delimiter);
-				sb.append("<events?page=" + (thePage + 1));
-				if (per_page != null) {
-					sb.append("&per_page=" + per_page);
-				}
-				if (since != null) {
-					sb.append("&since=" + since);
-				}
-				if (until != null) {
-					sb.append("&until=" + until);
-				}
-				sb.append(">; rel=\"next\"");
-				delimiter = ",";
-			}
-
-			response.setHeader("Link", sb.toString());
 		}
 
 		return events;
@@ -144,7 +72,7 @@ public class EventController extends AbstractController {
 	@RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
-		// checkPermission("events:create");
+		checkPermission("events:create");
 		validate(event);
 
 		mongoTemplate.insert(event);
@@ -155,7 +83,7 @@ public class EventController extends AbstractController {
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServletResponse response) {
-		// checkPermission("events:update");
+		checkPermission("events:update");
 		validate(event);
 
 		Update update = new Update();
@@ -182,7 +110,7 @@ public class EventController extends AbstractController {
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
-		// checkPermission("events:delete:" + id);
+		checkPermission("events:delete:" + id);
 
 		Event deletedEvent = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
 		if (deletedEvent == null) {

@@ -1,5 +1,6 @@
 package se.ryttargardskyrkan.rosette.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.Theme;
 
 @Controller
@@ -35,6 +36,8 @@ public class ThemeController extends AbstractController {
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Theme getTheme(@PathVariable String id) {
+		checkPermission("themes:read");
+		
 		Theme theme = mongoTemplate.findById(id, Theme.class);
 		if (theme == null) {
 			throw new NotFoundException();
@@ -44,58 +47,18 @@ public class ThemeController extends AbstractController {
 
 	@RequestMapping(value = "themes", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Theme> getThemes(
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer per_page,
-			HttpServletResponse response) {
+	public List<Theme> getThemes(HttpServletResponse response) {
 		Query query = new Query();
 		query.sort().on("title", Order.ASCENDING);
 		
-		int thePage = 1;
-		int thePerPage = 20;
-		
-		if (page != null && page > 0) {
-			thePage = page;
-		}
-		if (per_page != null && per_page > 0) {
-			thePerPage = per_page;
-		}		
-		
-		query.limit(thePerPage);
-		query.skip((thePage - 1) * thePerPage);
-				
-		List<Theme> themes = mongoTemplate.find(query, Theme.class);
-
-		// Header links
-		Query queryForLinks = new Query();
-		long numberOfThemes = mongoTemplate.count(queryForLinks, Theme.class);
-
-		if (numberOfThemes > 0) {
-			StringBuilder sb = new StringBuilder();
-			String delimiter = "";
-
-			if (thePage - 1 > 0) {
-				sb.append(delimiter);
-				sb.append("<themes?page=" + (thePage - 1));
-				if (per_page != null) {
-					sb.append("&per_page=" + per_page);
+		List<Theme> themesInDatabase = mongoTemplate.find(query, Theme.class);
+		List<Theme> themes = new ArrayList<Theme>();
+		if (themesInDatabase != null) {
+			for (Theme themeInDatabase : themesInDatabase) {
+				if (isPermitted("themes:read:" + themeInDatabase.getId())) {
+					themes.add(themeInDatabase);
 				}
-
-				sb.append(">; rel=\"previous\"");
-				delimiter = ",";
 			}
-
-			if (numberOfThemes > thePage * thePerPage) {
-				sb.append(delimiter);
-				sb.append("<themes?page=" + (thePage + 1));
-				if (per_page != null) {
-					sb.append("&per_page=" + per_page);
-				}
-				sb.append(">; rel=\"next\"");
-				delimiter = ",";
-			}
-
-			response.setHeader("Link", sb.toString());
 		}
 
 		return themes;
@@ -104,7 +67,7 @@ public class ThemeController extends AbstractController {
 	@RequestMapping(value = "themes", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Theme postTheme(@RequestBody Theme theme, HttpServletResponse response) {
-//		checkPermission("themes:create");
+		checkPermission("themes:create");
 		validate(theme);
 
 		mongoTemplate.insert(theme);
@@ -115,7 +78,7 @@ public class ThemeController extends AbstractController {
 
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putTheme(@PathVariable String id, @RequestBody Theme theme, HttpServletResponse response) {
-//		checkPermission("themes:update");
+		checkPermission("themes:update:" + id);
 		validate(theme);
 
 		Update update = new Update();
@@ -133,7 +96,7 @@ public class ThemeController extends AbstractController {
 
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteTheme(@PathVariable String id, HttpServletResponse response) {
-//		checkPermission("themes:delete:" + id);
+		checkPermission("themes:delete:" + id);
 
 		Theme deletedTheme = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Theme.class);
 		if (deletedTheme == null) {

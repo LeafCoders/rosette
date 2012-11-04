@@ -34,7 +34,7 @@ public class EventweekController extends AbstractController {
 	
 	@RequestMapping(value = "eventweek", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public Eventweek getEventweek2(HttpServletResponse response) {
+	public Eventweek getCurrentEventweek(HttpServletResponse response) {
 		DateTime now = DateTime.now();
 		int year = now.getWeekyear();
 		int week = now.getWeekOfWeekyear();
@@ -74,7 +74,16 @@ public class EventweekController extends AbstractController {
 			criteria = Criteria.where("startTime").gte(sinceDay.toDate());
 			criteria = criteria.lt(untilDay.toDate());
 			query.addCriteria(criteria);
-			List<Event> events = mongoTemplate.find(query, Event.class);
+			
+			List<Event> eventsInDatabase = mongoTemplate.find(query, Event.class);
+			List<Event> events = new ArrayList<Event>();
+			if (eventsInDatabase != null) {
+				for (Event eventInDatabase : eventsInDatabase) {
+					if (isPermitted("events:read:" + eventInDatabase.getId())) {
+						events.add(eventInDatabase);
+					}
+				}
+			}
 			
 			eventday.setDayNumber(i);
 			eventday.setDate(sinceDay.toDate());

@@ -1,39 +1,35 @@
 package se.ryttargardskyrkan.rosette.integration.theme.read
 
-import static org.junit.Assert.*
+import static junit.framework.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
-import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Theme
+
+import com.mongodb.util.JSON
 
 public class ReadMissingThemesTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String themes = """
+		mongoTemplate.getCollection("themes").insert(JSON.parse("""
 		[{
-			"id" : "1",
+			"_id" : "1",
 			"title" : "Markusevangeliet",
 			"description" : "Vi läser igenom markusevangeliet"
 		},
 		{
-			"id" : "2",
+			"_id" : "2",
 			"title" : "Johannesevangeliet",
 			"description" : "Vi läser igenom johannesevangeliet"
 		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(themes, new TypeReference<ArrayList<Theme>>() {}), "themes")
+		"""))
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/themes/4")

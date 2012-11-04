@@ -11,7 +11,7 @@ public class Group {
 
 	@Id
 	private String id;
-	@Indexed
+	@Indexed(unique = true)
 	private String name;
 	private String description;
 	private List<String> permissions;

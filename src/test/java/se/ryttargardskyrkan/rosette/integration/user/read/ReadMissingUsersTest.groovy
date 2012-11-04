@@ -1,41 +1,50 @@
 package se.ryttargardskyrkan.rosette.integration.user.read
 
-import static org.junit.Assert.*
+import static junit.framework.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
-import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
+import org.apache.shiro.authc.credential.DefaultPasswordService
+import org.apache.shiro.authc.credential.PasswordService
 import org.junit.Test
-import org.springframework.data.mongodb.core.MongoTemplate
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.User
+
+import com.mongodb.util.JSON
 
 public class ReadMissingUsersTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String users = """
+		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
-			"id" : "1",
+			"_id" : "1",
 			"username" : "lars.arvidsson@gmail.com",
-			"status" : "active",
-			"groupMemberships" : [{"groupId" : "1"}]
-		},
-		{
-			"id" : "2",
-			"username" : "larsabrasha",
-			"firstName" : "Nisse",
-			"lastName" : "Hult"
+			"hashedPassword" : "${hashedPassword}",
+			"status" : "active"
 		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(users, new TypeReference<ArrayList<User>>() {}), "users")
+		"""));
+		 
+		mongoTemplate.getCollection("groups").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"name" : "Admins",
+			"permissions" : ["*"]
+		}]
+		"""));
+		
+		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"groupId" : "1"
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/users/4")

@@ -1,6 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration.user.create
 
-import static org.junit.Assert.*
+import static junit.framework.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
@@ -12,42 +12,44 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.shiro.authc.credential.DefaultPasswordService
 import org.apache.shiro.authc.credential.PasswordService
-import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.User
-import se.ryttargardskyrkan.rosette.model.Group
-import se.ryttargardskyrkan.rosette.model.User
+
+import com.mongodb.util.JSON
 
 public class CreateUserWithWrongPermissionTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		PasswordService passwordService = new DefaultPasswordService();
-		String hashedPassword = passwordService.encryptPassword("password");
-		String groups = """
+		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
-			"id" : "1",
-			"name" : "admin",
-			"permissions" : ["users:read"]
-		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(groups, new TypeReference<ArrayList<Group>>() {}), "groups");
-		String users = """
-		[{
+			"_id" : "1",
 			"username" : "lars.arvidsson@gmail.com",
 			"hashedPassword" : "${hashedPassword}",
-			"status" : "active",
-			"groupMemberships" : [{"groupId" : "1"}]
+			"status" : "active"
 		}]
-		"""
-		mongoTemplate.insert(new ObjectMapper().readValue(users, new TypeReference<ArrayList<User>>() {}), "users")
+		"""));
+		 
+		mongoTemplate.getCollection("groups").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"name" : "Admins",
+			"permissions" : ["none"]
+		}]
+		"""));
+		
+		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"groupId" : "1"
+		}]
+		"""));
 		
 		// When
 		HttpPost postRequest = new HttpPost(baseUrl + "/users")
@@ -63,33 +65,8 @@ public class CreateUserWithWrongPermissionTest extends AbstractIntegrationTest {
 		HttpResponse response = httpClient.execute(postRequest)
 
 		// Then
-//		Disabling permission check for now
-//		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
-//		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
-//		assertEquals(0L, mongoTemplate.count(new Query(), User.class))
-		
-		
-		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
-		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		
-		String responseJson = TestUtil.responseBodyAsString(response)
-		User responseUser = new ObjectMapper().readValue(responseJson, User.class)
-		
-		String expectedUser = """
-		{
-			"id" : "${responseUser.getId()}",
-			"username" : "larsabrasha",
-			"firstName" : "Nisse",
-			"lastName" : "Hult",
-			"hashedPassword" : null,
-			"status" : null,
-			"groupMemberships" : null
-		}
-		"""
-		TestUtil.assertJsonEquals(expectedUser, responseJson)
-		
-		assertEquals(2L, mongoTemplate.count(new Query(), User.class))
-		User userInDatabase = mongoTemplate.findById(responseUser.getId(), User.class);
-		TestUtil.assertJsonEquals(expectedUser, new ObjectMapper().writeValueAsString(userInDatabase))
+		assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatusLine().getStatusCode())
+		assertEquals("Forbidden", response.getStatusLine().getReasonPhrase())
+		assertEquals(1L, mongoTemplate.count(new Query(), User.class))
 	}
 }

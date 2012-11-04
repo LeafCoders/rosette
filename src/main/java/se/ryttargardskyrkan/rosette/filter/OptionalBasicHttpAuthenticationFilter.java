@@ -2,8 +2,13 @@ package se.ryttargardskyrkan.rosette.filter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+
+import se.ryttargardskyrkan.rosette.security.AnonymousToken;
 
 public class OptionalBasicHttpAuthenticationFilter extends BasicHttpAuthenticationFilter {
 
@@ -16,7 +21,13 @@ public class OptionalBasicHttpAuthenticationFilter extends BasicHttpAuthenticati
               sendChallenge(request, response);
           }
         } else {
-        	loggedIn = true;
+        	HttpServletRequest httpRequest = (HttpServletRequest) request;
+        	httpRequest.setAttribute("anonymousSubject", true);
+        	
+        	Subject subject = getSubject(request, response);
+            AuthenticationToken token = new AnonymousToken();
+			subject.login(token);
+			loggedIn = onLoginSuccess(token, subject, request, response);
         }
         return loggedIn;
     }

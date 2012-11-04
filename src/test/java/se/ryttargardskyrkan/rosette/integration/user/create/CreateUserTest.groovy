@@ -1,6 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration.user.create
 
-import static org.junit.Assert.*
+import static junit.framework.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
@@ -13,18 +13,13 @@ import org.apache.http.impl.auth.BasicScheme
 import org.apache.shiro.authc.credential.DefaultPasswordService
 import org.apache.shiro.authc.credential.PasswordService
 import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.User
 
-import com.mongodb.BasicDBList;
-import com.mongodb.DBObject
 import com.mongodb.util.JSON
 
 public class CreateUserTest extends AbstractIntegrationTest {
@@ -32,26 +27,31 @@ public class CreateUserTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String groups = """
+		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "admin",
-			"permissions" : ["users:create"]
-		}]
-		"""
-		mongoTemplate.getDb().getCollection("groups").insert(JSON.parse(groups));
-		
-		PasswordService passwordService = new DefaultPasswordService();
-		String hashedPassword = passwordService.encryptPassword("password");
-		String users = """
-		[{
 			"username" : "lars.arvidsson@gmail.com",
 			"hashedPassword" : "${hashedPassword}",
-			"status" : "active",
-			"groupMemberships" : [{"groupId" : "1"}]
+			"status" : "active"
 		}]
-		"""
-		mongoTemplate.getDb().getCollection("users").insert(JSON.parse(users));
+		"""));
+		 
+		mongoTemplate.getCollection("groups").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"name" : "Admins",
+			"permissions" : ["*"]
+		}]
+		"""));
+		
+		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"groupId" : "1"
+		}]
+		"""));
 
 		// When
 		HttpPost postRequest = new HttpPost(baseUrl + "/users")
@@ -66,41 +66,41 @@ public class CreateUserTest extends AbstractIntegrationTest {
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), postRequest));
 		HttpResponse response = httpClient.execute(postRequest)
-
-		// Then
-		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
-		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		
+		// Then
+
+		// Asserting response
 		String responseJson = TestUtil.responseBodyAsString(response)
 		User responseUser = new ObjectMapper().readValue(responseJson, User.class)
 		
-		String expectedUserInResponse = """
+		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
+		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
+		TestUtil.assertJsonEquals("""
 		{
 			"id" : "${responseUser.getId()}",
 			"username" : "larsabrasha",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
 			"password" : null,
-			"status" : "active",
-			"groupMemberships" : null
+			"status" : "active"
 		}
-		"""
-		TestUtil.assertJsonEquals(expectedUserInResponse, responseJson)
+		""", responseJson)
 		
-		assertEquals(2L, mongoTemplate.count(new Query(), User.class))
-		User userInDatabase = mongoTemplate.findById(responseUser.getId(), User.class);
-		String expectedUserInDatabase = """
+		// Asserting database
+		User userInDatabase = mongoTemplate.findById(responseUser.getId(), User.class)
+		int numberOfUsersInDatabase = mongoTemplate.count(new Query(), User.class)
+		
+		assertEquals(2L, numberOfUsersInDatabase)
+		TestUtil.assertJsonEquals("""
 		{
 			"id" : "${responseUser.getId()}",
 			"username" : "larsabrasha",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
 			"password" : null,
-			"status" : "active",
-			"groupMemberships" : null
+			"status" : "active"
 		}
-		"""
-		TestUtil.assertJsonEquals(expectedUserInDatabase, new ObjectMapper().writeValueAsString(userInDatabase))
+		""", new ObjectMapper().writeValueAsString(userInDatabase))
 		assertTrue(userInDatabase.hashedPassword.startsWith("\$shiro1\$SHA-256\$"))
 	}
 }
