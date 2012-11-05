@@ -10,7 +10,5 @@
 	<import resource="persistence.xml" />
 	<import resource="security.xml" />
 	<import resource="validation.xml" />
-	
-	<context:component-scan base-package="se.ryttargardskyrkan.rosette" />
 		
 </beans>

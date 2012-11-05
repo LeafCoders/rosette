@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -19,20 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
+import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
 public class GroupMembershipController extends AbstractController {
-	private MongoTemplate mongoTemplate;
-	
-	public GroupMembershipController() {
-		super();
-	}
-
 	@Autowired
-	public GroupMembershipController(MongoTemplate mongoTemplate) {
-		super();
-		this.mongoTemplate = mongoTemplate;
-	}
+	private MongoTemplate mongoTemplate;
+	@Autowired
+	private MongoRealm mongoRealm;
 
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -70,6 +65,9 @@ public class GroupMembershipController extends AbstractController {
 		validate(groupMembership);
 
 		mongoTemplate.insert(groupMembership);
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(new SimplePrincipalCollection(groupMembership.getUserId(), "mongoRealm"));
 
 		response.setStatus(HttpStatus.CREATED.value());
 		return groupMembership;
@@ -85,5 +83,8 @@ public class GroupMembershipController extends AbstractController {
 		} else {
 			response.setStatus(HttpStatus.OK.value());
 		}
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
 	}
 }

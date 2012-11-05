@@ -10,17 +10,14 @@ import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
-import org.apache.shiro.authc.credential.DefaultPasswordService
-import org.apache.shiro.authc.credential.PasswordService
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
-import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Group
-import se.ryttargardskyrkan.rosette.model.User
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
 
@@ -29,7 +26,7 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		String hashedPassword = new RosettePasswordService().encryptPassword("password");
 		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
 			"_id" : "1",

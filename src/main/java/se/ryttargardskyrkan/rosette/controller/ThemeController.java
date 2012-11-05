@@ -24,17 +24,8 @@ import se.ryttargardskyrkan.rosette.model.Theme;
 
 @Controller
 public class ThemeController extends AbstractController {
-	private MongoTemplate mongoTemplate;
-
-	public ThemeController() {
-		super();
-	}
-
 	@Autowired
-	public ThemeController(MongoTemplate mongoTemplate) {
-		super();
-		this.mongoTemplate = mongoTemplate;
-	}
+	private MongoTemplate mongoTemplate;
 
 	@RequestMapping(value = "themes/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody

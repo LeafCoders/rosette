@@ -1,12 +1,11 @@
 package se.ryttargardskyrkan.rosette.security;
 
-import groovyjarjarasm.asm.commons.AnalyzerAdapter;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -28,23 +27,19 @@ import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.service.UserService;
 
-/**
- * Created by IntelliJ IDEA. User: durandt Date: 2011-09-23
- * <p/>
- * Class implementing the RealM for Shiro
- */
 @Service("mongoRealm")
 public class MongoRealm extends AuthorizingRealm {
 
-	private UserService userService;
-	private MongoTemplate mongoTemplate;
-
 	@Autowired
-	public MongoRealm(UserService userService, MongoTemplate mongoTemplate) {
-		this.userService = userService;
-		this.mongoTemplate = mongoTemplate;
+	private MongoTemplate mongoTemplate;
+	
+	PasswordMatcher passwordMatcher;
+
+	@PostConstruct
+	public void initialize() {
+		setAuthenticationCachingEnabled(true);
+		passwordMatcher = new RosettePasswordMatcher();
 	}
 
 	@Override
@@ -55,7 +50,7 @@ public class MongoRealm extends AuthorizingRealm {
 		if (!principalCollection.fromRealm("anonymousRealm").isEmpty()) {
 			permissions.add("*:read");
 		} else {
-			User user = userService.findUserById((String) principalCollection.getPrimaryPrincipal());
+			User user = mongoTemplate.findById((String) principalCollection.getPrimaryPrincipal(), User.class);
 			Query groupMembershipsQuery = new Query(Criteria.where("userId").is(user.getId()));
 			List<GroupMembership> groupMemberships = mongoTemplate.find(groupMembershipsQuery, GroupMembership.class);
 
@@ -93,7 +88,7 @@ public class MongoRealm extends AuthorizingRealm {
 			UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 			String providedUsername = token.getUsername();
 
-			final User user = userService.findUserByUsername(providedUsername);
+			final User user = mongoTemplate.findOne(Query.query(Criteria.where("username").is(providedUsername)), User.class);
 			if (user != null && "active".equals(user.getStatus())) {
 				simpleAuthenticationInfo = new SimpleAuthenticationInfo(user.getId(), user.getHashedPassword(), "mongoRealm");
 			}
@@ -107,8 +102,8 @@ public class MongoRealm extends AuthorizingRealm {
 	}
 
 	@Override
-	public CredentialsMatcher getCredentialsMatcher() {
-		return new PasswordMatcher();
+	public CredentialsMatcher getCredentialsMatcher() {		
+		return passwordMatcher;
 	}
 
 	@Override
@@ -122,5 +117,9 @@ public class MongoRealm extends AuthorizingRealm {
 		}
 
 		return isSupporting;
+	}
+	
+	public void clearCache(PrincipalCollection principals) {
+		super.clearCache(principals);
 	}
 }

@@ -24,17 +24,8 @@ import se.ryttargardskyrkan.rosette.model.Eventweek;
 
 @Controller
 public class EventweekController extends AbstractController {
-	private MongoTemplate mongoTemplate;
-
-	public EventweekController() {
-		super();
-	}
-			
 	@Autowired
-	public EventweekController(MongoTemplate mongoTemplate) {
-		super();
-		this.mongoTemplate = mongoTemplate;
-	}
+	private MongoTemplate mongoTemplate;
 	
 	@RequestMapping(value = "eventweek", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody

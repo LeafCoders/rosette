@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,22 +21,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 import se.ryttargardskyrkan.rosette.model.User;
+import se.ryttargardskyrkan.rosette.security.MongoRealm;
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
 
 @Controller
 public class UserController extends AbstractController {
-	private MongoTemplate mongoTemplate;
-
-	public UserController() {
-		super();
-	}
-
 	@Autowired
-	public UserController(MongoTemplate mongoTemplate) {
-		super();
-		this.mongoTemplate = mongoTemplate;
-	}
+	private MongoTemplate mongoTemplate;
+	@Autowired
+	private MongoRealm mongoRealm;
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -75,15 +71,20 @@ public class UserController extends AbstractController {
 		checkPermission("users:create");
 		validate(user);
 
-		String hashedPassword = new DefaultPasswordService().encryptPassword(user.getPassword());
-		user.setHashedPassword(hashedPassword);
-		user.setPassword(null);
-		user.setStatus("active");
+		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
+		if (count > 0) {
+			throw new ValidationException(null); // TODO
+		} else {
+			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
+			user.setHashedPassword(hashedPassword);
+			user.setPassword(null);
+			user.setStatus("active");
 
-		mongoTemplate.insert(user);
+			mongoTemplate.insert(user);
 
-		response.setStatus(HttpStatus.CREATED.value());
-		return user;
+			response.setStatus(HttpStatus.CREATED.value());
+			return user;
+		}
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
@@ -97,7 +98,7 @@ public class UserController extends AbstractController {
 		update.set("lastName", user.getLastName());
 
 		if (user.getPassword() != null && !"".equals(user.getPassword().trim())) {
-			String hashedPassword = new DefaultPasswordService().encryptPassword(user.getPassword());
+			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
 			update.set("hashedPassword", hashedPassword);
 		}
 
@@ -106,6 +107,9 @@ public class UserController extends AbstractController {
 		}
 
 		response.setStatus(HttpStatus.OK.value());
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")
@@ -126,6 +130,9 @@ public class UserController extends AbstractController {
 			} else {
 				response.setStatus(HttpStatus.OK.value());
 			}
+			
+			// Clearing auth cache
+			mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
 		}
 	}
 }

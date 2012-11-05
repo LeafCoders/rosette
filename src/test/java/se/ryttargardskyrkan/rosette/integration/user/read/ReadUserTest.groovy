@@ -7,12 +7,11 @@ import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
-import org.apache.shiro.authc.credential.DefaultPasswordService
-import org.apache.shiro.authc.credential.PasswordService
 import org.junit.Test
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
 
@@ -21,7 +20,7 @@ public class ReadUserTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		String hashedPassword = new RosettePasswordService().encryptPassword("password");
 		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
 			"_id" : "1",

@@ -1,5 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration
 
+import org.apache.http.client.methods.HttpDelete
 import org.apache.http.impl.client.DefaultHttpClient
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.AfterClass
@@ -15,7 +16,7 @@ abstract class AbstractIntegrationTest {
 	protected static DefaultHttpClient httpClient
 	protected static ObjectMapper mapper
 	
-	protected String baseUrl = "http://localhost:9000/api/v1-snapshot"
+	protected static String baseUrl = "http://localhost:9000/api/v1-snapshot"
 	
 	@BeforeClass
 	static void beforeClass() throws UnknownHostException, MongoException {
@@ -41,5 +42,11 @@ abstract class AbstractIntegrationTest {
 		httpClient = null
 		
 		mapper = null
+		
+		httpClient = new DefaultHttpClient();
+		HttpDelete httpDelete = new HttpDelete(baseUrl + "/authCaches/1")
+		httpClient.execute(httpDelete)
+		httpClient.getConnectionManager().shutdown()
+		httpClient = null
 	}
 }

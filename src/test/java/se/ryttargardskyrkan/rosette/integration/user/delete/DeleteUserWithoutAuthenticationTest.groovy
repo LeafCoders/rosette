@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpDelete
-import org.apache.shiro.authc.credential.DefaultPasswordService
-import org.apache.shiro.authc.credential.PasswordService
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
 

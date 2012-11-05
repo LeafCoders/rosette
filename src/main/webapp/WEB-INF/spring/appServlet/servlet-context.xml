@@ -31,6 +31,6 @@
 	
 	<beans:bean id="methodLogger" class="se.ryttargardskyrkan.rosette.aspect.MethodLogger"/>
 
-	<context:component-scan base-package="se.ryttargardskyrkan.rosette" />
+	<context:component-scan base-package="se.ryttargardskyrkan.rosette.controller" />
 
 </beans:beans>

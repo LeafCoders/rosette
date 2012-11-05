@@ -10,6 +10,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +25,8 @@ import se.ryttargardskyrkan.rosette.model.ValidationError;
 
 @RequestMapping("v1-snapshot")
 public abstract class AbstractController {
+	static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
+	
 	@Autowired
     private Validator validator;
 	
@@ -74,6 +78,8 @@ public abstract class AbstractController {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			responseBody = "Bad request";
 		}
+		
+		logger.error("Error", exception);
 		return responseBody;
 	}
 

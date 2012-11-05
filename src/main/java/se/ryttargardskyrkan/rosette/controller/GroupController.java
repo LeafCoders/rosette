@@ -22,20 +22,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
+import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
 public class GroupController extends AbstractController {
-	private MongoTemplate mongoTemplate;
-
-	public GroupController() {
-		super();
-	}
-
 	@Autowired
-	public GroupController(MongoTemplate mongoTemplate) {
-		super();
-		this.mongoTemplate = mongoTemplate;
-	}
+	private MongoTemplate mongoTemplate;
+	@Autowired
+	private MongoRealm mongoRealm;
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -97,6 +91,9 @@ public class GroupController extends AbstractController {
 		update.set("name", group.getName());
 		update.set("description", group.getDescription());
 		update.set("permissions", group.getPermissions());
+		
+		// Clearing user auth cache
+		// TODO
 
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Group.class).getN() == 0) {
 			throw new NotFoundException();
@@ -113,6 +110,9 @@ public class GroupController extends AbstractController {
 		if (group == null) {
 			throw new NotFoundException();
 		} else {
+			// Clearing user auth cache
+			// TODO
+			
 			// Removing group memberships with the group that is about to be deleted
 			mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), GroupMembership.class);
 			
@@ -122,7 +122,7 @@ public class GroupController extends AbstractController {
 				throw new NotFoundException();
 			} else {
 				response.setStatus(HttpStatus.OK.value());
-			}
+			}			
 		}
 	}
 }

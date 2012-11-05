@@ -9,7 +9,6 @@ import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpDelete
 import org.apache.http.impl.auth.BasicScheme
-import org.apache.shiro.authc.credential.DefaultPasswordService
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
 
@@ -17,6 +16,7 @@ import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.GroupMembership
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
 
@@ -25,7 +25,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String hashedPassword = new DefaultPasswordService().encryptPassword("password");
+		String hashedPassword = new RosettePasswordService().encryptPassword("password");
 		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
 			"_id" : "1",

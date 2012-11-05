@@ -25,17 +25,8 @@ import se.ryttargardskyrkan.rosette.model.Event;
 
 @Controller
 public class EventController extends AbstractController {
-	private MongoTemplate mongoTemplate;
-	
-	public EventController() {
-		super();
-	}
-
 	@Autowired
-	public EventController(MongoTemplate mongoTemplate) {
-		super();
-		this.mongoTemplate = mongoTemplate;
-	}
+	private MongoTemplate mongoTemplate;
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
