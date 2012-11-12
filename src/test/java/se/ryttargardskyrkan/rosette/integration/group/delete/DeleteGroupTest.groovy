@@ -103,7 +103,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 		TestUtil.assertJsonEquals("""
 		[{
 			"id" : "1",
-			"anyone" : false,
+			"everyone" : null,
 			"userId" : "1",
 			"groupId" : null,
 			"patterns" : ["*"]

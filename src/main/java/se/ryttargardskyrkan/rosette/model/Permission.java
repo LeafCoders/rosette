@@ -12,7 +12,7 @@ public class Permission {
 	private String id;
 	
 	@Indexed
-	private boolean anyone;
+	private Boolean everyone;
 	
 	@Indexed
 	private String userId;
@@ -28,12 +28,12 @@ public class Permission {
 		return id;
 	}
 
-	public boolean isAnyone() {
-		return anyone;
+	public Boolean getEveryone() {
+		return everyone;
 	}
 
-	public void setAnyone(boolean anyone) {
-		this.anyone = anyone;
+	public void setEveryone(Boolean everyone) {
+		this.everyone = everyone;
 	}
 
 	public void setId(String id) {

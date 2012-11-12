@@ -48,8 +48,8 @@ public class MongoRealm extends AuthorizingRealm {
 		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 		Set<String> permissions = new HashSet<String>();
 
-		// Adding permissions for anyone
-		Query query = Query.query(Criteria.where("anyone").is(true));
+		// Adding permissions for everyone
+		Query query = Query.query(Criteria.where("everyone").is(true));
 		Permission permission = mongoTemplate.findOne(query, Permission.class);
 		if (permission != null && permission.getPatterns() != null) {
 			permissions.addAll(permission.getPatterns());

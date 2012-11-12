@@ -40,7 +40,7 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"anyone" : true,
+			"everyone" : true,
 			"patterns" : ["*"]
 		}]
 		"""));

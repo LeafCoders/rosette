@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.read
+package se.ryttargardskyrkan.rosette.integration.permission.read
 
 import static junit.framework.Assert.*
 
@@ -14,39 +14,25 @@ import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 
 import com.mongodb.util.JSON
 
-public class ReadEventTest extends AbstractIntegrationTest {
+public class ReadPermissionTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		mongoTemplate.getCollection("events").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"title" : "Gudstjänst 1"
-		},
-		{
-			"_id" : "2",
-			"title" : "Gudstjänst 2",
-			"startTime" : ${TestUtil.mongoDate("2012-04-25 11:00 Europe/Stockholm")},
-			"description" : "Dopgudstjänst",
-			"endTime" : null
-		},
-		{
-			"_id" : "3",
-			"title" : "Gudstjänst 3"
-		}]
-		"""))
-		
 		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"everyone" : true,
+			"userId" : "1",
 			"patterns" : ["*"]
+		},{
+			"_id" : "2",
+			"everyone" : true,
+			"patterns" : ["permissions:*"]
 		}]
-		"""));
+		"""))
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/events/2")
+		HttpGet getRequest = new HttpGet(baseUrl + "/permissions/2")
 		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
@@ -54,16 +40,15 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		String expectedEvent = """
+		String expectedPermission = """
 		{
 			"id" : "2",
-			"title" : "Gudstjänst 2",
-			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
-			"endTime" : null,
-			"description" : "Dopgudstjänst",
-			"themeId" : null
+			"everyone" : true,
+			"userId" : null,
+			"groupId" : null,
+			"patterns" : ["permissions:*"]
 		}
 		"""
-		TestUtil.assertJsonResponseEquals(expectedEvent, response)
+		TestUtil.assertJsonResponseEquals(expectedPermission, response)
 	}
 }
