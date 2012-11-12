@@ -36,12 +36,10 @@ public class DeleteMissingGroupTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
+			"name" : "Admins"
 		},{
 			"_id" : "2",
-			"name" : "Translators",
-			"permissions" : ["translatorPermission"]
+			"name" : "Translators"
 		}]
 		"""));
 		
@@ -54,6 +52,14 @@ public class DeleteMissingGroupTest extends AbstractIntegrationTest {
 			"_id" : "2",
 			"userId" : "1",
 			"groupId" : "2"
+		}]
+		"""));
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"patterns" : ["*"]
 		}]
 		"""));
 

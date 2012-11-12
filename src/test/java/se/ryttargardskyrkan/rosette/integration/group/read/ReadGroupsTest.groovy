@@ -21,21 +21,26 @@ public class ReadGroupsTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String groups = """
+		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
 			"_id" : "1",
 			"name" : "Admins",
-			"description" : "Super users",
-			"permissions" : ["*"]
+			"description" : "Super users"
 		},
 		{
 			"_id" : "2",
 			"name" : "Translators",
-			"description" : "All translators",
-			"permissions" : ["translatorPermissions"]
+			"description" : "All translators"
 		}]
-		"""
-		mongoTemplate.getCollection("groups").insert(JSON.parse(groups))
+		"""))
+		
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/groups")
@@ -50,14 +55,12 @@ public class ReadGroupsTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"name" : "Admins",
-			"description" : "Super users",
-			"permissions" : ["*"]
+			"description" : "Super users"
 		},
 		{
 			"id" : "2",
 			"name" : "Translators",
-			"description" : "All translators",
-			"permissions" : ["translatorPermissions"]
+			"description" : "All translators"
 		}]
 		"""
 		TestUtil.assertJsonResponseEquals(expectedGroups, response)

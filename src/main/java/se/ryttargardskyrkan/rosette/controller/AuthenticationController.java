@@ -3,11 +3,9 @@ package se.ryttargardskyrkan.rosette.controller;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,9 +35,9 @@ public class AuthenticationController extends AbstractController {
 		return responseBody;
 	}
 	
-	@RequestMapping(value = "authCaches/{id}", method = RequestMethod.DELETE, produces = "application/json")
-	public void clearAuthCache(@PathVariable String id, HttpServletResponse response) {
-		mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
+	@RequestMapping(value = "authCaches", method = RequestMethod.DELETE, produces = "application/json")
+	public void clearAuthCaches(HttpServletResponse response) {
+		mongoRealm.clearCache(null);
 		
 		response.setStatus(HttpStatus.OK.value()); 
 	}

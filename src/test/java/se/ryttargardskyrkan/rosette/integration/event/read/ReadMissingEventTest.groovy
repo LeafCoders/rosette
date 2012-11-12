@@ -33,6 +33,14 @@ public class ReadMissingEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 3"
 		}]
 		"""))
+		
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/events/4")

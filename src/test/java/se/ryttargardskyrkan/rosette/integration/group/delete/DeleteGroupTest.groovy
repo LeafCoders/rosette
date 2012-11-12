@@ -16,6 +16,7 @@ import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.model.GroupMembership
+import se.ryttargardskyrkan.rosette.model.Permission
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
@@ -38,12 +39,10 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
+			"name" : "Admins"
 		},{
 			"_id" : "2",
-			"name" : "Translators",
-			"permissions" : ["translatorPermission"]
+			"name" : "Translators"
 		}]
 		"""));
 		
@@ -56,6 +55,18 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 			"_id" : "2",
 			"userId" : "1",
 			"groupId" : "2"
+		}]
+		"""));
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"patterns" : ["*"]
+		},{
+			"_id" : "2",
+			"groupId" : "2",
+			"patterns" : ["*"]
 		}]
 		"""));
 
@@ -77,17 +88,26 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"name" : "Admins",
-			"description" : null,
-			"permissions" : ["*"]
+			"description" : null
 		}]""", new ObjectMapper().writeValueAsString(groupsInDatabase))
 
 		// Asserting group memberships in database
-		List<GroupMembership> groupMemberships = mongoTemplate.findAll(GroupMembership.class)
 		TestUtil.assertJsonEquals("""
 		[{
 			"id" : "1",
 			"userId" : "1",
 			"groupId" : "1"
-		}]""", new ObjectMapper().writeValueAsString(groupMemberships))
+		}]""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(GroupMembership.class)))
+		
+		// Asserting permissions in database
+		TestUtil.assertJsonEquals("""
+		[{
+			"id" : "1",
+			"anyone" : false,
+			"userId" : "1",
+			"groupId" : null,
+			"patterns" : ["*"]
+		}]
+		""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(Permission.class)))
 	}
 }

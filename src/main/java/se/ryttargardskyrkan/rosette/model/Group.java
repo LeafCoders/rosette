@@ -1,7 +1,5 @@
 package se.ryttargardskyrkan.rosette.model;
 
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +12,6 @@ public class Group {
 	@Indexed(unique = true)
 	private String name;
 	private String description;
-	private List<String> permissions;
 
 	// Getters and setters
 
@@ -40,13 +37,5 @@ public class Group {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public List<String> getPermissions() {
-		return permissions;
-	}
-
-	public void setPermissions(List<String> permissions) {
-		this.permissions = permissions;
 	}
 }

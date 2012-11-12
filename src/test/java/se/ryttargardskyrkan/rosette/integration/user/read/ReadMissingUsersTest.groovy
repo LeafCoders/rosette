@@ -29,19 +29,11 @@ public class ReadMissingUsersTest extends AbstractIntegrationTest {
 		}]
 		"""));
 		 
-		mongoTemplate.getCollection("groups").insert(JSON.parse("""
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
-		}]
-		"""));
-		
-		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"userId" : "1",
-			"groupId" : "1"
+			"anyone" : true,
+			"patterns" : ["*"]
 		}]
 		"""));
 

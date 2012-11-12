@@ -40,8 +40,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
+			"name" : "Admins"
 		}]
 		"""));
 		
@@ -50,6 +49,14 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 			"_id" : "1",
 			"userId" : "1",
 			"groupId" : "1"
+		}]
+		"""));
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"patterns" : ["*"]
 		}]
 		"""));
 
@@ -77,8 +84,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 		{
 			"id" : "${responseGroup.getId()}",
 			"name" : "Translators",
-			"description" : "Translators from swedish to english.",
-			"permissions" : ["groups:update:${responseGroup.getId()}"]
+			"description" : "Translators from swedish to english."
 		}
 		""", responseJson)
 		
@@ -90,13 +96,11 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"name" : "Admins",
-			"description":null,
-			"permissions" : ["*"]
+			"description":null
 		},{
 			"id" : "${responseGroup.getId()}",
 			"name" : "Translators",
-			"description" : "Translators from swedish to english.",
-			"permissions" : ["groups:update:${responseGroup.getId()}"]
+			"description" : "Translators from swedish to english."
 		}]
 		""", new ObjectMapper().writeValueAsString(groupsInDatabase))
 	}

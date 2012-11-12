@@ -16,6 +16,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
+import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User;
 
 @Service("mongoRealm")
@@ -33,7 +34,7 @@ public class MongoRealm extends AuthorizingRealm {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	PasswordMatcher passwordMatcher;
 
 	@PostConstruct
@@ -47,9 +48,15 @@ public class MongoRealm extends AuthorizingRealm {
 		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 		Set<String> permissions = new HashSet<String>();
 
-		if (!principalCollection.fromRealm("anonymousRealm").isEmpty()) {
-			permissions.add("*:read");
-		} else {
+		// Adding permissions for anyone
+		Query query = Query.query(Criteria.where("anyone").is(true));
+		Permission permission = mongoTemplate.findOne(query, Permission.class);
+		if (permission != null && permission.getPatterns() != null) {
+			permissions.addAll(permission.getPatterns());
+		}
+
+		if (principalCollection.fromRealm("anonymousRealm").isEmpty()) {
+			// Adding group permissions
 			User user = mongoTemplate.findById((String) principalCollection.getPrimaryPrincipal(), User.class);
 			Query groupMembershipsQuery = new Query(Criteria.where("userId").is(user.getId()));
 			List<GroupMembership> groupMemberships = mongoTemplate.find(groupMembershipsQuery, GroupMembership.class);
@@ -60,17 +67,24 @@ public class MongoRealm extends AuthorizingRealm {
 					groupIds.add(groupMembership.getGroupId());
 				}
 
-				if (!groupIds.isEmpty()) {
-					Query groupQuery = new Query(Criteria.where("id").in(groupIds));
-					groupQuery.fields().include("permissions");
-					List<Group> groups = mongoTemplate.find(groupQuery, Group.class);
-
-					if (groups != null) {
-						for (Group group : groups) {
-							if (group.getPermissions() != null) {
-								permissions.addAll(group.getPermissions());
-							}
+				Query groupPermissionQuery = Query.query(Criteria.where("groupId").in(groupIds));
+				List<Permission> groupPermissions = mongoTemplate.find(groupPermissionQuery, Permission.class);
+				if (groupPermissions != null) {
+					for (Permission groupPermission : groupPermissions) {
+						if (groupPermission.getPatterns() != null) {
+							permissions.addAll(groupPermission.getPatterns());
 						}
+					}
+				}
+			}
+
+			// Adding user permissions
+			Query userPermissionQuery = Query.query(Criteria.where("userId").is(user.getId()));
+			List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
+			if (userPermissions != null) {
+				for (Permission userPermission : userPermissions) {
+					if (userPermission.getPatterns() != null) {
+						permissions.addAll(userPermission.getPatterns());
 					}
 				}
 			}
@@ -102,7 +116,7 @@ public class MongoRealm extends AuthorizingRealm {
 	}
 
 	@Override
-	public CredentialsMatcher getCredentialsMatcher() {		
+	public CredentialsMatcher getCredentialsMatcher() {
 		return passwordMatcher;
 	}
 
@@ -118,8 +132,16 @@ public class MongoRealm extends AuthorizingRealm {
 
 		return isSupporting;
 	}
-	
+
 	public void clearCache(PrincipalCollection principals) {
 		super.clearCache(principals);
+		
+		if (principals == null) {
+			Cache<Object, AuthenticationInfo> authenticationCache = getAuthenticationCache();
+			authenticationCache.clear();
+			
+			Cache<Object, AuthorizationInfo> authorizationCache = getAuthorizationCache();
+			authorizationCache.clear();
+		}
 	}
 }

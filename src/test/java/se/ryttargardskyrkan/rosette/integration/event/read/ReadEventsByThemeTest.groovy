@@ -49,6 +49,14 @@ public class ReadEventsByThemeTest extends AbstractIntegrationTest {
 			"themeId" : "1"
 		}]
 		"""))
+		
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/events?themeId=1")

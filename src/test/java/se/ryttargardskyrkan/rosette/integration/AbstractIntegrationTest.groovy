@@ -20,6 +20,12 @@ abstract class AbstractIntegrationTest {
 	
 	@BeforeClass
 	static void beforeClass() throws UnknownHostException, MongoException {
+		// Clearing auth cache
+		httpClient = new DefaultHttpClient();
+		HttpDelete httpDelete = new HttpDelete(baseUrl + "/authCaches")
+		httpClient.execute(httpDelete)
+		httpClient.getConnectionManager().shutdown()
+		
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")
 		httpClient = new DefaultHttpClient()
 		mapper = new ObjectMapper()		
@@ -32,6 +38,7 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("groupMemberships")
 		mongoTemplate.dropCollection("events")
 		mongoTemplate.dropCollection("themes")
+		mongoTemplate.dropCollection("permissions")
 	}
 	
 	@AfterClass
@@ -41,12 +48,6 @@ abstract class AbstractIntegrationTest {
 		httpClient.getConnectionManager().shutdown()
 		httpClient = null
 		
-		mapper = null
-		
-		httpClient = new DefaultHttpClient();
-		HttpDelete httpDelete = new HttpDelete(baseUrl + "/authCaches/1")
-		httpClient.execute(httpDelete)
-		httpClient.getConnectionManager().shutdown()
-		httpClient = null
+		mapper = null		
 	}
 }

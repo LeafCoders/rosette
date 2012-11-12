@@ -36,6 +36,14 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 			"status" : "active"
 		}]
 		"""));
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/users")

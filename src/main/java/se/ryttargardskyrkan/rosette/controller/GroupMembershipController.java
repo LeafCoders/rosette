@@ -70,6 +70,10 @@ public class GroupMembershipController extends AbstractController {
 		mongoRealm.clearCache(new SimplePrincipalCollection(groupMembership.getUserId(), "mongoRealm"));
 
 		response.setStatus(HttpStatus.CREATED.value());
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(null);
+		
 		return groupMembership;
 	}
 

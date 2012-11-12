@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
+import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
@@ -69,15 +70,7 @@ public class GroupController extends AbstractController {
 		validate(group);
 		
 		mongoTemplate.insert(group);
-
-		// Adding 'update' permission to the group itself
-		List<String> permissions = new ArrayList<String>();
-		permissions.add("groups:update:" + group.getId());
-		group.setPermissions(permissions);
 		
-		Update update = Update.update("permissions", permissions);
-		mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(group.getId())), update, Group.class);
-
 		response.setStatus(HttpStatus.CREATED.value());
 		return group;
 	}
@@ -90,11 +83,7 @@ public class GroupController extends AbstractController {
 		Update update = new Update();
 		update.set("name", group.getName());
 		update.set("description", group.getDescription());
-		update.set("permissions", group.getPermissions());
 		
-		// Clearing user auth cache
-		// TODO
-
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Group.class).getN() == 0) {
 			throw new NotFoundException();
 		}
@@ -110,8 +99,8 @@ public class GroupController extends AbstractController {
 		if (group == null) {
 			throw new NotFoundException();
 		} else {
-			// Clearing user auth cache
-			// TODO
+			// Removing permissions for the group
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), Permission.class);
 			
 			// Removing group memberships with the group that is about to be deleted
 			mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), GroupMembership.class);
@@ -122,7 +111,10 @@ public class GroupController extends AbstractController {
 				throw new NotFoundException();
 			} else {
 				response.setStatus(HttpStatus.OK.value());
-			}			
+			}
+			
+			// Clearing auth cache
+			mongoRealm.clearCache(null);
 		}
 	}
 }

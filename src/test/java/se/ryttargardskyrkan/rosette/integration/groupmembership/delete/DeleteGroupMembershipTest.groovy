@@ -42,8 +42,7 @@ public class DeleteGroupMembershipTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
+			"name" : "Admins"
 		}]
 		"""));
 
@@ -56,6 +55,14 @@ public class DeleteGroupMembershipTest extends AbstractIntegrationTest {
 			"_id" : "2",
 			"userId" : "2",
 			"groupId" : "1"
+		}]
+		"""));
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"patterns" : ["*"]
 		}]
 		"""));
 

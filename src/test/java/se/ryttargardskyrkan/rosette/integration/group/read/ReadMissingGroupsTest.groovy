@@ -28,6 +28,14 @@ public class ReadMissingGroupsTest extends AbstractIntegrationTest {
 			"name" : "Translators"
 		}]
 		"""))
+		
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/groups/4")

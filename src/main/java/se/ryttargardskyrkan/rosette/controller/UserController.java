@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
+import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
@@ -107,9 +108,6 @@ public class UserController extends AbstractController {
 		}
 
 		response.setStatus(HttpStatus.OK.value());
-		
-		// Clearing auth cache
-		mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")
@@ -120,8 +118,12 @@ public class UserController extends AbstractController {
 		if (user == null) {
 			throw new NotFoundException();
 		} else {
+			// Removing permissions for the user
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("userId").is(id)), Permission.class);
+			
 			// Removing group memberships with the user that is about to be deleted
 			mongoTemplate.findAndRemove(Query.query(Criteria.where("userId").is(id)), GroupMembership.class);
+
 						
 			// Deleting the user
 			User deletedUser = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), User.class);

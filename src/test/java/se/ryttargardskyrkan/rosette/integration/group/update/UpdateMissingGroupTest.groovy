@@ -14,7 +14,7 @@ import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.User
+import se.ryttargardskyrkan.rosette.model.Group
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
@@ -37,16 +37,15 @@ public class UpdateMissingGroupTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("groups").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
+			"name" : "Admins"
 		}]
 		"""));
-		
-		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
 			"_id" : "1",
 			"userId" : "1",
-			"groupId" : "1"
+			"patterns" : ["*"]
 		}]
 		"""));
 
@@ -66,6 +65,6 @@ public class UpdateMissingGroupTest extends AbstractIntegrationTest {
 		// Then
 		assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatusLine().getStatusCode())
 		assertEquals("Not Found", response.getStatusLine().getReasonPhrase())
-		assertEquals(1L, mongoTemplate.count(new Query(), User.class))
+		assertEquals(1L, mongoTemplate.count(new Query(), Group.class))
 	}
 }

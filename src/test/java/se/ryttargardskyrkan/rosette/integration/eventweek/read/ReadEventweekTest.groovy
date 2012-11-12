@@ -20,6 +20,8 @@ import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 
+import com.mongodb.util.JSON
+
 public class ReadEventweekTest extends AbstractIntegrationTest {
 
 	@Test
@@ -93,6 +95,14 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		}]
 		"""
 		mongoTemplate.insert(new ObjectMapper().readValue(events, new TypeReference<ArrayList<Event>>() {}), "events")
+		
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/eventweek")

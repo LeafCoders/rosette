@@ -55,14 +55,21 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 			"groupId" : "1"
 		}]
 		"""));
+	
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"userId" : "1",
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpPut putRequest = new HttpPut(baseUrl + "/groups/2")
 		String requestBody = """
 		{
 			"name" : "Translators",
-			"description" : "Super translators",			
-			"permissions" : ["*"]
+			"description" : "Super translators"
 		}
 		"""
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -83,13 +90,11 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"name" : "Admins",
-			"description" : null,
-			"permissions" : ["*"]
+			"description" : null
 		},{
 			"id" : "2",
 			"name" : "Translators",
-			"description" : "Super translators",
-			"permissions" : ["*"]
+			"description" : "Super translators"
 		}]
 		""", new ObjectMapper().writeValueAsString(groupsInDatabase))
 	}

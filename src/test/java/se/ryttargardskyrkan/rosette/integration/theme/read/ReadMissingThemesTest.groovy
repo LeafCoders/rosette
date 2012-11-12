@@ -30,6 +30,14 @@ public class ReadMissingThemesTest extends AbstractIntegrationTest {
 			"description" : "Vi läser igenom johannesevangeliet"
 		}]
 		"""))
+		
+		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"anyone" : true,
+			"patterns" : ["*"]
+		}]
+		"""));
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/themes/4")
