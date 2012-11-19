@@ -57,7 +57,7 @@ public class UserController extends AbstractController {
 		List<User> users = new ArrayList<User>();
 		if (usersInDatabase != null) {
 			for (User userInDatabase : usersInDatabase) {
-				if (isPermitted("themes:read:" + userInDatabase.getId())) {
+				if (isPermitted("users:read:" + userInDatabase.getId())) {
 					users.add(userInDatabase);
 				}
 			}

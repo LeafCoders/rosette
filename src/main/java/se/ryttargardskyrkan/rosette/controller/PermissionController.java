@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Permission;
+import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
 public class PermissionController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
-
+	@Autowired
+	private MongoRealm mongoRealm;
+	
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Permission getPermission(@PathVariable String id) {
@@ -61,6 +64,9 @@ public class PermissionController extends AbstractController {
 		validate(permission);
 
 		mongoTemplate.insert(permission);
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(null);
 
 		response.setStatus(HttpStatus.CREATED.value());
 		return permission;
@@ -78,6 +84,9 @@ public class PermissionController extends AbstractController {
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Permission.class).getN() == 0) {
 			throw new NotFoundException();
 		}
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(null);
 
 		response.setStatus(HttpStatus.OK.value());
 	}
@@ -90,6 +99,9 @@ public class PermissionController extends AbstractController {
 		if (deletedPermission == null) {
 			throw new NotFoundException();
 		} else {
+			// Clearing auth cache
+			mongoRealm.clearCache(null);
+			
 			response.setStatus(HttpStatus.OK.value());
 		}
 	}

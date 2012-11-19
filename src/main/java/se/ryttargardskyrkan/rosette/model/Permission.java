@@ -2,6 +2,7 @@ package se.ryttargardskyrkan.rosette.model;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,6 +21,7 @@ public class Permission {
 	@Indexed
 	private String groupId;
 	
+	@NotEmpty
 	private List<String> patterns;
 	
 	// Getters and setters
