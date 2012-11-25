@@ -87,7 +87,7 @@ public class User {
 	// Helpers
 	
 	@JsonIgnore
-	public String getName() {
+	public String getFullName() {
 		String name = "";
 		
 		String delimiter = "";

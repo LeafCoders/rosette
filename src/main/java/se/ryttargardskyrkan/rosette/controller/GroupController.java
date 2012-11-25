@@ -23,6 +23,7 @@ import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 import se.ryttargardskyrkan.rosette.model.Permission;
+import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
@@ -81,12 +82,19 @@ public class GroupController extends AbstractController {
 		validate(group);
 
 		Update update = new Update();
-		update.set("name", group.getName());
+		if (group.getName() != null)
+			update.set("name", group.getName());
 		update.set("description", group.getDescription());
 		
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Group.class).getN() == 0) {
 			throw new NotFoundException();
 		}
+		
+		// Updating groupName in permissions
+		Group groupInDatabase = mongoTemplate.findById(id, Group.class);
+		Update permissionUpdate = new Update();
+		permissionUpdate.set("groupName", groupInDatabase.getName());
+		mongoTemplate.updateMulti(Query.query(Criteria.where("groupId").is(id)), permissionUpdate, Permission.class);
 
 		response.setStatus(HttpStatus.OK.value());
 	}

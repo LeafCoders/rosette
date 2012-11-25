@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mongodb.WriteResult;
+
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
@@ -94,9 +96,12 @@ public class UserController extends AbstractController {
 		validate(user);
 
 		Update update = new Update();
-		update.set("username", user.getUsername());
-		update.set("firstName", user.getFirstName());
-		update.set("lastName", user.getLastName());
+		if (user.getUsername() != null)
+			update.set("username", user.getUsername());
+		if (user.getFirstName() != null)
+			update.set("firstName", user.getFirstName());
+		if (user.getLastName() != null)
+			update.set("lastName", user.getLastName());
 
 		if (user.getPassword() != null && !"".equals(user.getPassword().trim())) {
 			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
@@ -106,6 +111,12 @@ public class UserController extends AbstractController {
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, User.class).getN() == 0) {
 			throw new NotFoundException();
 		}
+		
+		// Updating userFullName in permissions
+		User userInDatabase = mongoTemplate.findById(id, User.class);
+		Update permissionUpdate = new Update();
+		permissionUpdate.set("userFullName", userInDatabase.getFullName());
+		mongoTemplate.updateMulti(Query.query(Criteria.where("userId").is(id)), permissionUpdate, Permission.class);
 
 		response.setStatus(HttpStatus.OK.value());
 	}

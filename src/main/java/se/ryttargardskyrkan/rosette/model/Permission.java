@@ -18,8 +18,12 @@ public class Permission {
 	@Indexed
 	private String userId;
 	
+	private String userFullName;
+	
 	@Indexed
 	private String groupId;
+	
+	private String groupName;
 	
 	@NotEmpty
 	private List<String> patterns;
@@ -50,12 +54,28 @@ public class Permission {
 		this.userId = userId;
 	}
 
+	public String getUserFullName() {
+		return userFullName;
+	}
+
+	public void setUserFullName(String userFullName) {
+		this.userFullName = userFullName;
+	}
+
 	public String getGroupId() {
 		return groupId;
 	}
 
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public List<String> getPatterns() {

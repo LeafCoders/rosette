@@ -32,6 +32,8 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 		[{
 			"_id" : "1",
 			"username" : "lars.arvidsson@gmail.com",
+			"firstName" : "Lars",
+			"lastName" : "Arvidsson",
 			"hashedPassword" : "${hashedPassword}",
 			"status" : "active"
 		}]
@@ -42,6 +44,13 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 			"_id" : "1",
 			"userId" : "1",
 			"patterns" : ["*"]
+		}]
+		"""));
+	
+		mongoTemplate.getCollection("groups").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"name" : "Admins",
 		}]
 		"""));
 
@@ -70,7 +79,9 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 			"id" : "${responsePermission.getId()}",
 			"everyone" : null,
 			"userId" : null,
+			"userFullName" : null,
 			"groupId" : "1",
+			"groupName" : "Admins",
 			"patterns" : ["events:*"]
 		}
 		""", responseJson)
@@ -81,13 +92,17 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"everyone" : null,
 			"userId" : "1",
+			"userFullName" : null,
 			"groupId" : null,
+			"groupName" : null,
 			"patterns" : ["*"]
 		},{
 			"id" : "${responsePermission.getId()}",
 			"everyone" : null,
 			"userId" : null,
+			"userFullName" : null,
 			"groupId" : "1",
+			"groupName" : "Admins",
 			"patterns" : ["events:*"]
 		}]
 		""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(Permission.class)))

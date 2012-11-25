@@ -67,13 +67,17 @@ public class UpdatePermissionTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"everyone" : null,
 			"userId" : "1",
+			"userFullName" : null,
 			"groupId" : null,
+			"groupName" : null,
 			"patterns" : ["*"]
 		},{
 			"id" : "2",
 			"everyone" : true,
 			"userId" : null,
+			"userFullName" : null,
 			"groupId" : null,
+			"groupName" : null,
 			"patterns" : ["events:read:*", "themes:read:*"]
 		}]
 		""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(Permission.class)))

@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
@@ -32,6 +33,8 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 		[{
 			"_id" : "1",
 			"username" : "lars.arvidsson@gmail.com",
+			"firstName" : "Lars",
+			"lastName" : "Arvidsson",
 			"hashedPassword" : "${hashedPassword}",
 			"status" : "active"
 		}]
@@ -41,6 +44,7 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 		[{
 			"_id" : "1",
 			"userId" : "1",
+			"userFullName" : "Lars Arvidsson",
 			"patterns" : ["*"]
 		}]
 		"""));
@@ -81,5 +85,17 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 		}]""", new ObjectMapper().writeValueAsString(usersInDatabase))
 		String updatedHashedPassword = mongoTemplate.getCollection("users").findOne().get("hashedPassword");
 		assertTrue(updatedHashedPassword.startsWith("\$shiro1\$SHA-256\$"));
+		
+		// Asserting permissions in database
+		TestUtil.assertJsonEquals("""
+		[{
+			"id" : "1",
+			"everyone" : null,
+			"userId" : "1",
+			"userFullName" : "Nisse Hult",
+			"groupId" : null,
+			"groupName" : null,
+			"patterns" : ["*"]
+		}]""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(Permission.class)));
 	}
 }

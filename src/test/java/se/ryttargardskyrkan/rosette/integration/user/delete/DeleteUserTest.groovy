@@ -111,7 +111,9 @@ public class DeleteUserTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"everyone" : null,
 			"userId" : "1",
+			"userFullName" : null,
 			"groupId" : null,
+			"groupName" : null,
 			"patterns" : ["*"]
 		}]
 		""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(Permission.class)))

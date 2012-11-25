@@ -45,7 +45,9 @@ public class ReadPermissionTest extends AbstractIntegrationTest {
 			"id" : "2",
 			"everyone" : true,
 			"userId" : null,
+			"userFullName" : null,
 			"groupId" : null,
+			"groupName" : null,
 			"patterns" : ["permissions:*"]
 		}
 		"""

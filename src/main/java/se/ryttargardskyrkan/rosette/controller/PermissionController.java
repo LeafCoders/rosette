@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.Permission;
+import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
@@ -63,6 +65,19 @@ public class PermissionController extends AbstractController {
 		checkPermission("permissions:create");
 		validate(permission);
 
+		// Setting groupName and userFullname
+		if (permission.getGroupId() != null) {
+			Group group = mongoTemplate.findById(permission.getGroupId(), Group.class);
+			if (group != null) {
+				permission.setGroupName(group.getName());
+			}
+		} else if (permission.getUserId() != null) {
+			User user = mongoTemplate.findById(permission.getUserId(), User.class);
+			if (user != null) {
+				permission.setUserFullName(user.getFullName());
+			}
+		}
+		
 		mongoTemplate.insert(permission);
 		
 		// Clearing auth cache

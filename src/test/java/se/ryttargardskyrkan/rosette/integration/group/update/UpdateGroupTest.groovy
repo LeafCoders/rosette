@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Group
+import se.ryttargardskyrkan.rosette.model.Permission
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
@@ -61,6 +62,10 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 			"_id" : "1",
 			"userId" : "1",
 			"patterns" : ["*"]
+		},{
+			"_id" : "2",
+			"groupId" : "2",
+			"patterns" : ["*"]
 		}]
 		"""));
 
@@ -97,5 +102,27 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 			"description" : "Super translators"
 		}]
 		""", new ObjectMapper().writeValueAsString(groupsInDatabase))
+		
+		
+		// Asserting permissions in database
+		TestUtil.assertJsonEquals("""
+		[{
+			"id" : "1",
+			"everyone" : null,
+			"userId" : "1",
+			"userFullName" : null,
+			"groupId" : null,
+			"groupName" : null,
+			"patterns" : ["*"]
+		},{
+			"id" : "2",
+			"everyone" : null,
+			"userId" : null,
+			"userFullName" : null,
+			"groupId" : "2",
+			"groupName" : "Translators",
+			"patterns" : ["*"]
+		}]""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(Permission.class)));
+
 	}
 }
