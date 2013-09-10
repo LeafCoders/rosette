@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
+import se.ryttargardskyrkan.rosette.model.User;
+import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller
@@ -33,11 +35,27 @@ public class GroupMembershipController extends AbstractController {
 	@ResponseBody
 	public GroupMembership getGroupMembership(@PathVariable String id) {
 		checkPermission("groupMemberships:read:" + id);
-		
+
 		GroupMembership groupMembership = mongoTemplate.findById(id, GroupMembership.class);
 		if (groupMembership == null) {
 			throw new NotFoundException();
-		}
+		} else {
+            List<User> users = mongoTemplate.findAll(User.class);
+            List<Group> groups = mongoTemplate.findAll(Group.class);
+
+            for (Group group : groups) {
+                if (group.getId().equals(groupMembership.getGroupId())) {
+                    groupMembership.setGroupName(group.getName());
+                    break;
+                }
+            }
+            for (User user : users) {
+                if (user.getId().equals(groupMembership.getUserId())) {
+                    groupMembership.setUsername(user.getUsername());
+                    break;
+                }
+            }
+        }
 		return groupMembership;
 	}
 
@@ -45,11 +63,28 @@ public class GroupMembershipController extends AbstractController {
 	@ResponseBody
 	public List<GroupMembership> getGroupMemberships(HttpServletResponse response) {
 		List<GroupMembership> groupMemberships = new ArrayList<GroupMembership>();
-		
+
 		List<GroupMembership> groupMembershipsInDatabase = mongoTemplate.findAll(GroupMembership.class);
 		if (groupMembershipsInDatabase != null) {
+
+            List<User> users = mongoTemplate.findAll(User.class);
+            List<Group> groups = mongoTemplate.findAll(Group.class);
+
 			for (GroupMembership groupMembershipInDatabase : groupMembershipsInDatabase) {
 				if (isPermitted("groupMemberships:read:" + groupMembershipInDatabase.getId())) {
+                    for (Group group : groups) {
+                        if (group.getId().equals(groupMembershipInDatabase.getGroupId())) {
+                            groupMembershipInDatabase.setGroupName(group.getName());
+                            break;
+                        }
+                    }
+                    for (User user : users) {
+                        if (user.getId().equals(groupMembershipInDatabase.getUserId())) {
+                            groupMembershipInDatabase.setUsername(user.getUsername());
+                            break;
+                        }
+                    }
+
 					groupMemberships.add(groupMembershipInDatabase);
 				}
 			}
@@ -65,15 +100,15 @@ public class GroupMembershipController extends AbstractController {
 		validate(groupMembership);
 
 		mongoTemplate.insert(groupMembership);
-		
+
 		// Clearing auth cache
 		mongoRealm.clearCache(new SimplePrincipalCollection(groupMembership.getUserId(), "mongoRealm"));
 
 		response.setStatus(HttpStatus.CREATED.value());
-		
+
 		// Clearing auth cache
 		mongoRealm.clearCache(null);
-		
+
 		return groupMembership;
 	}
 
@@ -87,7 +122,7 @@ public class GroupMembershipController extends AbstractController {
 		} else {
 			response.setStatus(HttpStatus.OK.value());
 		}
-		
+
 		// Clearing auth cache
 		mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
 	}
