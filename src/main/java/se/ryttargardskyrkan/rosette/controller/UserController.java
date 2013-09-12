@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mongodb.WriteResult;
-
+import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User;
+import se.ryttargardskyrkan.rosette.model.ValidationError;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
 
@@ -76,7 +75,7 @@ public class UserController extends AbstractController {
 
 		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
 		if (count > 0) {
-			throw new ValidationException(null); // TODO
+			throw new SimpleValidationException(new ValidationError("username", "duplicate not allowed"));
 		} else {
 			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
 			user.setHashedPassword(hashedPassword);
