@@ -27,7 +27,7 @@ public class EventweekController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	@RequestMapping(value = "eventweek", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "eventweeks/current", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Eventweek getCurrentEventweek(HttpServletResponse response) {
 		DateTime now = DateTime.now();
@@ -38,7 +38,7 @@ public class EventweekController extends AbstractController {
 		return this.getEventweek(id, response);
 	}
 
-	@RequestMapping(value = "eventweek/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "eventweeks/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Eventweek getEventweek(@PathVariable String id, HttpServletResponse response) {
 		int weekyear = Integer.parseInt(id.substring(0, 4));
@@ -99,7 +99,7 @@ public class EventweekController extends AbstractController {
 	
 	String headerLink(DateTime previousWeek, DateTime nextWeek) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<eventweek/");
+		sb.append("<eventweeks/");
 		sb.append(previousWeek.weekyear().get());
 		sb.append("-W");
 		sb.append(previousWeek.weekOfWeekyear().get() < 10 ?  "0" : "");
@@ -108,7 +108,7 @@ public class EventweekController extends AbstractController {
 		
 		sb.append(", ");
 		
-		sb.append("<eventweek/");
+		sb.append("<eventweeks/");
 		sb.append(nextWeek.weekyear().get());
 		sb.append("-W");
 		sb.append(nextWeek.weekOfWeekyear().get() < 10 ?  "0" : "");

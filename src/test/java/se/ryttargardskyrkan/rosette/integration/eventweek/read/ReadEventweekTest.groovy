@@ -105,7 +105,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		"""));
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/eventweek")
+		HttpGet getRequest = new HttpGet(baseUrl + "/eventweeks/current")
 		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
