@@ -88,7 +88,9 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		{
 			"id" : "${responseGroupMembership.getId()}",
 			"userId" : "2",
-			"groupId" : "1"
+			"groupId" : "1",
+			"username":null,
+			"groupName":null
 		}
 		""", responseJson)
 		
@@ -100,11 +102,15 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"userId" : "1",
-			"groupId" : "1"
+			"groupId" : "1",
+            "username":null,
+            "groupName":null
 		},{
 			"id" : "${responseGroupMembership.getId()}",
 			"userId" : "2",
-			"groupId" : "1"
+			"groupId" : "1",
+			"username":null,
+			"groupName":null
 		}]
 		""", new ObjectMapper().writeValueAsString(groupMembershipsInDatabase))
 	}

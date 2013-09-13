@@ -1,53 +1,34 @@
 package se.ryttargardskyrkan.rosette.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import se.ryttargardskyrkan.rosette.exception.ForbiddenException;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 
-@RequestMapping("v1-snapshot")
-public class AbstractController {
-    static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-    @Autowired
-    private Validator validator;
+/**
+ * Created with IntelliJ IDEA.
+ * User: larsa
+ * Date: 2013-09-13
+ * Time: 11:43
+ * To change this template use File | Settings | File Templates.
+ */
 
-    protected boolean isPermitted(String permission) {
-        return SecurityUtils.getSubject().isPermitted(permission);
-    }
-
-    protected void checkPermission(String permission) {
-        if (!SecurityUtils.getSubject().isPermitted(permission)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    protected void validate(Object object) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
-
-        if (constraintViolations != null && !constraintViolations.isEmpty()) {
-            throw new ValidationException(constraintViolations);
-        }
-    }
+@ControllerAdvice
+public class RestExceptionHandler {
+    static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -91,5 +72,4 @@ public class AbstractController {
         logger.error("Error", exception);
         return responseBody;
     }
-
 }
