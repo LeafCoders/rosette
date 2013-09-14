@@ -75,7 +75,7 @@ public class UserController extends AbstractController {
 
 		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
 		if (count > 0) {
-			throw new SimpleValidationException(new ValidationError("username", "duplicate not allowed"));
+			throw new SimpleValidationException(new ValidationError("username", "user.username.duplicatedUsernameNotAllowed"));
 		} else {
 			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
 			user.setHashedPassword(hashedPassword);
