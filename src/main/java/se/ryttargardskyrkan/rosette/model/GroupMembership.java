@@ -5,12 +5,16 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
+
 @Document(collection = "groupMemberships")
 public class GroupMembership {
     @Id
     private String id;
+    @NotNull(message = "groupMembership.groupId.notNull")
     @Indexed
     private String groupId;
+    @NotNull(message = "groupMembership.userId.notNull")
     @Indexed
     private String userId;
     @Transient

@@ -13,7 +13,7 @@ public class User {
 
 	@Id
 	private String id;
-	@NotNull
+	@NotNull(message = "user.username.notNull")
 	@Indexed(unique = true)
 	private String username;
 	

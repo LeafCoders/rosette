@@ -11,7 +11,7 @@ public class Group {
 
 	@Id
 	private String id;
-    @NotNull
+    @NotNull(message = "group.name.notNull")
 	@Indexed(unique = true)
 	private String name;
 	private String description;

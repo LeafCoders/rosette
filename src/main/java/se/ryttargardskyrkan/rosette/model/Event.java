@@ -18,10 +18,10 @@ public class Event {
 	@Id
 	private String id;
 
-	@NotNull
+	@NotNull(message = "event.title.notNull")
 	private String title;
 
-	@NotNull
+	@NotNull(message = "event.startTime.notNull")
 	@Indexed
 	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)

@@ -24,8 +24,8 @@ public class Permission {
 	private String groupId;
 	
 	private String groupName;
-	
-	@NotEmpty
+
+	@NotEmpty(message = "permission.groupId.notEmpty")
 	private List<String> patterns;
 	
 	// Getters and setters
