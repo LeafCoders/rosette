@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -52,7 +53,7 @@ public class UserController extends AbstractController {
 	@ResponseBody
 	public List<User> getUsers(HttpServletResponse response) {
 		Query query = new Query();
-		query.sort().on("username", Order.ASCENDING);
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "firstName"), new Sort.Order(Sort.Direction.ASC, "lastName")));
 
 		List<User> usersInDatabase = mongoTemplate.find(query, User.class);
 		List<User> users = new ArrayList<User>();

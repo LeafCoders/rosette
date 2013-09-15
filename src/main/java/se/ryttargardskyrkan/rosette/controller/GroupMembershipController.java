@@ -52,6 +52,7 @@ public class GroupMembershipController extends AbstractController {
             for (User user : users) {
                 if (user.getId().equals(groupMembership.getUserId())) {
                     groupMembership.setUsername(user.getUsername());
+                    groupMembership.setUserFullName(user.getFullName());
                     break;
                 }
             }
@@ -81,6 +82,7 @@ public class GroupMembershipController extends AbstractController {
                     for (User user : users) {
                         if (user.getId().equals(groupMembershipInDatabase.getUserId())) {
                             groupMembershipInDatabase.setUsername(user.getUsername());
+                            groupMembershipInDatabase.setUserFullName(user.getFullName());
                             break;
                         }
                     }

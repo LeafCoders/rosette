@@ -20,6 +20,8 @@ public class GroupMembership {
     @Transient
     private String username;
     @Transient
+    private String userFullName;
+    @Transient
     private String groupName;
 
     // Getters and setters
@@ -54,6 +56,14 @@ public class GroupMembership {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
     }
 
     public String getGroupName() {

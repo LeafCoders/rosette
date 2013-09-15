@@ -86,7 +86,7 @@ public class User {
 	
 	// Helpers
 	
-	@JsonIgnore
+	@Transient
 	public String getFullName() {
 		String name = "";
 		
@@ -103,4 +103,9 @@ public class User {
 		
 		return name;
 	}
+
+    @Transient
+    public void setFullName(String fullName) {
+        // nothing
+    }
 }
