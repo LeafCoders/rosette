@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.model.Group;
+import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
+import se.ryttargardskyrkan.rosette.model.*;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
 
 @Controller
 public class GroupMembershipController extends AbstractController {
@@ -101,18 +102,46 @@ public class GroupMembershipController extends AbstractController {
 		checkPermission("groupMemberships:create");
 		validate(groupMembership);
 
-		mongoTemplate.insert(groupMembership);
+        long count = mongoTemplate.count(Query.query(Criteria.where("userId").is(groupMembership.getUserId()).and("groupId").is(groupMembership.getGroupId())), GroupMembership.class);
+        if (count > 0) {
+            throw new SimpleValidationException(new ValidationError("groupMembership", "groupMembership.alreadyExists"));
+        } else {
+            mongoTemplate.insert(groupMembership);
 
-		// Clearing auth cache
-		mongoRealm.clearCache(new SimplePrincipalCollection(groupMembership.getUserId(), "mongoRealm"));
+            response.setStatus(HttpStatus.CREATED.value());
 
-		response.setStatus(HttpStatus.CREATED.value());
-
-		// Clearing auth cache
-		mongoRealm.clearCache(null);
+            // Clearing auth cache
+            mongoRealm.clearCache(null);
+        }
 
 		return groupMembership;
 	}
+
+    @RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    public void putGroupMembership(@PathVariable String id, @RequestBody GroupMembership groupMembership, HttpServletResponse response) {
+        checkPermission("users:update:" + id);
+        validate(groupMembership);
+
+        long count = mongoTemplate.count(Query.query(Criteria.where("userId").is(groupMembership.getUserId()).and("groupId").is(groupMembership.getGroupId())), GroupMembership.class);
+        if (count > 0) {
+            throw new SimpleValidationException(new ValidationError("groupMembership", "groupMembership.alreadyExists"));
+        } else {
+            Update update = new Update();
+            if (groupMembership.getGroupId() != null)
+                update.set("groupId", groupMembership.getGroupId());
+            if (groupMembership.getUserId() != null)
+                update.set("userId", groupMembership.getUserId());
+
+            if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, GroupMembership.class).getN() == 0) {
+                throw new NotFoundException();
+            }
+
+            response.setStatus(HttpStatus.OK.value());
+
+            // Clearing auth cache
+            mongoRealm.clearCache(null);
+        }
+    }
 
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteGroupMembership(@PathVariable String id, HttpServletResponse response) {
@@ -123,9 +152,9 @@ public class GroupMembershipController extends AbstractController {
 			throw new NotFoundException();
 		} else {
 			response.setStatus(HttpStatus.OK.value());
-		}
 
-		// Clearing auth cache
-		mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
+            // Clearing auth cache
+            mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
+		}
 	}
 }

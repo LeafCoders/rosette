@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,7 +19,7 @@ public class Event {
 	@Id
 	private String id;
 
-	@NotNull(message = "event.title.notNull")
+    @NotEmpty(message = "event.title.notEmpty")
 	private String title;
 
 	@NotNull(message = "event.startTime.notNull")

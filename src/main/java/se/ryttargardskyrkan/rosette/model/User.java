@@ -3,6 +3,7 @@ package se.ryttargardskyrkan.rosette.model;
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,7 +14,7 @@ public class User {
 
 	@Id
 	private String id;
-	@NotNull(message = "user.username.notNull")
+	@NotEmpty(message = "user.username.notEmpty")
 	@Indexed(unique = true)
 	private String username;
 	

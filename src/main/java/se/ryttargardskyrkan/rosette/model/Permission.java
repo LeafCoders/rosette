@@ -17,15 +17,14 @@ public class Permission {
 	
 	@Indexed
 	private String userId;
-	
+
 	private String userFullName;
-	
+
 	@Indexed
 	private String groupId;
-	
+
 	private String groupName;
 
-	@NotEmpty(message = "permission.groupId.notEmpty")
 	private List<String> patterns;
 	
 	// Getters and setters
