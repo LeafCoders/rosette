@@ -25,6 +25,11 @@
 			<param-value>true</param-value>
 		</init-param>
 	</filter>
+
+    <filter>
+        <filter-name>jsonpFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
 	
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
@@ -35,6 +40,11 @@
 		<filter-name>shiroFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
+
+    <filter-mapping>
+        <filter-name>jsonpFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
