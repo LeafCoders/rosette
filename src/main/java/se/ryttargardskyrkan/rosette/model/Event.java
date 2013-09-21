@@ -1,29 +1,45 @@
 package se.ryttargardskyrkan.rosette.model;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 
 @Document(collection = "events")
 public class Event {
-
 	@Id
 	private String id;
-	
-	@NotNull
+
+    @NotEmpty(message = "event.title.notEmpty")
 	private String title;
-	
+
+	@NotNull(message = "event.startTime.notNull")
+	@Indexed
+	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date startTime;
+
+	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 	
-	private EntityReference conductorOfMeeting;
+	private String description;
 	
-	private List<EntityReference> soundTechnicians;
+	@Indexed
+	private String themeId;
 
+	// Getters and setters
+
+	
 	public String getId() {
 		return id;
 	}
@@ -56,22 +72,19 @@ public class Event {
 		this.endTime = endTime;
 	}
 
-	public EntityReference getConductorOfMeeting() {
-		return conductorOfMeeting;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setConductorOfMeeting(EntityReference conductorOfMeeting) {
-		this.conductorOfMeeting = conductorOfMeeting;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public List<EntityReference> getSoundTechnicians() {
-		return soundTechnicians;
+	public String getThemeId() {
+		return themeId;
 	}
 
-	public void setSoundTechnicians(List<EntityReference> soundTechnicians) {
-		this.soundTechnicians = soundTechnicians;
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
 	}
-
-	
-	
 }
