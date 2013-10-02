@@ -12,7 +12,7 @@ public class CatchAllController extends AbstractController {
 		super();
 	}
 
-	@RequestMapping(produces = "application/json;charset=utf-8")
+	@RequestMapping(produces = "application/json;charset=UTF-8")
 	public void catchAll() {
 		throw new NotFoundException();
 	}

@@ -61,7 +61,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 		// Then
 
 		// Asserting response
-		String responseJson = TestUtil.responseBodyAsString(response)
+		String responseJson = TestUtil.jsonFromResponse(response)
 		User responseUser = new ObjectMapper().readValue(responseJson, User.class)
 		
 		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())

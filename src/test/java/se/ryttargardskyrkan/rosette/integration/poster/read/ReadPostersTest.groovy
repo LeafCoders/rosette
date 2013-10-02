@@ -21,12 +21,16 @@ public class ReadPostersTest extends AbstractIntegrationTest {
 		[{
 			"_id" : "1",
 			"title" : "Easter Poster",
-			"imageName" : "easter.jpg"
+			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:00 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:00 Europe/Stockholm")},
+			"duration" : 15
 		},
 		{
 			"_id" : "2",
 			"title" : "Christmas Eve",
-			"imageName" : "santa.jpg"
+			"startTime" : ${TestUtil.mongoDate("2012-07-25 11:00 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-08-26 11:00 Europe/Stockholm")},
+			"duration" : 15
 		}]
 		"""))
 		
@@ -52,12 +56,16 @@ public class ReadPostersTest extends AbstractIntegrationTest {
         [{
             "id" : "1",
             "title" : "Easter Poster",
-            "imageName" : "easter.jpg"
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
+			"duration" : 15
         },
         {
             "id" : "2",
             "title" : "Christmas Eve",
-            "imageName" : "santa.jpg"
+			"startTime" : "2012-07-25 11:00 Europe/Stockholm",
+			"endTime" : "2012-08-26 11:00 Europe/Stockholm",
+			"duration" : 15
         }]
         """
 		TestUtil.assertJsonResponseEquals(expectedPosters, response)
