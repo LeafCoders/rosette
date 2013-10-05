@@ -1,20 +1,21 @@
 package se.ryttargardskyrkan.rosette.model;
 
-import java.util.Date;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.validator.StartEndTime;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Document(collection = "posters")
-@StartEndTime(start = "startTime", end = "endTime", message = "poster.startBeforeEndTime")
+@ScriptAssert(lang = "javascript", script = "_this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
 public class Poster {
     @Id
     private String id;

@@ -64,7 +64,7 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
 		String requestBody = """
 		{
 			"title" : "",
-			"startTime" : "2013-01-02 11:00 Europe/Stockholm",
+			"startTime" : "2013-11-02 11:00 Europe/Stockholm",
 			"endTime" : "2013-03-04 11:00 Europe/Stockholm",
 			"duration" : 16
 		}
@@ -84,7 +84,7 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
 		}]
 		""", TestUtil.jsonFromResponse(response))
 	
-		// Asserting groups in database
+		// Asserting posters in database
 		Query queryPosters = new Query();
 		List<Poster> postersInDatabase = mongoTemplate.find(queryPosters, Poster.class)
 
