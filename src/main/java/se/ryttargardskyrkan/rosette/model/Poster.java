@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Document(collection = "posters")
-@ScriptAssert(lang = "javascript", script = "_this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
+@ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
 public class Poster {
     @Id
     private String id;
