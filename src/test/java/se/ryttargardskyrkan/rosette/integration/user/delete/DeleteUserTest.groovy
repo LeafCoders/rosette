@@ -92,7 +92,8 @@ public class DeleteUserTest extends AbstractIntegrationTest {
 			"firstName" : null,
 			"lastName" : null,
 			"password" : null,
-			"status" : "active"
+			"status" : "active",
+			"fullName":""
 		}]
 		""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(User.class)))
 		
@@ -103,7 +104,8 @@ public class DeleteUserTest extends AbstractIntegrationTest {
 			"userId" : "1",
 			"groupId" : "1",
 			"username":null,
-			"groupName":null
+			"groupName":null,
+			"userFullName":null
 		}]
 		""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(GroupMembership.class)))
 		

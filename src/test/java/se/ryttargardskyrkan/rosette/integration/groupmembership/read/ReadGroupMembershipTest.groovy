@@ -77,7 +77,8 @@ public class ReadGroupMembershipTest extends AbstractIntegrationTest {
 			"userId" : "2",
 			"groupId" : "1",
 			"username":"nisse",
-			"groupName":"Admins"
+			"groupName":"Admins",
+			"userFullName":""
 		}
 		"""
 		TestUtil.assertJsonResponseEquals(expectedGroupMembership, response)

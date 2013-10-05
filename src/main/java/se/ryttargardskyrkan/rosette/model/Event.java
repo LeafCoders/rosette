@@ -31,11 +31,8 @@ public class Event {
 	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
-	
+
 	private String description;
-	
-	@Indexed
-	private String themeId;
 
 	// Getters and setters
 
@@ -78,13 +75,5 @@ public class Event {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getThemeId() {
-		return themeId;
-	}
-
-	public void setThemeId(String themeId) {
-		this.themeId = themeId;
 	}
 }

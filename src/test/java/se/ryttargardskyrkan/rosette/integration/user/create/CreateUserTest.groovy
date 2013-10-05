@@ -73,7 +73,8 @@ public class CreateUserTest extends AbstractIntegrationTest {
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
 			"password" : null,
-			"status" : "active"
+			"status" : "active",
+			"fullName" : "Nisse Hult"
 		}
 		""", responseJson)
 		
@@ -89,7 +90,8 @@ public class CreateUserTest extends AbstractIntegrationTest {
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
 			"password" : null,
-			"status" : "active"
+			"status" : "active",
+			"fullName" : "Nisse Hult"
 		}
 		""", new ObjectMapper().writeValueAsString(userInDatabase))
 		assertTrue(userInDatabase.hashedPassword.startsWith("\$shiro1\$SHA-256\$"))
