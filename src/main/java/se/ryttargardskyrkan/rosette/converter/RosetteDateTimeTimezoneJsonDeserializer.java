@@ -8,6 +8,9 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 
+/*
+ * Deserializes Rosette time (string format) to java.util.Date object 
+ */
 public class RosetteDateTimeTimezoneJsonDeserializer extends JsonDeserializer<Date> {
 	@Override
 	public Date deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {

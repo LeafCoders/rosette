@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse
 
 import static junit.framework.Assert.assertEquals
 
-public class CreatePosterTest extends AbstractIntegrationTest {
+public class CreatePosterWithInvalidContentTest extends AbstractIntegrationTest {
 
     @Test
     public void test() throws ClientProtocolException, IOException {
@@ -47,10 +47,10 @@ public class CreatePosterTest extends AbstractIntegrationTest {
         HttpPost postRequest = new HttpPost(baseUrl + "/posters")
         String requestBody = """
 		{
-			"title" : "Easter Poster",
+			"title" : "",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
-			"duration" : 15
+			"endTime" : "2011-02-26 10:00 Europe/Stockholm",
+			"duration" : 0
 		}
 		"""
         postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -58,35 +58,20 @@ public class CreatePosterTest extends AbstractIntegrationTest {
         HttpResponse response = httpClient.execute(postRequest)
 
         // Then
-        assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
+
+		// Asserting response
+		assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatusLine().getStatusCode())
         assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-
-        // Asserting response
-        String responseJson = TestUtil.jsonFromResponse(response)
-        Poster responsePoster = new ObjectMapper().readValue(responseJson, new TypeReference<Poster>() {})
-
-        TestUtil.assertJsonEquals("""
-		{
-			"id" : "${responsePoster.getId()}",
-			"title" : "Easter Poster",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
-			"duration" : 15
-		}
-		""", responseJson)
+		TestUtil.assertJsonEquals("""
+		[
+			{ "property" : "duration", "message" : "poster.duration.tooShort" },
+			{ "property" : "",         "message" : "poster.startBeforeEndTime" },
+			{ "property" : "title",    "message" : "poster.title.notEmpty" }
+		]
+		""", TestUtil.jsonFromResponse(response))
 
         // Asserting database
         List<Poster> postersInDatabase = mongoTemplate.findAll(Poster.class)
-
-        assertEquals(1L, mongoTemplate.count(new Query(), Poster.class))
-        TestUtil.assertJsonEquals("""
-		[{
-			"id" : "${responsePoster.getId()}",
-			"title" : "Easter Poster",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
-			"duration" : 15
-		}]
-		""", new ObjectMapper().writeValueAsString(postersInDatabase))
+        assertEquals(0L, mongoTemplate.count(new Query(), Poster.class))
     }
 }

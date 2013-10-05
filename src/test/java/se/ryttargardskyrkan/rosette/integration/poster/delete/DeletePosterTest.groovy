@@ -26,7 +26,7 @@ public class DeletePosterTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"username" : "lars.arvidsson@gmail.com",
+			"username" : "user@host.com",
 			"hashedPassword" : "${hashedPassword}",
 			"status" : "active"
 		}]
@@ -44,12 +44,16 @@ public class DeletePosterTest extends AbstractIntegrationTest {
         [{
             "_id" : "1",
             "title" : "Easter Poster",
-            "imageName" : "easter.jpg"
+			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:00 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:00 Europe/Stockholm")},
+			"duration" : 15
         },
         {
             "_id" : "2",
             "title" : "Christmas Eve",
-            "imageName" : "santa.jpg"
+			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:01 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:01 Europe/Stockholm")},
+			"duration" : 15
         }]
         """))
 
@@ -57,7 +61,7 @@ public class DeletePosterTest extends AbstractIntegrationTest {
 		HttpDelete deleteRequest = new HttpDelete(baseUrl + "/posters/2")
 		deleteRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		deleteRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
-		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), deleteRequest));
+		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("user@host.com", "password"), deleteRequest));
 		HttpResponse response = httpClient.execute(deleteRequest)
 
 		// Then
@@ -71,7 +75,9 @@ public class DeletePosterTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Easter Poster",
-			"imageName" : "easter.jpg"
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
+			"duration" : 15
 		}]""", new ObjectMapper().writeValueAsString(postersInDatabase))
 	}
 }

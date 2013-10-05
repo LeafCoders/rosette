@@ -24,11 +24,11 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-        String hashedPassword = new RosettePasswordService().encryptPassword("password");
+        String hashedPassword = new RosettePasswordService().encryptPassword("password")
         mongoTemplate.getCollection("users").insert(JSON.parse("""
         [{
             "_id" : "1",
-            "username" : "lars.arvidsson@gmail.com",
+            "username" : "user@host.com",
             "hashedPassword" : "${hashedPassword}",
             "status" : "active"
         }]
@@ -43,52 +43,66 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
         """));
 
         mongoTemplate.getCollection("posters").insert(JSON.parse("""
-      		[{
-      			"_id" : "1",
-      			"title" : "Easter Poster",
-      			"imageName" : "easter.jpg"
-      		},
-      		{
-      			"_id" : "2",
-      			"title" : "Christmas Eve",
-      			"imageName" : "santa.jpg"
-      		}]
-      		"""))
-
-
+  		[{
+			"_id" : "1",
+			"title" : "Easter Poster",
+			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:00 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:00 Europe/Stockholm")},
+			"duration" : 15
+		},
+		{
+			"_id" : "2",
+			"title" : "Christmas Eve",
+			"startTime" : ${TestUtil.mongoDate("2012-07-25 11:00 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-08-26 11:00 Europe/Stockholm")},
+			"duration" : 15
+  		}]
+  		"""))
 
 		// When
 		HttpPut putRequest = new HttpPut(baseUrl + "/posters/2")
 		String requestBody = """
 		{
 			"title" : "",
-			"imageName" : "summer.jpg"
+			"startTime" : "2013-01-02 11:00 Europe/Stockholm",
+			"endTime" : "2013-03-04 11:00 Europe/Stockholm",
+			"duration" : 16
 		}
 		"""
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
-		putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), putRequest));
+		putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("user@host.com", "password"), putRequest))
 		HttpResponse response = httpClient.execute(putRequest)
 
 		// Then
 
 		// Asserting response
 		assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatusLine().getStatusCode())
-//        assertEquals("poster.title.notEmpty", response.get)
-
+		TestUtil.assertJsonEquals("""
+		[{
+			"property" : "title",
+			"message" : "poster.title.notEmpty"
+		}]
+		""", TestUtil.jsonFromResponse(response))
+	
 		// Asserting groups in database
 		Query queryPosters = new Query();
-		List<Poster> postersInDatabase = mongoTemplate.find(queryPosters, Poster.class);
+		List<Poster> postersInDatabase = mongoTemplate.find(queryPosters, Poster.class)
 
 		assertEquals(2L, mongoTemplate.count(new Query(), Poster.class))
 		TestUtil.assertJsonEquals("""
 		[{
 			"id" : "1",
 			"title" : "Easter Poster",
-			"imageName" : "easter.jpg"
-		},{
-			"id" : "2",
-			"title" : "Christmas Eve",
-			"imageName" : "santa.jpg" 
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
+			"duration" : 15
+        },
+        {
+            "id" : "2",
+            "title" : "Christmas Eve",
+			"startTime" : "2012-07-25 11:00 Europe/Stockholm",
+			"endTime" : "2012-08-26 11:00 Europe/Stockholm",
+			"duration" : 15
 		}]
 		""", new ObjectMapper().writeValueAsString(postersInDatabase))
 	}

@@ -26,7 +26,7 @@ public class PosterController extends AbstractController {
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Poster getPoster(@PathVariable String id) {
-		checkPermission("posters:read:" + id);
+		checkPermission("read:posters:" + id);
 
         Poster poster = mongoTemplate.findById(id, Poster.class);
 		if (poster == null) {
@@ -42,7 +42,7 @@ public class PosterController extends AbstractController {
 		List<Poster> posters = new ArrayList<Poster>();
 		if (postersInDatabase != null) {
 			for (Poster posterInDatabase : postersInDatabase) {
-				if (isPermitted("posters:read:" + posterInDatabase.getId())) {
+				if (isPermitted("read:posters:" + posterInDatabase.getId())) {
 					posters.add(posterInDatabase);
 				}
 			}
@@ -54,7 +54,7 @@ public class PosterController extends AbstractController {
 	@RequestMapping(value = "posters", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Poster postPoster(@RequestBody Poster poster, HttpServletResponse response) {
-		checkPermission("posters:create");
+		checkPermission("create:posters");
 		validate(poster);
 		
 		mongoTemplate.insert(poster);
@@ -64,13 +64,15 @@ public class PosterController extends AbstractController {
 	}
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putGroup(@PathVariable String id, @RequestBody Poster poster, HttpServletResponse response) {
-		checkPermission("posters:update:" + id);
+	public void putPoster(@PathVariable String id, @RequestBody Poster poster, HttpServletResponse response) {
+		checkPermission("update:posters:" + id);
 		validate(poster);
 
 		Update update = new Update();
 		update.set("title", poster.getTitle());
-		update.set("imageName", poster.getImageName());
+		update.set("startTime", poster.getStartTime());
+		update.set("endTime", poster.getEndTime());
+		update.set("duration", poster.getDuration());
 
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Poster.class).getN() == 0) {
 			throw new NotFoundException();
@@ -81,18 +83,13 @@ public class PosterController extends AbstractController {
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("posters:delete:" + id);
+		checkPermission("delete:posters:" + id);
 
-        Poster poster = mongoTemplate.findById(id, Poster.class);
-		if (poster == null) {
+        Poster deletedPoster = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Poster.class);
+		if (deletedPoster == null) {
 			throw new NotFoundException();
 		} else {
-            Poster deletedPoster = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Poster.class);
-			if (deletedPoster == null) {
-				throw new NotFoundException();
-			} else {
-				response.setStatus(HttpStatus.OK.value());
-			}
+			response.setStatus(HttpStatus.OK.value());
 		}
 	}
 }
