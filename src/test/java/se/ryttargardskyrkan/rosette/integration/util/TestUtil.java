@@ -17,13 +17,8 @@ import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneConverter;
 
 public class TestUtil {
 
-	public static String responseBodyAsString(HttpResponse httpResponse) throws IOException {
-		return IOUtils.toString(httpResponse.getEntity().getContent(), "utf-8");
-	}
-	
 	public static void assertJsonEquals(String expectedJson, String actualJson) throws JsonProcessingException, IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		
 		assertEquals(objectMapper.readTree(expectedJson), objectMapper.readTree(actualJson));
 	}
 	
@@ -35,6 +30,10 @@ public class TestUtil {
 		return IOUtils.toString(response.getEntity().getContent(), "utf-8");
 	}
 	
+	/*
+	 * Converts Rosette time format to MongoDb format.
+	 * Use this when inserting json directly into database without using a model.
+	 */
 	public static String mongoDate(String rosetteDateTime) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		GregorianCalendar calendar = new GregorianCalendar(new SimpleTimeZone(0, "GMT"));

@@ -86,7 +86,8 @@ public class DeleteGroupMembershipTest extends AbstractIntegrationTest {
 			"userId" : "1",
 			"groupId" : "1",
 			"username":null,
-			"groupName":null
+			"groupName":null,
+			"userFullName":null
 		}]
 		""", new ObjectMapper().writeValueAsString(groupMembershipsInDatabase))
 	}

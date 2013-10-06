@@ -69,7 +69,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 		// Then
 		
 		// Asserting response
-		String responseJson = TestUtil.responseBodyAsString(response)
+		String responseJson = TestUtil.jsonFromResponse(response)
 		Permission responsePermission = new ObjectMapper().readValue(responseJson, Permission.class)
 		
 		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())

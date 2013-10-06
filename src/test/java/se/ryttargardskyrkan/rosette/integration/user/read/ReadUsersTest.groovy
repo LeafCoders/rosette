@@ -56,17 +56,20 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		String expectedUsers = """
 		[{
+            "id" : "2",
+            "username" : "nissehult",
+            "firstName" : null,
+            "lastName" : null,
+            "fullName" : "",
+            "password" : null,
+            "status" : "active"
+        },
+        {
 			"id" : "1",
 			"username" : "lars.arvidsson@gmail.com",
 			"firstName" : "Lars",
 			"lastName" : "Arvidsson",
-			"password" : null,
-			"status" : "active"
-		},{
-			"id" : "2",
-			"username" : "nissehult",
-			"firstName" : null,
-			"lastName" : null,
+			"fullName" : "Lars Arvidsson",
 			"password" : null,
 			"status" : "active"
 		}]

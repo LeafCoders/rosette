@@ -73,8 +73,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
-			"description" : "Nattvard och dop",
-			"themeId" : null
+			"description" : "Nattvard och dop"
 		}
 		""", responseJson)
 		
@@ -88,8 +87,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
-			"description" : "Nattvard och dop",
-			"themeId" : null
+			"description" : "Nattvard och dop"
 		}
 		""", new ObjectMapper().writeValueAsString(eventInDatabase))
 	}

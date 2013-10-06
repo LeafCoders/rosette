@@ -1,9 +1,5 @@
 package se.ryttargardskyrkan.rosette.model;
 
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -11,49 +7,57 @@ import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 
-@Document(collection = "events")
-@ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")
-public class Event {
-	@Id
-	private String id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
-    @NotEmpty(message = "event.title.notEmpty")
-	private String title;
+@Document(collection = "posters")
+@ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
+public class Poster {
+    @Id
+    private String id;
 
-	@NotNull(message = "event.startTime.notNull")
+    @NotEmpty(message = "poster.title.notEmpty")
+    private String title;
+
+	// Start using poster after this time
+	@NotNull(message = "poster.startTime.notNull")
 	@Indexed
 	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date startTime;
 
+	// Don't use poster after this time
+	@NotNull(message = "poster.endTime.notNull")
+	@Indexed
 	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 
-	private String description;
-
-	// Getters and setters
-
+	// Number of seconds to display poster in "slide show"
+	@Min(value = 1, message = "poster.duration.tooShort")
+	private int duration;
 	
-	public String getId() {
-		return id;
-	}
+    // Getters and setters
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
 	public Date getStartTime() {
 		return startTime;
@@ -71,11 +75,11 @@ public class Event {
 		this.endTime = endTime;
 	}
 
-	public String getDescription() {
-		return description;
-	}
+    public int getDuration() {
+        return duration;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 }
