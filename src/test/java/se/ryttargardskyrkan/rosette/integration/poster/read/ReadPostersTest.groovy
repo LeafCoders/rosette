@@ -21,8 +21,8 @@ public class ReadPostersTest extends AbstractIntegrationTest {
 		[{
 			"_id" : "1",
 			"title" : "Easter Poster",
-			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:00 Europe/Stockholm")},
-			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:00 Europe/Stockholm")},
+			"startTime" : ${TestUtil.mongoDate("2012-10-25 11:00 Europe/Stockholm")},
+			"endTime" : ${TestUtil.mongoDate("2012-10-26 11:00 Europe/Stockholm")},
 			"duration" : 15
 		},
 		{
@@ -56,8 +56,8 @@ public class ReadPostersTest extends AbstractIntegrationTest {
         [{
             "id" : "1",
             "title" : "Easter Poster",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
+			"startTime" : "2012-10-25 11:00 Europe/Stockholm",
+			"endTime" : "2012-10-26 11:00 Europe/Stockholm",
 			"duration" : 15
         },
         {

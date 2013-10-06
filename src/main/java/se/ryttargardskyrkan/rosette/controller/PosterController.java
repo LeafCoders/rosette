@@ -8,12 +8,13 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import se.ryttargardskyrkan.rosette.comparator.PosterComparator;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Poster;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -47,7 +48,7 @@ public class PosterController extends AbstractController {
 				}
 			}
 		}
-
+        Collections.sort(posters, new PosterComparator());
 		return posters;
 	}
 
