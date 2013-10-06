@@ -16,7 +16,7 @@ import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeseria
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 
 @Document(collection = "events")
-@ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "event.startBeforeEndTime")
+@ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")
 public class Event {
 	@Id
 	private String id;

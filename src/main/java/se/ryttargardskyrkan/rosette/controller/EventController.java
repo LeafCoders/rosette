@@ -81,16 +81,12 @@ public class EventController extends AbstractController {
 		validate(event);
 
 		Update update = new Update();
-		if (event.getTitle() != null)
-			update.set("title", event.getTitle());
-		if (event.getStartTime() != null)
-			update.set("startTime", event.getStartTime());
-		if (event.getEndTime() != null)
-			update.set("endTime", event.getEndTime());
-		if (event.getDescription() != null)
-			update.set("description", event.getDescription());
+        update.set("title", event.getTitle());
+        update.set("startTime", event.getStartTime());
+        update.set("endTime", event.getEndTime());
+        update.set("description", event.getDescription());
 
-		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
+        if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
 			throw new NotFoundException();
 		}
 
