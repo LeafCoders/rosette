@@ -81,16 +81,14 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 1",
 			"description" : null,			
 			"startTime" : null,
-			"endTime" : null,
-			"themeId" : null
+			"endTime" : null
 		},
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
-			"description" : "Nattvard",
-			"themeId" : null
+			"description" : "Nattvard"
 		}]
 		"""
 		Query query = new Query();

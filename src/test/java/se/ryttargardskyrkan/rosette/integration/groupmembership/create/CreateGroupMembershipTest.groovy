@@ -79,7 +79,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		// Then
 		
 		// Asserting response
-		String responseJson = TestUtil.responseBodyAsString(response)
+		String responseJson = TestUtil.jsonFromResponse(response)
 		GroupMembership responseGroupMembership = new ObjectMapper().readValue(responseJson, GroupMembership.class)
 		
 		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
@@ -90,7 +90,8 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 			"userId" : "2",
 			"groupId" : "1",
 			"username":null,
-			"groupName":null
+			"groupName":null,
+			"userFullName":null
 		}
 		""", responseJson)
 		
@@ -104,13 +105,15 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 			"userId" : "1",
 			"groupId" : "1",
             "username":null,
-            "groupName":null
+            "groupName":null,
+            "userFullName":null
 		},{
 			"id" : "${responseGroupMembership.getId()}",
 			"userId" : "2",
 			"groupId" : "1",
 			"username":null,
-			"groupName":null
+			"groupName":null,
+			"userFullName":null
 		}]
 		""", new ObjectMapper().writeValueAsString(groupMembershipsInDatabase))
 	}

@@ -98,6 +98,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 			"userId" : "1",
 			"groupId" : "1",
 			"username":null,
+			"userFullName":null,
 			"groupName":null
 		}]""", new ObjectMapper().writeValueAsString(mongoTemplate.findAll(GroupMembership.class)))
 		
@@ -107,7 +108,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"everyone" : null,
 			"userId" : "1",
-			"userFullName" : null,
+			"userFullName":null,
 			"groupId" : null,
 			"groupName" : null,
 			"patterns" : ["*"]

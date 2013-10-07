@@ -106,15 +106,13 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "title": "Måndagsgudstjänst 1",
 		            "startTime": "2012-09-24 11:00 Europe/Stockholm",
 		            "endTime": null,
-					"description" : null,
-		            "themeId": null
+					"description" : null
 		        }, {
 		            "id": "3",
 		            "title": "Måndagsgudstjänst 2",
 		            "startTime": "2012-09-24 17:00 Europe/Stockholm",
 		            "endTime": null,
-					"description" : null,
-		            "themeId": null
+					"description" : null
 		        }]
 		    }, {
 		        "date": "2012-09-25",
@@ -124,8 +122,7 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "title": "Tisdagsgudstjänst",
 		            "startTime": "2012-09-25 11:00 Europe/Stockholm",
 		            "endTime": null,
-					"description" : null,
-		            "themeId": null
+					"description" : null
 		        }]
 		    }, {
 		        "date": "2012-09-26",
@@ -135,8 +132,7 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "title": "Onsdagsgudstjänst",
 		            "startTime": "2012-09-26 11:00 Europe/Stockholm",
 		            "endTime": null,
-					"description" : null,
-		            "themeId": null
+					"description" : null
 		        }]
 		    }, {
 		        "date": "2012-09-27",
@@ -154,8 +150,7 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "title": "Lördagsgudstjänst",
 		            "startTime": "2012-09-29 11:00 Europe/Stockholm",
 		            "endTime": null,
-					"description" : null,
-		            "themeId": null
+					"description" : null
 		        }]
 		    }, {
 		        "date": "2012-09-30",
@@ -165,8 +160,7 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "title": "Söndagsgudstjänst",
 		            "startTime": "2012-09-30 11:00 Europe/Stockholm",
 		            "endTime": null,
-					"description" : null,
-		            "themeId": null
+					"description" : null
 		        }]
 		    }]
 		}

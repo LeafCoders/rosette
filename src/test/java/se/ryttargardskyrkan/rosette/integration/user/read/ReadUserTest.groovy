@@ -60,6 +60,7 @@ public class ReadUserTest extends AbstractIntegrationTest {
 			"username" : "lars.arvidsson@gmail.com",
 			"firstName" : "Lars",
 			"lastName" : "Arvidsson",
+			"fullName":"Lars Arvidsson",
 			"password" : null,
 			"status" : "active"
 		}

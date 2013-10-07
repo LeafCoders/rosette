@@ -80,6 +80,7 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 			"username" : "larsabrasha",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
+			"fullName":"Nisse Hult",
 			"password" : null,
 			"status" : "active"
 		}]""", new ObjectMapper().writeValueAsString(usersInDatabase))

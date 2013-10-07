@@ -8,6 +8,9 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 
+/*
+* Serializes java.util.Date object to Rosette time (string format) 
+*/
 public class RosetteDateTimeTimezoneJsonSerializer extends JsonSerializer<Date> {
 	
 	@Override

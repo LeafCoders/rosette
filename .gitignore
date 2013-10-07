@@ -6,3 +6,5 @@ target
 .classpath
 rosette.iml
 Test.iml
+.idea
+/build

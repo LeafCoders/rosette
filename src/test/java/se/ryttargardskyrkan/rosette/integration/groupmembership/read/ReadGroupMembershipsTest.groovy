@@ -77,13 +77,15 @@ public class ReadGroupMembershipsTest extends AbstractIntegrationTest {
 			"userId" : "1",
 			"groupId" : "1",
 			"username":"lars.arvidsson@gmail.com",
-			"groupName":"Admins"
+			"groupName":"Admins",
+			"userFullName":""
 		},{
 			"id" : "2",
 			"userId" : "2",
 			"groupId" : "1",
 			"username":"nisse",
-			"groupName":"Admins"
+			"groupName":"Admins",
+			"userFullName":""
 		}]
 		"""
 		TestUtil.assertJsonResponseEquals(expectedThemes, response)

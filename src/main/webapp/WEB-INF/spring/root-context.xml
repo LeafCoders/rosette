@@ -10,5 +10,7 @@
 	<import resource="persistence.xml" />
 	<import resource="security.xml" />
 	<import resource="validation.xml" />
+
+    <bean id="jsonpFilter" class="se.ryttargardskyrkan.rosette.filter.JsonpCallbackFilter"/>
 		
 </beans>
