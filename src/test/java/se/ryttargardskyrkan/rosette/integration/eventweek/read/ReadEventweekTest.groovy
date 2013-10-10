@@ -127,13 +127,17 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Måndagsgudstjänst 1",
 		            "startTime": "${mondayEarlyAsString}",
 		            "endTime": null,
-					"description" : null
+					"description" : null,
+					"requiredUserResourceTypes":null,
+					"userResources":null
 		        }, {
 		            "id": "3",
 		            "title": "Måndagsgudstjänst 2",
 		            "startTime": "${mondayLateAsString}",
 		            "endTime": null,
-					"description" : null
+					"description" : null,
+					"requiredUserResourceTypes":null,
+					"userResources":null
 		        }]
 		    }, {
 		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(1).toDate())}",
@@ -143,7 +147,9 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Tisdagsgudstjänst",
 		            "startTime": "${tuesdayAsString}",
 		            "endTime": null,
-					"description" : null
+					"description" : null,
+					"requiredUserResourceTypes":null,
+					"userResources":null
 		        }]
 		    }, {
 		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(2).toDate())}",
@@ -153,7 +159,9 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Onsdagsgudstjänst",
 		            "startTime": "${wednesdayAsString}",
 		            "endTime": null,
-					"description" : null
+					"description" : null,
+					"requiredUserResourceTypes":null,
+					"userResources":null
 		        }]
 		    }, {
 		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(3).toDate())}",
@@ -171,7 +179,9 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Lördagsgudstjänst",
 		            "startTime": "${saturdayAsString}",
 		            "endTime": null,
-					"description" : null
+					"description" : null,
+					"requiredUserResourceTypes":null,
+					"userResources":null
 		        }]
 		    }, {
 		        "date": "${RosetteDateConverter.dateToString(monday.plusDays(6).toDate())}",
@@ -181,7 +191,9 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "title": "Söndagsgudstjänst",
 		            "startTime": "${sundayAsString}",
 		            "endTime": null,
-					"description" : null
+					"description" : null,
+					"requiredUserResourceTypes":null,
+					"userResources":null
 		        }]
 		    }]
 		}

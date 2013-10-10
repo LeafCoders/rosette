@@ -3,21 +3,19 @@ package se.ryttargardskyrkan.rosette.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
@@ -63,10 +61,20 @@ public class GroupMembershipController extends AbstractController {
 
 	@RequestMapping(value = "groupMemberships", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<GroupMembership> getGroupMemberships(HttpServletResponse response) {
+	public List<GroupMembership> getGroupMemberships(@RequestParam(value = "groupId", defaultValue = "") String groupId, HttpServletRequest request, HttpServletResponse response) {
 		List<GroupMembership> groupMemberships = new ArrayList<GroupMembership>();
 
-		List<GroupMembership> groupMembershipsInDatabase = mongoTemplate.findAll(GroupMembership.class);
+		List<GroupMembership> groupMembershipsInDatabase = null;
+
+        Query query = new Query();
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "userFullName")));
+
+        if ("".equals(groupId)) {
+            groupMembershipsInDatabase = mongoTemplate.find(query, GroupMembership.class);
+        } else {
+            groupMembershipsInDatabase = mongoTemplate.find(query.addCriteria(Criteria.where("groupId").is(groupId)), GroupMembership.class);
+        }
+
 		if (groupMembershipsInDatabase != null) {
 
             List<User> users = mongoTemplate.findAll(User.class);

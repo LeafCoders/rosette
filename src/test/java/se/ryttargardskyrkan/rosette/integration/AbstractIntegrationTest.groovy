@@ -40,6 +40,7 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("themes")
 		mongoTemplate.dropCollection("permissions")
         mongoTemplate.dropCollection("posters")
+        mongoTemplate.dropCollection("userResourceTypes")
 	}
 	
 	@AfterClass

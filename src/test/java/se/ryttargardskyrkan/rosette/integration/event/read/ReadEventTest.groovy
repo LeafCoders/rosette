@@ -29,7 +29,24 @@ public class ReadEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 2",
 			"startTime" : ${TestUtil.mongoDate("2012-04-25 11:00 Europe/Stockholm")},
 			"description" : "Dopgudstjänst",
-			"endTime" : null
+			"endTime" : null,
+			"requiredUserResourceTypes" : ["motesledare"],
+			"userResources" :
+			    [{
+			        "userResourceTypeId" : "tolk",
+			        "userReferences" :
+			            [{
+			                "userId" : "1",
+			                "userFullName" : "Nisse Hult"
+                        }]
+			    },{
+			        "userResourceTypeId" : "motesledare",
+			        "userReferences" :
+			            [{
+			                "userId" : "2",
+			                "userFullName" : "Lars Arvidsson"
+                        }]
+			    }]
 		},
 		{
 			"_id" : "3",
@@ -60,7 +77,26 @@ public class ReadEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 2",
 			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null,
-			"description" : "Dopgudstjänst"
+			"description" : "Dopgudstjänst",
+			"requiredUserResourceTypes" : ["motesledare"],
+			"userResources" :
+			    [{
+			        "userResourceTypeId" : "tolk",
+			        "userResourceTypeName" : null,
+			        "userReferences" :
+			            [{
+			                "userId" : "1",
+			                "userFullName" : "Nisse Hult"
+                        }]
+			    },{
+			        "userResourceTypeId" : "motesledare",
+			        "userResourceTypeName" : null,
+			        "userReferences" :
+			            [{
+			                "userId" : "2",
+			                "userFullName" : "Lars Arvidsson"
+                        }]
+			    }]
 		}
 		"""
 		TestUtil.assertJsonResponseEquals(expectedEvent, response)

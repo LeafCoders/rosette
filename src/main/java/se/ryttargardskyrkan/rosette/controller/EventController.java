@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -43,8 +44,8 @@ public class EventController extends AbstractController {
 	@RequestMapping(value = "events", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Event> getEvents(@RequestParam(required = false) String themeId, HttpServletResponse response) {
-		Query query = new Query();
-		query.sort().on("startTime", Order.ASCENDING);
+        Query query = new Query();
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "startTime")));
 
 		if (themeId != null) {
 			query.addCriteria(Criteria.where("themeId").is(themeId));
@@ -85,6 +86,8 @@ public class EventController extends AbstractController {
         update.set("startTime", event.getStartTime());
         update.set("endTime", event.getEndTime());
         update.set("description", event.getDescription());
+        update.set("requiredUserResourceTypes", event.getRequiredUserResourceTypes());
+        update.set("userResources", event.getUserResources());
 
         if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
 			throw new NotFoundException();

@@ -1,6 +1,7 @@
 package se.ryttargardskyrkan.rosette.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -36,9 +37,12 @@ public class Event {
 
 	private String description;
 
+    private List<String> requiredUserResourceTypes;
+
+    private List<UserResource> userResources;
+
 	// Getters and setters
 
-	
 	public String getId() {
 		return id;
 	}
@@ -78,4 +82,20 @@ public class Event {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+    public List<String> getRequiredUserResourceTypes() {
+        return requiredUserResourceTypes;
+    }
+
+    public void setRequiredUserResourceTypes(List<String> requiredUserResourceTypes) {
+        this.requiredUserResourceTypes = requiredUserResourceTypes;
+    }
+
+    public List<UserResource> getUserResources() {
+        return userResources;
+    }
+
+    public void setUserResources(List<UserResource> userResources) {
+        this.userResources = userResources;
+    }
 }

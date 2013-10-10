@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -48,8 +49,8 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Group> getGroups(HttpServletResponse response) {
-		Query query = new Query();
-		query.sort().on("groupname", Order.ASCENDING);
+        Query query = new Query();
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "groupname")));
 
 		List<Group> groupsInDatabase = mongoTemplate.find(query, Group.class);
 		List<Group> groups = new ArrayList<Group>();
