@@ -33,7 +33,7 @@ public class GroupMembershipController extends AbstractController {
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public GroupMembership getGroupMembership(@PathVariable String id) {
-		checkPermission("groupMemberships:read:" + id);
+		checkPermission("read:groupMemberships:" + id);
 
 		GroupMembership groupMembership = mongoTemplate.findById(id, GroupMembership.class);
 		if (groupMembership == null) {
@@ -81,7 +81,7 @@ public class GroupMembershipController extends AbstractController {
             List<Group> groups = mongoTemplate.findAll(Group.class);
 
 			for (GroupMembership groupMembershipInDatabase : groupMembershipsInDatabase) {
-				if (isPermitted("groupMemberships:read:" + groupMembershipInDatabase.getId())) {
+				if (isPermitted("read:groupMemberships:" + groupMembershipInDatabase.getId())) {
                     for (Group group : groups) {
                         if (group.getId().equals(groupMembershipInDatabase.getGroupId())) {
                             groupMembershipInDatabase.setGroupName(group.getName());
@@ -107,7 +107,7 @@ public class GroupMembershipController extends AbstractController {
 	@RequestMapping(value = "groupMemberships", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public GroupMembership postGroupMembership(@RequestBody GroupMembership groupMembership, HttpServletResponse response) {
-		checkPermission("groupMemberships:create");
+		checkPermission("create:groupMemberships");
 		validate(groupMembership);
 
         long count = mongoTemplate.count(Query.query(Criteria.where("userId").is(groupMembership.getUserId()).and("groupId").is(groupMembership.getGroupId())), GroupMembership.class);
@@ -127,7 +127,7 @@ public class GroupMembershipController extends AbstractController {
 
     @RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public void putGroupMembership(@PathVariable String id, @RequestBody GroupMembership groupMembership, HttpServletResponse response) {
-        checkPermission("users:update:" + id);
+        checkPermission("update:groupMemberships:" + id);
         validate(groupMembership);
 
         long count = mongoTemplate.count(Query.query(Criteria.where("userId").is(groupMembership.getUserId()).and("groupId").is(groupMembership.getGroupId())), GroupMembership.class);
@@ -153,7 +153,7 @@ public class GroupMembershipController extends AbstractController {
 
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteGroupMembership(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("groupMemberships:delete:" + id);
+		checkPermission("delete:groupMemberships:" + id);
 
 		GroupMembership deletedGroupMembership = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), GroupMembership.class);
 		if (deletedGroupMembership == null) {

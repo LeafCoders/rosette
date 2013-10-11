@@ -40,7 +40,7 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public User getUser(@PathVariable String id) {
-		checkPermission("users:read:" + id);
+		checkPermission("read:users:" + id);
 		
 		User user = mongoTemplate.findById(id, User.class);
 		if (user == null) {
@@ -59,7 +59,7 @@ public class UserController extends AbstractController {
 		List<User> users = new ArrayList<User>();
 		if (usersInDatabase != null) {
 			for (User userInDatabase : usersInDatabase) {
-				if (isPermitted("users:read:" + userInDatabase.getId())) {
+				if (isPermitted("read:users:" + userInDatabase.getId())) {
 					users.add(userInDatabase);
 				}
 			}
@@ -71,7 +71,7 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "users", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
-		checkPermission("users:create");
+		checkPermission("create:users");
 		validate(user);
 
 		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
@@ -92,7 +92,7 @@ public class UserController extends AbstractController {
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
-		checkPermission("users:update:" + id);
+		checkPermission("update:users:" + id);
 		validate(user);
 
 		Update update = new Update();
@@ -123,7 +123,7 @@ public class UserController extends AbstractController {
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteUser(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("users:delete:" + id);
+		checkPermission("delete:users:" + id);
 
 		User user = mongoTemplate.findById(id, User.class);
 		if (user == null) {

@@ -34,7 +34,7 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Permission getPermission(@PathVariable String id) {
-		checkPermission("permissions:read");
+		checkPermission("read:permissions");
 		
 		Permission permission = mongoTemplate.findById(id, Permission.class);
 		if (permission == null) {
@@ -50,7 +50,7 @@ public class PermissionController extends AbstractController {
 		List<Permission> permissions = new ArrayList<Permission>();
 		if (permissionsInDatabase != null) {
 			for (Permission permissionInDatabase : permissionsInDatabase) {
-				if (isPermitted("permissions:read:" + permissionInDatabase.getId())) {
+				if (isPermitted("read:permissions:" + permissionInDatabase.getId())) {
 					permissions.add(permissionInDatabase);
 				}
 			}
@@ -62,7 +62,7 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Permission postPermission(@RequestBody Permission permission, HttpServletResponse response) {
-		checkPermission("permissions:create");
+		checkPermission("create:permissions");
 		validate(permission);
 
 		// Setting groupName and userFullname
@@ -89,7 +89,7 @@ public class PermissionController extends AbstractController {
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putPermission(@PathVariable String id, @RequestBody Permission permission, HttpServletResponse response) {
-		checkPermission("permissions:update:" + id);
+		checkPermission("update:permissions:" + id);
 		validate(permission);
 
 		Update update = new Update();
@@ -108,7 +108,7 @@ public class PermissionController extends AbstractController {
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deletePermission(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("permissions:delete:" + id);
+		checkPermission("delete:permissions:" + id);
 
 		Permission deletedPermission = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Permission.class);
 		if (deletedPermission == null) {

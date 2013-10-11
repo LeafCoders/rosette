@@ -37,7 +37,7 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Group getGroup(@PathVariable String id) {
-		checkPermission("groups:read:" + id);
+		checkPermission("read:groups:" + id);
 		
 		Group group = mongoTemplate.findById(id, Group.class);
 		if (group == null) {
@@ -56,7 +56,7 @@ public class GroupController extends AbstractController {
 		List<Group> groups = new ArrayList<Group>();
 		if (groupsInDatabase != null) {
 			for (Group groupInDatabase : groupsInDatabase) {
-				if (isPermitted("groups:read:" + groupInDatabase.getId())) {
+				if (isPermitted("read:groups:" + groupInDatabase.getId())) {
 					groups.add(groupInDatabase);
 				}
 			}
@@ -68,7 +68,7 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Group postGroup(@RequestBody Group group, HttpServletResponse response) {
-		checkPermission("groups:create");
+		checkPermission("create:groups");
 		validate(group);
 		
 		mongoTemplate.insert(group);
@@ -79,7 +79,7 @@ public class GroupController extends AbstractController {
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putGroup(@PathVariable String id, @RequestBody Group group, HttpServletResponse response) {
-		checkPermission("groups:update:" + id);
+		checkPermission("update:groups:" + id);
 		validate(group);
 
 		Update update = new Update();
@@ -102,7 +102,7 @@ public class GroupController extends AbstractController {
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("groups:delete:" + id);
+		checkPermission("delete:groups:" + id);
 
 		Group group = mongoTemplate.findById(id, Group.class);
 		if (group == null) {

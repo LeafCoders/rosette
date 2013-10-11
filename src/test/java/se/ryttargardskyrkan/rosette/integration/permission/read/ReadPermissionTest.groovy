@@ -27,7 +27,7 @@ public class ReadPermissionTest extends AbstractIntegrationTest {
 		},{
 			"_id" : "2",
 			"everyone" : true,
-			"patterns" : ["permissions:*"]
+			"patterns" : ["read:permissions"]
 		}]
 		"""))
 
@@ -48,7 +48,7 @@ public class ReadPermissionTest extends AbstractIntegrationTest {
 			"userFullName" : null,
 			"groupId" : null,
 			"groupName" : null,
-			"patterns" : ["permissions:*"]
+			"patterns" : ["read:permissions"]
 		}
 		"""
 		TestUtil.assertJsonResponseEquals(expectedPermission, response)
