@@ -37,6 +37,7 @@ public class Event {
 
 	private String description;
 
+    /* List of ids to required user resource types */
     private List<String> requiredUserResourceTypes;
 
     private List<UserResource> userResources;

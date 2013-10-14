@@ -34,6 +34,22 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 			"status" : "active"
 		}]
 		"""));
+
+        mongoTemplate.getCollection("userResourceTypes").insert(JSON.parse("""
+		[{
+			"_id" : "0",
+            "name" : "Tolkar",
+			"groupId" : "2"
+		},{
+			"_id" : "1",
+            "name" : "Mötesledare",
+			"groupId" : "1"
+		},{
+		    "_id" : "2",
+		    "name" : "Ljustekniker",
+		    "groupId" : "3"
+		}]
+		"""))
 		 
 		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
@@ -53,9 +69,20 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 2",
 			"startTime" : ${TestUtil.mongoDate("2012-04-25 11:00 Europe/Stockholm")},
 			"description" : "Dopgudstjänst",
-			"requiredUserResourceTypes" : ["Tolk", "Mötesledare"],
+			"requiredUserResourceTypes" : ["0", "1"],
 			"userResources" :
 			    [{
+			        "userResourceTypeId" : "2",
+			        "userResourceTypeName" : "Ljustekniker",
+			        "userReferences" :
+			            [{
+			                "userId" : "5",
+			                "userFullName" : "Carl Larsson"
+                        },{
+			                "userId" : "6",
+			                "userFullName" : "Astrid Lindgren"
+                        }]
+			    },{
 			        "userResourceTypeId" : "0",
 			        "userResourceTypeName" : "Tolk",
 			        "userReferences" :
@@ -70,17 +97,6 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 			            [{
 			                "userId" : "2",
 			                "userFullName" : "Lars Arvidsson"
-                        }]
-			    },{
-			        "userResourceTypeId" : "2",
-			        "userResourceTypeName" : "Ljustekniker",
-			        "userReferences" :
-			            [{
-			                "userId" : "5",
-			                "userFullName" : "Carl Larsson"
-                        },{
-			                "userId" : "6",
-			                "userFullName" : "Astrid Lindgren"
                         }]
 			    }]
 		}]
@@ -130,7 +146,7 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
 			"description" : "Nattvard",
-			"requiredUserResourceTypes" : ["Tolk", "Mötesledare"],
+			"requiredUserResourceTypes" : ["0", "1"],
 			"userResources" :
 			    [{
 			        "userResourceTypeId" : "0",

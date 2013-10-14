@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Event;
 import se.ryttargardskyrkan.rosette.model.UserResource;
+import se.ryttargardskyrkan.rosette.model.UserResourceType;
 
 @Controller
 public class EventController extends AbstractController {
@@ -66,6 +67,10 @@ public class EventController extends AbstractController {
 	public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
 		checkPermission("create:events");
 		validate(event);
+
+        if (event.getUserResources() != null && !event.getUserResources().isEmpty()) {
+            event.setUserResources(sortUserResources(event.getUserResources()));
+        }
 
 		mongoTemplate.insert(event);
 
@@ -135,12 +140,12 @@ public class EventController extends AbstractController {
             }
         }
 
-        // TODO sort userResources
+        List<UserResource> sortedUserResources = sortUserResources(userResources);
 
         if (userResources.isEmpty()) {
             update.set("userResources", null);
         } else {
-            update.set("userResources", userResources);
+            update.set("userResources", sortedUserResources);
         }
 
         if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
@@ -161,4 +166,27 @@ public class EventController extends AbstractController {
 			response.setStatus(HttpStatus.OK.value());
 		}
 	}
+
+    private List<UserResource> sortUserResources(List<UserResource> userResources) {
+        List<UserResource> sortedUserResources = null;
+
+        if (userResources != null && !userResources.isEmpty()) {
+            sortedUserResources = new ArrayList<UserResource>();
+
+            Query query = new Query();
+            query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "sortOrder")));
+            List<UserResourceType> userResourceTypes = mongoTemplate.find(query, UserResourceType.class);
+
+            for (UserResourceType userResourceType : userResourceTypes) {
+                for (UserResource userResource : userResources) {
+                    if (userResourceType.getId().equals(userResource.getUserResourceTypeId())) {
+                        sortedUserResources.add(userResource);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return sortedUserResources;
+    }
 }

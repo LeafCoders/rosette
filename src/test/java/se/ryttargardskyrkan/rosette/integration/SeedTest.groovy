@@ -154,7 +154,7 @@ class SeedTest extends AbstractIntegrationTest {
 			"startTime" : ${TestUtil.mongoDate(today + " 11:00 Europe/Stockholm")},
 			"description" : "Dopgudstjänst",
 			"endTime" : null,
-			"requiredUserResourceTypes" : ["Mötesledare", "Tolkar", "Ljudtekniker"],
+			"requiredUserResourceTypes" : ["1", "2", "4"],
 			"userResources" :
 			    [{
 			        "userResourceTypeId" : "1",

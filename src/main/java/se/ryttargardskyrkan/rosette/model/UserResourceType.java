@@ -21,6 +21,8 @@ public class UserResourceType {
     @NotEmpty(message = "userResourceType.name.notEmpty")
     private String name;
     private String groupId;
+
+    /* The order of presentation for resources in events */
     @Min(0)
     private int sortOrder;
 
