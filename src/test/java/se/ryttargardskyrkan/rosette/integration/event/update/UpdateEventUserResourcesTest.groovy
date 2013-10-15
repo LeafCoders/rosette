@@ -1,9 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration.event.update
 
-import static junit.framework.Assert.*
-
-import javax.servlet.http.HttpServletResponse
-
+import com.mongodb.util.JSON
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
@@ -14,15 +11,16 @@ import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
-import com.mongodb.util.JSON
+import javax.servlet.http.HttpServletResponse
 
-public class UpdateEventTest extends AbstractIntegrationTest {
+import static junit.framework.Assert.assertEquals
+
+public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -36,12 +34,28 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"status" : "active"
 		}]
 		"""));
+
+        mongoTemplate.getCollection("userResourceTypes").insert(JSON.parse("""
+		[{
+			"_id" : "0",
+            "name" : "Tolkar",
+			"groupId" : "2"
+		},{
+			"_id" : "1",
+            "name" : "Mötesledare",
+			"groupId" : "1"
+		},{
+		    "_id" : "2",
+		    "name" : "Ljustekniker",
+		    "groupId" : "3"
+		}]
+		"""))
 		 
 		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
 			"_id" : "1",
 			"userId" : "1",
-			"patterns" : ["*"]
+			"patterns" : ["update:events:*:title", "update:events:*:startTime", "update:events:*:description", "update:events:*:userResources:0", "update:events:*:userResources:1"]
 		}]
 		"""));
 		
@@ -54,7 +68,37 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"_id" : "2",
 			"title" : "Gudstjänst 2",
 			"startTime" : ${TestUtil.mongoDate("2012-04-25 11:00 Europe/Stockholm")},
-			"description" : "Dopgudstjänst"
+			"description" : "Dopgudstjänst",
+			"requiredUserResourceTypes" : ["0", "1"],
+			"userResources" :
+			    [{
+			        "userResourceTypeId" : "2",
+			        "userResourceTypeName" : "Ljustekniker",
+			        "userReferences" :
+			            [{
+			                "userId" : "5",
+			                "userFullName" : "Carl Larsson"
+                        },{
+			                "userId" : "6",
+			                "userFullName" : "Astrid Lindgren"
+                        }]
+			    },{
+			        "userResourceTypeId" : "0",
+			        "userResourceTypeName" : "Tolk",
+			        "userReferences" :
+			            [{
+			                "userId" : "1",
+			                "userFullName" : "Nisse Hult"
+                        }]
+			    },{
+			        "userResourceTypeId" : "1",
+			        "userResourceTypeName" : "Mötesledare",
+			        "userReferences" :
+			            [{
+			                "userId" : "2",
+			                "userFullName" : "Lars Arvidsson"
+                        }]
+			    }]
 		}]
 		"""))
 
@@ -65,7 +109,18 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"id" : "1",
 			"title" : "Gudstjänst 2 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"description" : "Nattvard"
+			"description" : "Nattvard",
+			"requiredUserResourceTypes" : ["Tolk", "Mötesledare"],
+			"userResources" :
+			    [{
+			        "userResourceTypeId" : "0",
+			        "userResourceTypeName" : "Tolk",
+			        "userReferences" :
+			            [{
+			                "userId" : "3",
+			                "userFullName" : "Pelle Plutt"
+                        }]
+			    }]
 		}
 		"""
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -79,9 +134,9 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
 			"title" : "Gudstjänst 1",
-			"description" : null,			
 			"startTime" : null,
 			"endTime" : null,
+			"description" : null,
 			"requiredUserResourceTypes":null,
 			"userResources":null
 		},
@@ -91,8 +146,28 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
 			"description" : "Nattvard",
-			"requiredUserResourceTypes":null,
-			"userResources":null
+			"requiredUserResourceTypes" : ["0", "1"],
+			"userResources" :
+			    [{
+			        "userResourceTypeId" : "0",
+			        "userResourceTypeName" : "Tolk",
+			        "userReferences" :
+			            [{
+			                "userId" : "3",
+			                "userFullName" : "Pelle Plutt"
+                        }]
+			    },{
+			        "userResourceTypeId" : "2",
+			        "userResourceTypeName" : "Ljustekniker",
+			        "userReferences" :
+			            [{
+			                "userId" : "5",
+			                "userFullName" : "Carl Larsson"
+                        },{
+			                "userId" : "6",
+			                "userFullName" : "Astrid Lindgren"
+                        }]
+			    }]
 		}]
 		"""
 		Query query = new Query();

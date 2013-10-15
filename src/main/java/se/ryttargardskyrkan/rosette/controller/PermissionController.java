@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -34,7 +35,7 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Permission getPermission(@PathVariable String id) {
-		checkPermission("permissions:read");
+		checkPermission("read:permissions");
 		
 		Permission permission = mongoTemplate.findById(id, Permission.class);
 		if (permission == null) {
@@ -46,11 +47,14 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Permission> getPermissions(HttpServletResponse response) {
-		List<Permission> permissionsInDatabase = mongoTemplate.findAll(Permission.class);
+        Query query = new Query();
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "groupName"), new Sort.Order(Sort.Direction.ASC, "userFullName")));
+
+		List<Permission> permissionsInDatabase = mongoTemplate.find(query, Permission.class);
 		List<Permission> permissions = new ArrayList<Permission>();
 		if (permissionsInDatabase != null) {
 			for (Permission permissionInDatabase : permissionsInDatabase) {
-				if (isPermitted("permissions:read:" + permissionInDatabase.getId())) {
+				if (isPermitted("read:permissions:" + permissionInDatabase.getId())) {
 					permissions.add(permissionInDatabase);
 				}
 			}
@@ -62,7 +66,7 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Permission postPermission(@RequestBody Permission permission, HttpServletResponse response) {
-		checkPermission("permissions:create");
+		checkPermission("create:permissions");
 		validate(permission);
 
 		// Setting groupName and userFullname
@@ -89,7 +93,7 @@ public class PermissionController extends AbstractController {
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putPermission(@PathVariable String id, @RequestBody Permission permission, HttpServletResponse response) {
-		checkPermission("permissions:update:" + id);
+		checkPermission("update:permissions:" + id);
 		validate(permission);
 
 		Update update = new Update();
@@ -108,7 +112,7 @@ public class PermissionController extends AbstractController {
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deletePermission(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("permissions:delete:" + id);
+		checkPermission("delete:permissions:" + id);
 
 		Permission deletedPermission = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Permission.class);
 		if (deletedPermission == null) {
