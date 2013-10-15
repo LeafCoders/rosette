@@ -94,7 +94,28 @@ public class EventController extends AbstractController {
             update.set("description", event.getDescription());
         if (isPermitted("update:events:" + id + ":requiredUserResourceTypes"))
             update.set("requiredUserResourceTypes", event.getRequiredUserResourceTypes());
+        update.set("userResources", updatedUserResourcesForEvent(id, event));
 
+        if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
+			throw new NotFoundException();
+		}
+
+		response.setStatus(HttpStatus.OK.value());
+	}
+
+	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
+		checkPermission("delete:events:" + id);
+
+		Event deletedEvent = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
+		if (deletedEvent == null) {
+			throw new NotFoundException();
+		} else {
+			response.setStatus(HttpStatus.OK.value());
+		}
+	}
+
+    private List<UserResource> updatedUserResourcesForEvent(String id, Event event) {
         List<UserResource> userResources = new ArrayList<UserResource>();
 
         // Updating existing userResources if permitted, preventing deleting if not permitted
@@ -142,30 +163,8 @@ public class EventController extends AbstractController {
 
         List<UserResource> sortedUserResources = sortUserResources(userResources);
 
-        if (userResources.isEmpty()) {
-            update.set("userResources", null);
-        } else {
-            update.set("userResources", sortedUserResources);
-        }
-
-        if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, Event.class).getN() == 0) {
-			throw new NotFoundException();
-		}
-
-		response.setStatus(HttpStatus.OK.value());
-	}
-
-	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")
-	public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("delete:events:" + id);
-
-		Event deletedEvent = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Event.class);
-		if (deletedEvent == null) {
-			throw new NotFoundException();
-		} else {
-			response.setStatus(HttpStatus.OK.value());
-		}
-	}
+        return sortedUserResources;
+    }
 
     private List<UserResource> sortUserResources(List<UserResource> userResources) {
         List<UserResource> sortedUserResources = null;
