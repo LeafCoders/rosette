@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -46,7 +47,10 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Permission> getPermissions(HttpServletResponse response) {
-		List<Permission> permissionsInDatabase = mongoTemplate.findAll(Permission.class);
+        Query query = new Query();
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "groupName"), new Sort.Order(Sort.Direction.ASC, "userFullName")));
+
+		List<Permission> permissionsInDatabase = mongoTemplate.find(query, Permission.class);
 		List<Permission> permissions = new ArrayList<Permission>();
 		if (permissionsInDatabase != null) {
 			for (Permission permissionInDatabase : permissionsInDatabase) {

@@ -50,7 +50,7 @@ public class GroupController extends AbstractController {
 	@ResponseBody
 	public List<Group> getGroups(HttpServletResponse response) {
         Query query = new Query();
-        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "groupname")));
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
 
 		List<Group> groupsInDatabase = mongoTemplate.find(query, Group.class);
 		List<Group> groups = new ArrayList<Group>();
