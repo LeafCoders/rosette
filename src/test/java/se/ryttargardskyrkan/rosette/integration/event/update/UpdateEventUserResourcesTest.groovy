@@ -55,7 +55,7 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 		[{
 			"_id" : "1",
 			"userId" : "1",
-			"patterns" : ["update:events:*:title", "update:events:*:startTime", "update:events:*:description", "update:events:*:userResources:Tolk", "update:events:*:userResources:Mötesledare"]
+			"patterns" : ["update:events:*:title", "update:events:*:startTime", "update:events:*:description", "update:events:*:userResources:0", "update:events:*:userResources:1"]
 		}]
 		"""));
 		
