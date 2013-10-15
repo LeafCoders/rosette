@@ -131,12 +131,12 @@ public class EventController extends AbstractController {
                 }
 
                 if (updatedUserResource != null) {
-                    if (isPermitted("update:events:" + id + ":userResources:" + storedUserResource.getUserResourceTypeName())) {
+                    if (isPermitted("update:events:" + id + ":userResources:" + storedUserResource.getUserResourceTypeId())) {
                         userResources.add(updatedUserResource);
                     } else {
                         userResources.add(storedUserResource);
                     }
-                } else if (!isPermitted("update:events:" + id + ":userResources:" + storedUserResource.getUserResourceTypeName())) {
+                } else if (!isPermitted("update:events:" + id + ":userResources:" + storedUserResource.getUserResourceTypeId())) {
                     userResources.add(storedUserResource);
                 }
             }
@@ -155,7 +155,7 @@ public class EventController extends AbstractController {
                     }
                 }
 
-                if (!found && isPermitted("update:events:" + id + ":userResources:" + userResource.getUserResourceTypeName())) {
+                if (!found && isPermitted("update:events:" + id + ":userResources:" + userResource.getUserResourceTypeId())) {
                     userResources.add(userResource);
                 }
             }

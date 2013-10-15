@@ -131,17 +131,17 @@ class SeedTest extends AbstractIntegrationTest {
 			"_id" : "3",
 			"groupId" : "2",
 			"groupName" : "Mötesledare",
-			"patterns" : ["update:events:*:userResources:Mötesledare"]
+			"patterns" : ["update:events:*:userResources:1"]
 		},{
 			"_id" : "4",
 			"groupId" : "3",
 			"groupName" : "Tolkar",
-			"patterns" : ["update:events:*:userResources:Tolkar"]
+			"patterns" : ["update:events:*:userResources:2"]
 		},{
 			"_id" : "5",
 			"groupId" : "4",
 			"groupName" : "Ljudtekniker",
-			"patterns" : ["update:events:*:userResources:Ljudtekniker"]
+			"patterns" : ["update:events:*:userResources:3"]
 		}]
 		"""));
 
