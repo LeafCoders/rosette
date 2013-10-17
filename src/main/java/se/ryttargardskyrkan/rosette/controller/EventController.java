@@ -92,6 +92,10 @@ public class EventController extends AbstractController {
             update.set("endTime", event.getEndTime());
         if (isPermitted("update:events:" + id + ":description"))
             update.set("description", event.getDescription());
+        if (isPermitted("update:events:" + id + ":eventType"))
+            update.set("eventType", event.getEventType());
+        if (isPermitted("update:events:" + id + ":location"))
+            update.set("location", event.getLocation());
         if (isPermitted("update:events:" + id + ":requiredUserResourceTypes"))
             update.set("requiredUserResourceTypes", event.getRequiredUserResourceTypes());
         update.set("userResources", updatedUserResourcesForEvent(id, event));

@@ -117,6 +117,30 @@ class SeedTest extends AbstractIntegrationTest {
 		}]
 		"""))
 
+        mongoTemplate.getCollection("eventTypes").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+			"name" : "Gudstjänst"
+		},
+		{
+			"_id" : "2",
+			"name" : "Bön"
+		}]
+		"""))
+
+        mongoTemplate.getCollection("locations").insert(JSON.parse("""
+		[{
+			"_id" : "1",
+            "name" : "Kyrksalen",
+			"description" : "En stor lokal med plats för ca 700 pers."
+		},
+		{
+			"_id" : "2",
+            "name" : "Oasen",
+			"description" : "Konferensrum för ca 50 pers."
+		}]
+		"""))
+
         mongoTemplate.getCollection("permissions").insert(JSON.parse("""
 		[{
 			"_id" : "1",

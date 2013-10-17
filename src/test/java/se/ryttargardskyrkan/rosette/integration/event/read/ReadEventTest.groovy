@@ -27,6 +27,14 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		{
 			"_id" : "2",
 			"title" : "Gudstjänst 2",
+            "eventType" : {
+                "eventTypeId" : "1",
+                "eventTypeName" : "Gudstjänst"
+            },
+            "location" : {
+                "locationId" : "1",
+                "locationName" : "Kyrksalen"
+            },
 			"startTime" : ${TestUtil.mongoDate("2012-04-25 11:00 Europe/Stockholm")},
 			"description" : "Dopgudstjänst",
 			"endTime" : null,
@@ -75,6 +83,14 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		{
 			"id" : "2",
 			"title" : "Gudstjänst 2",
+			"eventType" : {
+                "eventTypeId" : "1",
+                "eventTypeName" : "Gudstjänst"
+            },
+            "location" : {
+                "locationId" : "1",
+                "locationName" : "Kyrksalen"
+            },
 			"startTime" : "2012-04-25 11:00 Europe/Stockholm",
 			"endTime" : null,
 			"description" : "Dopgudstjänst",
