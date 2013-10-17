@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -36,7 +37,7 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Group getGroup(@PathVariable String id) {
-		checkPermission("groups:read:" + id);
+		checkPermission("read:groups:" + id);
 		
 		Group group = mongoTemplate.findById(id, Group.class);
 		if (group == null) {
@@ -48,14 +49,14 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Group> getGroups(HttpServletResponse response) {
-		Query query = new Query();
-		query.sort().on("groupname", Order.ASCENDING);
+        Query query = new Query();
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
 
 		List<Group> groupsInDatabase = mongoTemplate.find(query, Group.class);
 		List<Group> groups = new ArrayList<Group>();
 		if (groupsInDatabase != null) {
 			for (Group groupInDatabase : groupsInDatabase) {
-				if (isPermitted("groups:read:" + groupInDatabase.getId())) {
+				if (isPermitted("read:groups:" + groupInDatabase.getId())) {
 					groups.add(groupInDatabase);
 				}
 			}
@@ -67,7 +68,7 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Group postGroup(@RequestBody Group group, HttpServletResponse response) {
-		checkPermission("groups:create");
+		checkPermission("create:groups");
 		validate(group);
 		
 		mongoTemplate.insert(group);
@@ -78,7 +79,7 @@ public class GroupController extends AbstractController {
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putGroup(@PathVariable String id, @RequestBody Group group, HttpServletResponse response) {
-		checkPermission("groups:update:" + id);
+		checkPermission("update:groups:" + id);
 		validate(group);
 
 		Update update = new Update();
@@ -101,7 +102,7 @@ public class GroupController extends AbstractController {
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("groups:delete:" + id);
+		checkPermission("delete:groups:" + id);
 
 		Group group = mongoTemplate.findById(id, Group.class);
 		if (group == null) {

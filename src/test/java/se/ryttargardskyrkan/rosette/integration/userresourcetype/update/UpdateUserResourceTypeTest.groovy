@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.poster.update
+package se.ryttargardskyrkan.rosette.integration.userresourcetype.update
 
 import com.mongodb.util.JSON
 import org.apache.http.HttpResponse
@@ -12,14 +12,14 @@ import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Poster
+import se.ryttargardskyrkan.rosette.model.UserResourceType
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 
 import javax.servlet.http.HttpServletResponse
 
 import static junit.framework.Assert.assertEquals
 
-public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
+public class UpdateUserResourceTypeTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -32,7 +32,7 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
             "hashedPassword" : "${hashedPassword}",
             "status" : "active"
         }]
-        """));
+        """))
 
         mongoTemplate.getCollection("permissions").insert(JSON.parse("""
         [{
@@ -40,33 +40,28 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
             "everyone" : true,
             "patterns" : ["*"]
         }]
-        """));
+        """))
 
-        mongoTemplate.getCollection("posters").insert(JSON.parse("""
+        mongoTemplate.getCollection("userResourceTypes").insert(JSON.parse("""
   		[{
 			"_id" : "1",
-			"title" : "Easter Poster",
-			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:00 Europe/Stockholm")},
-			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:00 Europe/Stockholm")},
-			"duration" : 15
+            "name" : "motesledare",
+			"groupId" : "1"
 		},
 		{
 			"_id" : "2",
-			"title" : "Christmas Eve",
-			"startTime" : ${TestUtil.mongoDate("2012-07-25 11:00 Europe/Stockholm")},
-			"endTime" : ${TestUtil.mongoDate("2012-08-26 11:00 Europe/Stockholm")},
-			"duration" : 15
-  		}]
+            "name" : "tolkar",
+			"groupId" : "2"
+		}]
   		"""))
 
+
 		// When
-		HttpPut putRequest = new HttpPut(baseUrl + "/posters/2")
+		HttpPut putRequest = new HttpPut(baseUrl + "/userResourceTypes/2")
 		String requestBody = """
 		{
-			"title" : "",
-			"startTime" : "2013-01-02 11:00 Europe/Stockholm",
-			"endTime" : "2013-03-04 11:00 Europe/Stockholm",
-			"duration" : 16
+			"name" : "ljudtekniker",
+			"groupId" : "3"
 		}
 		"""
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
@@ -76,34 +71,26 @@ public class UpdatePosterWithEmptyTitleTest extends AbstractIntegrationTest {
 		// Then
 
 		// Asserting response
-		assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatusLine().getStatusCode())
-		TestUtil.assertJsonEquals("""
-		[{
-			"property" : "title",
-			"message" : "poster.title.notEmpty"
-		}]
-		""", TestUtil.jsonFromResponse(response))
-	
-		// Asserting posters in database
-		Query queryPosters = new Query();
-		List<Poster> postersInDatabase = mongoTemplate.find(queryPosters, Poster.class)
+		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 
-		assertEquals(2L, mongoTemplate.count(new Query(), Poster.class))
+		// Asserting groups in database
+		Query queryUserResourceTypes = new Query()
+		List<UserResourceType> userResourceTypesInDatabase = mongoTemplate.find(queryUserResourceTypes, UserResourceType.class)
+
+		assertEquals(2L, mongoTemplate.count(new Query(), UserResourceType.class))
 		TestUtil.assertJsonEquals("""
 		[{
 			"id" : "1",
-			"title" : "Easter Poster",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
-			"duration" : 15
-        },
-        {
-            "id" : "2",
-            "title" : "Christmas Eve",
-			"startTime" : "2012-07-25 11:00 Europe/Stockholm",
-			"endTime" : "2012-08-26 11:00 Europe/Stockholm",
-			"duration" : 15
+            "name" : "motesledare",
+			"groupId" : "1",
+			"sortOrder" : 0
+		},
+		{
+			"id" : "2",
+            "name" : "ljudtekniker",
+			"groupId" : "3",
+			"sortOrder" : 0
 		}]
-		""", new ObjectMapper().writeValueAsString(postersInDatabase))
+		""", new ObjectMapper().writeValueAsString(userResourceTypesInDatabase))
 	}
 }

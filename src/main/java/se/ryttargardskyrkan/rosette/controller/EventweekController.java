@@ -74,7 +74,7 @@ public class EventweekController extends AbstractController {
 			List<Event> events = new ArrayList<Event>();
 			if (eventsInDatabase != null) {
 				for (Event eventInDatabase : eventsInDatabase) {
-					if (isPermitted("events:read:" + eventInDatabase.getId())) {
+					if (isPermitted("read:events:" + eventInDatabase.getId())) {
 						events.add(eventInDatabase);
 					}
 				}
