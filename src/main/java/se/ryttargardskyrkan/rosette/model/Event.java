@@ -37,6 +37,11 @@ public class Event {
 
 	private String description;
 
+    /* Id to the event type */
+    private EventTypeReference eventType;
+
+    private LocationReference location;
+
     /* List of ids to required user resource types */
     private List<String> requiredUserResourceTypes;
 
@@ -52,7 +57,7 @@ public class Event {
 		this.id = id;
 	}
 
-	public String getTitle() {
+    public String getTitle() {
 		return title;
 	}
 
@@ -83,6 +88,22 @@ public class Event {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+    public EventTypeReference getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventTypeReference eventType) {
+        this.eventType = eventType;
+    }
+
+    public LocationReference getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationReference location) {
+        this.location = location;
+    }
 
     public List<String> getRequiredUserResourceTypes() {
         return requiredUserResourceTypes;
