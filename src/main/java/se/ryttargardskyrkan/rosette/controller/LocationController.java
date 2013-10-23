@@ -10,9 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.model.Booking;
 import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,6 @@ import java.util.List;
 public class LocationController extends AbstractController {
     @Autowired
     private MongoTemplate mongoTemplate;
-    @Autowired
-    private MongoRealm mongoRealm;
 
     @RequestMapping(value = "locations/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -33,7 +30,7 @@ public class LocationController extends AbstractController {
         if (location == null) {
             throw new NotFoundException();
         }
-        return location;
+        return includeDependencies(location, mongoTemplate);
     }
 
     @RequestMapping(value = "locations", method = RequestMethod.GET, produces = "application/json")
@@ -45,9 +42,10 @@ public class LocationController extends AbstractController {
         List<Location> locationsInDatabase = mongoTemplate.find(query, Location.class);
         List<Location> locations = new ArrayList<Location>();
         if (locationsInDatabase != null) {
-            for (Location locationInDatabase : locationsInDatabase) {
-                if (isPermitted("read:locations:" + locationInDatabase.getId())) {
-                    locations.add(locationInDatabase);
+            for (Location location : locationsInDatabase) {
+                if (isPermitted("read:locations:" + location.getId())) {
+                	includeDependencies(location, mongoTemplate);
+                    locations.add(location);
                 }
             }
         }
@@ -93,4 +91,9 @@ public class LocationController extends AbstractController {
             response.setStatus(HttpStatus.OK.value());
         }
     }
+    
+	static public Location includeDependencies(final Location location, final MongoTemplate mongoTemplate) {
+		// TODO: Include map image asset for location
+		return location;
+	}
 }

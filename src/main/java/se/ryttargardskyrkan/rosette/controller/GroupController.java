@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,6 @@ import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 import se.ryttargardskyrkan.rosette.model.Permission;
-import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Controller

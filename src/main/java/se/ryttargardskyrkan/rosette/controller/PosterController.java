@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.comparator.PosterComparator;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Poster;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +20,6 @@ import java.util.List;
 public class PosterController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	@Autowired
-	private MongoRealm mongoRealm;
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -83,7 +80,7 @@ public class PosterController extends AbstractController {
 	}
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.DELETE, produces = "application/json")
-	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
+	public void deletePoster(@PathVariable String id, HttpServletResponse response) {
 		checkPermission("delete:posters:" + id);
 
         Poster deletedPoster = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Poster.class);

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
@@ -12,18 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.UserResourceType;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class UserResourceTypeController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	@Autowired
-	private MongoRealm mongoRealm;
 
 	@RequestMapping(value = "userResourceTypes/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody

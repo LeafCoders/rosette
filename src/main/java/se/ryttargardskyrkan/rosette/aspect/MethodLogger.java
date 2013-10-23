@@ -31,10 +31,10 @@ public class MethodLogger {
         	boolean first = true;
         	for (Object arg : args) {
         		if (!first) {
-        			first = false;
         			logMessageStringBuffer.append(", ");
         		}
         		logMessageStringBuffer.append(arg);
+    			first = false;
 			}
         }
         
