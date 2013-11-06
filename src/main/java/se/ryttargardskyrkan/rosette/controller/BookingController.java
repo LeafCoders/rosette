@@ -22,6 +22,9 @@ public class BookingController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private LocationController locationController;
+
 	@RequestMapping(value = "bookings/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Booking getBooking(@PathVariable String id) {
@@ -31,7 +34,10 @@ public class BookingController extends AbstractController {
 		if (booking == null) {
 			throw new NotFoundException();
 		}
-		return includeDependencies(booking, mongoTemplate);
+
+        insertDependenciesIntoBooking(booking);
+
+		return booking;
 	}
 
 	@RequestMapping(value = "bookings", method = RequestMethod.GET, produces = "application/json")
@@ -45,7 +51,7 @@ public class BookingController extends AbstractController {
 			for (Booking booking : bookingsInDatabase) {
 				if (isPermitted("read:bookings:" + booking.getId())) {
 					if (filterActiveToday(booking, onlyActiveToday)) {
-						includeDependencies(booking, mongoTemplate);
+						insertDependenciesIntoBooking(booking);
 						bookings.add(booking);
 					}
 				}
@@ -104,16 +110,15 @@ public class BookingController extends AbstractController {
 		response.setStatus(HttpStatus.OK.value());
 	}
 	
-	static public Booking includeDependencies(final Booking booking, final MongoTemplate mongoTemplate) {
+	public void insertDependenciesIntoBooking(final Booking booking) {
 		if (booking.getLocation().hasIdRef()) {
 	        Location location = mongoTemplate.findById(booking.getLocation().getIdRef(), Location.class);
 	        if (location == null) {
 	            throw new NotFoundException();
 	        }
 	        booking.getLocation().setReferredObject(location);
-	        LocationController.includeDependencies(location, mongoTemplate);
+	        locationController.insertDependenciesIntoLocation(location);
 		}
-		return booking;
 	}
 
 	private boolean filterActiveToday(Booking booking, boolean onlyActiveToday) {
