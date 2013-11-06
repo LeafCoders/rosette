@@ -137,6 +137,8 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 			"startTime" : null,
 			"endTime" : null,
 			"description" : null,
+			"eventType":null,
+			"location":null,
 			"requiredUserResourceTypes":null,
 			"userResources":null
 		},
@@ -146,6 +148,8 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
 			"description" : "Nattvard",
+			"eventType":null,
+			"location":null,
 			"requiredUserResourceTypes" : ["0", "1"],
 			"userResources" :
 			    [{

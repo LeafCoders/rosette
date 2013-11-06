@@ -75,24 +75,21 @@ public class ReadActiveBookingsTest extends AbstractIntegrationTest {
 			"customerName" : "Active",
 			"startTime" : "${today} 00:00 Europe/Stockholm",
 			"endTime" : "${today } 23:59 Europe/Stockholm",
-            "location" : { "idRef" : null, "text" : "Oasen" },
-			"locationData" : null
+            "location" : { "idRef" : null, "text" : "Oasen", "referredObject" : null }
 		},
 		{
 			"id" : "4",
 			"customerName" : "Active today early",
 			"startTime" : "${today } 23:51 Europe/Stockholm",
 			"endTime" : "${today } 23:52 Europe/Stockholm",
-            "location" : { "idRef" : null, "text" : "Boken" },
-			"locationData" : null
+            "location" : { "idRef" : null, "text" : "Boken", "referredObject" : null }
         },
 		{
 			"id" : "3",
 			"customerName" : "Active today",
 			"startTime" : "${today } 23:55 Europe/Stockholm",
 			"endTime" : "${today } 23:56 Europe/Stockholm",
-            "location" : { "idRef" : null, "text" : "Aspen" },
-			"locationData" : null
+            "location" : { "idRef" : null, "text" : "Aspen", "referredObject" : null }
         }]
         """
 		TestUtil.assertJsonResponseEquals(expectedBookings, response)

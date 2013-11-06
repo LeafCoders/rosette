@@ -5,12 +5,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.validator.HasIdOrText;
+import se.ryttargardskyrkan.rosette.validator.HasIdRefOrText;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -38,12 +38,8 @@ public class Booking {
 	private Date endTime;
 
     @NotNull(message = "booking.location.notNull")
-    @HasIdOrText
-    private IdOrText location;
-
-    // LocationData will not be stored in database. It will only be set for GET requests
-    @Transient
-    private Location locationData;
+    @HasIdRefOrText
+    private ObjectReference<Location> location;
 
     // Getters and setters
 
@@ -79,19 +75,11 @@ public class Booking {
 		this.endTime = endTime;
 	}
 
-    public IdOrText getLocation() {
+    public ObjectReference<Location> getLocation() {
         return location;
     }
 
-    public void setLocation(IdOrText location) {
+    public void setLocation(ObjectReference<Location> location) {
         this.location = location;
-    }
-
-    public Location getLocationData() {
-        return locationData;
-    }
-
-    public void setLocationData(Location locationData) {
-        this.locationData = locationData;
     }
 }

@@ -107,6 +107,8 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "startTime": "2012-09-24 11:00 Europe/Stockholm",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes" : null,
 					"userResources" : null
 		        }, {
@@ -115,6 +117,8 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "startTime": "2012-09-24 17:00 Europe/Stockholm",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes" : null,
 					"userResources" : null
 		        }]
@@ -127,6 +131,8 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "startTime": "2012-09-25 11:00 Europe/Stockholm",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes" : null,
 					"userResources" : null
 		        }]
@@ -139,6 +145,8 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "startTime": "2012-09-26 11:00 Europe/Stockholm",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes" : null,
 					"userResources" : null
 		        }]
@@ -159,6 +167,8 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "startTime": "2012-09-29 11:00 Europe/Stockholm",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]
@@ -171,6 +181,8 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		            "startTime": "2012-09-30 11:00 Europe/Stockholm",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]

@@ -10,12 +10,12 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = HasIdOrTextValidator.class)
+@Constraint(validatedBy = HasIdRefOrTextValidator.class)
 @Target( { METHOD, FIELD } )
 @Retention(RUNTIME)
-public @interface HasIdOrText {
+public @interface HasIdRefOrText {
 
-	String message() default "error.hasIdOrText.oneMustBeSet";
+	String message() default "error.hasIdRefOrText.oneMustBeSet";
 
 	Class<?>[] groups() default {};
 

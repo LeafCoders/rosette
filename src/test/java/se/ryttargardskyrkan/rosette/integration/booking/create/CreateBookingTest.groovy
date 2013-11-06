@@ -71,8 +71,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : "2012-03-25 13:00 Europe/Stockholm",
 			"endTime" : "2012-03-25 15:00 Europe/Stockholm",
-            "location" : { "idRef" : "1", "text" : null },
-			"locationData" : null
+            "location" : { "idRef" : "1", "text" : null, "referredObject" : null }
 		}
 		""", responseJson)
 
@@ -86,8 +85,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : "2012-03-25 13:00 Europe/Stockholm",
 			"endTime" : "2012-03-25 15:00 Europe/Stockholm",
-            "location" : { "idRef" : "1", "text" : null },
-            "locationData" : null
+            "location" : { "idRef" : "1", "text" : null, "referredObject" : null }
 		}]
 		""", new ObjectMapper().writeValueAsString(bookingsInDatabase))
     }

@@ -110,7 +110,7 @@ public class BookingController extends AbstractController {
 	        if (location == null) {
 	            throw new NotFoundException();
 	        }
-	        booking.setLocationData(location);
+	        booking.getLocation().setReferredObject(location);
 	        LocationController.includeDependencies(location, mongoTemplate);
 		}
 		return booking;
