@@ -23,7 +23,7 @@ public class ReadBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : ${TestUtil.mongoDate("2012-10-25 13:00 Europe/Stockholm")},
 			"endTime" : ${TestUtil.mongoDate("2012-10-25 15:00 Europe/Stockholm")},
-            "location" : { "idRef" : "1", "text" : null }
+            "location" : { "id" : "1", "text" : null }
 		},
 		{
 			"_id" : "2",
@@ -57,8 +57,7 @@ public class ReadBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : "2012-10-26 08:00 Europe/Stockholm",
 			"endTime" : "2012-10-26 12:00 Europe/Stockholm",
-            "location" : { "idRef" : null, "text" : "Oasen" },
-			"locationData" : null
+            "location" : { "idRef" : null, "text" : "Oasen", "referredObject" : null }
 		}
 		"""
 		TestUtil.assertJsonResponseEquals(expectedBooking, response)

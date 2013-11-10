@@ -82,6 +82,8 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"description" : null,			
 			"startTime" : null,
 			"endTime" : null,
+			"eventType":null,
+			"location":null,
 			"requiredUserResourceTypes":null,
 			"userResources":null
 		},
@@ -90,6 +92,8 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst 2 uppdaterad",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"eventType":null,
+			"location":null,
 			"description" : "Nattvard",
 			"requiredUserResourceTypes":null,
 			"userResources":null

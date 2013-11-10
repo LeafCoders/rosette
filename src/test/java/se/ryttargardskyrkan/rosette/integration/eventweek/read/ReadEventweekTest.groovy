@@ -128,6 +128,8 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "startTime": "${mondayEarlyAsString}",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }, {
@@ -136,6 +138,8 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "startTime": "${mondayLateAsString}",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]
@@ -148,6 +152,8 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "startTime": "${tuesdayAsString}",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]
@@ -160,6 +166,8 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "startTime": "${wednesdayAsString}",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]
@@ -180,6 +188,8 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "startTime": "${saturdayAsString}",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]
@@ -192,6 +202,8 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		            "startTime": "${sundayAsString}",
 		            "endTime": null,
 					"description" : null,
+					"eventType":null,
+			        "location":null,
 					"requiredUserResourceTypes":null,
 					"userResources":null
 		        }]

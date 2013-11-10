@@ -64,7 +64,7 @@ public class CreateBookingWithInvalidContentTest extends AbstractIntegrationTest
         assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		TestUtil.assertJsonEquals("""
 		[
-			{ "property" : "location", "message" : "error.hasIdOrText.oneMustBeSet" }
+			{ "property" : "location", "message" : "error.hasIdRefOrText.oneMustBeSet" }
 		]
 		""", TestUtil.jsonFromResponse(response))
 

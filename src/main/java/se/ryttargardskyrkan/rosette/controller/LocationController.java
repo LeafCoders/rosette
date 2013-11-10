@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.Booking;
 import se.ryttargardskyrkan.rosette.model.Location;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -30,7 +29,10 @@ public class LocationController extends AbstractController {
         if (location == null) {
             throw new NotFoundException();
         }
-        return includeDependencies(location, mongoTemplate);
+
+        insertDependenciesIntoLocation(location);
+
+        return location;
     }
 
     @RequestMapping(value = "locations", method = RequestMethod.GET, produces = "application/json")
@@ -44,7 +46,7 @@ public class LocationController extends AbstractController {
         if (locationsInDatabase != null) {
             for (Location location : locationsInDatabase) {
                 if (isPermitted("read:locations:" + location.getId())) {
-                	includeDependencies(location, mongoTemplate);
+                	insertDependenciesIntoLocation(location);
                     locations.add(location);
                 }
             }
@@ -92,8 +94,7 @@ public class LocationController extends AbstractController {
         }
     }
     
-	static public Location includeDependencies(final Location location, final MongoTemplate mongoTemplate) {
+	public void insertDependenciesIntoLocation(final Location location) {
 		// TODO: Include map image asset for location
-		return location;
 	}
 }

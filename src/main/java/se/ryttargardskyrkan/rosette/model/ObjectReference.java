@@ -1,17 +1,23 @@
 package se.ryttargardskyrkan.rosette.model;
 
-public class IdOrText {
+import org.springframework.data.annotation.Transient;
+
+public class ObjectReference<T> {
     private String idRef;
+
     private String text;
 
+    @Transient
+    private T referredObject;
+
     public boolean hasIdRef() {
-    	return (idRef != null) && !idRef.isEmpty();
+        return (idRef != null) && !idRef.isEmpty();
     }
-    
+
     public boolean hasText() {
-    	return (text != null) && !text.isEmpty();
+        return (text != null) && !text.isEmpty();
     }
-    
+
     // Getters and setters
 
     public String getIdRef() {
@@ -28,5 +34,13 @@ public class IdOrText {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public T getReferredObject() {
+        return referredObject;
+    }
+
+    public void setReferredObject(T referredObject) {
+        this.referredObject = referredObject;
     }
 }

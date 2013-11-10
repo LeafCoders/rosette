@@ -74,6 +74,8 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
 			"description" : "Nattvard och dop",
+			"eventType":null,
+			"location":null,
 			"requiredUserResourceTypes":null,
 			"userResources":null
 		}
@@ -89,6 +91,8 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
+			"eventType":null,
+			"location":null,
 			"description" : "Nattvard och dop",
 			"requiredUserResourceTypes":null,
 			"userResources":null
