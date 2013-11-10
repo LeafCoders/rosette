@@ -6,7 +6,7 @@ A controller handles requests and returns a response to the caller.
 
 The controller shall handle Create, Read, Update and Delete requests. The request shall follow this conventions:
 
-* `PUT /events`
+* `POST /events`
   * Creates a new event
   * Needs permission `create:events:2`, `create:events` or `create`
 * `GET /events/2`
@@ -15,7 +15,7 @@ The controller shall handle Create, Read, Update and Delete requests. The reques
 * `GET /events`
   * Gets all events
   * Needs permission `read:events` or `read`
-* `POST /events/2`
+* `PUT /events/2`
   * Updates event with id 2
   * Needs permission `update:events:2`, `update:events` or `update`
 * `DELETE /events/2`
