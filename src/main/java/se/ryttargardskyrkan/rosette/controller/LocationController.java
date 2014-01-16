@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +19,6 @@ import java.util.List;
 public class LocationController extends AbstractController {
     @Autowired
     private MongoTemplate mongoTemplate;
-    @Autowired
-    private MongoRealm mongoRealm;
 
     @RequestMapping(value = "locations/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -33,6 +29,9 @@ public class LocationController extends AbstractController {
         if (location == null) {
             throw new NotFoundException();
         }
+
+        insertDependenciesIntoLocation(location);
+
         return location;
     }
 
@@ -45,9 +44,10 @@ public class LocationController extends AbstractController {
         List<Location> locationsInDatabase = mongoTemplate.find(query, Location.class);
         List<Location> locations = new ArrayList<Location>();
         if (locationsInDatabase != null) {
-            for (Location locationInDatabase : locationsInDatabase) {
-                if (isPermitted("read:locations:" + locationInDatabase.getId())) {
-                    locations.add(locationInDatabase);
+            for (Location location : locationsInDatabase) {
+                if (isPermitted("read:locations:" + location.getId())) {
+                	insertDependenciesIntoLocation(location);
+                    locations.add(location);
                 }
             }
         }
@@ -93,4 +93,8 @@ public class LocationController extends AbstractController {
             response.setStatus(HttpStatus.OK.value());
         }
     }
+    
+	public void insertDependenciesIntoLocation(final Location location) {
+		// TODO: Include map image asset for location
+	}
 }

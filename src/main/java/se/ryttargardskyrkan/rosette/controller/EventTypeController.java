@@ -11,19 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.EventType;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class EventTypeController extends AbstractController {
     @Autowired
     private MongoTemplate mongoTemplate;
-    @Autowired
-    private MongoRealm mongoRealm;
 
     @RequestMapping(value = "eventTypes/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
