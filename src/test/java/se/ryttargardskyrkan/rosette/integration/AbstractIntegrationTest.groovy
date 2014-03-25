@@ -7,12 +7,13 @@ import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
 import org.springframework.data.mongodb.core.MongoTemplate
-
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import com.mongodb.Mongo
 import com.mongodb.MongoException
 
 abstract class AbstractIntegrationTest {
 	protected static MongoTemplate mongoTemplate
+	protected static GridFsTemplate gridFsTemplate
 	protected static DefaultHttpClient httpClient
 	protected static ObjectMapper mapper
 	
@@ -27,6 +28,7 @@ abstract class AbstractIntegrationTest {
 		httpClient.getConnectionManager().shutdown()
 		
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")
+		gridFsTemplate = new GridFsTemplate(mongoTemplate.mongoDbFactory, mongoTemplate.converter)
 		httpClient = new DefaultHttpClient()
 		mapper = new ObjectMapper()		
 	}
@@ -44,10 +46,12 @@ abstract class AbstractIntegrationTest {
         mongoTemplate.dropCollection("userResourceTypes")
         mongoTemplate.dropCollection("locations")
         mongoTemplate.dropCollection("bookings")
+        gridFsTemplate.delete(null)
 	}
 	
 	@AfterClass
 	static void afterClass() {
+		gridFsTemplate = null
 		mongoTemplate = null
 		
 		httpClient.getConnectionManager().shutdown()

@@ -2,22 +2,19 @@ package se.ryttargardskyrkan.rosette.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import se.ryttargardskyrkan.rosette.model.Event;
 import se.ryttargardskyrkan.rosette.model.Eventday;
 import se.ryttargardskyrkan.rosette.model.Eventweek;
@@ -64,7 +61,7 @@ public class EventweekController extends AbstractController {
 			DateTime untilDay = since.plusDays(i);
 			
 			Query query = new Query();
-			query.sort().on("startTime", Order.ASCENDING);
+			query.with(new Sort(Sort.Direction.ASC, "startTime"));
 			Criteria criteria = new Criteria();
 			criteria = Criteria.where("startTime").gte(sinceDay.toDate());
 			criteria = criteria.lt(untilDay.toDate());
