@@ -18,15 +18,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.model.Event;
 import se.ryttargardskyrkan.rosette.model.Eventday;
 import se.ryttargardskyrkan.rosette.model.Eventweek;
+import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
 public class EventweekController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private SecurityService security;
 	
 	@RequestMapping(value = "eventweeks/current", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Eventweek getCurrentEventweek(HttpServletResponse response) {
+		security.checkPermission("read:eventweek");
 		DateTime now = DateTime.now();
 		int year = now.getWeekyear();
 		int week = now.getWeekOfWeekyear();
@@ -38,6 +42,7 @@ public class EventweekController extends AbstractController {
 	@RequestMapping(value = "eventweeks/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Eventweek getEventweek(@PathVariable String id, HttpServletResponse response) {
+		security.checkPermission("read:eventweek");
 		int weekyear = Integer.parseInt(id.substring(0, 4));
 		int weekOfWeekyear = Integer.parseInt(id.substring(6, 8));
 		
@@ -88,13 +93,13 @@ public class EventweekController extends AbstractController {
 		// Header links
 		DateTime previousWeek = since.minusWeeks(1);
 		DateTime nextWeek = since.plusWeeks(1);
-		String headerLink = this.headerLink(previousWeek, nextWeek);
+		String headerLink = headerLink(previousWeek, nextWeek);
 		response.setHeader("Link", headerLink);
 
 		return eventweek;
 	}
 	
-	String headerLink(DateTime previousWeek, DateTime nextWeek) {
+	private String headerLink(DateTime previousWeek, DateTime nextWeek) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<eventweeks/");
 		sb.append(previousWeek.weekyear().get());

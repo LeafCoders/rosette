@@ -2,15 +2,12 @@ package se.ryttargardskyrkan.rosette.model;
 
 import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
-public class UploadResponse {
+public class UploadResponse extends IdBasedModel {
 
-	@Id
-	private String id;
     @NotNull
 	private String fileName;
     @NotNull
@@ -25,14 +22,6 @@ public class UploadResponse {
 	private Long height;
 
 	// Getters and setters
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getFileName() {
 		return fileName;

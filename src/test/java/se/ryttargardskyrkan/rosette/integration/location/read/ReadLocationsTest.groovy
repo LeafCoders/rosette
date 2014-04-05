@@ -52,12 +52,14 @@ public class ReadLocationsTest extends AbstractIntegrationTest {
         [{
 			"id" : "1",
             "name" : "Kyrksalen",
-			"description" : "En stor lokal med plats för ca 700 pers."
+			"description" : "En stor lokal med plats för ca 700 pers.",
+			"directionImage": null
 		},
 		{
 			"id" : "2",
             "name" : "Oasen",
-			"description" : "Konferensrum för ca 50 pers."
+			"description" : "Konferensrum för ca 50 pers.",
+			"directionImage": null
 		}]
         """
 		TestUtil.assertJsonResponseEquals(expectedLocations, response)

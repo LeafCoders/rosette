@@ -1,30 +1,23 @@
 package se.ryttargardskyrkan.rosette.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import se.ryttargardskyrkan.rosette.validator.HasIdRefOrText;
 import javax.validation.constraints.NotNull;
 
 @Document(collection = "locations")
-public class Location {
+public class Location extends IdBasedModel {
 
-	@Id
-	private String id;
     @NotNull(message = "location.name.notNull")
 	@Indexed(unique = true)
 	private String name;
 	private String description;
 
+	// Image that shows the direction to the location
+	@HasIdRefOrText
+	private ObjectReference<UploadResponse> directionImage;
+	
 	// Getters and setters
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -41,4 +34,12 @@ public class Location {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+    public ObjectReference<UploadResponse> getDirectionImage() {
+        return directionImage;
+    }
+
+    public void setDirectionImage(ObjectReference<UploadResponse> directionImage) {
+        this.directionImage = directionImage;
+    }
 }

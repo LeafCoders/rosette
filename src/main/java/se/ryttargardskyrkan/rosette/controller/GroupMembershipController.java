@@ -2,10 +2,8 @@ package se.ryttargardskyrkan.rosette.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,11 +13,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.model.*;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
+import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
 public class GroupMembershipController extends AbstractController {
@@ -27,6 +25,8 @@ public class GroupMembershipController extends AbstractController {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private MongoRealm mongoRealm;
+	@Autowired
+	private SecurityService security;
 
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -106,7 +106,7 @@ public class GroupMembershipController extends AbstractController {
 	@ResponseBody
 	public GroupMembership postGroupMembership(@RequestBody GroupMembership groupMembership, HttpServletResponse response) {
 		checkPermission("create:groupMemberships");
-		validate(groupMembership);
+		security.validate(groupMembership);
 
         long count = mongoTemplate.count(Query.query(Criteria.where("userId").is(groupMembership.getUserId()).and("groupId").is(groupMembership.getGroupId())), GroupMembership.class);
         if (count > 0) {
@@ -126,7 +126,7 @@ public class GroupMembershipController extends AbstractController {
     @RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public void putGroupMembership(@PathVariable String id, @RequestBody GroupMembership groupMembership, HttpServletResponse response) {
         checkPermission("update:groupMemberships:" + id);
-        validate(groupMembership);
+        security.validate(groupMembership);
 
         long count = mongoTemplate.count(Query.query(Criteria.where("userId").is(groupMembership.getUserId()).and("groupId").is(groupMembership.getGroupId())), GroupMembership.class);
         if (count > 0) {

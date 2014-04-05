@@ -51,7 +51,8 @@ public class ReadLocationTest extends AbstractIntegrationTest {
 		{
 			"id" : "2",
             "name" : "Oasen",
-			"description" : "Konferensrum för ca 50 pers."
+			"description" : "Konferensrum för ca 50 pers.",
+			"directionImage": null
 		}
 		"""
 		TestUtil.assertJsonResponseEquals(expectedLocation, response)

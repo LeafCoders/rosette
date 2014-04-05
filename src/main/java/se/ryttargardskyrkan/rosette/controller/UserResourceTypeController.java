@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.UserResourceType;
+import se.ryttargardskyrkan.rosette.service.SecurityService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
 public class UserResourceTypeController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private SecurityService security;
 
 	@RequestMapping(value = "userResourceTypes/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -54,7 +57,7 @@ public class UserResourceTypeController extends AbstractController {
 	@ResponseBody
 	public UserResourceType postUserResourceType(@RequestBody UserResourceType userResourceType, HttpServletResponse response) {
 		checkPermission("create:userResourceTypes");
-		validate(userResourceType);
+		security.validate(userResourceType);
 		
 		mongoTemplate.insert(userResourceType);
 		
@@ -65,7 +68,7 @@ public class UserResourceTypeController extends AbstractController {
 	@RequestMapping(value = "userResourceTypes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putUserResourceType(@PathVariable String id, @RequestBody UserResourceType userResourceType, HttpServletResponse response) {
 		checkPermission("update:userResourceTypes:" + id);
-		validate(userResourceType);
+		security.validate(userResourceType);
 
 		Update update = new Update();
 		update.set("name", userResourceType.getName());

@@ -1,19 +1,14 @@
 package se.ryttargardskyrkan.rosette.model;
 
-import javax.validation.constraints.NotNull;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
-public class User {
+public class User extends IdBasedModel {
 
-	@Id
-	private String id;
 	@NotEmpty(message = "user.username.notEmpty")
 	@Indexed(unique = true)
 	private String username;
@@ -28,14 +23,6 @@ public class User {
 	private String lastName;
 
 	// Getters and setters
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getUsername() {
 		return username;

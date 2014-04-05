@@ -1,32 +1,23 @@
 package se.ryttargardskyrkan.rosette.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.springframework.data.annotation.Id;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.DatatypeConverter;
 
 @Document
-public class UploadRequest {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UploadRequest extends IdBasedModel {
 
-	@Id
-	private String id;
     @NotNull(message = "upload.fileName.notNull")
 	private String fileName;
     @NotNull(message = "upload.mimeType.notNull")
 	private String mimeType;
     @NotNull(message = "upload.fileData.notNull")
 	private String fileData;
-
+    
 	// Getters and setters
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getFileName() {
 		return fileName;
@@ -56,6 +47,7 @@ public class UploadRequest {
 
 	@JsonIgnore
 	public byte[] getFileDataAsBytes() {
-		return DatatypeConverter.parseBase64Binary(fileData);
+		int index = fileData.indexOf(",");
+		return DatatypeConverter.parseBase64Binary(fileData.substring(index + 1));
 	}
 }

@@ -2,9 +2,7 @@ package se.ryttargardskyrkan.rosette.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
@@ -28,6 +25,7 @@ import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
+import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
 public class UserController extends AbstractController {
@@ -35,6 +33,8 @@ public class UserController extends AbstractController {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private MongoRealm mongoRealm;
+	@Autowired
+	private SecurityService security;
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -71,7 +71,7 @@ public class UserController extends AbstractController {
 	@ResponseBody
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
 		checkPermission("create:users");
-		validate(user);
+		security.validate(user);
 
 		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
 		if (count > 0) {
@@ -92,7 +92,7 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
 		checkPermission("update:users:" + id);
-		validate(user);
+		security.validate(user);
 
 		Update update = new Update();
 		if (user.getUsername() != null)

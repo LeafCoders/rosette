@@ -1,16 +1,11 @@
 package se.ryttargardskyrkan.rosette.model;
 
 import java.util.List;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "permissions")
-public class Permission {
-	@Id
-	private String id;
+public class Permission extends IdBasedModel {
 	
 	@Indexed
 	private Boolean everyone;
@@ -29,20 +24,12 @@ public class Permission {
 	
 	// Getters and setters
 
-	public String getId() {
-		return id;
-	}
-
 	public Boolean getEveryone() {
 		return everyone;
 	}
 
 	public void setEveryone(Boolean everyone) {
 		this.everyone = everyone;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getUserId() {
