@@ -17,7 +17,7 @@ import se.ryttargardskyrkan.rosette.model.Event
 
 import com.mongodb.util.JSON
 
-public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
+public class ReadEventWeekWithSpecificWeekTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -83,7 +83,7 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		"""));
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/eventweeks/2012-W39")
+		HttpGet getRequest = new HttpGet(baseUrl + "/eventWeeks/2012-W39")
 		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
@@ -92,7 +92,7 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		
-		String expectedEventweekAsJson = """
+		String expectedEventWeekAsJson = """
 		{
 		    "week": 39,
 		    "since": "2012-09-24",
@@ -190,6 +190,6 @@ public class ReadEventweekWithSpecificWeekTest extends AbstractIntegrationTest {
 		}
 		}
 		"""	
-		TestUtil.assertJsonResponseEquals(expectedEventweekAsJson, response)
+		TestUtil.assertJsonResponseEquals(expectedEventWeekAsJson, response)
 	}
 }

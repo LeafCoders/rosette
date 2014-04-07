@@ -14,8 +14,9 @@ public class LocationService extends MongoTemplateCRUD<Location> {
 		super("locations", Location.class);
 
 		UploadFolder folder = new UploadFolder();
-		folder.setTitle("locationItems.label.title");
+		folder.setTitle("uploadFolder.locations");
 		folder.setName("locations");
+		folder.setIsPublic(true);
 		folder.setMimeTypes(Arrays.asList(new String[]{"image/"}));
 		uploadFolderService.addFolder(folder);
 	}

@@ -22,7 +22,7 @@ import se.ryttargardskyrkan.rosette.model.Event
 
 import com.mongodb.util.JSON
 
-public class ReadEventweekTest extends AbstractIntegrationTest {
+public class ReadEventWeekTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
@@ -105,7 +105,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		"""));
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/eventweeks/current")
+		HttpGet getRequest = new HttpGet(baseUrl + "/eventWeeks/current")
 		getRequest.setHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.setHeader("Content-Type", "application/json; charset=UTF-8")
 		HttpResponse response = httpClient.execute(getRequest)
@@ -114,7 +114,7 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode())
 		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
 		
-		String expectedEventweekAsJson = """
+		String expectedEventWeekAsJson = """
 		{
 		    "week": ${week},
 		    "since": "${RosetteDateConverter.dateToString(monday.toDate())}",
@@ -210,6 +210,6 @@ public class ReadEventweekTest extends AbstractIntegrationTest {
 		    }]
 		}
 		"""	
-		TestUtil.assertJsonResponseEquals(expectedEventweekAsJson, response)
+		TestUtil.assertJsonResponseEquals(expectedEventWeekAsJson, response)
 	}
 }

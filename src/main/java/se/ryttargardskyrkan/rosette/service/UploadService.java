@@ -34,8 +34,11 @@ public class UploadService {
 	public static final String METADATA_WIDTH = "width";
 	public static final String METADATA_HEIGHT = "height";
 
-	@Value("${rosette.baseUrlWithVersion}")
-	private String baseUrlWithVersion;
+	@Value("${rosette.rosetteUrlWithVersion}")
+	private String rosetteUrlWithVersion;
+	
+	@Value("${rosette.cordateUrlWithVersion}")
+	private String cordateUrlWithVersion;
 
 	@Autowired
 	private GridFsTemplate gridFsTemplate;
@@ -111,8 +114,10 @@ public class UploadService {
 	
 	public void streamAsset(final String folder, final String fileName, HttpServletResponse response) {
 		sanitizeAndValidateFolder(folder);
-		if (!(security.isPermitted("read:assets:" + folder) || security.isPermitted("read:uploads:" + folder))) {
-			throw new ForbiddenException();
+		if (uploadFolderService.isPublic(folder) == false) {
+			if (!(security.isPermitted("read:assets:" + folder) || security.isPermitted("read:uploads:" + folder))) {
+				throw new ForbiddenException();
+			}
 		}
 
 		GridFSDBFile file = getFileByName(folder, fileName);
@@ -123,7 +128,7 @@ public class UploadService {
 		if (file != null) {
 			try {
 		        response.addHeader("Cache-Control", "public");
-		        response.addHeader("Cache-Control", "max-age=86400"); // One day
+//TODO: Remove when production		        response.addHeader("Cache-Control", "max-age=86400"); // One day
 		        response.addHeader("Content-disposition", "attachment; filename=\"" + file.getFilename() + "\"");
 		        response.setContentType(file.getContentType());
 		        response.setContentLength((int)file.getLength());
@@ -214,11 +219,17 @@ public class UploadService {
 	}
 
 	private UploadResponse fileToUpload(GridFSFile file) {
+		final String folderName = getMetadataFolder(file);
 		UploadResponse upload = new UploadResponse();
 		upload.setId(file.getId().toString());
 		upload.setFileName(file.getFilename());
-		upload.setFolder(getMetadataFolder(file));
-		upload.setFileUrl(baseUrlWithVersion + "/assets/" + getMetadataFolder(file) + "/" + file.getFilename());
+		upload.setFolder(folderName);
+		if (uploadFolderService.isPublic(folderName)) {
+			upload.setFileUrl(rosetteUrlWithVersion + "/assets/" + folderName + "/" + file.getFilename());
+		} else {
+			// Need to stream content through cordate server when folder isn't public
+			upload.setFileUrl(cordateUrlWithVersion + "/assets/" + folderName + "/" + file.getFilename());
+		}
         upload.setMimeType(file.getContentType());
 		upload.setFileSize(file.getLength());
 		Long width = getMetadataWidth(file);

@@ -16,6 +16,9 @@ public class UploadFolder extends IdBasedModel {
 	@Pattern(regexp="[a-z]")
 	private String name;
 
+	@NotEmpty(message = "uploadFolder.isPublic.notEmpty")
+	private boolean isPublic = false;
+
 	@NotEmpty(message = "uploadFolder.mimeTypes.notEmpty")
 	private List<String> mimeTypes;
 
@@ -35,6 +38,14 @@ public class UploadFolder extends IdBasedModel {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(boolean isPublic) {
+		this.isPublic = isPublic;
 	}
 
 	public List<String> getMimeTypes() {

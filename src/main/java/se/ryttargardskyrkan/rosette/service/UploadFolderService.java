@@ -45,6 +45,11 @@ public class UploadFolderService {
 		}
 		return false;
 	}
+
+	public boolean isPublic(final String folderName) {
+		UploadFolder folder = getFolder(folderName);
+		return (folder != null) && folder.getIsPublic();
+	}
 	
 	private final UploadFolder getFolder(final String folderName) {
 		for (final UploadFolder folder : folders) {

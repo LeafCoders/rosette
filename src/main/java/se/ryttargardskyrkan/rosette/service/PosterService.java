@@ -19,8 +19,9 @@ public class PosterService extends MongoTemplateCRUD<Poster> {
 		super("posters", Poster.class);
 
 		UploadFolder folder = new UploadFolder();
-		folder.setTitle("posterItems.label.title");
+		folder.setTitle("uploadFolder.posters");
 		folder.setName("posters");
+		folder.setIsPublic(true);
 		folder.setMimeTypes(Arrays.asList(new String[]{"image/"}));
 		uploadFolderService.addFolder(folder);
 	}

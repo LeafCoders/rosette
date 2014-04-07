@@ -16,7 +16,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, """["create:posters", "read:uploads:posters"]""")
+		givenPermissionForUser(user1, """["create:posters"]""")
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 		
 		// When
