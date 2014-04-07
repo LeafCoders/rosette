@@ -9,15 +9,14 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Event
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
 import javax.servlet.http.HttpServletResponse
-
 import static junit.framework.Assert.assertEquals
 
 public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
@@ -175,7 +174,7 @@ public class UpdateEventUserResourcesTest extends AbstractIntegrationTest {
 		}]
 		"""
 		Query query = new Query();
-		query.sort().on("startTime", Order.ASCENDING);
+		query.with(new Sort(Sort.Direction.ASC, "startTime"));
 		List<Event> eventsInDatabase = mongoTemplate.find(query, Event.class);
 		TestUtil.assertJsonEquals(expectedEvents, new ObjectMapper().writeValueAsString(eventsInDatabase))
 	}

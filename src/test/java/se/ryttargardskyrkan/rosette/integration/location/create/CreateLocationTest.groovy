@@ -67,7 +67,8 @@ public class CreateLocationTest extends AbstractIntegrationTest {
 		{
 			"id" : "${responseLocation.getId()}",
 			"name" : "Kyrksalen",
-			"description" : "En stor lokal med plats för ca 700 pers."
+			"description" : "En stor lokal med plats för ca 700 pers.",
+			"directionImage": null
 		}
 		""", responseJson)
 
@@ -79,7 +80,8 @@ public class CreateLocationTest extends AbstractIntegrationTest {
 		[{
 			"id" : "${responseLocation.getId()}",
 			"name" : "Kyrksalen",
-			"description" : "En stor lokal med plats för ca 700 pers."
+			"description" : "En stor lokal med plats för ca 700 pers.",
+			"directionImage": null
 		}]
 		""", new ObjectMapper().writeValueAsString(locationsInDatabase))
     }

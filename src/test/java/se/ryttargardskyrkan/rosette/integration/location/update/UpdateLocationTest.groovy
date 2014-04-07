@@ -82,12 +82,14 @@ public class UpdateLocationTest extends AbstractIntegrationTest {
 		[{
 			"id" : "1",
             "name" : "Kyrksalen",
-			"description" : "En stor lokal med plats för ca 700 pers."
+			"description" : "En stor lokal med plats för ca 700 pers.",
+			"directionImage": null
 		},
 		{
 			"id" : "2",
             "name" : "Ekkällan",
-			"description" : "Konferensrum för ca 100 pers."
+			"description" : "Konferensrum för ca 100 pers.",
+			"directionImage": null
 		}]
 		""", new ObjectMapper().writeValueAsString(locationsInDatabase))
 	}

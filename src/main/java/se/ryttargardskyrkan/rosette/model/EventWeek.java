@@ -9,7 +9,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateJsonSerializer;
 
-public class Eventweek {
+public class EventWeek {
 	private Integer week;
 	
 	@JsonSerialize(using = RosetteDateJsonSerializer.class)

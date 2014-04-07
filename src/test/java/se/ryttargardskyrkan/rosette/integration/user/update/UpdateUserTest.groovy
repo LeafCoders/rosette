@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
@@ -70,7 +71,7 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 		
 		// Asserting users in database
 		Query query = new Query();
-		query.sort().on("startTime", Order.ASCENDING);
+		query.with(new Sort(Sort.Direction.ASC, "startTime"));
 		List<User> usersInDatabase = mongoTemplate.find(query, User.class);
 		
 		assertEquals(1L, mongoTemplate.count(new Query(), User.class))

@@ -2,45 +2,47 @@ package se.ryttargardskyrkan.rosette.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import se.ryttargardskyrkan.rosette.model.Event;
 import se.ryttargardskyrkan.rosette.model.Eventday;
-import se.ryttargardskyrkan.rosette.model.Eventweek;
+import se.ryttargardskyrkan.rosette.model.EventWeek;
+import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
-public class EventweekController extends AbstractController {
+public class EventWeekController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private SecurityService security;
 	
-	@RequestMapping(value = "eventweeks/current", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "eventWeeks/current", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public Eventweek getCurrentEventweek(HttpServletResponse response) {
+	public EventWeek getCurrentEventWeek(HttpServletResponse response) {
+		security.checkPermission("read:eventweek");
 		DateTime now = DateTime.now();
 		int year = now.getWeekyear();
 		int week = now.getWeekOfWeekyear();
 		String id = "" + year + "-W" + (week < 10 ? "0" : "") + week;
 		
-		return this.getEventweek(id, response);
+		return this.getEventWeek(id, response);
 	}
 
-	@RequestMapping(value = "eventweeks/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "eventWeeks/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public Eventweek getEventweek(@PathVariable String id, HttpServletResponse response) {
+	public EventWeek getEventWeek(@PathVariable String id, HttpServletResponse response) {
+		security.checkPermission("read:eventweek");
 		int weekyear = Integer.parseInt(id.substring(0, 4));
 		int weekOfWeekyear = Integer.parseInt(id.substring(6, 8));
 		
@@ -50,10 +52,10 @@ public class EventweekController extends AbstractController {
 		since = since.withTimeAtStartOfDay();
 		since = since.withDayOfWeek(DateTimeConstants.MONDAY);
 		
-		Eventweek eventweek = new Eventweek();
-		eventweek.setWeek(since.weekOfWeekyear().get());
-		eventweek.setSince(since.toDate());
-		eventweek.setUntil(since.plusDays(6).toDate());
+		EventWeek eventWeek = new EventWeek();
+		eventWeek.setWeek(since.weekOfWeekyear().get());
+		eventWeek.setSince(since.toDate());
+		eventWeek.setUntil(since.plusDays(6).toDate());
 		
 		List <Eventday> days = new ArrayList<Eventday>();
 		
@@ -64,7 +66,7 @@ public class EventweekController extends AbstractController {
 			DateTime untilDay = since.plusDays(i);
 			
 			Query query = new Query();
-			query.sort().on("startTime", Order.ASCENDING);
+			query.with(new Sort(Sort.Direction.ASC, "startTime"));
 			Criteria criteria = new Criteria();
 			criteria = Criteria.where("startTime").gte(sinceDay.toDate());
 			criteria = criteria.lt(untilDay.toDate());
@@ -86,20 +88,20 @@ public class EventweekController extends AbstractController {
 			
 			days.add(eventday);
 		}		
-		eventweek.setDays(days);
+		eventWeek.setDays(days);
 
 		// Header links
 		DateTime previousWeek = since.minusWeeks(1);
 		DateTime nextWeek = since.plusWeeks(1);
-		String headerLink = this.headerLink(previousWeek, nextWeek);
+		String headerLink = headerLink(previousWeek, nextWeek);
 		response.setHeader("Link", headerLink);
 
-		return eventweek;
+		return eventWeek;
 	}
 	
-	String headerLink(DateTime previousWeek, DateTime nextWeek) {
+	private String headerLink(DateTime previousWeek, DateTime nextWeek) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<eventweeks/");
+		sb.append("<eventWeeks/");
 		sb.append(previousWeek.weekyear().get());
 		sb.append("-W");
 		sb.append(previousWeek.weekOfWeekyear().get() < 10 ?  "0" : "");
@@ -108,7 +110,7 @@ public class EventweekController extends AbstractController {
 		
 		sb.append(", ");
 		
-		sb.append("<eventweeks/");
+		sb.append("<eventWeeks/");
 		sb.append(nextWeek.weekyear().get());
 		sb.append("-W");
 		sb.append(nextWeek.weekOfWeekyear().get() < 10 ?  "0" : "");

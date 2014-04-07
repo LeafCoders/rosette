@@ -4,24 +4,21 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-
+import se.ryttargardskyrkan.rosette.validator.HasIdRefOrText;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Document(collection = "posters")
 @ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
-public class Poster {
-    @Id
-    private String id;
+public class Poster extends IdBasedModel {
 
-    @NotEmpty(message = "poster.title.notEmpty")
-    private String title;
+	@NotEmpty(message = "poster.title.notEmpty")
+	private String title;
 
 	// Start using poster after this time
 	@NotNull(message = "poster.startTime.notNull")
@@ -40,24 +37,20 @@ public class Poster {
 	// Number of seconds to display poster in "slide show"
 	@Min(value = 1, message = "poster.duration.tooShort")
 	private int duration;
-	
-    // Getters and setters
 
-    public String getId() {
-        return id;
-    }
+	@NotNull(message = "poster.image.notNull")
+	@HasIdRefOrText
+	private ObjectReference<UploadResponse> image;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	// Getters and setters
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public Date getStartTime() {
 		return startTime;
@@ -75,11 +68,19 @@ public class Poster {
 		this.endTime = endTime;
 	}
 
-    public int getDuration() {
-        return duration;
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+    public ObjectReference<UploadResponse> getImage() {
+        return image;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setImage(ObjectReference<UploadResponse> image) {
+        this.image = image;
     }
 }

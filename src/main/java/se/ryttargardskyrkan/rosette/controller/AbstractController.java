@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
@@ -40,14 +39,6 @@ public class AbstractController {
     protected void checkPermission(String permission) {
         if (!SecurityUtils.getSubject().isPermitted(permission)) {
             throw new ForbiddenException();
-        }
-    }
-
-    protected void validate(Object object) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
-
-        if (constraintViolations != null && !constraintViolations.isEmpty()) {
-            throw new ValidationException(constraintViolations);
         }
     }
 
@@ -94,5 +85,4 @@ public class AbstractController {
         logger.error("Error", exception);
         return responseBody;
     }
-
 }

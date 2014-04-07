@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
@@ -100,7 +101,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		}]
 		"""
 		Query query = new Query();
-		query.sort().on("startTime", Order.ASCENDING);
+		query.with(new Sort(Sort.Direction.ASC, "startTime"));
 		List<Event> eventsInDatabase = mongoTemplate.find(query, Event.class);
 		TestUtil.assertJsonEquals(expectedEvents, new ObjectMapper().writeValueAsString(eventsInDatabase))
 	}
