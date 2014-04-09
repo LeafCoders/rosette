@@ -11,7 +11,6 @@ import se.ryttargardskyrkan.rosette.filter.JsonpCallbackFilter;
 @ComponentScan(basePackages = {"se.ryttargardskyrkan.rosette"})
 @EnableWebMvc
 @EnableAspectJAutoProxy
-@ImportResource({"/WEB-INF/spring/security.xml"})
 @PropertySource("classpath:/settings.properties")
 class WebMvcConfig extends WebMvcConfigurerAdapter {
 
