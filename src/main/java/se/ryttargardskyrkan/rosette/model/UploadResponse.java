@@ -11,7 +11,7 @@ public class UploadResponse extends IdBasedModel {
     @NotNull
 	private String fileName;
     @NotNull
-	private String folder;
+	private String folderName;
     @NotNull
 	private String fileUrl; // Absolute url to downloadable file
     @NotNull
@@ -31,12 +31,12 @@ public class UploadResponse extends IdBasedModel {
 		this.fileName = fileName;
 	}
 
-	public String getFolder() {
-		return folder;
+	public String getFolderName() {
+		return folderName;
 	}
 
-	public void setFolder(String folder) {
-		this.folder = folder;
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 
 	public String getFileUrl() {

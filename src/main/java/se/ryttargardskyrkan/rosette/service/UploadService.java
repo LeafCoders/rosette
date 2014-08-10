@@ -223,7 +223,7 @@ public class UploadService {
 		UploadResponse upload = new UploadResponse();
 		upload.setId(file.getId().toString());
 		upload.setFileName(file.getFilename());
-		upload.setFolder(folderName);
+		upload.setFolderName(folderName);
 		if (uploadFolderService.isPublic(folderName)) {
 			upload.setFileUrl(rosetteUrlWithVersion + "/assets/" + folderName + "/" + file.getFilename());
 		} else {

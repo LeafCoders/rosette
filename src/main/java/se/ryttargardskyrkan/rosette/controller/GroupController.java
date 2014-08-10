@@ -71,26 +71,13 @@ public class GroupController extends AbstractController {
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
 		groupService.delete(id, response);
 
-		Group group = mongoTemplate.findById(id, Group.class);
-		if (group == null) {
-			throw new NotFoundException();
-		} else {
-			// Removing permissions for the group
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), Permission.class);
-			
-			// Removing group memberships with the group that is about to be deleted
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), GroupMembership.class);
-			
-			// Removing the group
-			Group deletedGroup = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), Group.class);
-			if (deletedGroup == null) {
-				throw new NotFoundException();
-			} else {
-				response.setStatus(HttpStatus.OK.value());
-			}
-			
-			// Clearing auth cache
-			mongoRealm.clearCache(null);
-		}
+		// Removing permissions for the group
+		mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), Permission.class);
+		
+		// Removing group memberships with the group that is about to be deleted
+		mongoTemplate.findAndRemove(Query.query(Criteria.where("groupId").is(id)), GroupMembership.class);
+		
+		// Clearing auth cache
+		mongoRealm.clearCache(null);
 	}
 }
