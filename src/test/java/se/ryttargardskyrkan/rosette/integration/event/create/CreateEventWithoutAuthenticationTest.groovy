@@ -1,18 +1,15 @@
 package se.ryttargardskyrkan.rosette.integration.event.create
 
 import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.event.Event;
 
 public class CreateEventWithoutAuthenticationTest extends AbstractIntegrationTest {
 

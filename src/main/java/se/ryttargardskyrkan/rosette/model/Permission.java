@@ -11,14 +11,10 @@ public class Permission extends IdBasedModel {
 	private Boolean everyone;
 	
 	@Indexed
-	private String userId;
-
-	private String userFullName;
+	private ObjectReference<User> user;
 
 	@Indexed
-	private String groupId;
-
-	private String groupName;
+	private ObjectReference<Group> group;
 
 	private List<String> patterns;
 	
@@ -32,36 +28,20 @@ public class Permission extends IdBasedModel {
 		this.everyone = everyone;
 	}
 
-	public String getUserId() {
-		return userId;
+	public ObjectReference<User> getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(ObjectReference<User> user) {
+		this.user = user;
 	}
 
-	public String getUserFullName() {
-		return userFullName;
+	public ObjectReference<Group> getGroup() {
+		return group;
 	}
 
-	public void setUserFullName(String userFullName) {
-		this.userFullName = userFullName;
-	}
-
-	public String getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
-
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
+	public void setGroup(ObjectReference<Group> group) {
+		this.group = group;
 	}
 
 	public List<String> getPatterns() {

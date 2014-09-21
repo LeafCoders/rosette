@@ -115,7 +115,7 @@ public class UserController extends AbstractController {
 		User userInDatabase = mongoTemplate.findById(id, User.class);
 		Update permissionUpdate = new Update();
 		permissionUpdate.set("userFullName", userInDatabase.getFullName());
-		mongoTemplate.updateMulti(Query.query(Criteria.where("userId").is(id)), permissionUpdate, Permission.class);
+		mongoTemplate.updateMulti(Query.query(Criteria.where("user.idRef").is(id)), permissionUpdate, Permission.class);
 
 		response.setStatus(HttpStatus.OK.value());
 	}
@@ -129,10 +129,10 @@ public class UserController extends AbstractController {
 			throw new NotFoundException();
 		} else {
 			// Removing permissions for the user
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("userId").is(id)), Permission.class);
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.idRef").is(id)), Permission.class);
 			
 			// Removing group memberships with the user that is about to be deleted
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("userId").is(id)), GroupMembership.class);
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.idRef").is(id)), GroupMembership.class);
 
 						
 			// Deleting the user

@@ -1,6 +1,7 @@
 package se.ryttargardskyrkan.rosette.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.model.IdBasedModel;
+import se.ryttargardskyrkan.rosette.model.User;
+import se.ryttargardskyrkan.rosette.model.ValidationError;
 
 abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 	@Autowired
@@ -36,19 +40,24 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 
 	@Override
 	public T read(String id) {
+        T data = readNoDep(id);
+        insertDependencies(data);
+		return data;
+	}
+
+	public T readNoDep(String id) {
 		security.checkPermission("read:" + permissionType + ":" + id);
         T data = mongoTemplate.findById(id, entityClass);
 		if (data == null) {
 			throw new NotFoundException();
 		}
-        insertDependencies(data);
 		return data;
 	}
-
+	
 	@Override
 	public List<T> readMany(final Query query) {
 		List<T> dataInDatabase = mongoTemplate.find(query, entityClass);
-		List<T> result = new ArrayList<T>();
+		List<T> result = new LinkedList<T>();
 		if (dataInDatabase != null) {
 			for (T data : dataInDatabase) {
 				if (security.isPermitted("read:" + permissionType + ":" + ((IdBasedModel)data).getId())) {
@@ -80,10 +89,10 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 		}
 		response.setStatus(HttpStatus.OK.value());
 	}
-/*
-	@Override
-	public void insertDependencies(T data) {
-		service.insertDependencies(data);
+	
+	public void validateUnique(String property, Object value, String message) {
+		if (mongoTemplate.count(Query.query(Criteria.where(property).is(value)), entityClass) > 0) {
+			throw new SimpleValidationException(new ValidationError(property, message));
+		}
 	}
-*/
 }

@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.Event;
-import se.ryttargardskyrkan.rosette.model.UserResource;
-import se.ryttargardskyrkan.rosette.model.UserResourceType;
+import se.ryttargardskyrkan.rosette.model.event.Event;
+import se.ryttargardskyrkan.rosette.model.event.EventCreateRequest;
+import se.ryttargardskyrkan.rosette.model.resource.UserResource;
+import se.ryttargardskyrkan.rosette.model.resource.UserResourceType;
 import se.ryttargardskyrkan.rosette.service.EventService;
 
 @Controller
@@ -40,11 +41,8 @@ public class EventController extends AbstractController {
 
 	@RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
-		if (event.getUserResources() != null && !event.getUserResources().isEmpty()) {
-			event.setUserResources(sortUserResources(event.getUserResources()));
-		}
-		return eventService.create(event, response);
+	public Event postEvent(@RequestBody EventCreateRequest eventCreateRequest, HttpServletResponse response) {
+		return eventService.create(eventCreateRequest, response);
 	}
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
@@ -64,7 +62,7 @@ public class EventController extends AbstractController {
 		if (isPermitted("update:events:" + id + ":location"))
 			update.set("location", event.getLocation());
 		if (isPermitted("update:events:" + id + ":requiredUserResourceTypes"))
-			update.set("requiredUserResourceTypes", event.getRequiredUserResourceTypes());
+			update.set("requiredUserResourceTypes", null);//event.getRequiredUserResourceTypes());
 		update.set("userResources", updatedUserResourcesForEvent(id, event));
 
 		eventService.update(id, event, update, response);
@@ -80,6 +78,7 @@ public class EventController extends AbstractController {
 
 		// Updating existing userResources if permitted, preventing deleting if not permitted
 		Event storedEvent = mongoTemplate.findById(id, Event.class);
+/* TODO: Fix errors in code...
 		if (storedEvent != null && storedEvent.getUserResources() != null) {
 			for (UserResource storedUserResource : storedEvent.getUserResources()) {
 				UserResource updatedUserResource = null;
@@ -120,7 +119,7 @@ public class EventController extends AbstractController {
 				}
 			}
 		}
-
+*/
 		List<UserResource> sortedUserResources = sortUserResources(userResources);
 
 		return sortedUserResources;
@@ -135,7 +134,7 @@ public class EventController extends AbstractController {
 			Query query = new Query();
 			query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "sortOrder")));
 			List<UserResourceType> userResourceTypes = mongoTemplate.find(query, UserResourceType.class);
-
+/* TODO: Fix errors in code...
 			for (UserResourceType userResourceType : userResourceTypes) {
 				for (UserResource userResource : userResources) {
 					if (userResourceType.getId().equals(userResource.getUserResourceTypeId())) {
@@ -144,6 +143,7 @@ public class EventController extends AbstractController {
 					}
 				}
 			}
+*/
 		}
 
 		return sortedUserResources;

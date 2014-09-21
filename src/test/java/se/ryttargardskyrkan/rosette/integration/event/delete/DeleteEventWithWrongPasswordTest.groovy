@@ -1,9 +1,7 @@
 package se.ryttargardskyrkan.rosette.integration.event.delete;
 
 import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
@@ -11,11 +9,9 @@ import org.apache.http.client.methods.HttpDelete
 import org.apache.http.impl.auth.BasicScheme
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.event.Event;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
 import com.mongodb.util.JSON
 
 public class DeleteEventWithWrongPasswordTest extends AbstractIntegrationTest {

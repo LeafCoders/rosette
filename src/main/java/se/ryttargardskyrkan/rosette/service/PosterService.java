@@ -29,7 +29,7 @@ public class PosterService extends MongoTemplateCRUD<Poster> {
 	@Override
 	public void insertDependencies(Poster data) {
 		final ObjectReference<UploadResponse> imageRef = data.getImage(); 
-		if (imageRef != null && imageRef.hasIdRef()) {
+		if (imageRef != null) {
 			imageRef.setReferredObject(uploadService.read(imageRef.getIdRef()));
 		}
 	}

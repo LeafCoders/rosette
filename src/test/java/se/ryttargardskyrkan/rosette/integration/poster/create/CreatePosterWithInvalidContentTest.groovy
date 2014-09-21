@@ -37,7 +37,7 @@ public class CreatePosterWithInvalidContentTest extends AbstractIntegrationTest 
 		String expectedData = """
 		[
 			{ "property" : "duration", "message" : "poster.duration.tooShort" },
-			{ "property" : "image",    "message" : "poster.image.notNull" },
+			{ "property" : "image",    "message" : "poster.image.mustBeSet" },
 			{ "property" : "",         "message" : "poster.startBeforeEndTime" },
 			{ "property" : "title",    "message" : "poster.title.notEmpty" }
 		]

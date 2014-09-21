@@ -2,7 +2,6 @@ package se.ryttargardskyrkan.rosette.model;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.validator.HasIdRefOrText;
 import javax.validation.constraints.NotNull;
 
 @Document(collection = "locations")
@@ -14,7 +13,6 @@ public class Location extends IdBasedModel {
 	private String description;
 
 	// Image that shows the direction to the location
-	@HasIdRefOrText
 	private ObjectReference<UploadResponse> directionImage;
 	
 	// Getters and setters

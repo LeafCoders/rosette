@@ -22,39 +22,18 @@ public class AuthenticationWithWrongPasswordTest extends AbstractIntegrationTest
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
-		String hashedPassword = new RosettePasswordService().encryptPassword("password");
-		mongoTemplate.getCollection("users").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"username" : "lars.arvidsson@gmail.com",
-			"hashedPassword" : "${hashedPassword}",
-			"status" : "active"
-		}]
-		"""));
-		 
-		mongoTemplate.getCollection("groups").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"name" : "Admins",
-			"permissions" : ["*"]
-		}]
-		"""));
-		
-		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"userId" : "1",
-			"groupId" : "1"
-		}]
-		"""));
+		givenUser(user1)
+		givenGroup(group1)
+		givenGroupMembership(user1, group1)
 
 		// When
-		HttpGet getRequest = new HttpGet(baseUrl + "/authentication")
-		getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "asdf"), getRequest));
-		HttpResponse response = httpClient.execute(getRequest)
+		getRequest = new HttpGet(baseUrl + "/authentication")
+		getRequest.addHeader(new BasicScheme().authenticate(
+			new UsernamePasswordCredentials(user1.username, "invalidPassword"), getRequest));
+		HttpResponse getResponse = httpClient.execute(getRequest)
 
 		// Then
-		assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode())
-		assertEquals("Unauthorized", response.getStatusLine().getReasonPhrase())
+		thenResponseCodeIs(getResponse, HttpServletResponse.SC_UNAUTHORIZED)
+		assertEquals("Unauthorized", getResponse.getStatusLine().getReasonPhrase())
 	}
 }

@@ -1,9 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration.event.create
 
-import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
@@ -13,90 +10,103 @@ import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
-import org.junit.Assert.*
 import org.springframework.data.mongodb.core.query.Query
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.event.Event;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
 import com.mongodb.util.JSON
 
 public class CreateEventTest extends AbstractIntegrationTest {
 
 	@Test
-	public void test() throws ClientProtocolException, IOException {
+	public void createWithSuccess() throws ClientProtocolException, IOException {
 		// Given
-		String hashedPassword = new RosettePasswordService().encryptPassword("password");
-		mongoTemplate.getCollection("users").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"username" : "lars.arvidsson@gmail.com",
-			"hashedPassword" : "${hashedPassword}",
-			"status" : "active"
-		}]
-		"""));
-		 
-		mongoTemplate.getCollection("permissions").insert(JSON.parse("""
-		[{
-			"_id" : "1",
-			"userId" : "1",
-			"patterns" : ["*"]
-		}]
-		"""));
+		givenUser(user1)
+		givenPermissionForUser(user1, ["create:events", "read:eventTypes", "read:resourceTypes"])
+		givenGroup(group1)
+		givenResourceType(userResourceType1)
+		givenResourceType(uploadResourceType1)
+		givenEventType(eventType1)
 
 		// When
-		HttpPost postRequest = new HttpPost(baseUrl + "/events")
-		String requestBody = """
-		{
+		postRequest = new HttpPost(baseUrl + "/events")
+		HttpResponse postResponse = whenPost(postRequest, user1, """{
+			"eventType" : { "idRef" : "${eventType1.id}" },
 			"title" : "Gudstjänst",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"description" : "Nattvard och dop"
-		}
-		"""
-		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
-		postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials("lars.arvidsson@gmail.com", "password"), postRequest));
-		HttpResponse response = httpClient.execute(postRequest)
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm"
+		}""")
 
 		// Then
-		
-		// Asserting response
-		String responseJson = TestUtil.jsonFromResponse(response)
-		Event responseEvent = new ObjectMapper().readValue(responseJson, new TypeReference<Event>() {})
-		
-		assertEquals(HttpServletResponse.SC_CREATED, response.getStatusLine().getStatusCode())
-		assertEquals("application/json;charset=UTF-8", response.getHeaders("Content-Type")[0].getValue())
-		TestUtil.assertJsonEquals("""
-		{
-			"id" : "${responseEvent.getId()}",
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
+		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
+
+		String responseBody = TestUtil.jsonFromResponse(postResponse)
+		String expectedData = """{
+			"id" : "${ JSON.parse(responseBody)['id'] }",
+			"eventType" : { "idRef" : "${eventType1.id}", "referredObject" : null },
 			"title" : "Gudstjänst",
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : null,
-			"description" : "Nattvard och dop",
-			"eventType":null,
-			"location":null,
-			"requiredUserResourceTypes":null,
-			"userResources":null
-		}
-		""", responseJson)
-		
-		// Asserting database
-		Event eventInDatabase = mongoTemplate.findOne(new Query(), Event.class)
-		
-		assertEquals(1L, mongoTemplate.count(new Query(), Event.class))
-		TestUtil.assertJsonEquals("""
-		{
-			"id" : "${responseEvent.getId()}",
+			"description" : null,
+			"location" : null,
+			"resources" : [
+				{
+					"type" : "user",
+					"resourceType" : { "idRef" : "${userResourceType1.id}", "referredObject" : null },
+					"users" : { "refs" : null, "text" : null }
+				}, {
+					"type" : "upload",
+					"resourceType" : { "idRef" : "${uploadResourceType1.id}", "referredObject" : null },
+					"uploads" : []
+				}
+			]
+		}"""
+		thenResponseDataIs(responseBody, expectedData)
+		postRequest.releaseConnection()
+		thenItemsInDatabaseIs(Event.class, 1)
+	}
+
+	@Test
+	public void failWhenCreateWithoutPermission() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenGroup(group1)
+		givenResourceType(userResourceType1)
+		givenResourceType(uploadResourceType1)
+		givenEventType(eventType1)
+
+		// When
+		postRequest = new HttpPost(baseUrl + "/events")
+		HttpResponse postResponse = whenPost(postRequest, user1, """{
+			"eventType" : { "idRef" : "${eventType1.id}" },
 			"title" : "Gudstjänst",
-			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
-			"endTime" : null,
-			"eventType":null,
-			"location":null,
-			"description" : "Nattvard och dop",
-			"requiredUserResourceTypes":null,
-			"userResources":null
-		}
-		""", new ObjectMapper().writeValueAsString(eventInDatabase))
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm"
+		}""")
+
+		// Then
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_FORBIDDEN)
+	}
+
+	@Test
+	public void failWhenCreateWithoutFullPermission() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenPermissionForUser(user1, ["create:events", "read:eventTypes"])
+		givenGroup(group1)
+		givenResourceType(userResourceType1)
+		givenResourceType(uploadResourceType1)
+		givenEventType(eventType1)
+
+		// When
+		postRequest = new HttpPost(baseUrl + "/events")
+		HttpResponse postResponse = whenPost(postRequest, user1, """{
+			"eventType" : { "idRef" : "${eventType1.id}" },
+			"title" : "Gudstjänst",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm"
+		}""")
+
+		// Then
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_FORBIDDEN)
 	}
 }

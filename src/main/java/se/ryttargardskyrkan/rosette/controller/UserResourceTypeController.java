@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.UserResourceType;
+import se.ryttargardskyrkan.rosette.model.resource.UserResourceType;
 import se.ryttargardskyrkan.rosette.service.SecurityService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -72,8 +72,8 @@ public class UserResourceTypeController extends AbstractController {
 
 		Update update = new Update();
 		update.set("name", userResourceType.getName());
-		update.set("groupId", userResourceType.getGroupId());
-        update.set("sortOrder", userResourceType.getSortOrder());
+		update.set("group", userResourceType.getGroup());
+//TODO:...        update.set("sortOrder", userResourceType.getSortOrder());
 
 		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, UserResourceType.class).getN() == 0) {
 			throw new NotFoundException();

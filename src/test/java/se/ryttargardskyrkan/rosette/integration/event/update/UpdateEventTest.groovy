@@ -1,9 +1,7 @@
 package se.ryttargardskyrkan.rosette.integration.event.update
 
 import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
@@ -15,12 +13,10 @@ import org.junit.Test
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.event.Event;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
 import com.mongodb.util.JSON
 
 public class UpdateEventTest extends AbstractIntegrationTest {

@@ -27,7 +27,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
 			"duration" : 15,
-            "image" : { "idRef" : "${uploadItem['id']}" }
+            "image" : ${ givenIdRef(uploadItem) }
 		}
 		""")
 

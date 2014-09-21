@@ -38,6 +38,7 @@ public class EventTypeController extends AbstractController {
 	public void putEventType(@PathVariable String id, @RequestBody EventType eventType, HttpServletResponse response) {
 		Update update = new Update();
 		update.set("name", eventType.getName());
+		update.set("resourceTypes", eventType.getResourceTypes());
 
 		eventTypeService.update(id, eventType, update, response);
 	}

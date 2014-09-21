@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.validator.HasIdRefOrText;
+import se.ryttargardskyrkan.rosette.validator.HasIdRef;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -21,15 +21,15 @@ public class Poster extends IdBasedModel {
 	private String title;
 
 	// Start using poster after this time
-	@NotNull(message = "poster.startTime.notNull")
 	@Indexed
+	@NotNull(message = "poster.startTime.notNull")
 	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date startTime;
 
 	// Don't use poster after this time
-	@NotNull(message = "poster.endTime.notNull")
 	@Indexed
+	@NotNull(message = "poster.endTime.notNull")
 	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
@@ -38,8 +38,7 @@ public class Poster extends IdBasedModel {
 	@Min(value = 1, message = "poster.duration.tooShort")
 	private int duration;
 
-	@NotNull(message = "poster.image.notNull")
-	@HasIdRefOrText
+	@HasIdRef(message = "poster.image.mustBeSet")
 	private ObjectReference<UploadResponse> image;
 
 	// Getters and setters

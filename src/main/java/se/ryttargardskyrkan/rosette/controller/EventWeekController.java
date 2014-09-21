@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.Event;
-import se.ryttargardskyrkan.rosette.model.Eventday;
-import se.ryttargardskyrkan.rosette.model.EventWeek;
+import se.ryttargardskyrkan.rosette.model.event.Event;
+import se.ryttargardskyrkan.rosette.model.event.EventDay;
+import se.ryttargardskyrkan.rosette.model.event.EventWeek;
 import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
@@ -57,10 +57,10 @@ public class EventWeekController extends AbstractController {
 		eventWeek.setSince(since.toDate());
 		eventWeek.setUntil(since.plusDays(6).toDate());
 		
-		List <Eventday> days = new ArrayList<Eventday>();
+		List <EventDay> days = new ArrayList<EventDay>();
 		
 		for (int i = 1; i <= 7; i++) {
-			Eventday eventday = new Eventday();
+			EventDay eventday = new EventDay();
 			
 			DateTime sinceDay = since.plusDays(i - 1);
 			DateTime untilDay = since.plusDays(i);

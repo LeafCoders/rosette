@@ -33,9 +33,8 @@ public class Booking extends IdBasedModel {
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 
-	@NotNull(message = "booking.location.notNull")
-	@HasIdRefOrText
-	private ObjectReference<Location> location;
+	@HasIdRefOrText(message = "booking.location.mustBeSet")
+	private ObjectReferenceOrText<Location> location;
 
 	// Getters and setters
 
@@ -63,11 +62,11 @@ public class Booking extends IdBasedModel {
 		this.endTime = endTime;
 	}
 
-	public ObjectReference<Location> getLocation() {
+	public ObjectReferenceOrText<Location> getLocation() {
 		return location;
 	}
 
-	public void setLocation(ObjectReference<Location> location) {
+	public void setLocation(ObjectReferenceOrText<Location> location) {
 		this.location = location;
 	}
 }

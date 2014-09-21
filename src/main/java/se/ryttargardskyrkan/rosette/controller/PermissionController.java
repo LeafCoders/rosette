@@ -12,21 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.Permission;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.service.GroupService;
 import se.ryttargardskyrkan.rosette.service.PermissionService;
-import se.ryttargardskyrkan.rosette.service.UserService;
 
 @Controller
 public class PermissionController extends AbstractController {
 	@Autowired
 	private PermissionService permissionService;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private GroupService groupService;
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -38,27 +30,14 @@ public class PermissionController extends AbstractController {
 	@ResponseBody
 	public List<Permission> getPermissions(HttpServletResponse response) {
 		Query query = new Query().with(new Sort(
-				new Sort.Order(Sort.Direction.ASC, "groupName"),
-				new Sort.Order(Sort.Direction.ASC, "userFullName")));
+				new Sort.Order(Sort.Direction.ASC, "group.idRef"),
+				new Sort.Order(Sort.Direction.ASC, "user.idRef")));
 		return permissionService.readMany(query);
 	}
 
 	@RequestMapping(value = "permissions", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Permission postPermission(@RequestBody Permission permission, HttpServletResponse response) {
-		// Setting groupName and userFullname
-		if (permission.getGroupId() != null) {
-			Group group = groupService.read(permission.getGroupId());
-			if (group != null) {
-				permission.setGroupName(group.getName());
-			}
-		} else if (permission.getUserId() != null) {
-			User user = userService.read(permission.getUserId());
-			if (user != null) {
-				permission.setUserFullName(user.getFullName());
-			}
-		}
-
 		return permissionService.create(permission, response);
 	}
 

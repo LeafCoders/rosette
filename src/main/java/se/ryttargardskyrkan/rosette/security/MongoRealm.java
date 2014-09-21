@@ -58,16 +58,16 @@ public class MongoRealm extends AuthorizingRealm {
 		if (principalCollection.fromRealm("anonymousRealm").isEmpty()) {
 			// Adding group permissions
 			User user = mongoTemplate.findById((String) principalCollection.getPrimaryPrincipal(), User.class);
-			Query groupMembershipsQuery = new Query(Criteria.where("userId").is(user.getId()));
+			Query groupMembershipsQuery = new Query(Criteria.where("user.idRef").is(user.getId()));
 			List<GroupMembership> groupMemberships = mongoTemplate.find(groupMembershipsQuery, GroupMembership.class);
 
 			if (groupMemberships != null) {
 				List<String> groupIds = new ArrayList<String>();
 				for (GroupMembership groupMembership : groupMemberships) {
-					groupIds.add(groupMembership.getGroupId());
+					groupIds.add(groupMembership.getGroup().getIdRef());
 				}
 
-				Query groupPermissionQuery = Query.query(Criteria.where("groupId").in(groupIds));
+				Query groupPermissionQuery = Query.query(Criteria.where("group.idRef").in(groupIds));
 				List<Permission> groupPermissions = mongoTemplate.find(groupPermissionQuery, Permission.class);
 				if (groupPermissions != null) {
 					for (Permission groupPermission : groupPermissions) {
@@ -79,7 +79,7 @@ public class MongoRealm extends AuthorizingRealm {
 			}
 
 			// Adding user permissions
-			Query userPermissionQuery = Query.query(Criteria.where("userId").is(user.getId()));
+			Query userPermissionQuery = Query.query(Criteria.where("user.idRef").is(user.getId()));
 			List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
 			if (userPermissions != null) {
 				for (Permission userPermission : userPermissions) {

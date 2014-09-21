@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
+import se.ryttargardskyrkan.rosette.model.event.Event;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 import javax.servlet.http.HttpServletResponse
 import static junit.framework.Assert.assertEquals

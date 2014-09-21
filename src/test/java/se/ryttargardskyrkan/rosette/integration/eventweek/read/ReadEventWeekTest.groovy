@@ -1,9 +1,7 @@
 package se.ryttargardskyrkan.rosette.integration.eventweek.read
 
 import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
@@ -13,13 +11,11 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.junit.Test
-
 import se.ryttargardskyrkan.rosette.converter.RosetteDateConverter
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneConverter
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Event
-
+import se.ryttargardskyrkan.rosette.model.event.Event;
 import com.mongodb.util.JSON
 
 public class ReadEventWeekTest extends AbstractIntegrationTest {
