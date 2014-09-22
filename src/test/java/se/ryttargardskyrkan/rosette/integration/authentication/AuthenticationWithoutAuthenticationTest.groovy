@@ -1,15 +1,13 @@
 package se.ryttargardskyrkan.rosette.integration.authentication
 
-import javax.servlet.http.HttpServletResponse
-
-import static org.junit.Assert.*
-
-import org.apache.http.HttpResponse
-import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpGet
-import org.junit.Test
-
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
+import static org.junit.Assert.*;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.junit.Test;
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
 
 public class AuthenticationWithoutAuthenticationTest extends AbstractIntegrationTest {
 
@@ -21,11 +19,13 @@ public class AuthenticationWithoutAuthenticationTest extends AbstractIntegration
 		givenGroupMembership(user1, group1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/authentication")
+		HttpGet getRequest = new HttpGet(baseUrl + "/authentication")
 		HttpResponse getResponse = httpClient.execute(getRequest)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_UNAUTHORIZED)
 		assertEquals("Unauthorized", getResponse.getStatusLine().getReasonPhrase())
+
+		getRequest.releaseConnection()
 	}
 }

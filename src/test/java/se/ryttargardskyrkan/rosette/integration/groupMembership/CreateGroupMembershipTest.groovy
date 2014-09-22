@@ -24,8 +24,8 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		
 		// When
-		postRequest = new HttpPost(baseUrl + "/groupMemberships")
-		HttpResponse postResponse = whenPost(postRequest, user1, """{
+		String postUrl = "/groupMemberships"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"user" : { "idRef": "${user1.id}" },
 			"group" : { "idRef": "${group1.id}" }
 		}""")
@@ -41,7 +41,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 			"group" : { "idRef": "${group1.id}", "referredObject": null }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
-		postRequest.releaseConnection()
+		releasePostRequest()
 		thenDataInDatabaseIs(GroupMembership.class, "[${expectedData}]")
 		thenItemsInDatabaseIs(GroupMembership.class, 1)
 	}
@@ -55,15 +55,15 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		givenGroupMembership(user1, group1)
 
 		// When
-		postRequest = new HttpPost(baseUrl + "/groupMemberships")
-		HttpResponse postResponse = whenPost(postRequest, user1, """{
+		String postUrl = "/groupMemberships"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"user" : { "idRef": "${user1.id}" },
 			"group" : { "idRef": "${group1.id}" }
 		}""")
 
 		// Then
 		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
-		postRequest.releaseConnection()
+		releasePostRequest()
 		thenItemsInDatabaseIs(GroupMembership.class, 1)
 	}
 }

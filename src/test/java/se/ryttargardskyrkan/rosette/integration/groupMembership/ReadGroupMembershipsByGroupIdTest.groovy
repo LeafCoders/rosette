@@ -27,8 +27,8 @@ public class ReadGroupMembershipsByGroupIdTest extends AbstractIntegrationTest {
 		String groupMembId2 = givenGroupMembership(user2, group2)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/groupMemberships?groupId=${group2.id}")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/groupMemberships?groupId=${group2.id}"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)

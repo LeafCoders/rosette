@@ -1,14 +1,13 @@
 package se.ryttargardskyrkan.rosette.integration.eventType
 
-import com.mongodb.util.JSON
-import org.apache.http.HttpResponse
-import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpGet
-import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.junit.Test;
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil;
 import se.ryttargardskyrkan.rosette.model.EventType;
-import javax.servlet.http.HttpServletResponse
 
 public class ReadEventTypesTest extends AbstractIntegrationTest {
 
@@ -24,91 +23,102 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 		givenEventType(eventType2)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/eventTypes")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/eventTypes"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String responseBody = TestUtil.jsonFromResponse(getResponse)
-		String expectedData = """[{
-			"id" : "${eventType1.id}",
-			"key" : "people",
-			"name" : "EventType 1",
-			"resourceTypes" : [{
-				"idRef" : "${userResourceType1.id}",
-				"referredObject" : {
-					"type" : "user",
-					"id" : "${userResourceType1.id}",
-					"key" : "speaker",
-					"category" : "persons",
-					"name" : "UserResourceType 1",
-					"description" : "Description here",
-					"multiSelect" : false,
-					"allowText" : false,
-					"group" : {
-						"idRef" : "${group1.id}",
+		String expectedData = """[
+			{
+				"id" : "${eventType1.id}",
+				"key" : "people",
+				"name" : "EventType 1",
+				"description" : "Description...",
+				"resourceTypes" : [
+					{
+						"idRef" : "${userResourceType1.id}",
 						"referredObject" : {
-							"id" : "${group1.id}",
-							"name" : "Admins",
-							"description" : null
+							"type" : "user",
+							"id" : "${userResourceType1.id}",
+							"key" : "speaker",
+							"name" : "UserResourceType 1",
+							"description" : "Description here",
+							"section" : "persons",
+							"multiSelect" : false,
+							"allowText" : false,
+							"group" : {
+								"idRef" : "${group1.id}",
+								"referredObject" : {
+									"id" : "${group1.id}",
+									"name" : "Admins",
+									"description" : null
+								}
+							}
+						}
+					},
+					{
+						"idRef" : "${uploadResourceType1.id}",
+						"referredObject" : {
+							"type" : "upload",
+							"id" : "${uploadResourceType1.id}",
+							"key" : "posterFile",
+							"name" : "UploadResourceType 1",
+							"description" : "Select poster files",
+							"section" : "files",
+							"folderName" : "posters",
+							"multiSelect" : true
 						}
 					}
-				}
-			}, {
-				"idRef" : "${uploadResourceType1.id}",
-				"referredObject" : {
-					"type" : "upload",
-					"id" : "${uploadResourceType1.id}",
-					"key" : "posterFile",
-					"category" : "files",
-					"name" : "UploadResourceType 1",
-					"description" : "Select poster files",
-					"folderName" : "posters",
-					"multiSelect" : true
-				}
-			}]
-		}, {
-			"id" : "${eventType2.id}",
-			"key" : "groups",
-			"name" : "EventType 2",
-			"resourceTypes" : [{
-				"idRef" : "${userResourceType1.id}",
-				"referredObject" : {
-					"type" : "user",
-					"id" : "${userResourceType1.id}",
-					"key" : "speaker",
-					"category" : "persons",
-					"name" : "UserResourceType 1",
-					"description" : "Description here",
-					"multiSelect" : false,
-					"allowText" : false,
-					"group" : {
-						"idRef" : "${group1.id}",
+				]
+			},
+			{
+				"id" : "${eventType2.id}",
+				"key" : "groups",
+				"name" : "EventType 2",
+				"description" : "Description...",
+				"resourceTypes" : [
+					{
+						"idRef" : "${userResourceType1.id}",
 						"referredObject" : {
-							"id" : "${group1.id}",
-							"name" : "Admins",
-							"description" : null
+							"type" : "user",
+							"id" : "${userResourceType1.id}",
+							"key" : "speaker",
+							"name" : "UserResourceType 1",
+							"description" : "Description here",
+							"section" : "persons",
+							"multiSelect" : false,
+							"allowText" : false,
+							"group" : {
+								"idRef" : "${group1.id}",
+								"referredObject" : {
+									"id" : "${group1.id}",
+									"name" : "Admins",
+									"description" : null
+								}
+							}
+						}
+					},
+					{
+						"idRef" : "${uploadResourceType1.id}",
+						"referredObject" : {
+							"type" : "upload",
+							"id" : "${uploadResourceType1.id}",
+							"key" : "posterFile",
+							"name" : "UploadResourceType 1",
+							"description" : "Select poster files",
+							"section" : "files",
+							"folderName" : "posters",
+							"multiSelect" : true
 						}
 					}
-				}
-			}, {
-				"idRef" : "${uploadResourceType1.id}",
-				"referredObject" : {
-					"type" : "upload",
-					"id" : "${uploadResourceType1.id}",
-					"key" : "posterFile",
-					"category" : "files",
-					"name" : "UploadResourceType 1",
-					"description" : "Select poster files",
-					"folderName" : "posters",
-					"multiSelect" : true
-				}
-			}]
-		}]"""
+				]
+			}
+		]"""
 		thenResponseDataIs(responseBody, expectedData)
-		getRequest.releaseConnection()
+		releaseGetRequest()
 		thenItemsInDatabaseIs(EventType.class, 2)
 	}
 }

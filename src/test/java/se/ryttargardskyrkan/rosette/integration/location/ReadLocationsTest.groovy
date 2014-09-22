@@ -1,5 +1,6 @@
-package se.ryttargardskyrkan.rosette.integration.authorization
+package se.ryttargardskyrkan.rosette.integration.location
 
+import com.mongodb.util.JSON
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
@@ -9,16 +10,20 @@ import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 
 import javax.servlet.http.HttpServletResponse
 
-public class AuthorizationTest extends AbstractIntegrationTest {
+import static junit.framework.Assert.assertEquals
+
+public class ReadLocationsTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:events"])
-		
+		givenPermissionForUser(user1, ["read:locations"])
+		givenLocation(location1)
+		givenLocation(location2)
+
 		// When
-		String getUrl = "/authorizations?permissions=read:events,update:events,%20read:events"
+		String getUrl = "/locations"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -26,10 +31,20 @@ public class AuthorizationTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String responseBody = TestUtil.jsonFromResponse(getResponse)
-		String expectedData = """{
-			"read:events" : true,
-		    "update:events" : false
-		}"""
+		String expectedData = """[
+			{
+				"id" : "${ location1.id }",
+				"name" : "Away",
+				"description" : "Description...",
+				"directionImage" : null
+			},
+			{
+				"id" : "${ location2.id }",
+				"name" : "Home",
+				"description" : "Description...",
+				"directionImage" : null
+			}
+		]"""
 		thenResponseDataIs(responseBody, expectedData)
 	}
 }

@@ -23,22 +23,21 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/resourceTypes/${userResourceType1.id}")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/resourceTypes/${userResourceType1.id}"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String responseBody = TestUtil.jsonFromResponse(getResponse)
-		Object responseObject = JSON.parse(responseBody);
 		String expectedData = """{
 			"type": "user",
 			"id": "${userResourceType1.id}",
 			"key" : "speaker",
-			"category" : "persons",
 			"name": "UserResourceType 1",
 			"description": "Description here",
+			"section" : "persons",
 			"multiSelect": false,
 			"allowText": false,
 			"group": {
@@ -60,8 +59,8 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, ["read:resourceTypes", "read:groups"])
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/resourceTypes/4711")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/resourceTypes/4711"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_NOT_FOUND)
@@ -75,8 +74,8 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/resourceTypes/${userResourceType1.id}")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/resourceTypes/${userResourceType1.id}"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_FORBIDDEN)

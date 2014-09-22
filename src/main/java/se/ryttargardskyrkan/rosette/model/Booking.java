@@ -33,7 +33,7 @@ public class Booking extends IdBasedModel {
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 
-	@HasIdRefOrText(message = "booking.location.mustBeSet")
+	@HasIdRefOrText(message = "booking.location.oneMustBeSet")
 	private ObjectReferenceOrText<Location> location;
 
 	// Getters and setters

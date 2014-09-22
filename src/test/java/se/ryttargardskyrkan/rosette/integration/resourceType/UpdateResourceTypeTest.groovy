@@ -22,13 +22,13 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		putRequest = new HttpPut(baseUrl + "/resourceTypes/${userResourceType1.id}")
-		HttpResponse putResponse = whenPut(putRequest, user1, """{
+		String putUrl = "/resourceTypes/${userResourceType1.id}"
+		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type": "user",
 			"key" : "willNotBeChanged",
-			"category" : "users",
 			"name": "UserResourceType 1 New",
 			"description": "Description here New",
+			"section" : "users",
 			"multiSelect": true,
 			"allowText": true,
 			"group": {
@@ -41,15 +41,16 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		String expectedData = """[{
 			"id" : "${userResourceType1.id}",
 			"key" : "speaker",
-			"category" : "users",
 			"name": "UserResourceType 1 New",
 			"description": "Description here New",
+			"section" : "users",
 			"multiSelect": true,
 			"allowText": true,
 			"group": {
 				"idRef": "${group2.id}", "referredObject": null
 			}
 		}]"""
+		releasePutRequest()
 		thenDataInDatabaseIs(ResourceType.class, expectedData)
 		thenItemsInDatabaseIs(ResourceType.class, 1)
     }
@@ -63,8 +64,8 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		putRequest = new HttpPut(baseUrl + "/resourceTypes/${userResourceType1.id}")
-		HttpResponse putResponse = whenPut(putRequest, user1, """{
+		String putUrl = "/resourceTypes/${userResourceType1.id}"
+		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type": "user",
 			"name": "UserResourceType 1",
 			"description": "Description here",

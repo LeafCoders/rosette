@@ -31,9 +31,9 @@ public class DeleteGroupMembershipTest extends AbstractIntegrationTest {
 		String groupMemb2 = givenGroupMembership(user2, group1)
 
 		// Then		
-		deleteRequest = new HttpDelete(baseUrl + "/groupMemberships/${groupMemb2}")
-		HttpResponse uploadResponse = whenDelete(deleteRequest, user1)
-		deleteRequest.releaseConnection()
+		String deleteUrl = "/groupMemberships/${groupMemb2}"
+		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+		releaseDeleteRequest()
 
 		// Then
 		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)

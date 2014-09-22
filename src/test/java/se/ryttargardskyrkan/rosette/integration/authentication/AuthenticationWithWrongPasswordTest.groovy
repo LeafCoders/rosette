@@ -1,21 +1,15 @@
 package se.ryttargardskyrkan.rosette.integration.authentication
 
-import static junit.framework.Assert.*
-
-import javax.servlet.http.HttpServletResponse
-
-import org.apache.http.HttpResponse
-import org.apache.http.auth.UsernamePasswordCredentials
-import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.auth.BasicScheme
-import org.junit.Test
-import org.junit.Assert.*
-
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
-import com.mongodb.util.JSON
+import static org.junit.Assert.*;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
+import org.junit.Test;
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
 
 public class AuthenticationWithWrongPasswordTest extends AbstractIntegrationTest {
 
@@ -27,7 +21,7 @@ public class AuthenticationWithWrongPasswordTest extends AbstractIntegrationTest
 		givenGroupMembership(user1, group1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/authentication")
+		HttpGet getRequest = new HttpGet(baseUrl + "/authentication")
 		getRequest.addHeader(new BasicScheme().authenticate(
 			new UsernamePasswordCredentials(user1.username, "invalidPassword"), getRequest));
 		HttpResponse getResponse = httpClient.execute(getRequest)
@@ -35,5 +29,7 @@ public class AuthenticationWithWrongPasswordTest extends AbstractIntegrationTest
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_UNAUTHORIZED)
 		assertEquals("Unauthorized", getResponse.getStatusLine().getReasonPhrase())
+		
+		getRequest.releaseConnection()
 	}
 }

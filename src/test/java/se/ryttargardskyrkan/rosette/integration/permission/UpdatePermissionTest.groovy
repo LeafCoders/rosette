@@ -1,0 +1,39 @@
+package se.ryttargardskyrkan.rosette.integration.permission
+
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.junit.Test;
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
+import se.ryttargardskyrkan.rosette.model.Permission;
+
+public class UpdatePermissionTest extends AbstractIntegrationTest {
+
+	@Test
+	public void test() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		String userPermissionId = givenPermissionForUser(user1, ["update:permissions"])
+
+		// When
+		String putUrl = "/permissions/${ userPermissionId }"
+		HttpResponse putResponse = whenPut(putUrl, user1, """{
+			"user" : { "idRef" : "${ user1.id }" },
+			"patterns" : ["read:events"]
+		}""")
+
+		// Then
+		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
+
+		String expectedData = """[{
+			"id" : "${ userPermissionId }",
+			"everyone" : null,
+			"user" : { "idRef" : "${ user1.id }", "referredObject" : null },
+			"group" : null,
+			"patterns" : ["read:events"]
+		}]"""
+		thenDataInDatabaseIs(Permission.class, expectedData)
+		thenItemsInDatabaseIs(Permission.class, 1)
+	}
+}

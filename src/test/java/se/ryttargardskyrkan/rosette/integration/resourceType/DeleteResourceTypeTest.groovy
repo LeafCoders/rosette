@@ -21,12 +21,12 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		deleteRequest = new HttpDelete(baseUrl + "/resourceTypes/${userResourceType1.id}")
-		HttpResponse deleteResponse = whenDelete(deleteRequest, user1)
+		String deleteUrl = "/resourceTypes/${userResourceType1.id}"
+		HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
 		// Then
 		thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_OK)
-		deleteRequest.releaseConnection()
+		releaseDeleteRequest()
 		thenItemsInDatabaseIs(ResourceType.class, 0)
     }
 
@@ -39,12 +39,12 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 		
 		// When
-		deleteRequest = new HttpDelete(baseUrl + "/resourceTypes/4711")
-		HttpResponse deleteResponse = whenDelete(deleteRequest, user1)
+		String deleteUrl = "/resourceTypes/4711"
+		HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
 		// Then
 		thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_NOT_FOUND)
-		deleteRequest.releaseConnection()
+		releaseDeleteRequest()
 		thenItemsInDatabaseIs(ResourceType.class, 1)
     }
 
@@ -57,12 +57,12 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 		
 		// When
-		deleteRequest = new HttpDelete(baseUrl + "/resourceTypes/${userResourceType1.id}")
-		HttpResponse deleteResponse = whenDelete(deleteRequest, user1)
+		String deleteUrl = "/resourceTypes/${userResourceType1.id}"
+		HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
 		// Then
 		thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_FORBIDDEN)
-		deleteRequest.releaseConnection()
+		releaseDeleteRequest()
 		thenItemsInDatabaseIs(ResourceType.class, 1)
     }
 }

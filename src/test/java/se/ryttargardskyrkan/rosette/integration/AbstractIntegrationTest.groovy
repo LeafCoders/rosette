@@ -36,10 +36,10 @@ abstract class AbstractIntegrationTest {
 
 	protected static String baseUrl = "http://localhost:9000/api/v1-snapshot"
 
-	protected HttpPost postRequest = null;
-	protected HttpGet getRequest = null;
-	protected HttpPut putRequest = null;
-	protected HttpDelete deleteRequest = null;
+	private HttpPost postRequest = null;
+	private HttpGet getRequest = null;
+	private HttpPut putRequest = null;
+	private HttpDelete deleteRequest = null;
 	
 	
 	@BeforeClass
@@ -172,42 +172,66 @@ abstract class AbstractIntegrationTest {
 		name : "Users"
 	)
 
-	protected final poster1 = JSON.parse("""
-		{
-			"_id" : "${getObjectId()}",
-			"title" : "Poster1 title",
-			"startTime" : ${TestUtil.mongoDate("2012-03-25 11:00 Europe/Stockholm")},
-			"endTime" : ${TestUtil.mongoDate("2012-03-26 11:00 Europe/Stockholm")},
-			"duration" : 15,
-            "image" : null
-		}
-		""")
-	protected final poster2 = JSON.parse("""
-		{
-			"_id" : "${getObjectId()}",
-			"title" : "Poster2 title",
-			"startTime" : ${TestUtil.mongoDate("2012-03-26 10:00 Europe/Stockholm")},
-			"endTime" : ${TestUtil.mongoDate("2012-03-27 18:00 Europe/Stockholm")},
-			"duration" : 10,
-            "image" : null
-		}
-		""")
+	protected final Location location1 = new Location(
+		id : getObjectId(),
+		name : "Away",
+		description : "Description...",
+		directionImage : null
+	)
+	protected final Location location2 = new Location(
+		id : getObjectId(),
+		name : "Home",
+		description : "Description...",
+		directionImage : null
+	)
 
-	protected final String validPNGImage = """{
-        "fileName" : "image.png",
-        "mimeType" : "image/png",
-        "fileData" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABAWlDQ1BJQ0MgUHJvZmlsZQAAGBljYGC8k1hQkMPEwMCQm1dSFOTupBARGaUA5MJBYnJxgWNAgA9IIC8/LxUuAWd8u8bACOJc1nV2D1ao2TrN8VKr2JnJE+fttOuadAGuDDuDo7ykoAQo9QSIRYqAlgPpHyB2OpjNyANiJ0HYCiB2UUiQMwMDowmQzZcOYbuA2EkQdgiInZJanAxUkwJklyH88zkE7E5GsZMIsfwFDAyW8gwMzN0IsaRpDAzb9zMwSJxBiKkA1fHbMDBsO5dcWlQGNBcEGBnPMjAQ4kPcAlYv456al1qUmawQUJRZlliSqgAK74Ci/LTMHCzBCtZCPgEAA1NJWOMhui0AAAAJcEhZcwAACxMAAAsTAQCanBgAAAI9aVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA1LjQuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpQaG90b21ldHJpY0ludGVycHJldGF0aW9uPjI8L3RpZmY6UGhvdG9tZXRyaWNJbnRlcnByZXRhdGlvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CjAVYfMAAABzSURBVDgR1VFBCsAwCFvH3lrf5Gs3OgjEOEehh7FeotXEiK33fm4Lb1/g3tTvBY5qBXcPJTMLOZLXFQapIkKg6RV0MhqBKhgcKPnJgfYEgTEFE4D8BxeMSYCLM3EpwFY5VtF0Rm7mWInI0xVQmMVyhf8IXIo8H+rM3fTBAAAAAElFTkSuQmCC"
-    }"""
-	protected final String validJPEGImage = """{
-        "fileName" : "image.jpg",
-        "mimeType" : "image/jpg",
-        "fileData" : "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHsSUNDX1BST0ZJTEUAAQEAAAHcYXBwbAIAAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwQVBQTAAAAABub25lAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLUNHUyB8tZZB0oUWzJORnrk+ipLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAh3dHB0AAAA5AAAABRyWFlaAAAA+AAAABRnWFlaAAABDAAAABRiWFlaAAABIAAAABRyVFJDAAABNAAAAA5nVFJDAAABRAAAAA5iVFJDAAABVAAAAA5kZXNjAAABZAAAAHZYWVogAAAAAAAA81QAAQAAAAEWyVhZWiAAAAAAAABvoAAAOR8AAAOLWFlaIAAAAAAAAGKWAAC3vwAAGMxYWVogAAAAAAAAJKAAAA88AAC2zmN1cnYAAAAAAAAAAQHNAABjdXJ2AAAAAAAAAAEBzQAAY3VydgAAAAAAAAABAc0AAGRlc2MAAAAAAAAAHEdlbmVyaWMgUHJpdmF0ZSBSR0IgUHJvZmlsZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/hAIxFeGlmAABNTQAqAAAACAAGAQYAAwAAAAEAAgAAARIAAwAAAAEAAQAAARoABQAAAAEAAABWARsABQAAAAEAAABeASgAAwAAAAEAAgAAh2kABAAAAAEAAABmAAAAAAAAAEgAAAABAAAASAAAAAEAAqACAAQAAAABAAAAEKADAAQAAAABAAAAEAAAAAD/2wBDAAIBAQIBAQICAQICAgICAwUDAwMDAwYEBAMFBwYHBwcGBgYHCAsJBwgKCAYGCQ0JCgsLDAwMBwkNDg0MDgsMDAv/2wBDAQICAgMCAwUDAwULCAYICwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwv/wAARCAAQABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwBf2Tf2IfFP7Usera1aw3Wk+BPDcNzLrPiJhbCGzaK1knEaC6ubeORmKRqx81ViEyPIyIQSftZfsQ+Kf2Wo9J1q6hutW8CeJIbaXRvESi2MN40trHOY3Frc3EcbKXkVT5rLKIXeNnQEi18C/wBqrwp8O/gNrPgT4p+A9T8V2ur/ANop9otPEY0vyEuzpUm4J9klJlim0W2kRi2w7mV43Fbn7Qn7dWg/Fb9jvwh8G/hn8Prrwnovg/U01KC8ufEJ1Oa5YR3Ik8wfZogGkku3lJUhQcqqKuAoB//Z"
-    }"""
+	protected final Booking booking1 = new Booking(
+		id : getObjectId(),
+		customerName : "Scan",
+		startTime : TestUtil.modelDate("2012-03-25 11:00 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
+		location : new ObjectReferenceOrText<Location>(idRef: location1.id)
+	)
+	protected final Booking booking2 = new Booking(
+		id : getObjectId(),
+		customerName : "Arla",
+		startTime : TestUtil.modelDate("2014-01-21 11:00 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2014-01-22 12:00 Europe/Stockholm"),
+		location : new ObjectReferenceOrText<Location>(text: "A location")
+	)
+
+	protected final Poster poster1 = new Poster(
+		id : getObjectId(),
+		title : "Poster1 title",
+		startTime : TestUtil.modelDate("2012-03-25 11:00 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
+		duration : 15,
+        image : null
+	)
+	protected final Poster poster2 = new Poster(
+		id : getObjectId(),
+		title : "Poster2 title",
+		startTime : TestUtil.modelDate("2012-03-26 10:00 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2012-03-27 18:00 Europe/Stockholm"),
+		duration : 10,
+        image : null
+	)
+
+	protected final UploadRequest validPNGImage = new UploadRequest(
+        fileName : "image.png",
+        mimeType : "image/png",
+        fileData : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABAWlDQ1BJQ0MgUHJvZmlsZQAAGBljYGC8k1hQkMPEwMCQm1dSFOTupBARGaUA5MJBYnJxgWNAgA9IIC8/LxUuAWd8u8bACOJc1nV2D1ao2TrN8VKr2JnJE+fttOuadAGuDDuDo7ykoAQo9QSIRYqAlgPpHyB2OpjNyANiJ0HYCiB2UUiQMwMDowmQzZcOYbuA2EkQdgiInZJanAxUkwJklyH88zkE7E5GsZMIsfwFDAyW8gwMzN0IsaRpDAzb9zMwSJxBiKkA1fHbMDBsO5dcWlQGNBcEGBnPMjAQ4kPcAlYv456al1qUmawQUJRZlliSqgAK74Ci/LTMHCzBCtZCPgEAA1NJWOMhui0AAAAJcEhZcwAACxMAAAsTAQCanBgAAAI9aVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA1LjQuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpQaG90b21ldHJpY0ludGVycHJldGF0aW9uPjI8L3RpZmY6UGhvdG9tZXRyaWNJbnRlcnByZXRhdGlvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CjAVYfMAAABzSURBVDgR1VFBCsAwCFvH3lrf5Gs3OgjEOEehh7FeotXEiK33fm4Lb1/g3tTvBY5qBXcPJTMLOZLXFQapIkKg6RV0MhqBKhgcKPnJgfYEgTEFE4D8BxeMSYCLM3EpwFY5VtF0Rm7mWInI0xVQmMVyhf8IXIo8H+rM3fTBAAAAAElFTkSuQmCC"
+    )
+	protected final UploadRequest validJPEGImage = new UploadRequest(
+        fileName : "image.jpg",
+        mimeType : "image/jpg",
+        fileData : "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHsSUNDX1BST0ZJTEUAAQEAAAHcYXBwbAIAAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwQVBQTAAAAABub25lAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLUNHUyB8tZZB0oUWzJORnrk+ipLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAh3dHB0AAAA5AAAABRyWFlaAAAA+AAAABRnWFlaAAABDAAAABRiWFlaAAABIAAAABRyVFJDAAABNAAAAA5nVFJDAAABRAAAAA5iVFJDAAABVAAAAA5kZXNjAAABZAAAAHZYWVogAAAAAAAA81QAAQAAAAEWyVhZWiAAAAAAAABvoAAAOR8AAAOLWFlaIAAAAAAAAGKWAAC3vwAAGMxYWVogAAAAAAAAJKAAAA88AAC2zmN1cnYAAAAAAAAAAQHNAABjdXJ2AAAAAAAAAAEBzQAAY3VydgAAAAAAAAABAc0AAGRlc2MAAAAAAAAAHEdlbmVyaWMgUHJpdmF0ZSBSR0IgUHJvZmlsZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/hAIxFeGlmAABNTQAqAAAACAAGAQYAAwAAAAEAAgAAARIAAwAAAAEAAQAAARoABQAAAAEAAABWARsABQAAAAEAAABeASgAAwAAAAEAAgAAh2kABAAAAAEAAABmAAAAAAAAAEgAAAABAAAASAAAAAEAAqACAAQAAAABAAAAEKADAAQAAAABAAAAEAAAAAD/2wBDAAIBAQIBAQICAQICAgICAwUDAwMDAwYEBAMFBwYHBwcGBgYHCAsJBwgKCAYGCQ0JCgsLDAwMBwkNDg0MDgsMDAv/2wBDAQICAgMCAwUDAwULCAYICwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwv/wAARCAAQABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwBf2Tf2IfFP7Usera1aw3Wk+BPDcNzLrPiJhbCGzaK1knEaC6ubeORmKRqx81ViEyPIyIQSftZfsQ+Kf2Wo9J1q6hutW8CeJIbaXRvESi2MN40trHOY3Frc3EcbKXkVT5rLKIXeNnQEi18C/wBqrwp8O/gNrPgT4p+A9T8V2ur/ANop9otPEY0vyEuzpUm4J9klJlim0W2kRi2w7mV43Fbn7Qn7dWg/Fb9jvwh8G/hn8Prrwnovg/U01KC8ufEJ1Oa5YR3Ik8wfZogGkku3lJUhQcqqKuAoB//Z"
+    )
 
 	protected final UserResourceType userResourceType1 = new UserResourceType(
 		id : getObjectId(),
 		key : "speaker",
-		category : "persons",
+		section : "persons",
 		name : "UserResourceType 1",
 		description : "Description here",
 		multiSelect : false,
@@ -217,7 +241,7 @@ abstract class AbstractIntegrationTest {
 	protected final UploadResourceType uploadResourceType1 = new UploadResourceType(
 		id : getObjectId(),
 		key : "posterFile",
-		category : "files",
+		section : "files",
 		name : "UploadResourceType 1",
 		description : "Select poster files",
 		multiSelect : true,
@@ -228,6 +252,7 @@ abstract class AbstractIntegrationTest {
 		id : getObjectId(),
 		key : "people",
 		name : "EventType 1",
+		description : "Description...",
 		resourceTypes : [
 			new ObjectReference<UserResourceType>(idRef: userResourceType1.id),
 			new ObjectReference<UploadResourceType>(idRef: uploadResourceType1.id)
@@ -237,6 +262,7 @@ abstract class AbstractIntegrationTest {
 		id : getObjectId(),
 		key : "groups",
 		name : "EventType 2",
+		description : "Description...",
 		resourceTypes : [
 			new ObjectReference<UserResourceType>(idRef: userResourceType1.id),
 			new ObjectReference<UploadResourceType>(idRef: uploadResourceType1.id)
@@ -250,12 +276,32 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(user);
 	}
 
-	protected void givenPermissionForUser(User user, List<String> permissions) {
+	protected String givenPermissionForEveryone(List<String> permissions) {
+		String permissionId = getObjectId()
 		mongoTemplate.insert(new Permission(
-			id : getObjectId(),
-			user : new ObjectReference<User>(idRef: user.id),
-			patterns : permissions
+			id : permissionId,
+			everyone : true,
+			patterns : permissions.collect { it.toString() } // Convert GString to String
 		))
+		return permissionId
+	}
+	protected String givenPermissionForUser(User user, List<String> permissions) {
+		String permissionId = getObjectId()
+		mongoTemplate.insert(new Permission(
+			id : permissionId,
+			user : new ObjectReference<User>(idRef: user.id),
+			patterns : permissions.collect { it.toString() } // Convert GString to String
+		))
+		return permissionId
+	}
+	protected String givenPermissionForGroup(Group group, List<String> permissions) {
+		String permissionId = getObjectId()
+		mongoTemplate.insert(new Permission(
+			id : permissionId,
+			group : new ObjectReference<Group>(idRef: group.id),
+			patterns : permissions.collect { it.toString() } // Convert GString to String
+		))
+		return permissionId
 	}
 
 	protected void givenGroup(Group group) {
@@ -280,19 +326,28 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(eventType)
 	}
 
+	protected void givenLocation(Location location) {
+		mongoTemplate.insert(location);
+	}
+
+	protected void givenBooking(Booking booking) {
+		mongoTemplate.insert(booking);
+	}
+
 	protected void givenPoster(def poster, def upload) {
 		poster['image'] = toReference(upload['id'], upload)
 		mongoTemplate.getCollection("posters").insert([poster]);
 	}
 	
-	protected Object givenUploadInFolder(String folder, def upload) {
+	protected Object givenUploadInFolder(String folder, UploadRequest upload) {
 		createTestUploadUser()
-        HttpPost postRequest = new HttpPost(baseUrl + "/uploads/" + folder)
-		HttpResponse postResponse = whenPost(postRequest, userTestUpload, upload)
+        String postUrl = "/uploads/" + folder
+		String postContent = new ObjectMapper().writeValueAsString(upload)
+		HttpResponse postResponse = whenPost(postUrl, userTestUpload, postContent)
 		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
 		Object responseObj = JSON.parse(TestUtil.jsonFromResponse(postResponse))
-		postRequest.releaseConnection()
-		return responseObj; 
+		releasePostRequest()
+		return responseObj 
 	}
 
 	
@@ -300,14 +355,16 @@ abstract class AbstractIntegrationTest {
 	/*
 	 *  When
 	 */
-	protected HttpResponse whenPost(HttpPost postRequest, User user, String requestBody) {
+	protected HttpResponse whenPost(String postUrl, User user, String requestBody) {
+        postRequest = new HttpPost(baseUrl + postUrl)
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), postRequest))
 		HttpResponse resp = httpClient.execute(postRequest)
 		return resp
 	}
 
-	protected HttpResponse whenGet(HttpGet getRequest, User user) {
+	protected HttpResponse whenGet(String getUrl, User user) {
+        getRequest = new HttpGet(baseUrl + getUrl)
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), getRequest))
@@ -315,14 +372,16 @@ abstract class AbstractIntegrationTest {
 		return resp
 	}
 
-	protected HttpResponse whenPut(HttpPut putRequest, User user, String requestBody) {
+	protected HttpResponse whenPut(String putUrl, User user, String requestBody) {
+        putRequest = new HttpPut(baseUrl + putUrl)
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), putRequest))
 		HttpResponse resp = httpClient.execute(putRequest)
 		return resp
 	}
 
-	protected HttpResponse whenDelete(HttpDelete deleteRequest, User user) {
+	protected HttpResponse whenDelete(String deleteUrl, User user) {
+        deleteRequest = new HttpDelete(baseUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), deleteRequest))
 		HttpResponse resp = httpClient.execute(deleteRequest)
@@ -355,18 +414,16 @@ abstract class AbstractIntegrationTest {
 
 	protected void thenAssetWithNameExist(String fileName, String fileUrl) {
 		createTestUploadUser()
-		HttpGet getAssetsRequest = new HttpGet(fileUrl)
-		HttpResponse assetsResponse = whenGet(getAssetsRequest, userTestUpload)
+		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload)
 		assertEquals(HttpServletResponse.SC_OK, assetsResponse.getStatusLine().getStatusCode())
 		assertTrue(assetsResponse.allHeaders.toString().contains(fileName))
-		getAssetsRequest.releaseConnection()
+		releaseGetRequest()
 	}
 
 	protected void thenAssetDontExist(String fileUrl) {
 		createTestUploadUser()
-		HttpGet getAssetsRequest = new HttpGet(fileUrl)
-		HttpResponse assetsResponse = whenGet(getAssetsRequest, userTestUpload)
+		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload)
 		assertEquals(HttpServletResponse.SC_NOT_FOUND, assetsResponse.getStatusLine().getStatusCode())
-		getAssetsRequest.releaseConnection()
+		releaseGetRequest()
 	}
 }

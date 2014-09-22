@@ -21,13 +21,13 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		
 		// When
-		postRequest = new HttpPost(baseUrl + "/resourceTypes")
-		HttpResponse postResponse = whenPost(postRequest, user1, """{
+		String postUrl = "/resourceTypes"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"type" : "user",
 			"key" : "speaker",
-			"category" : "Personer",
 			"name" : "Talare",
 			"description" : "Den som talar",
+			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
 			"group" : { "idRef": "${group1.id}" }
@@ -42,15 +42,15 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 			"type" : "user",
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"key" : "speaker",
-			"category" : "Personer",
 			"name" : "Talare",
 			"description" : "Den som talar",
+			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
 			"group" : { "idRef": "${group1.id}", "referredObject": null }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
-		postRequest.releaseConnection()
+		releasePostRequest()
 		expectedData = expectedData.replace('"type" : "user",', '')
 		thenDataInDatabaseIs(ResourceType.class, "[${expectedData}]")
 		thenItemsInDatabaseIs(ResourceType.class, 1)
@@ -64,8 +64,8 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		
 		// When
-		postRequest = new HttpPost(baseUrl + "/resourceTypes")
-		HttpResponse postResponse = whenPost(postRequest, user1, """{
+		String postUrl = "/resourceTypes"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"name" : "Talare",
 			"description" : "Den som talar",
 			"multiSelect" : false,
@@ -75,7 +75,6 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 
 		// Then
 		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
-		postRequest.releaseConnection()
     }
 
 	@Test
@@ -86,13 +85,13 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		
 		// When
-		postRequest = new HttpPost(baseUrl + "/resourceTypes")
-		HttpResponse postResponse = whenPost(postRequest, user1, """{
+		String postUrl = "/resourceTypes"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"type" : "user",
 			"key" : "speaker",
-			"category" : "Personer",
 			"name" : "Talare",
 			"description" : "Den som talar",
+			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
 			"group" : { "idRef": "${group1.id}" }
@@ -100,21 +99,20 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 	
 		// Then
 		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
-		postRequest.releaseConnection();
+		releasePostRequest()
 		
 		// When
-		postRequest = new HttpPost(baseUrl + "/resourceTypes")
-		HttpResponse postResponse2 = whenPost(postRequest, user1, """{
+		HttpResponse postResponse2 = whenPost(postUrl, user1, """{
 			"type" : "user",
 			"key" : "speaker",
-			"category" : "Personer",
 			"name" : "Talare",
 			"description" : "Den som talar",
+			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
 			"group" : { "idRef": "${group1.id}" }
 		}""")
-	
+
 		// Then
 		thenResponseCodeIs(postResponse2, HttpServletResponse.SC_BAD_REQUEST)
 	}

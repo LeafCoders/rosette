@@ -44,4 +44,14 @@ public class TestUtil {
 		return "{$date:\"" + format.format(date) + "\"}";
 	}
 	
+	/*
+	 * Converts Rosette time format to server model format.
+	 * Use this when Setting date parameter in a server model.
+	 */
+	public static Date modelDate(String rosetteDateTime) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		GregorianCalendar calendar = new GregorianCalendar(new SimpleTimeZone(0, "GMT"));
+        format.setCalendar(calendar);
+		return RosetteDateTimeTimezoneConverter.stringToDate(rosetteDateTime);
+	}
 }

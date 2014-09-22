@@ -24,8 +24,8 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		givenResourceType(uploadResourceType1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/resourceTypes")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/resourceTypes"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
@@ -36,17 +36,17 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		String expectedData = """[{
 			"id": "${uploadResourceType1.id}",
 			"key" : "posterFile",
-			"category" : "files",
 			"name": "UploadResourceType 1",
 			"description": "Select poster files",
+			"section" : "files",
 			"multiSelect": true,
 			"folderName": "posters"
 		}, {
 			"id": "${userResourceType1.id}",
 			"key" : "speaker",
-			"category" : "persons",
 			"name": "UserResourceType 1",
 			"description": "Description here",
+			"section" : "persons",
 			"multiSelect": false,
 			"allowText": false,
 			"group": {
@@ -69,8 +69,8 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/resourceTypes")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/resourceTypes"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
@@ -88,8 +88,8 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceType1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/resourceTypes")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/resourceTypes"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_FORBIDDEN)

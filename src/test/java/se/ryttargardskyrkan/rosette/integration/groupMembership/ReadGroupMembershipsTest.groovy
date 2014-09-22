@@ -28,8 +28,8 @@ public class ReadGroupMembershipsTest extends AbstractIntegrationTest {
 		String groupMembId2 = givenGroupMembership(user2, group1)
 		
         // When
-        HttpGet getRequest = new HttpGet(baseUrl + "/groupMemberships")
-		HttpResponse uploadResponse = whenGet(getRequest, user1)
+		String getUrl = "/groupMemberships"
+		HttpResponse uploadResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
@@ -83,6 +83,5 @@ public class ReadGroupMembershipsTest extends AbstractIntegrationTest {
 			}
 		}]"""
 		thenResponseDataIs(responseBody, expectedData)
-		getRequest.releaseConnection()
 	}
 }

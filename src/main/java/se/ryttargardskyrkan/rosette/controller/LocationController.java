@@ -39,10 +39,7 @@ public class LocationController extends AbstractController {
 		Update update = new Update();
 		update.set("name", location.getName());
 		update.set("description", location.getDescription());
-		if (location.getDirectionImage() != null) {
-			update.set("directionImage", location.getDirectionImage());
-		}
-
+		update.set("directionImage", location.getDirectionImage());
 		locationService.update(id, location, update, response);
 	}
 

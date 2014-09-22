@@ -1,6 +1,6 @@
 package se.ryttargardskyrkan.rosette.integration.user.update
 
-import static junit.framework.Assert.*
+import static org.junit.Assert.*
 
 import javax.servlet.http.HttpServletResponse
 
@@ -13,7 +13,6 @@ import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
 import org.springframework.data.domain.Sort
-import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
 
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest

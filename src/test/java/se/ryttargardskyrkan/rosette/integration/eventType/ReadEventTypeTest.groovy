@@ -1,14 +1,13 @@
 package se.ryttargardskyrkan.rosette.integration.eventType
 
-import com.mongodb.util.JSON
-import org.apache.http.HttpResponse
-import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpGet
-import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.junit.Test;
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil;
 import se.ryttargardskyrkan.rosette.model.EventType;
-import javax.servlet.http.HttpServletResponse
 
 public class ReadEventTypeTest extends AbstractIntegrationTest {
 
@@ -23,8 +22,8 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 		givenEventType(eventType1)
 
 		// When
-		getRequest = new HttpGet(baseUrl + "/eventTypes/${eventType1.id}")
-		HttpResponse getResponse = whenGet(getRequest, user1)
+		String getUrl = "/eventTypes/${eventType1.id}"
+		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
@@ -35,42 +34,46 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 			"id" : "${eventType1.id}",
 			"key" : "people",
 			"name" : "EventType 1",
-			"resourceTypes" : [{
-				"idRef" : "${userResourceType1.id}",
-				"referredObject" : {
-					"type" : "user",
-					"id" : "${userResourceType1.id}",
-					"key" : "speaker",
-					"category" : "persons",
-					"name" : "UserResourceType 1",
-					"description" : "Description here",
-					"multiSelect" : false,
-					"allowText" : false,
-					"group" : {
-						"idRef" : "${group1.id}",
-						"referredObject" : {
-							"id" : "${group1.id}",
-							"name" : "Admins",
-							"description" : null
+			"description" : "Description...",
+			"resourceTypes" : [
+				{
+					"idRef" : "${userResourceType1.id}",
+					"referredObject" : {
+						"type" : "user",
+						"id" : "${userResourceType1.id}",
+						"key" : "speaker",
+						"name" : "UserResourceType 1",
+						"description" : "Description here",
+						"section" : "persons",
+						"multiSelect" : false,
+						"allowText" : false,
+						"group" : {
+							"idRef" : "${group1.id}",
+							"referredObject" : {
+								"id" : "${group1.id}",
+								"name" : "Admins",
+								"description" : null
+							}
 						}
 					}
+				},
+				{
+					"idRef" : "${uploadResourceType1.id}",
+					"referredObject" : {
+						"type" : "upload",
+						"id" : "${uploadResourceType1.id}",
+						"key" : "posterFile",
+						"name" : "UploadResourceType 1",
+						"description" : "Select poster files",
+						"section" : "files",
+						"folderName" : "posters",
+						"multiSelect" : true
+					}
 				}
-			}, {
-				"idRef" : "${uploadResourceType1.id}",
-				"referredObject" : {
-					"type" : "upload",
-					"id" : "${uploadResourceType1.id}",
-					"key" : "posterFile",
-					"category" : "files",
-					"name" : "UploadResourceType 1",
-					"description" : "Select poster files",
-					"folderName" : "posters",
-					"multiSelect" : true
-				}
-			}]
+			]
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
-		getRequest.releaseConnection()
+		releaseGetRequest()
 		thenItemsInDatabaseIs(EventType.class, 1)
 	}
 }

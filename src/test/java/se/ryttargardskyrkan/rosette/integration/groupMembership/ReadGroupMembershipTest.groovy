@@ -1,7 +1,5 @@
 package se.ryttargardskyrkan.rosette.integration.groupMembership
 
-import static org.junit.Assert.*
-
 import javax.servlet.http.HttpServletResponse
 
 import org.apache.http.HttpResponse
@@ -28,8 +26,8 @@ public class ReadGroupMembershipTest extends AbstractIntegrationTest {
 		String groupMembId2 = givenGroupMembership(user2, group1)
 
         // When
-        HttpGet getRequest = new HttpGet(baseUrl + "/groupMemberships/${groupMembId2}")
-		HttpResponse uploadResponse = whenGet(getRequest, user1)
+		String getUrl = "/groupMemberships/${ groupMembId2 }"
+		HttpResponse uploadResponse = whenGet(getUrl, user1)
 
 		// Then
 		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
@@ -37,11 +35,11 @@ public class ReadGroupMembershipTest extends AbstractIntegrationTest {
 
 		String responseBody = TestUtil.jsonFromResponse(uploadResponse)
 		String expectedData = """{
-			"id" : "${groupMembId2}",
+			"id" : "${ groupMembId2 }",
 			"user" : {
-				"idRef": "${user2.id}",
+				"idRef": "${ user2.id }",
 				"referredObject": {
-					"id": "${user2.id}",
+					"id": "${ user2.id }",
 					"username" : "user2",
 					"firstName" : "User",
 					"lastName" : "Two",
@@ -51,15 +49,14 @@ public class ReadGroupMembershipTest extends AbstractIntegrationTest {
 				}
 			},
 			"group" : {
-				"idRef": "${group1.id}",
+				"idRef": "${ group1.id }",
 				"referredObject": {
-					"id": "${group1.id}",
+					"id": "${ group1.id }",
 					"name": "Admins",
 					"description": null
 				}
 			}
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
-		getRequest.releaseConnection()
 	}
 }

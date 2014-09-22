@@ -1,21 +1,12 @@
 package se.ryttargardskyrkan.rosette.integration.eventType
 
-import com.mongodb.util.JSON
-import org.apache.http.HttpResponse
-import org.apache.http.auth.UsernamePasswordCredentials
-import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpDelete
-import org.apache.http.impl.auth.BasicScheme
-import org.codehaus.jackson.map.ObjectMapper
-import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.EventType
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
-import javax.servlet.http.HttpServletResponse
-
-import static junit.framework.Assert.assertEquals
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.junit.Test;
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
+import se.ryttargardskyrkan.rosette.model.EventType;
 
 public class DeleteEventTypeTest extends AbstractIntegrationTest {
 
@@ -31,9 +22,9 @@ public class DeleteEventTypeTest extends AbstractIntegrationTest {
 		givenEventType(eventType2)
 
 		// Then		
-		deleteRequest = new HttpDelete(baseUrl + "/eventTypes/${eventType1.id}")
-		HttpResponse uploadResponse = whenDelete(deleteRequest, user1)
-		deleteRequest.releaseConnection()
+		String deleteUrl = "/eventTypes/${eventType1.id}"
+		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+		releaseDeleteRequest()
 
 		// Then
 		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
