@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users")
 public class User extends IdBasedModel {
 
-	@NotEmpty(message = "user.username.notEmpty")
 	@Indexed(unique = true)
+	@NotEmpty(message = "user.username.notEmpty")
 	private String username;
 	
 	@Transient
@@ -19,7 +19,11 @@ public class User extends IdBasedModel {
 	@JsonIgnore
 	private String hashedPassword;
 	private String status;
+
+	@NotEmpty(message = "user.firstName.notEmpty")
 	private String firstName;
+
+	@NotEmpty(message = "user.lastName.notEmpty")
 	private String lastName;
 
 	// Getters and setters

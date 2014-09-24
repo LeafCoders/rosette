@@ -122,11 +122,6 @@ abstract class AbstractIntegrationTest {
 	 */
 	private int objectId = 1
 	private int getObjectId() { return objectId++ }
-	private def toReference(String itemId, def item) {
-		def reference = JSON.parse("""{"idRef":"${itemId}", "text":null, "referredObject":null}""")
-		reference['referredObject'] = item
-		return reference
-	}
 
 	private boolean hasAddedUploadUser = false
 	private void createTestUploadUser() {
@@ -327,16 +322,16 @@ abstract class AbstractIntegrationTest {
 	}
 
 	protected void givenLocation(Location location) {
-		mongoTemplate.insert(location);
+		mongoTemplate.insert(location)
 	}
 
 	protected void givenBooking(Booking booking) {
-		mongoTemplate.insert(booking);
+		mongoTemplate.insert(booking)
 	}
 
-	protected void givenPoster(def poster, def upload) {
-		poster['image'] = toReference(upload['id'], upload)
-		mongoTemplate.getCollection("posters").insert([poster]);
+	protected void givenPoster(Poster poster, def upload) {
+		poster.image = new ObjectReference<UploadResponse>(idRef: upload['id'])
+		mongoTemplate.insert(poster)
 	}
 	
 	protected Object givenUploadInFolder(String folder, UploadRequest upload) {
@@ -363,8 +358,8 @@ abstract class AbstractIntegrationTest {
 		return resp
 	}
 
-	protected HttpResponse whenGet(String getUrl, User user) {
-        getRequest = new HttpGet(baseUrl + getUrl)
+	protected HttpResponse whenGet(String getUrl, User user, boolean relativeUrl = true) {
+        getRequest = new HttpGet(relativeUrl ? (baseUrl + getUrl) : getUrl)
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), getRequest))
@@ -414,7 +409,7 @@ abstract class AbstractIntegrationTest {
 
 	protected void thenAssetWithNameExist(String fileName, String fileUrl) {
 		createTestUploadUser()
-		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload)
+		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload, false)
 		assertEquals(HttpServletResponse.SC_OK, assetsResponse.getStatusLine().getStatusCode())
 		assertTrue(assetsResponse.allHeaders.toString().contains(fileName))
 		releaseGetRequest()
@@ -422,7 +417,7 @@ abstract class AbstractIntegrationTest {
 
 	protected void thenAssetDontExist(String fileUrl) {
 		createTestUploadUser()
-		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload)
+		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload, false)
 		assertEquals(HttpServletResponse.SC_NOT_FOUND, assetsResponse.getStatusLine().getStatusCode())
 		releaseGetRequest()
 	}

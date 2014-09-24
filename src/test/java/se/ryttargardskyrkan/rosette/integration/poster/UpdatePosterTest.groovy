@@ -34,16 +34,14 @@ public class UpdatePosterTest extends AbstractIntegrationTest {
 		// Then
 		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
 
-		String responseBody = TestUtil.jsonFromResponse(putResponse)
 		String expectedData = """[{
 			"id" : "${ poster1.id }",
 			"title" : "New title",
 			"startTime" : "2014-01-01 11:00 Europe/Stockholm",
 			"endTime" : "2014-01-01 18:00 Europe/Stockholm",
 			"duration" : 10,
-			"image" : { "idRef" : "${ uploadItem['id'] }", "text" : null, "referredObject" : null }
+			"image" : { "idRef" : "${ uploadItem['id'] }", "referredObject" : null }
 		}]"""
-		thenResponseDataIs(responseBody, expectedData)
 		thenDataInDatabaseIs(Poster.class, expectedData)
 		thenItemsInDatabaseIs(Poster.class, 1)
 	}

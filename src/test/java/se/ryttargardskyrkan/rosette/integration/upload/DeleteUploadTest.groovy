@@ -21,7 +21,7 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
         // When
 		String deleteUrl = "/uploads/posters/${uploadItem['id']}"
 		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
-		deleteRequest.releaseConnection()
+		releaseDeleteRequest()
 
         // Then
 		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)

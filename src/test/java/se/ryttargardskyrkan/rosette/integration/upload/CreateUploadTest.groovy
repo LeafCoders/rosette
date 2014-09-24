@@ -13,7 +13,7 @@ import se.ryttargardskyrkan.rosette.integration.util.TestUtil;
 public class CreateUploadTest extends AbstractIntegrationTest {
 
     @Test
-    public void testUploadWithSuccess() throws ClientProtocolException, IOException {
+    public void createUploadWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["create:uploads:posters"])
@@ -23,7 +23,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
 	        "fileName" : "image.png",
 	        "mimeType" : "image/png",
-	        "fileData" : ${validPNGImage.fileData}
+	        "fileData" : "${validPNGImage.fileData}"
 		}""")
 
         // Then
@@ -59,8 +59,8 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 	        "mimeType" : "image/png",
 	        "fileData" : ${validPNGImage.fileData}
 		}""")
-		
+
 		// Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_FORBIDDEN)
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
 	}
 }

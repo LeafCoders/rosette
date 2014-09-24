@@ -1,0 +1,84 @@
+package se.ryttargardskyrkan.rosette.integration.group
+
+import javax.servlet.http.HttpServletResponse
+import org.apache.http.HttpResponse
+import org.apache.http.client.ClientProtocolException
+import org.junit.Test
+import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
+import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.ryttargardskyrkan.rosette.model.Group
+import com.mongodb.util.JSON
+
+public class CreateGroupTest extends AbstractIntegrationTest {
+
+	@Test
+	public void createGroupWithSuccess() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenPermissionForUser(user1, ["create:groups"])
+		
+        // When
+		String postUrl = "/groups"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"name" : "Translators",
+			"description" : "Translators from swedish to english."
+		}""")
+
+		// Then
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
+		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
+
+		String responseBody = TestUtil.jsonFromResponse(postResponse)
+		String expectedData = """{
+			"id" : "${ JSON.parse(responseBody)['id'] }",
+			"name" : "Translators",
+			"description" : "Translators from swedish to english."
+		}"""
+
+		thenResponseDataIs(responseBody, expectedData)
+		thenDataInDatabaseIs(Group.class, "[${expectedData}]")
+		thenItemsInDatabaseIs(Group.class, 1)
+	}
+
+	@Test
+	public void failCreateGroupWithoutPermission() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenPermissionForUser(user1, ["read:groups"])
+
+        // When
+		String postUrl = "/groups"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"name" : "Translators",
+			"description" : "Translators from swedish to english."
+		}""")
+
+		// Then
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_FORBIDDEN)
+		thenItemsInDatabaseIs(Group.class, 0)
+	}
+
+	@Test
+	public void failCreateGroupWithInvalidContent() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenPermissionForUser(user1, ["create:groups"])
+
+        // When
+		String postUrl = "/groups"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"name" : ""
+		}""")
+
+		// Then
+		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
+		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
+
+		String responseBody = TestUtil.jsonFromResponse(postResponse)
+		String expectedData = """[
+			{ "property" : "name", "message" : "group.name.notEmpty" }
+		]"""
+		thenResponseDataIs(responseBody, expectedData)
+		thenItemsInDatabaseIs(Group.class, 0)
+	}
+}
