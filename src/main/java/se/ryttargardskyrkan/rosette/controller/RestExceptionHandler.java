@@ -44,7 +44,7 @@ public class RestExceptionHandler {
 
         if (exception instanceof ForbiddenException) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            responseBody = "Forbidden";
+            responseBody = "Forbidden: " + exception.getMessage();
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             responseBody = "Not found";

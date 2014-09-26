@@ -38,7 +38,7 @@ public class AbstractController {
 
     protected void checkPermission(String permission) {
         if (!SecurityUtils.getSubject().isPermitted(permission)) {
-            throw new ForbiddenException();
+            throw new ForbiddenException("Missing permission: " + permission);
         }
     }
 
@@ -54,7 +54,7 @@ public class AbstractController {
 
         if (exception instanceof ForbiddenException) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            responseBody = "Forbidden";
+            responseBody = "Forbidden: " + exception.getMessage();
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             responseBody = "Not found";

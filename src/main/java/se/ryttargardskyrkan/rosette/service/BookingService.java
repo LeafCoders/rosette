@@ -20,7 +20,7 @@ public class BookingService extends MongoTemplateCRUD<Booking> {
 	public void insertDependencies(Booking data) {
 		final ObjectReferenceOrText<Location> locationRef = data.getLocation(); 
 		if (locationRef != null && locationRef.hasIdRef()) {
-			locationRef.setReferredObject(locationService.read(locationRef.getIdRef()));
+			locationRef.setReferredObject(locationService.readNoDep(locationRef.getIdRef()));
 		}
 	}
 }

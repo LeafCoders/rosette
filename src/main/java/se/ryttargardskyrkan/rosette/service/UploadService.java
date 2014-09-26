@@ -116,7 +116,7 @@ public class UploadService {
 		sanitizeAndValidateFolder(folder);
 		if (uploadFolderService.isPublic(folder) == false) {
 			if (!(security.isPermitted("read:assets:" + folder) || security.isPermitted("read:uploads:" + folder))) {
-				throw new ForbiddenException();
+				throw new ForbiddenException("Missing permission: One of read:assets:" + folder + " or read:uploads:" + folder + " must be permitted.");
 			}
 		}
 

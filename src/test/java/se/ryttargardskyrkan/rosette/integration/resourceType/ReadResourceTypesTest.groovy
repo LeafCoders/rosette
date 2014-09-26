@@ -28,11 +28,9 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
-		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
+		String responseBody = thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(getResponse)
-		Object responseObject = JSON.parse(responseBody);
 		String expectedData = """[{
 			"id": "${uploadResourceType1.id}",
 			"key" : "posterFile",
@@ -73,10 +71,10 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
-		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
+		String responseBody = thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		assertEquals("[]", TestUtil.jsonFromResponse(getResponse))
+		assertEquals("[]", responseBody)
     }
 
 	@Test

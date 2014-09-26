@@ -2,6 +2,7 @@ package se.ryttargardskyrkan.rosette.integration
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
+import java.util.List;
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
@@ -22,6 +23,7 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.*
+import se.ryttargardskyrkan.rosette.model.event.Event
 import se.ryttargardskyrkan.rosette.model.resource.*
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 import com.mongodb.Mongo
@@ -139,6 +141,8 @@ abstract class AbstractIntegrationTest {
 	private final User userTestUpload = new User(
 		id : getObjectId(),
 		username : "usertestupload",
+		firstName : "User",
+		lastName : "Test Upload",
 		hashedPassword : "${hashedPassword}",
 		status : "active"
 	)
@@ -264,6 +268,38 @@ abstract class AbstractIntegrationTest {
 		]
 	)
 
+	protected final Event event1 = new Event(
+		id : getObjectId(),
+		eventType : new ObjectReference<EventType>(idRef: eventType1.id),
+		title : "An event",
+		startTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2012-03-26 12:00 Europe/Stockholm"),
+		description : "Description...",
+		location : new ObjectReferenceOrText<Location>(idRef: location1.id),
+		resources : [
+			new UserResource(
+				type : "user",
+				resourceType : new ObjectReference<ResourceType>(idRef: userResourceType1.id), 
+				users : new ObjectReferencesAndText<User>(refs: [new ObjectReference<User>(idRef: user1.id)])
+			),
+			new UploadResource(
+				type : "upload",
+				resourceType : new ObjectReference<ResourceType>(idRef: uploadResourceType1.id), 
+				uploads : new ArrayList<ObjectReference<UploadResponse>>()
+			)
+		]
+	)
+	protected final Event event2 = new Event(
+		id : getObjectId(),
+		eventType : new ObjectReference<EventType>(idRef: eventType1.id),
+		title : "Another event",
+		startTime : TestUtil.modelDate("2014-10-05 18:30 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2014-10-05 20:00 Europe/Stockholm"),
+		description : null,
+		location : null,
+		resources : []
+	)
+
 	/*
 	 *  Given
 	 */
@@ -321,6 +357,10 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(eventType)
 	}
 
+	protected void givenEvent(Event event) {
+		mongoTemplate.insert(event)
+	}
+	
 	protected void givenLocation(Location location) {
 		mongoTemplate.insert(location)
 	}
@@ -339,13 +379,13 @@ abstract class AbstractIntegrationTest {
         String postUrl = "/uploads/" + folder
 		String postContent = new ObjectMapper().writeValueAsString(upload)
 		HttpResponse postResponse = whenPost(postUrl, userTestUpload, postContent)
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
-		Object responseObj = JSON.parse(TestUtil.jsonFromResponse(postResponse))
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
+		Object responseObj = JSON.parse(responseBody)
 		releasePostRequest()
 		return responseObj 
 	}
 
-	
+
 
 	/*
 	 *  When
@@ -386,8 +426,10 @@ abstract class AbstractIntegrationTest {
 	/*
 	 *  Then
 	 */
-	protected void thenResponseCodeIs(HttpResponse response, int code) {
-		assertEquals(code, response.getStatusLine().getStatusCode())
+	protected String thenResponseCodeIs(HttpResponse response, int code) {
+		String responseBody = TestUtil.jsonFromResponse(response)
+		assertEquals(responseBody + " - ", code, response.getStatusLine().getStatusCode())
+		return responseBody
 	}
 
 	protected void thenResponseHeaderHas(HttpResponse response, String type, String value) {

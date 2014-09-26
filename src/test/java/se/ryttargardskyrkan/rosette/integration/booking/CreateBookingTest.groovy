@@ -29,10 +29,9 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 		}""")
 
 		// Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(postResponse)
 		String expectedData = """{
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"customerName" : "Customer 1",
@@ -62,10 +61,9 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 		}""")
 
         // Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(postResponse)
 		String expectedData = """[
 			{ "property" : "location", "message" : "booking.location.oneMustBeSet" }
 		]"""
@@ -90,10 +88,9 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 		}""")
 
         // Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(postResponse)
 		String expectedData = """[
 			{ "property" : "customerName", "message" : "booking.customerName.notEmpty" },
 			{ "property" : "location",     "message" : "booking.location.oneMustBeSet" },

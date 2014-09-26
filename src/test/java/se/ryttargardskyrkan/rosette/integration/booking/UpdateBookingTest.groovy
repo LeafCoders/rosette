@@ -71,9 +71,8 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 		}""")
 
 		// Then
-		thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
+		String responseBody = thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
 
-		String responseBody = TestUtil.jsonFromResponse(putResponse)
 		String expectedData = """[
 			{ "property" : "customerName", "message" : "booking.customerName.notEmpty" },
 			{ "property" : "location",     "message" : "booking.location.oneMustBeSet" },

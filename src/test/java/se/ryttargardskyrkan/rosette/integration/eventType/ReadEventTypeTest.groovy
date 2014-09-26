@@ -22,14 +22,13 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 		givenEventType(eventType1)
 
 		// When
-		String getUrl = "/eventTypes/${eventType1.id}"
+		String getUrl = "/eventTypes/${ eventType1.id }"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
-		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
+		String responseBody = thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(getResponse)
 		String expectedData = """{
 			"id" : "${eventType1.id}",
 			"key" : "people",
@@ -37,31 +36,24 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 			"description" : "Description...",
 			"resourceTypes" : [
 				{
-					"idRef" : "${userResourceType1.id}",
+					"idRef" : "${ userResourceType1.id }",
 					"referredObject" : {
 						"type" : "user",
-						"id" : "${userResourceType1.id}",
+						"id" : "${ userResourceType1.id }",
 						"key" : "speaker",
 						"name" : "UserResourceType 1",
 						"description" : "Description here",
 						"section" : "persons",
 						"multiSelect" : false,
 						"allowText" : false,
-						"group" : {
-							"idRef" : "${group1.id}",
-							"referredObject" : {
-								"id" : "${group1.id}",
-								"name" : "Admins",
-								"description" : null
-							}
-						}
+						"group" : { "idRef" : "${group1.id}", "referredObject" : null }
 					}
 				},
 				{
-					"idRef" : "${uploadResourceType1.id}",
+					"idRef" : "${ uploadResourceType1.id }",
 					"referredObject" : {
 						"type" : "upload",
-						"id" : "${uploadResourceType1.id}",
+						"id" : "${ uploadResourceType1.id }",
 						"key" : "posterFile",
 						"name" : "UploadResourceType 1",
 						"description" : "Select poster files",

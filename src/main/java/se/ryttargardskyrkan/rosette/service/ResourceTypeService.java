@@ -31,11 +31,11 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 		if (data instanceof UserResourceType) {
 			ObjectReference<Group> group = ((UserResourceType) data).getGroup();
 			if (group != null) {
-				group.setReferredObject(groupService.read(group.getIdRef()));
+				group.setReferredObject(groupService.readNoDep(group.getIdRef()));
 			}
 		}
 	}
-	
+
 	public Resource createResourceFrom(ObjectReference<ResourceType> resourceTypeRef) {
 		ResourceType resourceType = readNoDep(resourceTypeRef.getIdRef());
 		if (resourceType instanceof UserResourceType) {

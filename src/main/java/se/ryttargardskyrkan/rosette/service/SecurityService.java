@@ -31,7 +31,7 @@ public class SecurityService {
 
 	public void checkPermission(final String permission) {
 		if (!SecurityUtils.getSubject().isPermitted(permission)) {
-			throw new ForbiddenException();
+			throw new ForbiddenException("Missing permission: " + permission);
 		}
 	}
 

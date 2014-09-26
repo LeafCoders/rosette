@@ -26,7 +26,7 @@ public class EventTypeService extends MongoTemplateCRUD<EventType> {
 	@Override
 	public void insertDependencies(EventType data) {
 		for (ObjectReference<ResourceType> resourceType : data.getResourceTypes()) {
-			resourceType.setReferredObject(resourceTypeService.read(resourceType.getIdRef()));
+			resourceType.setReferredObject(resourceTypeService.readNoDep(resourceType.getIdRef()));
 		}
 	}
 }

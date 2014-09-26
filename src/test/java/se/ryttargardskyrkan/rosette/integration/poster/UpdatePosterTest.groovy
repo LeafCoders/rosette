@@ -65,10 +65,9 @@ public class UpdatePosterTest extends AbstractIntegrationTest {
 		}""")
 
 		// Then
-		thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
+		String responseBody = thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
 		thenResponseHeaderHas(putResponse, "Content-Type", "application/json;charset=UTF-8")
 		
-		String responseBody = TestUtil.jsonFromResponse(putResponse)
 		String expectedData = """[
 			{ "property" : "title", "message" : "poster.title.notEmpty" }
 		]"""

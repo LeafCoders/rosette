@@ -27,10 +27,9 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 		}""")
 
         // Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(postResponse)
 		String expectedData = """{
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"fileName" : "image.png",

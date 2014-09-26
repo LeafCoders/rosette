@@ -27,10 +27,9 @@ public class ReadPostersTest extends AbstractIntegrationTest {
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
-		thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
+		String responseBody = thenResponseCodeIs(getResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(getResponse)
 		String expectedData = """[
 			{
 				"id" : "${ poster2.id }",

@@ -52,11 +52,11 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	public void insertDependencies(Permission data) {
 		final ObjectReference<User> userRef = data.getUser(); 
 		if (userRef != null) {
-			userRef.setReferredObject(userService.read(userRef.getIdRef()));
+			userRef.setReferredObject(userService.readNoDep(userRef.getIdRef()));
 		}
 		final ObjectReference<Group> groupRef = data.getGroup(); 
 		if (groupRef != null) {
-			groupRef.setReferredObject(groupService.read(groupRef.getIdRef()));
+			groupRef.setReferredObject(groupService.readNoDep(groupRef.getIdRef()));
 		}
 	}
 }

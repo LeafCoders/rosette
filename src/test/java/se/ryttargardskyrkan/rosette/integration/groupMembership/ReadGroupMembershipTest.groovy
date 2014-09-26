@@ -30,10 +30,9 @@ public class ReadGroupMembershipTest extends AbstractIntegrationTest {
 		HttpResponse uploadResponse = whenGet(getUrl, user1)
 
 		// Then
-		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
+		String responseBody = thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
 		thenResponseHeaderHas(uploadResponse, "Content-Type", "application/json;charset=UTF-8")
 
-		String responseBody = TestUtil.jsonFromResponse(uploadResponse)
 		String expectedData = """{
 			"id" : "${ groupMembId2 }",
 			"user" : {
