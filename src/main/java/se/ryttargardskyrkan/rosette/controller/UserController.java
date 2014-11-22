@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
@@ -25,6 +26,7 @@ import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
+import se.ryttargardskyrkan.rosette.service.GroupMembershipService;
 import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
@@ -34,7 +36,9 @@ public class UserController extends AbstractController {
 	@Autowired
 	private MongoRealm mongoRealm;
 	@Autowired
-	private SecurityService security;
+	private SecurityService securityService;
+	@Autowired
+	private GroupMembershipService groupMembershipService;
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -50,9 +54,14 @@ public class UserController extends AbstractController {
 
 	@RequestMapping(value = "users", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<User> getUsers(HttpServletResponse response) {
+	public List<User> getUsers(HttpServletResponse response, @RequestParam(required = false) String groupId) {
 		Query query = new Query();
         query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "firstName"), new Sort.Order(Sort.Direction.ASC, "lastName")));
+
+        if (groupId != null) {
+        	List<String> userIds = groupMembershipService.getUserIdsInGroup(groupId);
+        	query.addCriteria(Criteria.where("id").in(userIds));
+        }
 
 		List<User> usersInDatabase = mongoTemplate.find(query, User.class);
 		List<User> users = new ArrayList<User>();
@@ -71,7 +80,7 @@ public class UserController extends AbstractController {
 	@ResponseBody
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
 		checkPermission("create:users");
-		security.validate(user);
+		securityService.validate(user);
 
 		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
 		if (count > 0) {
@@ -92,7 +101,7 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
 		checkPermission("update:users:" + id);
-		security.validate(user);
+		securityService.validate(user);
 
 		Update update = new Update();
 		if (user.getUsername() != null)

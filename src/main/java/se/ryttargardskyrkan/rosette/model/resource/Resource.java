@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.validator.HasIdRef;
 
+// The following annotations uses the property 'type' to decide which class to create
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = UserResource.class, name = "user"),
@@ -22,11 +23,10 @@ public abstract class Resource {
 
     public Resource() {}
 
-	public Resource(String type, ResourceType resourceType) {
+	public Resource(String type) {
 		this.type = type;
-		this.resourceType = new ObjectReference<ResourceType>(resourceType.getId());
 	}
-	
+
     // Getters and setters
 
 	public String getType() {

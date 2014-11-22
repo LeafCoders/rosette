@@ -10,12 +10,9 @@ public class UserResource extends Resource {
 
     // Constructors
 
-    public UserResource() {}
-
-	public UserResource(UserResourceType userResourceType) {
-		super("user", userResourceType);
-		setUsers(new ObjectReferencesAndText<User>());
-	}
+    public UserResource() {
+		super("user");
+    }
 	
     // Getters and setters
 

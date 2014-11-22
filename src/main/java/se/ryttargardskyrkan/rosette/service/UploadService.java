@@ -34,12 +34,12 @@ public class UploadService {
 	public static final String METADATA_WIDTH = "width";
 	public static final String METADATA_HEIGHT = "height";
 
-	@Value("${rosette.rosetteUrlWithVersion}")
-	private String rosetteUrlWithVersion;
+	@Value("${rosette.baseUrl}")
+	private String baseUrl;
 	
-	@Value("${rosette.cordateUrlWithVersion}")
-	private String cordateUrlWithVersion;
-
+	@Value("${rosette.apiVersion}")
+	private String apiVersion;
+	
 	@Autowired
 	private GridFsTemplate gridFsTemplate;
 	@Autowired
@@ -225,10 +225,10 @@ public class UploadService {
 		upload.setFileName(file.getFilename());
 		upload.setFolderName(folderName);
 		if (uploadFolderService.isPublic(folderName)) {
-			upload.setFileUrl(rosetteUrlWithVersion + "/assets/" + folderName + "/" + file.getFilename());
+			upload.setFileUrl(baseUrl + "/api/" + apiVersion + "/assets/" + folderName + "/" + file.getFilename());
 		} else {
 			// Need to stream content through cordate server when folder isn't public
-			upload.setFileUrl(cordateUrlWithVersion + "/assets/" + folderName + "/" + file.getFilename());
+			upload.setFileUrl(baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderName + "/" + file.getFilename());
 		}
         upload.setMimeType(file.getContentType());
 		upload.setFileSize(file.getLength());

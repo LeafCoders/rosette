@@ -1,6 +1,5 @@
 package se.ryttargardskyrkan.rosette.model.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import se.ryttargardskyrkan.rosette.model.ObjectReference;
@@ -12,13 +11,10 @@ public class UploadResource extends Resource {
 
     // Constructors
 
-    public UploadResource() {}
+    public UploadResource() {
+		super("upload");
+    }
 
-	public UploadResource(UploadResourceType uploadResourceType) {
-		super("upload", uploadResourceType);
-		setUploads(new ArrayList<ObjectReference<UploadResponse>>());
-	}
-	
     // Getters and setters
 
 	public List<ObjectReference<UploadResponse>> getUploads() {

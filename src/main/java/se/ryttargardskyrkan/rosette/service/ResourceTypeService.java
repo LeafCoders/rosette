@@ -35,14 +35,4 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 			}
 		}
 	}
-
-	public Resource createResourceFrom(ObjectReference<ResourceType> resourceTypeRef) {
-		ResourceType resourceType = readNoDep(resourceTypeRef.getIdRef());
-		if (resourceType instanceof UserResourceType) {
-			return new UserResource((UserResourceType) resourceType);
-		} else if (resourceType instanceof UploadResourceType) {
-			return new UploadResource((UploadResourceType) resourceType);
-		}
-		return null;
-	}
 }

@@ -1,5 +1,7 @@
 package se.ryttargardskyrkan.rosette.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -73,5 +75,17 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
         		.where("user.idRef").is(groupMembership.getUser().getIdRef())
         		.and("group.idRef").is(groupMembership.getGroup().getIdRef())), GroupMembership.class);
         return count > 0;
+	}
+
+	public List<String> getUserIdsInGroup(String groupId) {
+		List<GroupMembership> groupMemberships = mongoTemplate.find(
+        		Query.query(Criteria.where("group.idRef").is(groupId)), GroupMembership.class);
+		ArrayList<String> result = new ArrayList<String>(groupMemberships.size());
+		if (groupMemberships != null) {
+			for (GroupMembership gm : groupMemberships) {
+				result.add(gm.getUser().getIdRef());
+			}
+		}
+		return result;		
 	}
 }
