@@ -42,6 +42,15 @@ public class SecurityService {
         }
     }
 
+	public String requestUserId() {
+		Object principal = SecurityUtils.getSubject().getPrincipal();
+		if (principal != null) {
+			return principal.toString();
+		} else {
+			return null;
+		}
+	}
+    
 	// TODO: I very ugly method. Fix with annotaions? http://stackoverflow.com/a/4454783
 	public void checkNotReferenced(final String id, final String permissionType) {
 		if (permissionType == "locations") {

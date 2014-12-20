@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.service.PermissionService;
+import se.ryttargardskyrkan.rosette.service.SecurityService;
 
 @Controller
 public class PermissionController extends AbstractController {
 	@Autowired
 	private PermissionService permissionService;
+	@Autowired
+	private SecurityService security;
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -54,5 +57,11 @@ public class PermissionController extends AbstractController {
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deletePermission(@PathVariable String id, HttpServletResponse response) {
 		permissionService.delete(id, response);
+	}
+	
+	@RequestMapping(value = "permissionsForUser", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<String> getPermissionForUser() {
+		return permissionService.getForUser(security.requestUserId());
 	}
 }

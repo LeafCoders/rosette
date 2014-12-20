@@ -1,12 +1,8 @@
 package se.ryttargardskyrkan.rosette.security;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import javax.annotation.PostConstruct;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -24,16 +20,16 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User;
+import se.ryttargardskyrkan.rosette.service.PermissionService;
 
 @Service("mongoRealm")
 public class MongoRealm extends AuthorizingRealm {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private PermissionService permissionService;
 
 	PasswordMatcher passwordMatcher;
 
@@ -45,51 +41,15 @@ public class MongoRealm extends AuthorizingRealm {
 
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 		Set<String> permissions = new HashSet<String>();
-
-		// Adding permissions for everyone
-		Query query = Query.query(Criteria.where("everyone").is(true));
-		Permission permission = mongoTemplate.findOne(query, Permission.class);
-		if (permission != null && permission.getPatterns() != null) {
-			permissions.addAll(permission.getPatterns());
+		boolean isKnownUser = principalCollection.fromRealm("anonymousRealm").isEmpty();
+		if (isKnownUser) {
+			permissions.addAll(permissionService.getForUser((String)principalCollection.getPrimaryPrincipal()));
+		} else {
+			permissions.addAll(permissionService.getForEveryone());
 		}
 
-		if (principalCollection.fromRealm("anonymousRealm").isEmpty()) {
-			// Adding group permissions
-			User user = mongoTemplate.findById((String) principalCollection.getPrimaryPrincipal(), User.class);
-			Query groupMembershipsQuery = new Query(Criteria.where("user.idRef").is(user.getId()));
-			List<GroupMembership> groupMemberships = mongoTemplate.find(groupMembershipsQuery, GroupMembership.class);
-
-			if (groupMemberships != null) {
-				List<String> groupIds = new ArrayList<String>();
-				for (GroupMembership groupMembership : groupMemberships) {
-					groupIds.add(groupMembership.getGroup().getIdRef());
-				}
-
-				Query groupPermissionQuery = Query.query(Criteria.where("group.idRef").in(groupIds));
-				List<Permission> groupPermissions = mongoTemplate.find(groupPermissionQuery, Permission.class);
-				if (groupPermissions != null) {
-					for (Permission groupPermission : groupPermissions) {
-						if (groupPermission.getPatterns() != null) {
-							permissions.addAll(groupPermission.getPatterns());
-						}
-					}
-				}
-			}
-
-			// Adding user permissions
-			Query userPermissionQuery = Query.query(Criteria.where("user.idRef").is(user.getId()));
-			List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
-			if (userPermissions != null) {
-				for (Permission userPermission : userPermissions) {
-					if (userPermission.getPatterns() != null) {
-						permissions.addAll(userPermission.getPatterns());
-					}
-				}
-			}
-		}
-
+		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 		simpleAuthorizationInfo.setStringPermissions(permissions);
 		return simpleAuthorizationInfo;
 	}
