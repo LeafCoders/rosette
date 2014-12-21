@@ -10,6 +10,8 @@ public class EventType extends TypeBasedModel {
     @NotNull(message = "eventType.resourceTypes.notNull")
     private List<ObjectReference<ResourceType>> resourceTypes;
 
+    private Boolean showOnPalmate;
+
     // Getter and setters
 
     public List<ObjectReference<ResourceType>> getResourceTypes() {
@@ -19,4 +21,12 @@ public class EventType extends TypeBasedModel {
     public void setResourceTypes(List<ObjectReference<ResourceType>> resourceTypes) {
         this.resourceTypes = resourceTypes;
     }
+
+	public Boolean getShowOnPalmate() {
+		return showOnPalmate;
+	}
+
+	public void setShowOnPalmate(Boolean showOnPalmate) {
+		this.showOnPalmate = showOnPalmate;
+	}
 }

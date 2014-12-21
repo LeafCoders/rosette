@@ -24,8 +24,10 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 		// When
 		String putUrl = "/eventTypes/${eventType2.id}"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"name" : "Changed name",
 			"key" : "willNotChange",
+			"name" : "Changed name",
+			"description" : "New description",
+			"showOnPalmate" : true,
 			"resourceTypes" : [
 				{ "idRef": "${uploadResourceType1.id}" },
 				{ "idRef": "${userResourceType1.id}" }
@@ -40,6 +42,7 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 				"key" : "people",
 				"name" : "EventType 1",
 				"description" : "Description...",
+				"showOnPalmate" : true,
 				"resourceTypes" : [
 					{ "idRef" : "${userResourceType1.id}", "referredObject" : null },
 					{ "idRef" : "${uploadResourceType1.id}", "referredObject" : null }
@@ -49,7 +52,8 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 				"id" : "${eventType2.id}",
 				"key" : "groups",
 				"name" : "Changed name",
-				"description" : "Description...",
+				"description" : "New description",
+				"showOnPalmate" : true,
 				"resourceTypes" : [
 					{ "idRef" : "${uploadResourceType1.id}", "referredObject" : null },
 					{ "idRef" : "${userResourceType1.id}", "referredObject" : null }

@@ -50,6 +50,7 @@ public class EventController extends AbstractController {
 		update.set("endTime", event.getEndTime());
 		update.set("description", event.getDescription());
 		update.set("location", event.getLocation());
+		update.set("showOnPalmate", event.getShowOnPalmate());
 		update.set("resources", event.getResources());
 
 		eventService.update(id, event, update, response);

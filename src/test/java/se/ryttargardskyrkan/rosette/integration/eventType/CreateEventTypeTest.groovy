@@ -26,6 +26,8 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"key" : "speakers",
 			"name" : "Speakers",
+			"description" : "Description",
+			"showOnPalmate" : true,
 			"resourceTypes" : [
 				{ "idRef": "${userResourceType1.id}" },
 				{ "idRef": "${uploadResourceType1.id}" }
@@ -40,7 +42,8 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"key" : "speakers",
 			"name" : "Speakers",
-			"description" : null,
+			"description" : "Description",
+			"showOnPalmate" : true,
 			"resourceTypes" : [
 				{ "idRef" : "${userResourceType1.id}","referredObject" : null },
 				{ "idRef" : "${uploadResourceType1.id}", "referredObject" : null }

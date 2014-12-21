@@ -252,6 +252,7 @@ abstract class AbstractIntegrationTest {
 		key : "people",
 		name : "EventType 1",
 		description : "Description...",
+		showOnPalmate : true,
 		resourceTypes : [
 			new ObjectReference<UserResourceType>(idRef: userResourceType1.id),
 			new ObjectReference<UploadResourceType>(idRef: uploadResourceType1.id)
@@ -262,6 +263,7 @@ abstract class AbstractIntegrationTest {
 		key : "groups",
 		name : "EventType 2",
 		description : "Description...",
+		showOnPalmate : false,
 		resourceTypes : [
 			new ObjectReference<UserResourceType>(idRef: userResourceType1.id),
 			new ObjectReference<UploadResourceType>(idRef: uploadResourceType1.id)

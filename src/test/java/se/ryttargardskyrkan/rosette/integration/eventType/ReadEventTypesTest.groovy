@@ -36,6 +36,7 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 				"key" : "people",
 				"name" : "EventType 1",
 				"description" : "Description...",
+				"showOnPalmate" : true,
 				"resourceTypes" : [
 					{
 						"idRef" : "${ userResourceType1.id }",
@@ -71,6 +72,7 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 				"key" : "groups",
 				"name" : "EventType 2",
 				"description" : "Description...",
+				"showOnPalmate" : false,
 				"resourceTypes" : [
 					{
 						"idRef" : "${ userResourceType1.id }",

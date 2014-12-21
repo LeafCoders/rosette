@@ -44,6 +44,8 @@ public class Event extends IdBasedModel {
 
     private ObjectReferenceOrText<Location> location;
 
+    private Boolean showOnPalmate;
+    
     @NotNull(message = "event.resources.notNull")
     private List<Resource> resources;
 	
@@ -97,7 +99,15 @@ public class Event extends IdBasedModel {
         this.location = location;
     }
 
-    public List<Resource> getResources() {
+	public Boolean getShowOnPalmate() {
+		return showOnPalmate;
+	}
+
+	public void setShowOnPalmate(Boolean showOnPalmate) {
+		this.showOnPalmate = showOnPalmate;
+	}
+
+	public List<Resource> getResources() {
         return resources;
     }
 
