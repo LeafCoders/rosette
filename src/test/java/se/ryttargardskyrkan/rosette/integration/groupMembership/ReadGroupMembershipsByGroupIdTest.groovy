@@ -44,6 +44,7 @@ public class ReadGroupMembershipsByGroupIdTest extends AbstractIntegrationTest {
 					"firstName" : "User",
 					"lastName" : "Two",
 					"fullName" : "User Two",
+					"email" : "u2@ser.se",
 					"password" : null,
 					"status" : "active"
 				}

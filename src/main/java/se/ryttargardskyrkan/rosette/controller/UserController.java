@@ -1,6 +1,5 @@
 package se.ryttargardskyrkan.rosette.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -18,16 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
 import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
 import se.ryttargardskyrkan.rosette.service.GroupMembershipService;
 import se.ryttargardskyrkan.rosette.service.SecurityService;
+import se.ryttargardskyrkan.rosette.service.UserService;
 
 @Controller
 public class UserController extends AbstractController {
@@ -38,18 +36,14 @@ public class UserController extends AbstractController {
 	@Autowired
 	private SecurityService securityService;
 	@Autowired
+	private UserService userService;
+	@Autowired
 	private GroupMembershipService groupMembershipService;
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public User getUser(@PathVariable String id) {
-		checkPermission("read:users:" + id);
-		
-		User user = mongoTemplate.findById(id, User.class);
-		if (user == null) {
-			throw new NotFoundException();
-		}
-		return user;
+		return userService.read(id);
 	}
 
 	@RequestMapping(value = "users", method = RequestMethod.GET, produces = "application/json")
@@ -62,47 +56,23 @@ public class UserController extends AbstractController {
         	List<String> userIds = groupMembershipService.getUserIdsInGroup(groupId);
         	query.addCriteria(Criteria.where("id").in(userIds));
         }
-
-		List<User> usersInDatabase = mongoTemplate.find(query, User.class);
-		List<User> users = new ArrayList<User>();
-		if (usersInDatabase != null) {
-			for (User userInDatabase : usersInDatabase) {
-				if (isPermitted("read:users:" + userInDatabase.getId())) {
-					users.add(userInDatabase);
-				}
-			}
-		}
-
-		return users;
+        
+        return userService.readMany(query);
 	}
 
 	@RequestMapping(value = "users", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
-		checkPermission("create:users");
-		securityService.validate(user);
+		String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
+		user.setHashedPassword(hashedPassword);
+		user.setPassword(null);
+		user.setStatus("active");
 
-		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
-		if (count > 0) {
-			throw new SimpleValidationException(new ValidationError("username", "user.username.duplicatedUsernameNotAllowed"));
-		} else {
-			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
-			user.setHashedPassword(hashedPassword);
-			user.setPassword(null);
-			user.setStatus("active");
-
-			mongoTemplate.insert(user);
-
-			response.setStatus(HttpStatus.CREATED.value());
-			return user;
-		}
+		return userService.create(user, response);
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
-		checkPermission("update:users:" + id);
-		securityService.validate(user);
-
 		Update update = new Update();
 		if (user.getUsername() != null)
 			update.set("username", user.getUsername());
@@ -110,6 +80,8 @@ public class UserController extends AbstractController {
 			update.set("firstName", user.getFirstName());
 		if (user.getLastName() != null)
 			update.set("lastName", user.getLastName());
+		if (user.getEmail() != null)
+			update.set("email", user.getEmail());
 
 		if (user.getPassword() != null && !"".equals(user.getPassword().trim())) {
 			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
@@ -120,7 +92,7 @@ public class UserController extends AbstractController {
 			throw new NotFoundException();
 		}
 		
-		response.setStatus(HttpStatus.OK.value());
+		userService.update(id, user, update, response);
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")

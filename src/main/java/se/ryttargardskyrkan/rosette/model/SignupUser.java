@@ -1,25 +1,32 @@
 package se.ryttargardskyrkan.rosette.model;
 
+import java.util.Date;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.validator.constraints.Email;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 
-@Document(collection = "users")
-public class User extends IdBasedModel {
+@Document(collection = "signupUsers")
+public class SignupUser extends IdBasedModel {
 
-	@Indexed(unique = true)
+	@CreatedDate
+	@JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
+    private Date createdTime;	
+
 	@NotEmpty(message = "user.username.notEmpty")
 	private String username;
 	
 	@Transient
 	private String password;
-	
+
 	@JsonIgnore
 	private String hashedPassword;
-	private String status;
 
 	@NotEmpty(message = "user.firstName.notEmpty")
 	private String firstName;
@@ -28,10 +35,20 @@ public class User extends IdBasedModel {
 	private String lastName;
 
 	@NotEmpty(message = "user.email.notEmpty")
-	@Email(message = "user.email.invalid")
 	private String email;
 
+	@NotEmpty(message = "user.permissions.notEmpty")
+	private String permissions;
+
 	// Getters and setters
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
 
 	public String getUsername() {
 		return username;
@@ -57,14 +74,6 @@ public class User extends IdBasedModel {
 		this.hashedPassword = hashedPassword;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -88,29 +97,12 @@ public class User extends IdBasedModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	// Helpers
-	
-	@Transient
-	public String getFullName() {
-		String name = "";
-		
-		String delimiter = "";
-		
-		if (this.getFirstName() != null) {
-			name =  this.getFirstName();
-			delimiter = " ";
-		}
-		
-		if (this.getLastName() != null) {
-			name += delimiter + this.getLastName();
-		}
-		
-		return name;
+
+	public String getPermissions() {
+		return permissions;
 	}
 
-    @Transient
-    public void setFullName(String fullName) {
-        // nothing
-    }
+	public void setPermissions(String permissions) {
+		this.permissions = permissions;
+	}
 }

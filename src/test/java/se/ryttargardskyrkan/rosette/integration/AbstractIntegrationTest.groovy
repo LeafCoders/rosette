@@ -60,6 +60,7 @@ abstract class AbstractIntegrationTest {
 		httpClient.getConnectionManager().shutdown()
 		httpClient = new DefaultHttpClient()
 
+		mongoTemplate.dropCollection("signupUsers")
 		mongoTemplate.dropCollection("users")
 		mongoTemplate.dropCollection("groups")
 		mongoTemplate.dropCollection("groupMemberships")
@@ -151,6 +152,7 @@ abstract class AbstractIntegrationTest {
 		username : "user1",
 		firstName : "User",
 		lastName : "One",
+		email : "u1@ser.se",
 		hashedPassword : hashedPassword,
 		status : "active"
 	)
@@ -159,8 +161,18 @@ abstract class AbstractIntegrationTest {
 		username : "user2",
 		firstName : "User",
 		lastName : "Two",
+		email : "u2@ser.se",
 		hashedPassword : hashedPassword,
 		status : "active"
+	)
+	protected final SignupUser signupUser1 = new SignupUser(
+		id : getObjectId(),
+		username : "signupUser1",
+		firstName : "User",
+		lastName : "One",
+		email : "u1@sign.se",
+		permissions : "Perms for u1",
+		hashedPassword : hashedPassword
 	)
 	protected final Group group1 = new Group(
 		id : getObjectId(),
@@ -309,6 +321,10 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(user);
 	}
 
+	protected void givenSignupUser(SignupUser signupUser) {
+		mongoTemplate.insert(signupUser);
+	}
+
 	protected String givenPermissionForEveryone(List<String> permissions) {
 		String permissionId = getObjectId()
 		mongoTemplate.insert(new Permission(
@@ -395,7 +411,9 @@ abstract class AbstractIntegrationTest {
 	protected HttpResponse whenPost(String postUrl, User user, String requestBody) {
         postRequest = new HttpPost(baseUrl + postUrl)
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
-		postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), postRequest))
+		if (user != null) {
+			postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), postRequest))
+		}
 		HttpResponse resp = httpClient.execute(postRequest)
 		return resp
 	}
@@ -404,7 +422,9 @@ abstract class AbstractIntegrationTest {
         getRequest = new HttpGet(relativeUrl ? (baseUrl + getUrl) : getUrl)
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
-		getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), getRequest))
+		if (user != null) {
+			getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), getRequest))
+		}
 		HttpResponse resp = httpClient.execute(getRequest)
 		return resp
 	}
@@ -412,7 +432,9 @@ abstract class AbstractIntegrationTest {
 	protected HttpResponse whenPut(String putUrl, User user, String requestBody) {
         putRequest = new HttpPut(baseUrl + putUrl)
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
-		putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), putRequest))
+		if (user != null) {
+			putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), putRequest))
+		}
 		HttpResponse resp = httpClient.execute(putRequest)
 		return resp
 	}
@@ -420,7 +442,9 @@ abstract class AbstractIntegrationTest {
 	protected HttpResponse whenDelete(String deleteUrl, User user) {
         deleteRequest = new HttpDelete(baseUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
-		deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), deleteRequest))
+		if (user != null) {
+			deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), deleteRequest))
+		}
 		HttpResponse resp = httpClient.execute(deleteRequest)
 		return resp
 	}

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.user
+package se.ryttargardskyrkan.rosette.integration.signupUser
 
 import static org.junit.Assert.*
 import javax.servlet.http.HttpServletResponse
@@ -6,24 +6,25 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.User
+import se.ryttargardskyrkan.rosette.model.SignupUser
 
-public class UpdateUserTest extends AbstractIntegrationTest {
+public class UpdateSignupUserTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void updateUserWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:users:${ user1.id }"])
+		givenSignupUser(signupUser1)
+		givenPermissionForUser(user1, ["update:signupUsers:${ signupUser1.id }"])
 
 		// When
-		String putUrl = "/users/${ user1.id }"
+		String putUrl = "/signupUsers/${ signupUser1.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"username" : "stubbe",
 			"firstName" : "Misse",
 			"lastName" : "Bult",
 			"email" : "new@ser.se",
-			"status" : ""
+			"permissions" : "New permissions"
 		}""")
 
 		// Then
@@ -31,18 +32,18 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 
 		String expectedData = """[
 			{
-				"id" : "${ user1.id }",
+				"id" : "${ signupUser1.id }",
 				"username" : "stubbe",
 				"firstName" : "Misse",
 				"lastName" : "Bult",
 				"email" : "new@ser.se",
-				"status" : "active",
 				"password" : null,
-			    "fullName" : "Misse Bult"
+				"permissions" : "New permissions",
+				"createdTime" : null
 			}
 		]"""
-		thenDataInDatabaseIs(User.class, expectedData)
-		thenItemsInDatabaseIs(User.class, 1)
+		thenDataInDatabaseIs(SignupUser.class, expectedData)
+		thenItemsInDatabaseIs(SignupUser.class, 1)
 	}
 
 	@Test

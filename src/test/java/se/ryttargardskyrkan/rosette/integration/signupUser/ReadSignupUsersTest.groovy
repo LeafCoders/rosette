@@ -1,6 +1,5 @@
-package se.ryttargardskyrkan.rosette.integration.user
+package se.ryttargardskyrkan.rosette.integration.signupUser
 
-import static junit.framework.Assert.*
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
@@ -12,17 +11,17 @@ import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 import com.mongodb.util.JSON
 
-public class ReadUsersTest extends AbstractIntegrationTest {
+public class ReadSignupUsersTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void readAllUsersWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenUser(user2)
-		givenPermissionForUser(user1, ["read:users"])
+		givenSignupUser(signupUser1)
+		givenPermissionForUser(user1, ["read:signupUsers"])
 
 		// When
-		String getUrl = "/users"
+		String getUrl = "/signupUsers"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -31,24 +30,14 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 
 		String expectedData = """[
 			{
-				"id" : "${ user1.id }",
-				"username" : "user1",
+				"id" : "${ signupUser1.id }",
+				"username" : "signupUser1",
 				"firstName" : "User",
 				"lastName" : "One",
-				"email" : "u1@ser.se",
-				"status" : "active",
+				"email" : "u1@sign.se",
 				"password" : null,
-			    "fullName" : "User One"
-			},
-			{
-				"id" : "${ user2.id }",
-				"username" : "user2",
-				"firstName" : "User",
-				"lastName" : "Two",
-				"email" : "u2@ser.se",
-				"status" : "active",
-				"password" : null,
-			    "fullName" : "User Two"
+				"permissions" : "Perms for u1",
+				"createdTime" : null
 			}
 		]"""
 		thenResponseDataIs(responseBody, expectedData)

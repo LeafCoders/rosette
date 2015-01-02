@@ -47,6 +47,7 @@ public class ReadPermissionsTest extends AbstractIntegrationTest {
 						"status" : "active",
 						"firstName" : "User",
 						"lastName" : "One",
+						"email" : "u1@ser.se",
 						"fullName" : "User One"
 					}
 				},

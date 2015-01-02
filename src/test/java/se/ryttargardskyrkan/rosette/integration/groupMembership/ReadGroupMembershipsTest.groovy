@@ -45,6 +45,7 @@ public class ReadGroupMembershipsTest extends AbstractIntegrationTest {
 					"firstName" : "User",
 					"lastName" : "One",
 					"fullName" : "User One",
+					"email" : "u1@ser.se",
 					"password" : null,
 					"status" : "active"
 				}
@@ -67,6 +68,7 @@ public class ReadGroupMembershipsTest extends AbstractIntegrationTest {
 					"firstName" : "User",
 					"lastName" : "Two",
 					"fullName" : "User Two",
+					"email" : "u2@ser.se",
 					"password" : null,
 					"status" : "active"
 				}

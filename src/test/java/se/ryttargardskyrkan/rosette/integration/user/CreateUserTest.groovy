@@ -26,6 +26,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 			"username" : "hubbe",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
+			"email" : "n@is.se",
 			"password" : "password"
 		}""")
 
@@ -38,6 +39,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 			"username" : "hubbe",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
+			"email" : "n@is.se",
 			"status" : "active",
 			"password" : null,
 		    "fullName" : "Nisse Hult"
@@ -63,6 +65,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 			"username" : "hubbe",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
+			"email" : "n@is.se",
 			"password" : "password"
 		}""")
 

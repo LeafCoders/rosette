@@ -1,6 +1,5 @@
 package se.ryttargardskyrkan.rosette.service;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
 import se.ryttargardskyrkan.rosette.model.IdBasedModel;
-import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 
 abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
