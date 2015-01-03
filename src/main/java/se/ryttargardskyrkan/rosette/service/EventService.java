@@ -1,7 +1,11 @@
 package se.ryttargardskyrkan.rosette.service;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.model.EventType;
 import se.ryttargardskyrkan.rosette.model.Location;
@@ -30,6 +34,14 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		super("events", Event.class);
 	}
 
+	public List<Event> readMany(Date from, Date to) {
+		Query query = new Query();
+		if (from != null && to != null) {
+			query.addCriteria(Criteria.where("startTime").gte(from).lt(to));
+		}
+		return readMany(query.with(new Sort(Sort.Direction.ASC, "startTime")));
+	}
+	
 	@Override
 	public void insertDependencies(Event data) {
 		final ObjectReference<EventType> eventTypeRef = data.getEventType(); 
