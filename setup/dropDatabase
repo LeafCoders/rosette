@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Drops the "rosette" database
+mongo localhost:27017/rosette --eval "db.dropDatabase();"

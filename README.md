@@ -1,6 +1,6 @@
 # rosette
 
-Services for events and users
+A REST server for events, posters, bookings, uploads and more.
 
 
 ## Development setup
@@ -36,3 +36,9 @@ Services for events and users
 9. Double-click at `VMware vFabric tc Server Developer Edition v2.9` in `Servers` view.
 10. Change `bio.http.port` to `9000`
 11. Click at the `Modules` tab and change `rosette` to have path `/`
+
+
+## Installation
+
+1. Set profile to "production" with JVM arg `-Dspring.profiles.active=production`
+2. Set JVM arg `-Drosette.baseUrl=http://rosetteHostName:rosettePortNr`
