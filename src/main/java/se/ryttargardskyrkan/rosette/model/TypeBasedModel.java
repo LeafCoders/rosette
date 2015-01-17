@@ -3,12 +3,12 @@ package se.ryttargardskyrkan.rosette.model;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.annotation.Id;
 
-public class TypeBasedModel extends IdBasedModel {
-	@Indexed(unique = true)
-	@Pattern(regexp = "[a-z][a-zA-Z]+", message = "type.key.notValidFormat")
-	protected String key;
+public class TypeBasedModel implements BaseModel {
+	@Id
+	@Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = "error.id.notValidFormat")
+	protected String id;
 
     @NotEmpty(message = "type.name.notEmpty")
     protected String name;
@@ -18,12 +18,12 @@ public class TypeBasedModel extends IdBasedModel {
 
     // Getter and setters
 
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

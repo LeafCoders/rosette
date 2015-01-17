@@ -1,23 +1,20 @@
 package se.ryttargardskyrkan.rosette.integration.event.update
 
 import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
-import org.junit.Test
-
+import org.junit.*
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
 import com.mongodb.util.JSON
 
+@Ignore
 public class UpdateMissingEventTest extends AbstractIntegrationTest {
 
 	@Test

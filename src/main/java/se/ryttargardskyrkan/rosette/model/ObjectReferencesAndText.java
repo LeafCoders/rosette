@@ -14,6 +14,10 @@ public class ObjectReferencesAndText<T> {
     public boolean hasText() {
         return (text != null) && !text.isEmpty();
     }
+    
+    public int totalNumRefsAndText() {
+    	return (hasRefs() ? getRefs().size() : 0) + (hasText() ? 1 : 0);
+    }
 
     // Getters and setters
 

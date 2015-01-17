@@ -2,18 +2,19 @@ package se.ryttargardskyrkan.rosette.service;
 
 import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.model.EventType;
 import se.ryttargardskyrkan.rosette.model.Location;
 import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
-import se.ryttargardskyrkan.rosette.model.ObjectReferencesAndText;
-import se.ryttargardskyrkan.rosette.model.UploadResponse;
-import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.model.event.Event;
 import se.ryttargardskyrkan.rosette.model.resource.*;
 
@@ -26,9 +27,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	@Autowired
 	ResourceTypeService resourceTypeService;
 	@Autowired
-	UserService userService;
-	@Autowired
-	UploadService uploadService;
+	MethodsService methodsService;
 
 	public EventService() {
 		super("events", Event.class);
@@ -41,7 +40,24 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		}
 		return readMany(query.with(new Sort(Sort.Direction.ASC, "startTime")));
 	}
-	
+
+	public void assignResource(String eventId, String resourceTypeId, Resource resource, HttpServletResponse response) {
+		security.checkPermission("assign:resourceTypes:" + resourceTypeId);
+		security.validate(resource);
+
+		Query query = new Query(new Criteria().andOperator(
+		        Criteria.where("id").is(eventId),
+		        Criteria.where("resources.resourceType.idRef").is(resourceTypeId)));		
+
+		ResourceType resourceType = resourceTypeService.readNoDep(resource.getResourceType().getIdRef());
+		Update update = methodsService.of(resource).createAssignUpdate(resourceType);
+
+		if (mongoTemplate.updateFirst(query, update, Event.class).getN() == 0) {
+			throw new NotFoundException();
+		}
+		response.setStatus(HttpStatus.OK.value());
+	}
+
 	@Override
 	public void insertDependencies(Event data) {
 		final ObjectReference<EventType> eventTypeRef = data.getEventType(); 
@@ -56,23 +72,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		for (Resource resource : resources) {
 			final ObjectReference<ResourceType> resourceTypeRef = resource.getResourceType();
 			resourceTypeRef.setReferredObject(resourceTypeService.readNoDep(resourceTypeRef.getIdRef()));
-			if (resource instanceof UserResource) {
-				UserResource userResource = (UserResource) resource;
-				final ObjectReferencesAndText<User> userRefs = userResource.getUsers();
-				if (userRefs != null) {
-					for (ObjectReference<User> userRef : userRefs.getRefs()) {
-						userRef.setReferredObject(userService.readNoDep(userRef.getIdRef()));
-					}
-				}
-			} else if (resource instanceof UploadResource) {
-				UploadResource uploadResource = (UploadResource) resource;
-				final List<ObjectReference<UploadResponse>> uploadRefs = uploadResource.getUploads();
-				if (uploadRefs != null) {
-					for (ObjectReference<UploadResponse> uploadRef : uploadRefs) {
-						uploadRef.setReferredObject(uploadService.read(uploadRef.getIdRef()));
-					}
-				}
-			}
+			methodsService.of(resource).insertDependencies();
 		}
 	}
 }

@@ -11,10 +11,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.IdBasedModel;
+import se.ryttargardskyrkan.rosette.model.BaseModel;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 
-abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
+abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 	@Autowired
@@ -27,9 +27,21 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 		this.entityClass = entityClass;
 	}
 
+	protected void checkPermission(String accessType) {
+		security.checkPermission(accessType + ":" + permissionType);
+	}
+
+	protected void checkPermission(String accessType, String id) {
+		security.checkPermission(accessType + ":" + permissionType + ":" + id);
+	}
+
+	protected Query getIdQuery(String id) {
+		return Query.query(Criteria.where("id").is(id));
+	}
+
 	@Override
 	public T create(T data, HttpServletResponse response) {
-		security.checkPermission("create:" + permissionType);
+		checkPermission("create");
 		security.validate(data);
 		mongoTemplate.insert(data);
 		response.setStatus(HttpStatus.CREATED.value());
@@ -44,7 +56,7 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 	}
 
 	public T readNoDep(String id) {
-		security.checkPermission("read:" + permissionType + ":" + id);
+		checkPermission("read", id);
         T data = mongoTemplate.findById(id, entityClass);
 		if (data == null) {
 			throw new NotFoundException();
@@ -58,7 +70,7 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 		List<T> result = new LinkedList<T>();
 		if (dataInDatabase != null) {
 			for (T data : dataInDatabase) {
-				if (security.isPermitted("read:" + permissionType + ":" + ((IdBasedModel)data).getId())) {
+				if (security.isPermitted("read:" + permissionType + ":" + data.getId())) {
 			        insertDependencies(data);
 					result.add(data);
 				}
@@ -69,10 +81,10 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 
 	@Override
 	public void update(String id, T data, Update update, HttpServletResponse response) {
-		security.checkPermission("update:" + permissionType + ":" + id);
+		checkPermission("update", id);
 		security.validate(data);
 
-		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, entityClass).getN() == 0) {
+		if (mongoTemplate.updateFirst(getIdQuery(id), update, entityClass).getN() == 0) {
 			throw new NotFoundException();
 		}
 		response.setStatus(HttpStatus.OK.value());
@@ -80,17 +92,21 @@ abstract class MongoTemplateCRUD<T> implements StandardCRUD<T> {
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-		security.checkPermission("delete:" + permissionType + ":" + id);
+		checkPermission("delete", id);
 		security.checkNotReferenced(id, permissionType);
-        if (mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), entityClass) == null) {
+        if (mongoTemplate.findAndRemove(getIdQuery(id), entityClass) == null) {
 			throw new NotFoundException();
 		}
 		response.setStatus(HttpStatus.OK.value());
 	}
 	
 	public void validateUnique(String property, Object value, String message) {
-		if (mongoTemplate.count(Query.query(Criteria.where(property).is(value)), entityClass) > 0) {
+		if (value == null || value == "" || mongoTemplate.count(Query.query(Criteria.where(property).is(value)), entityClass) > 0) {
 			throw new SimpleValidationException(new ValidationError(property, message));
 		}
+	}
+	
+	public void validateUniqueId(T data) {
+		validateUnique("id", data.getId(), "error.id.mustBeUnique");
 	}
 }

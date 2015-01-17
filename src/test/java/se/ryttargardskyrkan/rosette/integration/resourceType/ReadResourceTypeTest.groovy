@@ -18,12 +18,12 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
     public void successReadOne() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:resourceTypes", "read:groups"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenPermissionForUser(user1, ["read:resourceTypes:${userResourceTypeSingle.id}", "read:groups"])
 
 		// When
-		String getUrl = "/resourceTypes/${userResourceType1.id}"
+		String getUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -32,9 +32,8 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 
 		String expectedData = """{
 			"type": "user",
-			"id": "${userResourceType1.id}",
-			"key" : "speaker",
-			"name": "UserResourceType 1",
+			"id" : "${userResourceTypeSingle.id}",
+			"name": "UserResourceType Single",
 			"description": "Description here",
 			"section" : "persons",
 			"multiSelect": false,
@@ -58,7 +57,7 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, ["read:resourceTypes", "read:groups"])
 
 		// When
-		String getUrl = "/resourceTypes/4711"
+		String getUrl = "/resourceTypes/nonExistingKey"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -70,10 +69,10 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
 
 		// When
-		String getUrl = "/resourceTypes/${userResourceType1.id}"
+		String getUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then

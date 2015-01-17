@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.exception.ForbiddenException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
+import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.UploadRequest;
 import se.ryttargardskyrkan.rosette.model.UploadResponse;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
@@ -89,7 +90,7 @@ public class UploadService {
 		sanitizeAndValidateFolder(folder);
 
 		List<GridFSDBFile> filesInFolder = getFilesInFolder(folder);
-		List<UploadResponse> uploads = new ArrayList<UploadResponse>();
+		List<UploadResponse> uploads = new LinkedList<UploadResponse>();
 		if (filesInFolder != null) {
 			for (GridFSDBFile file : filesInFolder) {
 				if (security.isPermitted("read:uploads:" + folder + ":" + file.getId())) {
@@ -111,7 +112,28 @@ public class UploadService {
 			throw new NotFoundException();
 		}
 	}
-	
+
+	public boolean containsUploads(String folder, List<ObjectReference<UploadResponse>> uploadIdRefs) {
+		List<String> uploadIdsInFolder = getFileIdsInFolder(folder);
+		for (ObjectReference<UploadResponse> uploadIdRef : uploadIdRefs) {
+			if (!uploadIdsInFolder.contains(uploadIdRef.getIdRef())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public List<String> getFileIdsInFolder(String folder) {
+		List<GridFSDBFile> filesInFolder = getFilesInFolder(folder);
+		List<String> uploadIds = new LinkedList<String>();
+		if (filesInFolder != null) {
+			for (GridFSDBFile file : filesInFolder) {
+				uploadIds.add(file.getId().toString());
+			}
+		}
+		return uploadIds;
+	}
+
 	public void streamAsset(final String folder, final String fileName, HttpServletResponse response) {
 		sanitizeAndValidateFolder(folder);
 		if (uploadFolderService.isPublic(folder) == false) {

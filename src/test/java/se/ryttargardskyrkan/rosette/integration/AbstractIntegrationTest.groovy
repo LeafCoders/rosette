@@ -132,6 +132,7 @@ abstract class AbstractIntegrationTest {
 			hasAddedUploadUser = true
 			givenUser(userTestUpload)
 			givenPermissionForUser(userTestUpload, ["*:uploads"])
+			System.sleep(100);
 		}
 	}
 
@@ -239,46 +240,59 @@ abstract class AbstractIntegrationTest {
         fileData : "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHsSUNDX1BST0ZJTEUAAQEAAAHcYXBwbAIAAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwQVBQTAAAAABub25lAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLUNHUyB8tZZB0oUWzJORnrk+ipLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAh3dHB0AAAA5AAAABRyWFlaAAAA+AAAABRnWFlaAAABDAAAABRiWFlaAAABIAAAABRyVFJDAAABNAAAAA5nVFJDAAABRAAAAA5iVFJDAAABVAAAAA5kZXNjAAABZAAAAHZYWVogAAAAAAAA81QAAQAAAAEWyVhZWiAAAAAAAABvoAAAOR8AAAOLWFlaIAAAAAAAAGKWAAC3vwAAGMxYWVogAAAAAAAAJKAAAA88AAC2zmN1cnYAAAAAAAAAAQHNAABjdXJ2AAAAAAAAAAEBzQAAY3VydgAAAAAAAAABAc0AAGRlc2MAAAAAAAAAHEdlbmVyaWMgUHJpdmF0ZSBSR0IgUHJvZmlsZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/hAIxFeGlmAABNTQAqAAAACAAGAQYAAwAAAAEAAgAAARIAAwAAAAEAAQAAARoABQAAAAEAAABWARsABQAAAAEAAABeASgAAwAAAAEAAgAAh2kABAAAAAEAAABmAAAAAAAAAEgAAAABAAAASAAAAAEAAqACAAQAAAABAAAAEKADAAQAAAABAAAAEAAAAAD/2wBDAAIBAQIBAQICAQICAgICAwUDAwMDAwYEBAMFBwYHBwcGBgYHCAsJBwgKCAYGCQ0JCgsLDAwMBwkNDg0MDgsMDAv/2wBDAQICAgMCAwUDAwULCAYICwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwv/wAARCAAQABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwBf2Tf2IfFP7Usera1aw3Wk+BPDcNzLrPiJhbCGzaK1knEaC6ubeORmKRqx81ViEyPIyIQSftZfsQ+Kf2Wo9J1q6hutW8CeJIbaXRvESi2MN40trHOY3Frc3EcbKXkVT5rLKIXeNnQEi18C/wBqrwp8O/gNrPgT4p+A9T8V2ur/ANop9otPEY0vyEuzpUm4J9klJlim0W2kRi2w7mV43Fbn7Qn7dWg/Fb9jvwh8G/hn8Prrwnovg/U01KC8ufEJ1Oa5YR3Ik8wfZogGkku3lJUhQcqqKuAoB//Z"
     )
 
-	protected final UserResourceType userResourceType1 = new UserResourceType(
-		id : getObjectId(),
-		key : "speaker",
+	protected final UserResourceType userResourceTypeSingle = new UserResourceType(
+		id : "speaker",
 		section : "persons",
-		name : "UserResourceType 1",
+		name : "UserResourceType Single",
 		description : "Description here",
 		multiSelect : false,
 		allowText : false,
 		group : new ObjectReference<Group>(idRef: group1.id)
 	)
-	protected final UploadResourceType uploadResourceType1 = new UploadResourceType(
-		id : getObjectId(),
-		key : "posterFile",
+	protected final UserResourceType userResourceTypeMultiAndText = new UserResourceType(
+		id : "readers",
+		section : "persons",
+		name : "UserResourceType Multi",
+		description : "Description here",
+		multiSelect : true,
+		allowText : true,
+		group : new ObjectReference<Group>(idRef: group1.id)
+	)
+	protected final UploadResourceType uploadResourceTypeSingle = new UploadResourceType(
+		id : "posterFile",
 		section : "files",
-		name : "UploadResourceType 1",
-		description : "Select poster files",
+		name : "UploadResourceType Single",
+		description : "A poster file",
+		multiSelect : false,
+		folderName : "posters"
+	)
+	protected final UploadResourceType uploadResourceTypeMulti = new UploadResourceType(
+		id : "posterFiles",
+		section : "files",
+		name : "UploadResourceType Multi",
+		description : "Some poster files",
 		multiSelect : true,
 		folderName : "posters"
 	)
 
 	protected final EventType eventType1 = new EventType(
-		id : getObjectId(),
-		key : "people",
+		id : "people",
 		name : "EventType 1",
 		description : "Description...",
 		showOnPalmate : true,
 		resourceTypes : [
-			new ObjectReference<UserResourceType>(idRef: userResourceType1.id),
-			new ObjectReference<UploadResourceType>(idRef: uploadResourceType1.id)
+			new ObjectReference<UserResourceType>(idRef: userResourceTypeSingle.id),
+			new ObjectReference<UploadResourceType>(idRef: uploadResourceTypeSingle.id)
 		]
 	)
 	protected final EventType eventType2 = new EventType(
-		id : getObjectId(),
-		key : "groups",
+		id : "groups",
 		name : "EventType 2",
 		description : "Description...",
 		showOnPalmate : false,
 		resourceTypes : [
-			new ObjectReference<UserResourceType>(idRef: userResourceType1.id),
-			new ObjectReference<UploadResourceType>(idRef: uploadResourceType1.id)
+			new ObjectReference<UserResourceType>(idRef: userResourceTypeMultiAndText.id),
+			new ObjectReference<UploadResourceType>(idRef: uploadResourceTypeMulti.id)
 		]
 	)
 
@@ -293,12 +307,12 @@ abstract class AbstractIntegrationTest {
 		resources : [
 			new UserResource(
 				type : "user",
-				resourceType : new ObjectReference<ResourceType>(idRef: userResourceType1.id), 
+				resourceType : new ObjectReference<ResourceType>(idRef: userResourceTypeSingle.id), 
 				users : new ObjectReferencesAndText<User>(refs: [new ObjectReference<User>(idRef: user1.id)])
 			),
 			new UploadResource(
 				type : "upload",
-				resourceType : new ObjectReference<ResourceType>(idRef: uploadResourceType1.id), 
+				resourceType : new ObjectReference<ResourceType>(idRef: uploadResourceTypeSingle.id), 
 				uploads : new ArrayList<ObjectReference<UploadResponse>>()
 			)
 		]
@@ -311,7 +325,18 @@ abstract class AbstractIntegrationTest {
 		endTime : TestUtil.modelDate("2014-10-05 20:00 Europe/Stockholm"),
 		description : null,
 		location : null,
-		resources : []
+		resources : [
+			new UserResource(
+				type : "user",
+				resourceType : new ObjectReference<ResourceType>(idRef: userResourceTypeMultiAndText.id), 
+				users : new ObjectReferencesAndText<User>(refs: [new ObjectReference<User>(idRef: user1.id)])
+			),
+			new UploadResource(
+				type : "upload",
+				resourceType : new ObjectReference<ResourceType>(idRef: uploadResourceTypeMulti.id), 
+				uploads : new ArrayList<ObjectReference<UploadResponse>>()
+			)
+		]
 	)
 
 	/*

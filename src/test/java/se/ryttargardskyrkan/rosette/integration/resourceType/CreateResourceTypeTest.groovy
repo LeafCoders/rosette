@@ -24,7 +24,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		String postUrl = "/resourceTypes"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"type" : "user",
-			"key" : "speaker",
+			"id" : "speaker",
 			"name" : "Talare",
 			"description" : "Den som talar",
 			"section" : "Personer",
@@ -39,8 +39,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 
 		String expectedData = """{
 			"type" : "user",
-			"id" : "${ JSON.parse(responseBody)['id'] }",
-			"key" : "speaker",
+			"id" : "speaker",
 			"name" : "Talare",
 			"description" : "Den som talar",
 			"section" : "Personer",
@@ -86,8 +85,8 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		// When
 		String postUrl = "/resourceTypes"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"id" : "speaker",
 			"type" : "user",
-			"key" : "speaker",
 			"name" : "Talare",
 			"description" : "Den som talar",
 			"section" : "Personer",
@@ -102,8 +101,8 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		
 		// When
 		HttpResponse postResponse2 = whenPost(postUrl, user1, """{
+			"id" : "speaker",
 			"type" : "user",
-			"key" : "speaker",
 			"name" : "Talare",
 			"description" : "Den som talar",
 			"section" : "Personer",

@@ -16,21 +16,21 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["update:eventTypes"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 		givenEventType(eventType1)
 		givenEventType(eventType2)
 
 		// When
 		String putUrl = "/eventTypes/${eventType2.id}"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"key" : "willNotChange",
+			"id" : "willNotChange",
 			"name" : "Changed name",
 			"description" : "New description",
 			"showOnPalmate" : true,
 			"resourceTypes" : [
-				{ "idRef": "${uploadResourceType1.id}" },
-				{ "idRef": "${userResourceType1.id}" }
+				{ "idRef": "${uploadResourceTypeSingle.id}" },
+				{ "idRef": "${userResourceTypeSingle.id}" }
 			]
 		}""")
 
@@ -39,24 +39,22 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 		String expectedData = """[
 			{
 				"id" : "${eventType1.id}",
-				"key" : "people",
 				"name" : "EventType 1",
 				"description" : "Description...",
 				"showOnPalmate" : true,
 				"resourceTypes" : [
-					{ "idRef" : "${userResourceType1.id}", "referredObject" : null },
-					{ "idRef" : "${uploadResourceType1.id}", "referredObject" : null }
+					{ "idRef" : "${userResourceTypeSingle.id}", "referredObject" : null },
+					{ "idRef" : "${uploadResourceTypeSingle.id}", "referredObject" : null }
 				]
 			},
 			{
 				"id" : "${eventType2.id}",
-				"key" : "groups",
 				"name" : "Changed name",
 				"description" : "New description",
 				"showOnPalmate" : true,
 				"resourceTypes" : [
-					{ "idRef" : "${uploadResourceType1.id}", "referredObject" : null },
-					{ "idRef" : "${userResourceType1.id}", "referredObject" : null }
+					{ "idRef" : "${uploadResourceTypeSingle.id}", "referredObject" : null },
+					{ "idRef" : "${userResourceTypeSingle.id}", "referredObject" : null }
 				]
 			}
 		]"""

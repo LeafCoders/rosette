@@ -18,19 +18,19 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["create:eventTypes", "read:*"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 
 		// When
 		String postUrl = "/eventTypes"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"key" : "speakers",
+			"id" : "speakers",
 			"name" : "Speakers",
 			"description" : "Description",
 			"showOnPalmate" : true,
 			"resourceTypes" : [
-				{ "idRef": "${userResourceType1.id}" },
-				{ "idRef": "${uploadResourceType1.id}" }
+				{ "idRef": "${userResourceTypeSingle.id}" },
+				{ "idRef": "${uploadResourceTypeSingle.id}" }
 			]
 		}""")
 
@@ -39,14 +39,13 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """{
-			"id" : "${ JSON.parse(responseBody)['id'] }",
-			"key" : "speakers",
+			"id" : "speakers",
 			"name" : "Speakers",
 			"description" : "Description",
 			"showOnPalmate" : true,
 			"resourceTypes" : [
-				{ "idRef" : "${userResourceType1.id}","referredObject" : null },
-				{ "idRef" : "${uploadResourceType1.id}", "referredObject" : null }
+				{ "idRef" : "${userResourceTypeSingle.id}","referredObject" : null },
+				{ "idRef" : "${uploadResourceTypeSingle.id}", "referredObject" : null }
 			]
 		}"""
 		thenResponseDataIs(responseBody, expectedData)

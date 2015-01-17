@@ -6,13 +6,10 @@ import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.resource.*;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
 
 @Service
 public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 
-	@Autowired
-	private MongoRealm mongoRealm;
 	@Autowired
 	private GroupService groupService;
 
@@ -22,12 +19,13 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 
 	@Override
 	public ResourceType create(ResourceType data, HttpServletResponse response) {
-		validateUnique("key", data.getKey(), "resourceType.key.mustBeUnique");
+		validateUniqueId(data);
 		return super.create(data, response);
 	}
 
 	@Override
 	public void insertDependencies(ResourceType data) {
+		// TODO: Use methodService here
 		if (data instanceof UserResourceType) {
 			ObjectReference<Group> group = ((UserResourceType) data).getGroup();
 			if (group != null) {

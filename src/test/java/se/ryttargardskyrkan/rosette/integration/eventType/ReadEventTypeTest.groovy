@@ -17,8 +17,8 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:eventTypes", "read:resourceTypes", "read:groups"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 		givenEventType(eventType1)
 
 		// When
@@ -31,18 +31,16 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 
 		String expectedData = """{
 			"id" : "${eventType1.id}",
-			"key" : "people",
 			"name" : "EventType 1",
 			"description" : "Description...",
 			"showOnPalmate" : true,
 			"resourceTypes" : [
 				{
-					"idRef" : "${ userResourceType1.id }",
+					"idRef" : "${ userResourceTypeSingle.id }",
 					"referredObject" : {
 						"type" : "user",
-						"id" : "${ userResourceType1.id }",
-						"key" : "speaker",
-						"name" : "UserResourceType 1",
+						"id" : "${ userResourceTypeSingle.id }",
+						"name" : "UserResourceType Single",
 						"description" : "Description here",
 						"section" : "persons",
 						"multiSelect" : false,
@@ -51,16 +49,15 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 					}
 				},
 				{
-					"idRef" : "${ uploadResourceType1.id }",
+					"idRef" : "${ uploadResourceTypeSingle.id }",
 					"referredObject" : {
 						"type" : "upload",
-						"id" : "${ uploadResourceType1.id }",
-						"key" : "posterFile",
-						"name" : "UploadResourceType 1",
-						"description" : "Select poster files",
+						"id" : "${ uploadResourceTypeSingle.id }",
+						"name" : "UploadResourceType Single",
+						"description" : "A poster file",
 						"section" : "files",
 						"folderName" : "posters",
-						"multiSelect" : true
+						"multiSelect" : false
 					}
 				}
 			]

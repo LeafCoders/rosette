@@ -1,26 +1,11 @@
 package se.ryttargardskyrkan.rosette.integration.group
 
-import static junit.framework.Assert.*
-
 import javax.servlet.http.HttpServletResponse
-
 import org.apache.http.HttpResponse
-import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.ClientProtocolException
-import org.apache.http.client.methods.HttpPut
-import org.apache.http.entity.StringEntity
-import org.apache.http.impl.auth.BasicScheme
-import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
-import org.springframework.data.mongodb.core.query.Query
-
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Group
-import se.ryttargardskyrkan.rosette.model.Permission
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
-
-import com.mongodb.util.JSON
 
 public class UpdateGroupTest extends AbstractIntegrationTest {
 

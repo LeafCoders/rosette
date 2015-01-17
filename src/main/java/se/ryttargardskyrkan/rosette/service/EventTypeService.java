@@ -19,7 +19,7 @@ public class EventTypeService extends MongoTemplateCRUD<EventType> {
 
 	@Override
 	public EventType create(EventType data, HttpServletResponse response) {
-		validateUnique("key", data.getKey(), "eventType.key.mustBeUnique");
+		validateUniqueId(data);
 		return super.create(data, response);
 	}
 

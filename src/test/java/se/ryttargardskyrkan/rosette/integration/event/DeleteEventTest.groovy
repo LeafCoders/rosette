@@ -16,8 +16,8 @@ public class DeleteEventTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, ["delete:events:${ event2.id }"])
 		givenLocation(location1)
 		givenEventType(eventType1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
 		givenEvent(event2)
 		
@@ -37,8 +37,8 @@ public class DeleteEventTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, ["delete:events:invalid"])
 		givenLocation(location1)
 		givenEventType(eventType1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
 		givenEvent(event2)
 		

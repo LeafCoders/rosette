@@ -26,8 +26,10 @@ class SeedTest extends AbstractIntegrationTest {
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)
 
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(userResourceTypeMultiAndText)
+		givenResourceType(uploadResourceTypeSingle)
+		givenResourceType(uploadResourceTypeMulti)
 
 		givenEventType(eventType1)
 		givenEventType(eventType2)

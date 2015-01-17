@@ -16,17 +16,17 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
     public void updateUserResourceTypeWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:resourceTypes"])
 		givenGroup(group1)
 		givenGroup(group2)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenPermissionForUser(user1, ["update:resourceTypes:${userResourceTypeSingle.id}"])
 
 		// When
-		String putUrl = "/resourceTypes/${userResourceType1.id}"
+		String putUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type": "user",
-			"key" : "willNotBeChanged",
-			"name": "UserResourceType 1 New",
+			"id" : "willNotBeChanged",
+			"name": "UserResourceType Single New",
 			"description": "Description here New",
 			"section" : "users",
 			"multiSelect": true,
@@ -39,9 +39,8 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		// Then
 		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
 		String expectedData = """[{
-			"id" : "${userResourceType1.id}",
-			"key" : "speaker",
-			"name": "UserResourceType 1 New",
+			"id" : "${userResourceTypeSingle.id}",
+			"name": "UserResourceType Single New",
 			"description": "Description here New",
 			"section" : "users",
 			"multiSelect": true,
@@ -61,13 +60,13 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["update:resourceTypes"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
 
 		// When
-		String putUrl = "/resourceTypes/${userResourceType1.id}"
+		String putUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"type": "user",
-			"name": "UserResourceType 1",
+			"id": "${userResourceTypeSingle.id}",
+			"name": "UserResourceType Single",
 			"description": "Description here",
 			"multiSelect": false,
 			"allowText": false,

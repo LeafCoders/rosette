@@ -16,12 +16,12 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
     public void deleteUserResourceTypeWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:resourceTypes"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenPermissionForUser(user1, ["delete:resourceTypes:${userResourceTypeSingle.id}"])
 
 		// When
-		String deleteUrl = "/resourceTypes/${userResourceType1.id}"
+		String deleteUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
 		// Then
@@ -36,10 +36,10 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["delete:resourceTypes"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
 		
 		// When
-		String deleteUrl = "/resourceTypes/4711"
+		String deleteUrl = "/resourceTypes/nonExistingKey"
 		HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
 		// Then
@@ -54,10 +54,10 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
 		
 		// When
-		String deleteUrl = "/resourceTypes/${userResourceType1.id}"
+		String deleteUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
 		// Then

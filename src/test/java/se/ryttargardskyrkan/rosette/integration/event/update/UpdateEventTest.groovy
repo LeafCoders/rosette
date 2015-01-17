@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
-import org.junit.Test
+import org.junit.*
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Order
 import org.springframework.data.mongodb.core.query.Query
@@ -19,6 +19,7 @@ import se.ryttargardskyrkan.rosette.model.event.Event;
 import se.ryttargardskyrkan.rosette.security.RosettePasswordService
 import com.mongodb.util.JSON
 
+@Ignore
 public class UpdateEventTest extends AbstractIntegrationTest {
 
 	@Test

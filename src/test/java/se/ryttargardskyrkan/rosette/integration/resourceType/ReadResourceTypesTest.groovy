@@ -20,8 +20,8 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:resourceTypes", "read:groups"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 
 		// When
 		String getUrl = "/resourceTypes"
@@ -32,17 +32,15 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[{
-			"id": "${uploadResourceType1.id}",
-			"key" : "posterFile",
-			"name": "UploadResourceType 1",
-			"description": "Select poster files",
+			"id" : "posterFile",
+			"name": "UploadResourceType Single",
+			"description": "A poster file",
 			"section" : "files",
-			"multiSelect": true,
+			"multiSelect": false,
 			"folderName": "posters"
 		}, {
-			"id": "${userResourceType1.id}",
-			"key" : "speaker",
-			"name": "UserResourceType 1",
+			"id" : "speaker",
+			"name": "UserResourceType Single",
 			"description": "Description here",
 			"section" : "persons",
 			"multiSelect": false,
@@ -64,7 +62,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
 
 		// When
 		String getUrl = "/resourceTypes"
@@ -83,7 +81,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:resourceTypes"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
+		givenResourceType(userResourceTypeSingle)
 
 		// When
 		String getUrl = "/resourceTypes"

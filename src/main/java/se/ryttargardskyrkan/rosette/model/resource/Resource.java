@@ -16,7 +16,7 @@ public abstract class Resource {
 	@NotEmpty(message = "resource.type.notEmpty")
 	private String type;
 
-	@HasIdRef(message = "userResource.resourceType.mustBeSet")
+	@HasIdRef(message = "error.resourceType.mustBeSet")
     private ObjectReference<ResourceType> resourceType;
 	
     // Constructors

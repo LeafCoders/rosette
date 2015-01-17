@@ -17,8 +17,10 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:eventTypes", "read:resourceTypes", "read:groups"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(userResourceTypeMultiAndText)
+		givenResourceType(uploadResourceTypeSingle)
+		givenResourceType(uploadResourceTypeMulti)
 		givenEventType(eventType1)
 		givenEventType(eventType2)
 
@@ -33,18 +35,16 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 		String expectedData = """[
 			{
 				"id" : "${ eventType1.id }",
-				"key" : "people",
 				"name" : "EventType 1",
 				"description" : "Description...",
 				"showOnPalmate" : true,
 				"resourceTypes" : [
 					{
-						"idRef" : "${ userResourceType1.id }",
+						"idRef" : "${ userResourceTypeSingle.id }",
 						"referredObject" : {
 							"type" : "user",
-							"id" : "${ userResourceType1.id }",
-							"key" : "speaker",
-							"name" : "UserResourceType 1",
+							"id" : "${ userResourceTypeSingle.id }",
+							"name" : "UserResourceType Single",
 							"description" : "Description here",
 							"section" : "persons",
 							"multiSelect" : false,
@@ -53,49 +53,45 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 						}
 					},
 					{
-						"idRef" : "${ uploadResourceType1.id }",
+						"idRef" : "${ uploadResourceTypeSingle.id }",
 						"referredObject" : {
 							"type" : "upload",
-							"id" : "${ uploadResourceType1.id }",
-							"key" : "posterFile",
-							"name" : "UploadResourceType 1",
-							"description" : "Select poster files",
+							"id" : "${ uploadResourceTypeSingle.id }",
+							"name" : "UploadResourceType Single",
+							"description" : "A poster file",
 							"section" : "files",
 							"folderName" : "posters",
-							"multiSelect" : true
+							"multiSelect" : false
 						}
 					}
 				]
 			},
 			{
 				"id" : "${ eventType2.id }",
-				"key" : "groups",
 				"name" : "EventType 2",
 				"description" : "Description...",
 				"showOnPalmate" : false,
 				"resourceTypes" : [
 					{
-						"idRef" : "${ userResourceType1.id }",
+						"idRef" : "${ userResourceTypeMultiAndText.id }",
 						"referredObject" : {
 							"type" : "user",
-							"id" : "${ userResourceType1.id }",
-							"key" : "speaker",
-							"name" : "UserResourceType 1",
+							"id" : "${ userResourceTypeMultiAndText.id }",
+							"name" : "UserResourceType Multi",
 							"description" : "Description here",
 							"section" : "persons",
-							"multiSelect" : false,
-							"allowText" : false,
+							"multiSelect" : true,
+							"allowText" : true,
 							"group" : { "idRef" : "${ group1.id }", "referredObject" : null }
 						}
 					},
 					{
-						"idRef" : "${ uploadResourceType1.id }",
+						"idRef" : "${ uploadResourceTypeMulti.id }",
 						"referredObject" : {
 							"type" : "upload",
-							"id" : "${ uploadResourceType1.id }",
-							"key" : "posterFile",
-							"name" : "UploadResourceType 1",
-							"description" : "Select poster files",
+							"id" : "${ uploadResourceTypeMulti.id }",
+							"name" : "UploadResourceType Multi",
+							"description" : "Some poster files",
 							"section" : "files",
 							"folderName" : "posters",
 							"multiSelect" : true

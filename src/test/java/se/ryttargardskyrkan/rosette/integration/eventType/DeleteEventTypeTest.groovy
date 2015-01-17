@@ -16,8 +16,8 @@ public class DeleteEventTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["delete:eventTypes"])
 		givenGroup(group1)
-		givenResourceType(userResourceType1)
-		givenResourceType(uploadResourceType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
 		givenEventType(eventType1)
 		givenEventType(eventType2)
 

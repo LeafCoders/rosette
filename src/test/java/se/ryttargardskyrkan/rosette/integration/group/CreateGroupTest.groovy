@@ -20,6 +20,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/groups"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"id" : "theSpecialTeam",
 			"name" : "Translators",
 			"description" : "Translators from swedish to english."
 		}""")
@@ -29,7 +30,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """{
-			"id" : "${ JSON.parse(responseBody)['id'] }",
+			"id" : "theSpecialTeam",
 			"name" : "Translators",
 			"description" : "Translators from swedish to english."
 		}"""
@@ -48,6 +49,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/groups"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"id" : "theSpecialTeam",
 			"name" : "Translators",
 			"description" : "Translators from swedish to english."
 		}""")
@@ -58,7 +60,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void failCreateGroupWithInvalidContent() throws ClientProtocolException, IOException {
+	public void failCreateGroupWhenMissingId() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["create:groups"])
@@ -66,7 +68,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/groups"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"name" : ""
+			"name" : "Translators"
 		}""")
 
 		// Then
@@ -74,7 +76,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[
-			{ "property" : "name", "message" : "group.name.notEmpty" }
+			{ "property" : "id", "message" : "error.id.mustBeUnique" }
 		]"""
 		thenResponseDataIs(responseBody, expectedData)
 		thenItemsInDatabaseIs(Group.class, 0)

@@ -17,10 +17,10 @@ public class ResourceTypeController extends AbstractController {
     @Autowired
     private ResourceTypeService resourceTypeService;
 
-	@RequestMapping(value = "resourceTypes/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ResourceType getResourceType(@PathVariable String id) {
-		return resourceTypeService.read(id);
+	public ResourceType getResourceType(@PathVariable String key) {
+		return resourceTypeService.read(key);
 	}
 
 	@RequestMapping(value = "resourceTypes", method = RequestMethod.GET, produces = "application/json")
@@ -38,14 +38,14 @@ public class ResourceTypeController extends AbstractController {
 	}
 
 	// ResourceType must contain the attribute 'type' that equals any string specified in ResourceType  
-    @RequestMapping(value = "resourceTypes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public void putResourceType(@PathVariable String id, @RequestBody ResourceType resourceType, HttpServletResponse response) {
+    @RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    public void putResourceType(@PathVariable String key, @RequestBody ResourceType resourceType, HttpServletResponse response) {
     	Update update = resourceType.addToUpdateQuery(new Update());
-		resourceTypeService.update(id, resourceType, update, response);
+		resourceTypeService.update(key, resourceType, update, response);
     }
 
-	@RequestMapping(value = "resourceTypes/{id}", method = RequestMethod.DELETE, produces = "application/json")
-	public void deleteResourceType(@PathVariable String id, HttpServletResponse response) {
-		resourceTypeService.delete(id, response);
+	@RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.DELETE, produces = "application/json")
+	public void deleteResourceType(@PathVariable String key, HttpServletResponse response) {
+		resourceTypeService.delete(key, response);
 	}
 }
