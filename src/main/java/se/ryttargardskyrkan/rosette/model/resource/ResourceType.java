@@ -14,9 +14,18 @@ import se.ryttargardskyrkan.rosette.model.TypeBasedModel;
     @JsonSubTypes.Type(value = UploadResourceType.class, name = "upload")
 })
 public abstract class ResourceType extends TypeBasedModel {
+	@NotEmpty(message = "resourceType.type.notEmpty")
+    protected String type;
+
 	@NotEmpty(message = "resourceType.section.notEmpty")
 	private String section;
 
+    // Constructors
+
+    public ResourceType(String type) {
+    	this.type = type;
+    }
+	
 	public Update addToUpdateQuery(Update update) {
 		update.set("section", section);
 		update.set("name", name);
@@ -25,6 +34,14 @@ public abstract class ResourceType extends TypeBasedModel {
 	}
 
     // Getters and setters
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getSection() {
         return section;

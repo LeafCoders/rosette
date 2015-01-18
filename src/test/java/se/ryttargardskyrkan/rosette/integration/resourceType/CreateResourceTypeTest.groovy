@@ -49,7 +49,6 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		releasePostRequest()
-		expectedData = expectedData.replace('"type" : "user",', '')
 		thenDataInDatabaseIs(ResourceType.class, "[${expectedData}]")
 		thenItemsInDatabaseIs(ResourceType.class, 1)
     }

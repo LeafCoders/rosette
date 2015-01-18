@@ -40,6 +40,7 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
 		String expectedData = """[{
 			"id" : "${userResourceTypeSingle.id}",
+			"type" : "user",
 			"name": "UserResourceType Single New",
 			"description": "Description here New",
 			"section" : "users",
@@ -66,6 +67,7 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		String putUrl = "/resourceTypes/${userResourceTypeSingle.id}"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"id": "${userResourceTypeSingle.id}",
+			"type" : "user",
 			"name": "UserResourceType Single",
 			"description": "Description here",
 			"multiSelect": false,

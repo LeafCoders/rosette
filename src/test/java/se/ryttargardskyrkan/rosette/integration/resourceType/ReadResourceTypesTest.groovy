@@ -33,6 +33,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 
 		String expectedData = """[{
 			"id" : "posterFile",
+			"type" : "upload",
 			"name": "UploadResourceType Single",
 			"description": "A poster file",
 			"section" : "files",
@@ -40,6 +41,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 			"folderName": "posters"
 		}, {
 			"id" : "speaker",
+			"type" : "user",
 			"name": "UserResourceType Single",
 			"description": "Description here",
 			"section" : "persons",

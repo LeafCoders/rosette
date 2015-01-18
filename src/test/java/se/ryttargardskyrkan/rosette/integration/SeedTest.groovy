@@ -11,6 +11,8 @@ class SeedTest extends AbstractIntegrationTest {
 		givenUser(user2)
 		givenGroup(group1)
 		givenGroup(group2)
+		givenGroupMembership(user1, group1)
+		givenGroupMembership(user2, group1)
 		givenGroupMembership(user2, group2)
 		givenPermissionForUser(user1, ["*"])
 		givenPermissionForGroup(group2, ["*"])
@@ -22,9 +24,10 @@ class SeedTest extends AbstractIntegrationTest {
 		givenBooking(booking1)
 		givenBooking(booking2)
 
-		def uploadItem = givenUploadInFolder("posters", validPNGImage)
-		givenPoster(poster1, uploadItem)
-		givenPoster(poster2, uploadItem)
+		def uploadItem1 = givenUploadInFolder("posters", validPNGImage)
+		def uploadItem2 = givenUploadInFolder("posters", validJPEGImage)
+		givenPoster(poster1, uploadItem1)
+		givenPoster(poster2, uploadItem2)
 
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(userResourceTypeMultiAndText)

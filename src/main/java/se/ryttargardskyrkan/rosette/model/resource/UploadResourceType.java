@@ -9,6 +9,12 @@ public class UploadResourceType extends ResourceType {
 
 	private Boolean multiSelect;
 	
+    // Constructors
+
+    public UploadResourceType() {
+		super("user");
+    }
+
 	@Override
 	public Update addToUpdateQuery(Update update) {
 		update.set("folderName", folderName);

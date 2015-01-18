@@ -241,6 +241,7 @@ abstract class AbstractIntegrationTest {
     )
 
 	protected final UserResourceType userResourceTypeSingle = new UserResourceType(
+		type : 'user',
 		id : "speaker",
 		section : "persons",
 		name : "UserResourceType Single",
@@ -250,6 +251,7 @@ abstract class AbstractIntegrationTest {
 		group : new ObjectReference<Group>(idRef: group1.id)
 	)
 	protected final UserResourceType userResourceTypeMultiAndText = new UserResourceType(
+		type : 'user',
 		id : "readers",
 		section : "persons",
 		name : "UserResourceType Multi",
@@ -259,6 +261,7 @@ abstract class AbstractIntegrationTest {
 		group : new ObjectReference<Group>(idRef: group1.id)
 	)
 	protected final UploadResourceType uploadResourceTypeSingle = new UploadResourceType(
+		type : 'upload',
 		id : "posterFile",
 		section : "files",
 		name : "UploadResourceType Single",
@@ -267,6 +270,7 @@ abstract class AbstractIntegrationTest {
 		folderName : "posters"
 	)
 	protected final UploadResourceType uploadResourceTypeMulti = new UploadResourceType(
+		type : 'upload',
 		id : "posterFiles",
 		section : "files",
 		name : "UploadResourceType Multi",

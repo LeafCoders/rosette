@@ -12,7 +12,13 @@ public class UserResourceType extends ResourceType {
 	private Boolean multiSelect;
 	private Boolean allowText;
 
-	@Override
+    // Constructors
+
+    public UserResourceType() {
+		super("user");
+    }
+
+    @Override
 	public Update addToUpdateQuery(Update update) {
 		update.set("group", group);
 		update.set("multiSelect", multiSelect);

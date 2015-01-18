@@ -16,6 +16,7 @@ public class UserResourceMethods implements ResourceMethods {
 
 	public UserResourceMethods(UserResource resource, UserService userService, GroupService groupService) {
 		this.resource = resource;
+		this.userService = userService;
 		this.groupService = groupService;
 	}
 
