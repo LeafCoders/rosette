@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonSerialize;

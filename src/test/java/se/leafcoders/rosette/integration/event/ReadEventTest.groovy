@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.integration.event
+package se.leafcoders.rosette.integration.event
 
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.*
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
 
 @Ignore
 public class ReadEventTest extends AbstractIntegrationTest {

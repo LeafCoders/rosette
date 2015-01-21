@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;

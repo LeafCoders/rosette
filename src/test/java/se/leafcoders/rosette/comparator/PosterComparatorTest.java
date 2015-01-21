@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.comparator;
+package se.leafcoders.rosette.comparator;
 
 import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import se.ryttargardskyrkan.rosette.model.Poster;
+import se.leafcoders.rosette.model.Poster;
 
 public class PosterComparatorTest {
 	

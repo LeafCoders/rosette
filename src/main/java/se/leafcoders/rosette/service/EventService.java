@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.Date;
 import java.util.List;
@@ -10,10 +10,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.event.Event;
-import se.ryttargardskyrkan.rosette.model.resource.Resource;
-import se.ryttargardskyrkan.rosette.model.resource.ResourceType;
+import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.model.resource.Resource;
+import se.leafcoders.rosette.model.resource.ResourceType;
 
 @Service
 public class EventService extends MongoTemplateCRUD<Event> {

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.application;
+package se.leafcoders.rosette.application;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;

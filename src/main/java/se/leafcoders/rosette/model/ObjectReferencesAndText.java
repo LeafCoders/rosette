@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import java.util.List;
 

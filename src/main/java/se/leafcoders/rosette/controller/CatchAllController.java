@@ -1,9 +1,9 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.exception.NotFoundException;
 
 @Controller
 public class CatchAllController extends AbstractController {

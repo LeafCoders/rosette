@@ -1,7 +1,7 @@
-package se.ryttargardskyrkan.rosette.comparator;
+package se.leafcoders.rosette.comparator;
 
 import java.util.Comparator;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.ValidationError;
 
 public class ValidationErrorComparator implements Comparator<ValidationError> {
     @Override

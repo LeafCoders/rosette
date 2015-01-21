@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import java.util.Date;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -8,9 +8,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
-import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.leafcoders.rosette.security.RosettePasswordService;
 
 @Document(collection = "signupUsers")
 public class SignupUser extends IdBasedModel {

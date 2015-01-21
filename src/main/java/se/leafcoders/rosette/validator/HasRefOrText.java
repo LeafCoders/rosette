@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.validator;
+package se.leafcoders.rosette.validator;
 
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.FIELD;

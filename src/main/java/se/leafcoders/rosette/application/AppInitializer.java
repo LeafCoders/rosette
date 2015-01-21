@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.application;
+package se.leafcoders.rosette.application;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -22,7 +22,7 @@ public class AppInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		// Register web mvc config
 		AnnotationConfigWebApplicationContext webMvcContext = new AnnotationConfigWebApplicationContext();
-        webMvcContext.scan("se.ryttargardskyrkan.rosette.application");
+        webMvcContext.scan("se.leafcoders.rosette.application");
 		servletContext.addListener(new ContextLoaderListener(webMvcContext));
 
         // Setup filters

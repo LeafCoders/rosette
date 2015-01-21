@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.Permission;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
+import se.leafcoders.rosette.model.GroupMembership;
+import se.leafcoders.rosette.model.Permission;
+import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.security.MongoRealm;
 
 @Service
 public class PermissionService extends MongoTemplateCRUD<Permission> {

@@ -1,13 +1,13 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.resource.Resource;
-import se.ryttargardskyrkan.rosette.model.resource.ResourceMethods;
-import se.ryttargardskyrkan.rosette.model.resource.UploadResource;
-import se.ryttargardskyrkan.rosette.model.resource.UploadResourceMethods;
-import se.ryttargardskyrkan.rosette.model.resource.UserResource;
-import se.ryttargardskyrkan.rosette.model.resource.UserResourceMethods;
+import se.leafcoders.rosette.model.resource.Resource;
+import se.leafcoders.rosette.model.resource.ResourceMethods;
+import se.leafcoders.rosette.model.resource.UploadResource;
+import se.leafcoders.rosette.model.resource.UploadResourceMethods;
+import se.leafcoders.rosette.model.resource.UserResource;
+import se.leafcoders.rosette.model.resource.UserResourceMethods;
 
 @Service
 public class MethodsService {

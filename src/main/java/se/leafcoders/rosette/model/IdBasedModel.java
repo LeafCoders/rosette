@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import org.springframework.data.annotation.Id;
 

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.upload
+package se.leafcoders.rosette.integration.upload
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
@@ -7,7 +7,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpDelete
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
 
 public class DeleteUploadTest extends AbstractIntegrationTest {
 

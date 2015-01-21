@@ -1,12 +1,12 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import org.springframework.data.mongodb.core.query.Update;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.ObjectReferencesAndText;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
-import se.ryttargardskyrkan.rosette.service.GroupService;
-import se.ryttargardskyrkan.rosette.service.UserService;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.ObjectReferencesAndText;
+import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.service.GroupService;
+import se.leafcoders.rosette.service.UserService;
 
 public class UserResourceMethods implements ResourceMethods {
 	protected final UserResource resource;

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.resourceType
+package se.leafcoders.rosette.integration.resourceType
 
 import static org.junit.Assert.assertEquals
 import javax.servlet.http.HttpServletResponse
@@ -6,10 +6,10 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.resource.ResourceType
-import se.ryttargardskyrkan.rosette.model.resource.UserResourceType
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.resource.ResourceType
+import se.leafcoders.rosette.model.resource.UserResourceType
 import com.mongodb.util.JSON
 
 public class ReadResourceTypesTest extends AbstractIntegrationTest {

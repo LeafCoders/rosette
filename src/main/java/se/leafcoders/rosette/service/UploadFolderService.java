@@ -1,10 +1,10 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.UploadFolder;
+import se.leafcoders.rosette.model.UploadFolder;
 
 @Service
 public class UploadFolderService {

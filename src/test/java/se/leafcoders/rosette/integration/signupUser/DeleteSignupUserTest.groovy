@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.integration.signupUser;
+package se.leafcoders.rosette.integration.signupUser;
 
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.SignupUser
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.model.SignupUser
 
 public class DeleteSignupUserTest extends AbstractIntegrationTest {
 

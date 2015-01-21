@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.resource.UserResourceType;
-import se.ryttargardskyrkan.rosette.service.SecurityService;
+import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.model.resource.UserResourceType;
+import se.leafcoders.rosette.service.SecurityService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;

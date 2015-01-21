@@ -1,5 +1,5 @@
 
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -10,13 +10,13 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.exception.ForbiddenException;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.exception.ValidationException;
-import se.ryttargardskyrkan.rosette.model.Booking;
-import se.ryttargardskyrkan.rosette.model.Poster;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
-import se.ryttargardskyrkan.rosette.model.event.Event;
+import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.exception.ValidationException;
+import se.leafcoders.rosette.model.Booking;
+import se.leafcoders.rosette.model.Poster;
+import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.event.Event;
 
 @Service
 public class SecurityService {

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.user
+package se.leafcoders.rosette.integration.user
 
 import static junit.framework.Assert.*
 import java.io.IOException;
@@ -7,9 +7,9 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.util.JSON
 
 public class ReadUsersTest extends AbstractIntegrationTest {

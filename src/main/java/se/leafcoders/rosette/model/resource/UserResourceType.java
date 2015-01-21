@@ -1,8 +1,8 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
-import se.ryttargardskyrkan.rosette.model.BaseModel;
-import se.ryttargardskyrkan.rosette.model.Group;
-import se.ryttargardskyrkan.rosette.validator.HasRef;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.Group;
+import se.leafcoders.rosette.validator.HasRef;
 
 public class UserResourceType extends ResourceType {
 	@HasRef

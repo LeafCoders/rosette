@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;

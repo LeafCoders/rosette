@@ -1,10 +1,10 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.model.UploadFolder;
-import se.ryttargardskyrkan.rosette.service.UploadFolderService;
+import se.leafcoders.rosette.model.UploadFolder;
+import se.leafcoders.rosette.service.UploadFolderService;
 import java.util.List;
 
 @Controller

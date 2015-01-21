@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.eventweek.read
+package se.leafcoders.rosette.integration.eventweek.read
 
 import static junit.framework.Assert.*
 import javax.servlet.http.HttpServletResponse
@@ -11,11 +11,11 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.junit.*
-import se.ryttargardskyrkan.rosette.converter.RosetteDateConverter
-import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneConverter
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.event.Event;
+import se.leafcoders.rosette.converter.RosetteDateConverter
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneConverter
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.event.Event;
 import com.mongodb.util.JSON
 
 @Ignore

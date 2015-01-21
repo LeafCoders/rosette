@@ -1,13 +1,13 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.model.ValidationError;
 
 @Service
 public class UserService extends MongoTemplateCRUD<User> {

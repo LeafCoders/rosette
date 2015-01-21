@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.aspect;
+package se.leafcoders.rosette.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -11,7 +11,7 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class MethodLogger {
 
-    @Around("execution(* se.ryttargardskyrkan.rosette.controller.*.*(..))")
+    @Around("execution(* se.leafcoders.rosette.controller.*.*(..))")
     public Object timeMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -8,8 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.model.resource.ResourceType;
-import se.ryttargardskyrkan.rosette.service.ResourceTypeService;
+import se.leafcoders.rosette.model.resource.ResourceType;
+import se.leafcoders.rosette.service.ResourceTypeService;
 
 @Controller
 public class ResourceTypeController extends AbstractController {

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration
+package se.leafcoders.rosette.integration
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
@@ -20,11 +20,11 @@ import org.junit.BeforeClass
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.*
-import se.ryttargardskyrkan.rosette.model.event.Event
-import se.ryttargardskyrkan.rosette.model.resource.*
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.*
+import se.leafcoders.rosette.model.event.Event
+import se.leafcoders.rosette.model.resource.*
+import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.Mongo
 import com.mongodb.MongoException
 import com.mongodb.util.JSON

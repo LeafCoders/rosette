@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.Group;
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.Permission;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
-import se.ryttargardskyrkan.rosette.service.GroupService;
+import se.leafcoders.rosette.model.Group;
+import se.leafcoders.rosette.model.GroupMembership;
+import se.leafcoders.rosette.model.Permission;
+import se.leafcoders.rosette.security.MongoRealm;
+import se.leafcoders.rosette.service.GroupService;
 
 @Controller
 public class GroupController extends AbstractController {

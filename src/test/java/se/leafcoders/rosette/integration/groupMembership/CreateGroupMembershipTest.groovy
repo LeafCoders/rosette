@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.groupMembership
+package se.leafcoders.rosette.integration.groupMembership
 
 import javax.servlet.http.HttpServletResponse
 
@@ -8,9 +8,9 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.impl.auth.BasicScheme
 import org.junit.Test
 
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.GroupMembership
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.GroupMembership
 
 import com.mongodb.util.JSON
 

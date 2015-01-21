@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.filter;
+package se.leafcoders.rosette.filter;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;

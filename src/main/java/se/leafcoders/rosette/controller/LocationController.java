@@ -1,12 +1,12 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.service.LocationService;
+import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.service.LocationService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 

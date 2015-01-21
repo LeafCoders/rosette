@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model.event;
+package se.leafcoders.rosette.model.event;
 
 import java.util.Date;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import se.ryttargardskyrkan.rosette.converter.RosetteDateJsonDeserializer;
-import se.ryttargardskyrkan.rosette.converter.RosetteDateJsonSerializer;
+import se.leafcoders.rosette.converter.RosetteDateJsonDeserializer;
+import se.leafcoders.rosette.converter.RosetteDateJsonSerializer;
 
 public class EventDay {
 	@JsonSerialize(using = RosetteDateJsonSerializer.class)

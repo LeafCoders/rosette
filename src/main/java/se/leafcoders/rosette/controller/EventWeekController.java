@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.event.Event;
-import se.ryttargardskyrkan.rosette.model.event.EventDay;
-import se.ryttargardskyrkan.rosette.model.event.EventWeek;
-import se.ryttargardskyrkan.rosette.service.SecurityService;
+import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.model.event.EventDay;
+import se.leafcoders.rosette.model.event.EventWeek;
+import se.leafcoders.rosette.service.SecurityService;
 
 @Controller
 public class EventWeekController extends AbstractController {

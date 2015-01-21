@@ -1,8 +1,8 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import se.ryttargardskyrkan.rosette.model.UploadResponse;
+import se.leafcoders.rosette.model.UploadResponse;
 
 public class UploadResource extends Resource {
 	@NotNull(message = "uploadResource.uploads.notNull")

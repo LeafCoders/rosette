@@ -1,12 +1,12 @@
-package se.ryttargardskyrkan.rosette.integration.group
+package se.leafcoders.rosette.integration.group
 
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Group
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.Group
 import com.mongodb.util.JSON
 
 public class CreateGroupTest extends AbstractIntegrationTest {

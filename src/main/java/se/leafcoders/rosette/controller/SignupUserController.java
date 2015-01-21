@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.SignupUser;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
-import se.ryttargardskyrkan.rosette.service.SecurityService;
-import se.ryttargardskyrkan.rosette.service.SignupUserService;
-import se.ryttargardskyrkan.rosette.service.UserService;
+import se.leafcoders.rosette.model.SignupUser;
+import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.security.MongoRealm;
+import se.leafcoders.rosette.security.RosettePasswordService;
+import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.service.SignupUserService;
+import se.leafcoders.rosette.service.UserService;
 
 @Controller
 public class SignupUserController extends AbstractController {

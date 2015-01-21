@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.comparator.PosterComparator;
-import se.ryttargardskyrkan.rosette.model.Poster;
-import se.ryttargardskyrkan.rosette.service.PosterService;
+import se.leafcoders.rosette.comparator.PosterComparator;
+import se.leafcoders.rosette.model.Poster;
+import se.leafcoders.rosette.service.PosterService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.List;

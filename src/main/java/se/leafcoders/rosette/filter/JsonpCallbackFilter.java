@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.filter;
+package se.leafcoders.rosette.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

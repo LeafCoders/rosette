@@ -1,8 +1,8 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import javax.validation.constraints.NotNull;
-import se.ryttargardskyrkan.rosette.model.ObjectReferencesAndText;
-import se.ryttargardskyrkan.rosette.model.User;
+import se.leafcoders.rosette.model.ObjectReferencesAndText;
+import se.leafcoders.rosette.model.User;
 
 public class UserResource extends Resource {
 	@NotNull(message = "userResource.users.notNull")

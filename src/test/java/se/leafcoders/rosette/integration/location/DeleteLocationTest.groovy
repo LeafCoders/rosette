@@ -1,10 +1,10 @@
-package se.ryttargardskyrkan.rosette.integration.location
+package se.leafcoders.rosette.integration.location
 
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.Location
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.model.Location
 
 import javax.servlet.http.HttpServletResponse
 

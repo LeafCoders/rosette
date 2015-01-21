@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 public class ObjectReferenceOrText<T extends BaseModel> {
     private T ref;

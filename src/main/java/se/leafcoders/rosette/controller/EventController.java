@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.event.Event;
-import se.ryttargardskyrkan.rosette.model.resource.Resource;
-import se.ryttargardskyrkan.rosette.service.EventService;
+import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.model.resource.Resource;
+import se.leafcoders.rosette.service.EventService;
 
 @Controller
 public class EventController extends AbstractController {

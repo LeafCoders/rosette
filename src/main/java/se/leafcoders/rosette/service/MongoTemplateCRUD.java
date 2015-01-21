@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,10 +8,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.BaseModel;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.ValidationError;
 
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
 	@Autowired

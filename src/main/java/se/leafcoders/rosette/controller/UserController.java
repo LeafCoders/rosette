@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.Permission;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
-import se.ryttargardskyrkan.rosette.service.GroupMembershipService;
-import se.ryttargardskyrkan.rosette.service.SecurityService;
-import se.ryttargardskyrkan.rosette.service.UserService;
+import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.model.GroupMembership;
+import se.leafcoders.rosette.model.Permission;
+import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.security.MongoRealm;
+import se.leafcoders.rosette.security.RosettePasswordService;
+import se.leafcoders.rosette.service.GroupMembershipService;
+import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.service.UserService;
 
 @Controller
 public class UserController extends AbstractController {

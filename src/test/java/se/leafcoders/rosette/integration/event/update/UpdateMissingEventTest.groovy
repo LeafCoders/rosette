@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.update
+package se.leafcoders.rosette.integration.event.update
 
 import static junit.framework.Assert.*
 import javax.servlet.http.HttpServletResponse
@@ -9,9 +9,9 @@ import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.junit.*
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.util.JSON
 
 @Ignore

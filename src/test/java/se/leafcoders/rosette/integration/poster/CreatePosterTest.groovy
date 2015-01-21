@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.poster
+package se.leafcoders.rosette.integration.poster
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse
@@ -6,10 +6,10 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPost
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Poster
-import se.ryttargardskyrkan.rosette.model.UploadResponse
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.Poster
+import se.leafcoders.rosette.model.UploadResponse
 import com.mongodb.util.JSON
 
 public class CreatePosterTest extends AbstractIntegrationTest {

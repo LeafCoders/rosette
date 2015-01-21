@@ -1,8 +1,8 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.Booking;
+import se.leafcoders.rosette.model.Booking;
 
 @Service
 public class BookingService extends MongoTemplateCRUD<Booking> {

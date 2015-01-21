@@ -1,9 +1,9 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.resource.*;
+import se.leafcoders.rosette.model.resource.*;
 
 @Service
 public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.application;
+package se.leafcoders.rosette.application;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;

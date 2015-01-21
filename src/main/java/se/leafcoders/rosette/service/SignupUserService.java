@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.SignupUser;
+import se.leafcoders.rosette.model.SignupUser;
 
 @Service
 public class SignupUserService extends MongoTemplateCRUD<SignupUser> {

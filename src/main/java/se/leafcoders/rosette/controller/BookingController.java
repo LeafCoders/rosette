@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.model.Booking;
-import se.ryttargardskyrkan.rosette.service.BookingService;
-import se.ryttargardskyrkan.rosette.service.SecurityService;
+import se.leafcoders.rosette.model.Booking;
+import se.leafcoders.rosette.service.BookingService;
+import se.leafcoders.rosette.service.SecurityService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.List;

@@ -1,9 +1,9 @@
-package se.ryttargardskyrkan.rosette.comparator;
+package se.leafcoders.rosette.comparator;
 
 import java.util.Comparator;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import se.ryttargardskyrkan.rosette.model.Poster;
+import se.leafcoders.rosette.model.Poster;
 
 public class PosterComparator implements Comparator<Poster> {
 

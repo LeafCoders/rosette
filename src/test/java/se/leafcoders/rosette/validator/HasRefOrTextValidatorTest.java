@@ -1,8 +1,8 @@
-package se.ryttargardskyrkan.rosette.validator;
+package se.leafcoders.rosette.validator;
 
 import org.junit.Test;
-import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
+import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.model.ObjectReferenceOrText;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

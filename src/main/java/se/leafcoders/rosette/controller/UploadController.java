@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.ryttargardskyrkan.rosette.model.UploadRequest;
-import se.ryttargardskyrkan.rosette.model.UploadResponse;
-import se.ryttargardskyrkan.rosette.service.UploadService;
+import se.leafcoders.rosette.model.UploadRequest;
+import se.leafcoders.rosette.model.UploadResponse;
+import se.leafcoders.rosette.service.UploadService;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 

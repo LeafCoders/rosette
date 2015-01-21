@@ -1,14 +1,14 @@
-package se.ryttargardskyrkan.rosette.application;
+package se.leafcoders.rosette.application;
 
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import se.ryttargardskyrkan.rosette.aspect.MethodLogger;
-import se.ryttargardskyrkan.rosette.filter.JsonpCallbackFilter;
+import se.leafcoders.rosette.aspect.MethodLogger;
+import se.leafcoders.rosette.filter.JsonpCallbackFilter;
 
 @Configuration
-@ComponentScan(basePackages = {"se.ryttargardskyrkan.rosette"})
+@ComponentScan(basePackages = {"se.leafcoders.rosette"})
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @PropertySource("classpath:/settings.properties")

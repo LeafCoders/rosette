@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.filter;
+package se.leafcoders.rosette.filter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -8,7 +8,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 
-import se.ryttargardskyrkan.rosette.security.AnonymousToken;
+import se.leafcoders.rosette.security.AnonymousToken;
 
 public class OptionalBasicHttpAuthenticationFilter extends BasicHttpAuthenticationFilter {
 

@@ -1,6 +1,6 @@
-package se.ryttargardskyrkan.rosette.exception;
+package se.leafcoders.rosette.exception;
 
-import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.ValidationError;
 
 public class SimpleValidationException extends RuntimeException {
     private static final long serialVersionUID = 1L;

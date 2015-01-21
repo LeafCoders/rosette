@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
-import se.ryttargardskyrkan.rosette.security.MongoRealm;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.GroupMembership;
+import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.security.MongoRealm;
 
 @Service
 public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {

@@ -1,8 +1,8 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.validator.HasRef;
+import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "groupMemberships")
 public class GroupMembership extends IdBasedModel {

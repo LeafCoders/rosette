@@ -1,7 +1,7 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import se.ryttargardskyrkan.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.BaseModel;
 
 public class UploadResourceType extends ResourceType {
 

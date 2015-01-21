@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.exception;
+package se.leafcoders.rosette.exception;
 
 import java.util.Set;
 

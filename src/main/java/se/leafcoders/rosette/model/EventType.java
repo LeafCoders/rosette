@@ -1,9 +1,9 @@
-package se.ryttargardskyrkan.rosette.model;
+package se.leafcoders.rosette.model;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.model.resource.ResourceType;
+import se.leafcoders.rosette.model.resource.ResourceType;
 
 @Document(collection = "eventTypes")
 public class EventType extends TypeBasedModel {

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.security;
+package se.leafcoders.rosette.security;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,8 +20,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.User;
-import se.ryttargardskyrkan.rosette.service.PermissionService;
+import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.service.PermissionService;
 
 @Service("mongoRealm")
 public class MongoRealm extends AuthorizingRealm {

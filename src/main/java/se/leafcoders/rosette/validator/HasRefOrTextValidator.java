@@ -1,6 +1,6 @@
-package se.ryttargardskyrkan.rosette.validator;
+package se.leafcoders.rosette.validator;
 
-import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
+import se.leafcoders.rosette.model.ObjectReferenceOrText;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

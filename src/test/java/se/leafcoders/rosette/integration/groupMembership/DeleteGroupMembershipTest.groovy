@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.groupMembership
+package se.leafcoders.rosette.integration.groupMembership
 
 import static junit.framework.Assert.*
 
@@ -12,10 +12,10 @@ import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
 
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.GroupMembership
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.GroupMembership
+import se.leafcoders.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
 

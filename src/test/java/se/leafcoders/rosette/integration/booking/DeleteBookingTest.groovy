@@ -1,12 +1,12 @@
-package se.ryttargardskyrkan.rosette.integration.booking
+package se.leafcoders.rosette.integration.booking
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
-import se.ryttargardskyrkan.rosette.model.Booking;
+import se.leafcoders.rosette.integration.AbstractIntegrationTest;
+import se.leafcoders.rosette.model.Booking;
 
 public class DeleteBookingTest extends AbstractIntegrationTest {
 

@@ -1,12 +1,12 @@
-package se.ryttargardskyrkan.rosette.integration.eventType
+package se.leafcoders.rosette.integration.eventType
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
-import se.ryttargardskyrkan.rosette.model.EventType;
+import se.leafcoders.rosette.integration.AbstractIntegrationTest;
+import se.leafcoders.rosette.model.EventType;
 
 public class UpdateEventTypeTest extends AbstractIntegrationTest {
 

@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.integration.authentication
+package se.leafcoders.rosette.integration.authentication
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
+import se.leafcoders.rosette.integration.AbstractIntegrationTest;
 
 public class AuthenticationTest extends AbstractIntegrationTest {
 

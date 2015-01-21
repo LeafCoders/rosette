@@ -1,12 +1,12 @@
-package se.ryttargardskyrkan.rosette.integration.location
+package se.leafcoders.rosette.integration.location
 
 import com.mongodb.util.JSON
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
 
 import javax.servlet.http.HttpServletResponse
 

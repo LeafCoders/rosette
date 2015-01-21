@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.converter;
+package se.leafcoders.rosette.converter;
 
 import static org.junit.Assert.assertEquals;
 

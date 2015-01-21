@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.event.create
+package se.leafcoders.rosette.integration.event.create
 
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
@@ -11,10 +11,10 @@ import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.*
 import org.springframework.data.mongodb.core.query.Query
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.event.Event;
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.util.JSON
 
 @Ignore

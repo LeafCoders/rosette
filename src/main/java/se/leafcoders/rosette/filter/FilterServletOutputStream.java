@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.filter;
+package se.leafcoders.rosette.filter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

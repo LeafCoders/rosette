@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.model.Permission;
-import se.ryttargardskyrkan.rosette.service.PermissionService;
-import se.ryttargardskyrkan.rosette.service.SecurityService;
+import se.leafcoders.rosette.model.Permission;
+import se.leafcoders.rosette.service.PermissionService;
+import se.leafcoders.rosette.service.SecurityService;
 
 @Controller
 public class PermissionController extends AbstractController {

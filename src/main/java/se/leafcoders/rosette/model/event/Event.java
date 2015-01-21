@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.model.event;
+package se.leafcoders.rosette.model.event;
 
 import java.util.Date;
 import java.util.List;
@@ -9,15 +9,15 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
-import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.model.BaseModel;
-import se.ryttargardskyrkan.rosette.model.EventType;
-import se.ryttargardskyrkan.rosette.model.IdBasedModel;
-import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
-import se.ryttargardskyrkan.rosette.model.resource.Resource;
-import se.ryttargardskyrkan.rosette.validator.HasRef;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.EventType;
+import se.leafcoders.rosette.model.IdBasedModel;
+import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.model.ObjectReferenceOrText;
+import se.leafcoders.rosette.model.resource.Resource;
+import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "events")
 @ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration
+package se.leafcoders.rosette.integration
 
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test

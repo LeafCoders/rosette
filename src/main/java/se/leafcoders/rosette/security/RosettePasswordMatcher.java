@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.security;
+package se.leafcoders.rosette.security;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

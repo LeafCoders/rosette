@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import java.util.List;
 import org.springframework.data.mongodb.core.query.Update;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.UploadResponse;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
-import se.ryttargardskyrkan.rosette.service.UploadService;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.UploadResponse;
+import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.service.UploadService;
 
 public class UploadResourceMethods implements ResourceMethods {
 	protected final UploadResource resource;

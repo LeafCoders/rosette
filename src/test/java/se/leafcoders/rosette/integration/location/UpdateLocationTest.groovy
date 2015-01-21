@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.location
+package se.leafcoders.rosette.integration.location
 
 import com.mongodb.util.JSON
 import org.apache.http.HttpResponse
@@ -10,10 +10,10 @@ import org.apache.http.impl.auth.BasicScheme
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.Location
-import se.ryttargardskyrkan.rosette.security.RosettePasswordService
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.Location
+import se.leafcoders.rosette.security.RosettePasswordService
 
 import javax.servlet.http.HttpServletResponse
 

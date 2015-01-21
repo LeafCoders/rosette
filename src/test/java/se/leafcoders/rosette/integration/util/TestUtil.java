@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.util;
+package se.leafcoders.rosette.integration.util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +13,7 @@ import org.apache.http.HttpResponse;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneConverter;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneConverter;
 
 public class TestUtil {
 

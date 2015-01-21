@@ -1,9 +1,9 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotEmpty;
-import se.ryttargardskyrkan.rosette.validator.HasRef;
+import se.leafcoders.rosette.validator.HasRef;
 
 // The following annotations uses the property 'type' to decide which class to create
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")

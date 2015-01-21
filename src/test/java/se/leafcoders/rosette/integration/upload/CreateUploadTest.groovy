@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.upload
+package se.leafcoders.rosette.integration.upload
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
@@ -7,8 +7,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost
 import org.junit.Test;
 import com.mongodb.util.JSON;
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest;
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil;
+import se.leafcoders.rosette.integration.AbstractIntegrationTest;
+import se.leafcoders.rosette.integration.util.TestUtil;
 
 public class CreateUploadTest extends AbstractIntegrationTest {
 

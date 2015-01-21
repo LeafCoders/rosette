@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.integration.eventweek.read
+package se.leafcoders.rosette.integration.eventweek.read
 
 import static junit.framework.Assert.*
 import javax.servlet.http.HttpServletResponse
@@ -8,9 +8,9 @@ import org.apache.http.client.methods.HttpGet
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.type.TypeReference
 import org.junit.*
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.integration.util.TestUtil
-import se.ryttargardskyrkan.rosette.model.event.Event;
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.event.Event;
 import com.mongodb.util.JSON
 
 @Ignore

@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.controller;
+package se.leafcoders.rosette.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,12 +6,12 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.ryttargardskyrkan.rosette.comparator.ValidationErrorComparator;
-import se.ryttargardskyrkan.rosette.exception.ForbiddenException;
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.exception.ValidationException;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.leafcoders.rosette.comparator.ValidationErrorComparator;
+import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.exception.ValidationException;
+import se.leafcoders.rosette.model.ValidationError;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;

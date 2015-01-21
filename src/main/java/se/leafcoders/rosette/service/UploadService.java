@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.service;
+package se.leafcoders.rosette.service;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -17,12 +17,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.exception.ForbiddenException;
-import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.UploadRequest;
-import se.ryttargardskyrkan.rosette.model.UploadResponse;
-import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.UploadRequest;
+import se.leafcoders.rosette.model.UploadResponse;
+import se.leafcoders.rosette.model.ValidationError;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;

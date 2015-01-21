@@ -1,4 +1,4 @@
-package se.ryttargardskyrkan.rosette.exception;
+package se.leafcoders.rosette.exception;
 
 
 public class ForbiddenException extends RuntimeException {

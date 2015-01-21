@@ -1,13 +1,13 @@
-package se.ryttargardskyrkan.rosette.integration.signupUser
+package se.leafcoders.rosette.integration.signupUser
 
 import static org.junit.Assert.*
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
-import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
-import se.ryttargardskyrkan.rosette.model.SignupUser
-import se.ryttargardskyrkan.rosette.model.User
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.model.SignupUser
+import se.leafcoders.rosette.model.User
 
 public class TransformSignupUserTest extends AbstractIntegrationTest {
 	

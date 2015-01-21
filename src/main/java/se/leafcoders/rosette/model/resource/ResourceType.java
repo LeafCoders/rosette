@@ -1,11 +1,11 @@
-package se.ryttargardskyrkan.rosette.model.resource;
+package se.leafcoders.rosette.model.resource;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.model.BaseModel;
-import se.ryttargardskyrkan.rosette.model.TypeBasedModel;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.TypeBasedModel;
 
 @Document(collection = "resourceTypes")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
