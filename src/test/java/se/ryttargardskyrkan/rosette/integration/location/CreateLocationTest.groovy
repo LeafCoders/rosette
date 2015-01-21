@@ -26,7 +26,7 @@ public class CreateLocationTest extends AbstractIntegrationTest {
     public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:locations"])
+		givenPermissionForUser(user1, ["create:locations", "read:locations", "read:uploads"])
 		Object image = givenUploadInFolder("locations", validPNGImage)
 		
 		// When
@@ -34,7 +34,7 @@ public class CreateLocationTest extends AbstractIntegrationTest {
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"name" : "Kyrksalen",
 			"description" : "En stor lokal med plats för ca 700 pers.",
-			"directionImage": { "idRef" : "${ image['id'] }" }
+			"directionImage": ${ toJSON(image) }
 		}""")
 
 		// Then
@@ -45,7 +45,7 @@ public class CreateLocationTest extends AbstractIntegrationTest {
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"name" : "Kyrksalen",
 			"description" : "En stor lokal med plats för ca 700 pers.",
-			"directionImage": { "idRef" : "${ image['id'] }", "referredObject" : null }
+			"directionImage": ${ toJSON(image) }
 		}"""
 
 		thenResponseDataIs(responseBody, expectedData)

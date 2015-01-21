@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,17 +47,7 @@ public class EventController extends AbstractController {
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServletResponse response) {
-		Update update = new Update();
-
-		update.set("title", event.getTitle());
-		update.set("startTime", event.getStartTime());
-		update.set("endTime", event.getEndTime());
-		update.set("description", event.getDescription());
-		update.set("location", event.getLocation());
-		update.set("showOnPalmate", event.getShowOnPalmate());
-		update.set("resources", event.getResources());
-
-		eventService.update(id, event, update, response);
+		eventService.update(id, event, response);
 	}
 
 	@RequestMapping(value = "events/{eventId}/resources/{resourceTypeId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")

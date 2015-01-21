@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
 
 @Document(collection = "users")
 public class User extends IdBasedModel {
@@ -19,7 +20,6 @@ public class User extends IdBasedModel {
 	
 	@JsonIgnore
 	private String hashedPassword;
-	private String status;
 
 	@NotEmpty(message = "user.firstName.notEmpty")
 	private String firstName;
@@ -30,6 +30,27 @@ public class User extends IdBasedModel {
 	@NotEmpty(message = "user.email.notEmpty")
 	@Email(message = "user.email.invalid")
 	private String email;
+
+	@Override
+	public void update(BaseModel updateFrom) {
+		User userUpdate = (User) updateFrom;
+		if (userUpdate.getUsername() != null) {
+			setUsername(userUpdate.getUsername());
+		}
+		if (userUpdate.getPassword() != null && !"".equals(userUpdate.getPassword().trim())) {
+			String hashedPassword = new RosettePasswordService().encryptPassword(userUpdate.getPassword());
+			setHashedPassword(hashedPassword);
+		}
+		if (userUpdate.getFirstName() != null) {
+			setFirstName(userUpdate.getFirstName());
+		}
+		if (userUpdate.getLastName() != null) {
+			setLastName(userUpdate.getLastName());
+		}
+		if (userUpdate.getEmail() != null) {
+			setEmail(userUpdate.getEmail());
+		}
+	}
 
 	// Getters and setters
 
@@ -55,14 +76,6 @@ public class User extends IdBasedModel {
 
 	public void setHashedPassword(String hashedPassword) {
 		this.hashedPassword = hashedPassword;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getFirstName() {

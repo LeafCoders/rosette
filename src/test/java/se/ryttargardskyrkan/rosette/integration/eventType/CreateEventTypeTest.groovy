@@ -28,10 +28,7 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 			"name" : "Speakers",
 			"description" : "Description",
 			"showOnPalmate" : true,
-			"resourceTypes" : [
-				{ "idRef": "${userResourceTypeSingle.id}" },
-				{ "idRef": "${uploadResourceTypeSingle.id}" }
-			]
+			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}""")
 
 		// Then
@@ -43,10 +40,7 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 			"name" : "Speakers",
 			"description" : "Description",
 			"showOnPalmate" : true,
-			"resourceTypes" : [
-				{ "idRef" : "${userResourceTypeSingle.id}","referredObject" : null },
-				{ "idRef" : "${uploadResourceTypeSingle.id}", "referredObject" : null }
-			]
+			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		releasePostRequest()

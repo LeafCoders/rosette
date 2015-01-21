@@ -63,7 +63,7 @@ public class MongoRealm extends AuthorizingRealm {
 			String providedUsername = token.getUsername();
 
 			final User user = mongoTemplate.findOne(Query.query(Criteria.where("username").is(providedUsername)), User.class);
-			if (user != null && "active".equals(user.getStatus())) {
+			if (user != null) {
 				simpleAuthenticationInfo = new SimpleAuthenticationInfo(user.getId(), user.getHashedPassword(), "mongoRealm");
 			}
 

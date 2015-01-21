@@ -35,23 +35,14 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 				"customerName" : "Scan",
 				"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 				"endTime" : "2012-03-26 11:00 Europe/Stockholm",
-				"location" : {
-					"idRef" : "${ location1.id }",
-					"text" : null,
-					"referredObject" : {
-						"id" : "${ location1.id }",
-						"name" : "Away",
-						"description" : "Description...",
-						"directionImage" : null
-					}
-				}
+				"location" : { "ref" : ${ toJSON(location1) }, "text" : null }
 			},
 			{
 				"id" : "${ booking2.id }",
 				"customerName" : "Arla",
 				"startTime" : "2014-01-21 11:00 Europe/Stockholm",
 				"endTime" : "2014-01-22 12:00 Europe/Stockholm",
-				"location" : { "idRef" : null, "text" : "A location", "referredObject" : null }
+				"location" : { "ref" : null, "text" : "A location" }
 			}
 		]"""
 		thenResponseDataIs(responseBody, expectedData)
@@ -72,28 +63,28 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 				"customerName" : "Not active",
 				"startTime" : ${ TestUtil.mongoDate(today + " 00:00 Europe/Stockholm") },
 				"endTime" : ${ TestUtil.mongoDate(today + " 00:02 Europe/Stockholm") },
-	            "location" : { "idRef" : "1", "text" : null }
+	            "location" : { "ref" : { "id" : "1" }, "text" : null }
 			},
 			{
 				"_id" : "2",
 				"customerName" : "Active",
 				"startTime" : ${ TestUtil.mongoDate(today + " 00:00 Europe/Stockholm") },
 				"endTime" : ${ TestUtil.mongoDate(today + " 23:59 Europe/Stockholm") },
-	            "location" : { "idRef" : null, "text" : "Oasen" }
+	            "location" : { "ref" : null, "text" : "Oasen" }
 			},
 			{
 				"_id" : "3",
 				"customerName" : "Active today",
 				"startTime" : ${ TestUtil.mongoDate(today + " 23:55 Europe/Stockholm") },
 				"endTime" : ${ TestUtil.mongoDate(today + " 23:56 Europe/Stockholm") },
-	            "location" : { "idRef" : null, "text" : "Aspen" }
+	            "location" : { "ref" : null, "text" : "Aspen" }
 			},
 			{
 				"_id" : "4",
 				"customerName" : "Active today early",
 				"startTime" : ${ TestUtil.mongoDate(today + " 23:51 Europe/Stockholm") },
 				"endTime" : ${ TestUtil.mongoDate(today + " 23:52 Europe/Stockholm") },
-	            "location" : { "idRef" : null, "text" : "Boken" }
+	            "location" : { "ref" : null, "text" : "Boken" }
 			}
 		]"""))
 
@@ -111,21 +102,21 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 				"customerName" : "Active",
 				"startTime" : "${ today } 00:00 Europe/Stockholm",
 				"endTime" : "${ today } 23:59 Europe/Stockholm",
-	            "location" : { "idRef" : null, "text" : "Oasen", "referredObject" : null }
+	            "location" : { "ref" : null, "text" : "Oasen" }
 			},
 			{
 				"id" : "4",
 				"customerName" : "Active today early",
 				"startTime" : "${ today } 23:51 Europe/Stockholm",
 				"endTime" : "${ today } 23:52 Europe/Stockholm",
-	            "location" : { "idRef" : null, "text" : "Boken", "referredObject" : null }
+	            "location" : { "ref" : null, "text" : "Boken" }
 	        },
 			{
 				"id" : "3",
 				"customerName" : "Active today",
 				"startTime" : "${ today } 23:55 Europe/Stockholm",
 				"endTime" : "${ today } 23:56 Europe/Stockholm",
-	            "location" : { "idRef" : null, "text" : "Aspen", "referredObject" : null }
+	            "location" : { "ref" : null, "text" : "Aspen" }
 	        }
 		]"""
 		thenResponseDataIs(responseBody, expectedData)

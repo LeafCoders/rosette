@@ -17,7 +17,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
     public void createUserResourceTypeWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:resourceTypes"])
+		givenPermissionForUser(user1, ["create:resourceTypes", "read:groups"])
 		givenGroup(group1)
 		
 		// When
@@ -30,7 +30,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
-			"group" : { "idRef": "${group1.id}" }
+			"group": ${ toJSON(group1) }
 		}""")
 
 		// Then
@@ -45,7 +45,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
-			"group" : { "idRef": "${group1.id}", "referredObject": null }
+			"group": ${ toJSON(group1) }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		releasePostRequest()
@@ -67,7 +67,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 			"description" : "Den som talar",
 			"multiSelect" : false,
 			"allowText" : false,
-			"group" : { "idRef": "${group1.id}" }
+			"group": ${ toJSON(group1) }
 		}""")
 
 		// Then
@@ -78,7 +78,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 	public void failsWhenCreateWithoutUniqueKey() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:resourceTypes"])
+		givenPermissionForUser(user1, ["create:resourceTypes", "read:groups"])
 		givenGroup(group1)
 		
 		// When
@@ -91,7 +91,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
-			"group" : { "idRef": "${group1.id}" }
+			"group": ${ toJSON(group1) }
 		}""")
 	
 		// Then
@@ -107,7 +107,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "Personer",
 			"multiSelect" : false,
 			"allowText" : false,
-			"group" : { "idRef": "${group1.id}" }
+			"group": ${ toJSON(group1) }
 		}""")
 
 		// Then

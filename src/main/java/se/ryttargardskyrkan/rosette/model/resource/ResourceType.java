@@ -4,7 +4,7 @@ import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.query.Update;
+import se.ryttargardskyrkan.rosette.model.BaseModel;
 import se.ryttargardskyrkan.rosette.model.TypeBasedModel;
 
 @Document(collection = "resourceTypes")
@@ -25,13 +25,15 @@ public abstract class ResourceType extends TypeBasedModel {
     public ResourceType(String type) {
     	this.type = type;
     }
-	
-	public Update addToUpdateQuery(Update update) {
-		update.set("section", section);
-		update.set("name", name);
-		update.set("description", description);
-		return update;
-	}
+
+    @Override
+	public void update(BaseModel updateFrom) {
+    	ResourceType resourceTypeUpdate = (ResourceType) updateFrom;
+    	if (resourceTypeUpdate.getSection() != null) {
+    		setSection(resourceTypeUpdate.getSection());
+    	}
+    	super.update(updateFrom);
+    }
 
     // Getters and setters
 

@@ -17,10 +17,27 @@ public class UploadFolder extends IdBasedModel {
 	private String name;
 
 	@NotEmpty(message = "uploadFolder.isPublic.notEmpty")
-	private boolean isPublic = false;
+	private Boolean isPublic = false;
 
 	@NotEmpty(message = "uploadFolder.mimeTypes.notEmpty")
 	private List<String> mimeTypes;
+
+	@Override
+	public void update(BaseModel updateFrom) {
+		UploadFolder uploadFolderUpdate = (UploadFolder) updateFrom;
+		if (uploadFolderUpdate.getTitle() != null) {
+			setTitle(uploadFolderUpdate.getTitle());
+		}
+		if (uploadFolderUpdate.getName() != null) {
+			setName(uploadFolderUpdate.getName());
+		}
+		if (uploadFolderUpdate.getIsPublic() != null) {
+			setIsPublic(uploadFolderUpdate.getIsPublic());
+		}
+		if (uploadFolderUpdate.getMimeTypes() != null) {
+			setMimeTypes(uploadFolderUpdate.getMimeTypes());
+		}
+	}
 
 	// Getters and setters
 
@@ -40,11 +57,11 @@ public class UploadFolder extends IdBasedModel {
 		this.name = name;
 	}
 
-	public boolean getIsPublic() {
+	public Boolean getIsPublic() {
 		return isPublic;
 	}
 
-	public void setIsPublic(boolean isPublic) {
+	public void setIsPublic(Boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 

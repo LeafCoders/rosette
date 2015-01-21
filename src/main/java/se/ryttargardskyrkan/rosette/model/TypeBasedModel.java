@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 
-public class TypeBasedModel implements BaseModel {
+public abstract class TypeBasedModel implements BaseModel {
 	@Id
 	@Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = "error.id.notValidFormat")
 	protected String id;
@@ -15,6 +15,17 @@ public class TypeBasedModel implements BaseModel {
 
     @Length(max = 200, message = "type.description.max200Chars")
     protected String description;
+
+    @Override
+	public void update(BaseModel updateFrom) {
+    	TypeBasedModel modelUpdate = (TypeBasedModel) updateFrom;
+    	if (modelUpdate.getName() != null) {
+    		setName(modelUpdate.getName());
+    	}
+    	if (modelUpdate.getDescription() != null) {
+    		setDescription(modelUpdate.getDescription());
+    	}
+    }
 
     // Getter and setters
 

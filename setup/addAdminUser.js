@@ -11,6 +11,6 @@ db.users.insert({
 });
 
 db.permissions.insert({
-  "user" : { "idRef" : "4711" },
+  "user" : { "id" : "4711" },
   "patterns" : [ "*" ]
 });

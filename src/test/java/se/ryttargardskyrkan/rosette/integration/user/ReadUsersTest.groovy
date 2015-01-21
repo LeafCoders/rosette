@@ -36,7 +36,6 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 				"firstName" : "User",
 				"lastName" : "One",
 				"email" : "u1@ser.se",
-				"status" : "active",
 				"password" : null,
 			    "fullName" : "User One"
 			},
@@ -46,7 +45,6 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 				"firstName" : "User",
 				"lastName" : "Two",
 				"email" : "u2@ser.se",
-				"status" : "active",
 				"password" : null,
 			    "fullName" : "User Two"
 			}

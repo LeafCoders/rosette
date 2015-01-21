@@ -18,7 +18,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
     public void successReadAll() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:resourceTypes", "read:groups"])
+		givenPermissionForUser(user1, ["read:resourceTypes"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
@@ -47,14 +47,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 			"section" : "persons",
 			"multiSelect": false,
 			"allowText": false,
-			"group": {
-				"idRef": "${group1.id}",
-				"referredObject": {
-					"id": "${group1.id}",
-					"name": "Admins",
-					"description": null
-				}
-			}
+			"group": ${ toJSON(group1) }
 		}]"""
 		thenResponseDataIs(responseBody, expectedData)
     }
@@ -75,21 +68,5 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		assertEquals("[]", responseBody)
-    }
-
-	@Test
-    public void failReadAllWithoutGroupPermission() throws ClientProtocolException, IOException {
-		// Given
-		givenUser(user1)
-		givenPermissionForUser(user1, ["read:resourceTypes"])
-		givenGroup(group1)
-		givenResourceType(userResourceTypeSingle)
-
-		// When
-		String getUrl = "/resourceTypes"
-		HttpResponse getResponse = whenGet(getUrl, user1)
-
-		// Then
-		thenResponseCodeIs(getResponse, HttpServletResponse.SC_FORBIDDEN)
     }
 }

@@ -35,27 +35,8 @@ public class ReadGroupMembershipTest extends AbstractIntegrationTest {
 
 		String expectedData = """{
 			"id" : "${ groupMembId2 }",
-			"user" : {
-				"idRef": "${ user2.id }",
-				"referredObject": {
-					"id": "${ user2.id }",
-					"username" : "user2",
-					"firstName" : "User",
-					"lastName" : "Two",
-					"fullName" : "User Two",
-					"email" : "u2@ser.se",
-					"password" : null,
-					"status" : "active"
-				}
-			},
-			"group" : {
-				"idRef": "${ group1.id }",
-				"referredObject": {
-					"id": "${ group1.id }",
-					"name": "Admins",
-					"description": null
-				}
-			}
+			"user" : ${ toJSON(user2) },
+			"group" : ${ toJSON(group1) }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 	}

@@ -16,7 +16,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
     public void createBookingWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:bookings"])
+		givenPermissionForUser(user1, ["create:bookings", "read:locations"])
 		givenLocation(location1)
 		
         // When
@@ -25,7 +25,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : "2012-03-25 13:00 Europe/Stockholm",
 			"endTime" : "2012-03-25 15:00 Europe/Stockholm",
-            "location" : { "idRef" : "${ location1.id }" }
+            "location" : { "ref" : { "id" : "${ location1.id }" } }
 		}""")
 
 		// Then
@@ -37,7 +37,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : "2012-03-25 13:00 Europe/Stockholm",
 			"endTime" : "2012-03-25 15:00 Europe/Stockholm",
-            "location" : { "idRef" : "${ location1.id }", "text" : null, "referredObject" : null }
+            "location" : { "ref" : ${ toJSON(location1) }, "text" : null }
 		}"""
 
 		thenResponseDataIs(responseBody, expectedData)
@@ -48,7 +48,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
     @Test
     public void failWhenCreateBookingWithInvalidLocation() throws ClientProtocolException, IOException {
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:bookings"])
+		givenPermissionForUser(user1, ["create:bookings", "read:locations"])
 		givenLocation(location1)
 		
         // When
@@ -57,7 +57,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Customer 1",
 			"startTime" : "2012-03-25 13:00 Europe/Stockholm",
 			"endTime" : "2012-03-25 15:00 Europe/Stockholm",
-            "location" : { "idRef" : "${ location1.id }", "text" : "Aspen" }
+            "location" : { "ref" : { "id" : "${ location1.id }" }, "text" : "Aspen" }
 		}""")
 
         // Then

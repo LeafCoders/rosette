@@ -13,8 +13,22 @@ public class Location extends IdBasedModel {
 	private String description;
 
 	// Image that shows the direction to the location
-	private ObjectReference<UploadResponse> directionImage;
+	private UploadResponse directionImage;
 	
+	@Override
+	public void update(BaseModel updateFrom) {
+		Location locationUpdate = (Location) updateFrom;
+    	if (locationUpdate.getName() != null) {
+    		setName(locationUpdate.getName());
+    	}
+    	if (locationUpdate.getDescription() != null) {
+    		setDescription(locationUpdate.getDescription());
+    	}
+    	if (locationUpdate.getDirectionImage() != null) {
+    		setDirectionImage(locationUpdate.getDirectionImage());
+    	}
+	}
+
 	// Getters and setters
 
 	public String getName() {
@@ -33,11 +47,11 @@ public class Location extends IdBasedModel {
 		this.description = description;
 	}
 
-    public ObjectReference<UploadResponse> getDirectionImage() {
+    public UploadResponse getDirectionImage() {
         return directionImage;
     }
 
-    public void setDirectionImage(ObjectReference<UploadResponse> directionImage) {
+    public void setDirectionImage(UploadResponse directionImage) {
         this.directionImage = directionImage;
     }
 }

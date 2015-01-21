@@ -21,6 +21,10 @@ public class UploadResponse extends IdBasedModel {
 	private Long width;
 	private Long height;
 
+	@Override
+	public void update(BaseModel updateFrom) {
+	}
+
 	// Getters and setters
 
 	public String getFileName() {

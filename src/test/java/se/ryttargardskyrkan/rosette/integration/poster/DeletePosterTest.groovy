@@ -8,6 +8,7 @@ import org.junit.Test
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Poster
+import se.ryttargardskyrkan.rosette.model.UploadResponse
 import com.mongodb.util.JSON
 
 public class DeletePosterTest extends AbstractIntegrationTest {
@@ -18,7 +19,7 @@ public class DeletePosterTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["delete:posters"])
-		def uploadItem = givenUploadInFolder("posters", validPNGImage)
+		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)
 

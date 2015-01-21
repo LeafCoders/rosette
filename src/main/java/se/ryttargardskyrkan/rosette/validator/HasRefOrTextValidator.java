@@ -6,15 +6,15 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /*
- * Validates that either idRef or text is set, not both.
+ * Validates that either id or text is set, not both.
  */
-public class HasIdRefOrTextValidator implements ConstraintValidator<HasIdRefOrText, ObjectReferenceOrText> {
+public class HasRefOrTextValidator implements ConstraintValidator<HasRefOrText, ObjectReferenceOrText> {
     @Override
-    public void initialize(HasIdRefOrText constraintAnnotation) {
+    public void initialize(HasRefOrText constraintAnnotation) {
     }
 
     @Override
     public boolean isValid(ObjectReferenceOrText value, ConstraintValidatorContext context) {
-        return (value != null) && (value.hasIdRef() != value.hasText());
+        return (value != null) && (value.hasRef() != value.hasText());
     }
 }

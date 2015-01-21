@@ -14,7 +14,7 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 	public void updateUserWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:users:${ user1.id }"])
+		givenPermissionForUser(user1, ["update:users:${ user1.id }", "read:users"])
 
 		// When
 		String putUrl = "/users/${ user1.id }"
@@ -22,8 +22,7 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 			"username" : "stubbe",
 			"firstName" : "Misse",
 			"lastName" : "Bult",
-			"email" : "new@ser.se",
-			"status" : ""
+			"email" : "new@ser.se"
 		}""")
 
 		// Then
@@ -36,7 +35,6 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 				"firstName" : "Misse",
 				"lastName" : "Bult",
 				"email" : "new@ser.se",
-				"status" : "active",
 				"password" : null,
 			    "fullName" : "Misse Bult"
 			}
@@ -49,15 +47,14 @@ public class UpdateUserTest extends AbstractIntegrationTest {
 	public void failUpdateUserThatDontExist() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:users"])
+		givenPermissionForUser(user1, ["update:users", "read:users"])
 
 		// When
 		String putUrl = "/users/4711"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"username" : "stubbe",
 			"firstName" : "Misse",
-			"lastName" : "Bult",
-			"status" : ""
+			"lastName" : "Bult"
 		}""")
 
 		// Then

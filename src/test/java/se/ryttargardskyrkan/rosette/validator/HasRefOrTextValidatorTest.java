@@ -7,26 +7,28 @@ import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class HasIdRefOrTextValidatorTest {
+public class HasRefOrTextValidatorTest {
 	
     @Test
     public void testHasNone() {
-        HasIdRefOrTextValidator validator = new HasIdRefOrTextValidator();
+        HasRefOrTextValidator validator = new HasRefOrTextValidator();
         ObjectReferenceOrText<Location> hasNone = new ObjectReferenceOrText<Location>();
         assertFalse(validator.isValid(hasNone, null));
     }
 
     @Test
-    public void testHasIdRef() {
-        HasIdRefOrTextValidator validator = new HasIdRefOrTextValidator();
-        ObjectReferenceOrText<Location> hasIdRef = new ObjectReferenceOrText<Location>();
-        hasIdRef.setIdRef("TestId");
-        assertTrue(validator.isValid(hasIdRef, null));
+    public void testHasRef() {
+        HasRefOrTextValidator validator = new HasRefOrTextValidator();
+        ObjectReferenceOrText<Location> hasRef = new ObjectReferenceOrText<Location>();
+        Location location = new Location();
+        location.setId("Some id");
+        hasRef.setRef(location);
+        assertTrue(validator.isValid(hasRef, null));
     }
 
     @Test
     public void testHasText() {
-        HasIdRefOrTextValidator validator = new HasIdRefOrTextValidator();
+        HasRefOrTextValidator validator = new HasRefOrTextValidator();
         ObjectReferenceOrText<Location> hasText = new ObjectReferenceOrText<Location>();
         hasText.setText("TestText");
         assertTrue(validator.isValid(hasText, null));
@@ -34,9 +36,11 @@ public class HasIdRefOrTextValidatorTest {
 
     @Test
     public void testHasIdAndText() {
-        HasIdRefOrTextValidator validator = new HasIdRefOrTextValidator();
+        HasRefOrTextValidator validator = new HasRefOrTextValidator();
         ObjectReferenceOrText<Location> hasBoth = new ObjectReferenceOrText<Location>();
-        hasBoth.setIdRef("TestId");
+        Location location = new Location();
+        location.setId("Some id");
+        hasBoth.setRef(location);
         hasBoth.setText("TestText");
         assertFalse(validator.isValid(hasBoth, null));
     }

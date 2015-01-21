@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,14 +64,7 @@ public class SignupUserController extends AbstractController {
 
 	@RequestMapping(value = "signupUsers/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putSignupUser(@PathVariable String id, @RequestBody SignupUser signupUser, HttpServletResponse response) {
-		Update update = new Update();
-		update.set("username", signupUser.getUsername());
-		update.set("firstName", signupUser.getFirstName());
-		update.set("lastName", signupUser.getLastName());
-		update.set("email", signupUser.getEmail());
-		update.set("permissions", signupUser.getPermissions());
-
-		signupUserService.update(id, signupUser, update, response);
+		signupUserService.update(id, signupUser, response);
 	}
 
 	@RequestMapping(value = "signupUsers/{id}", method = RequestMethod.DELETE, produces = "application/json")

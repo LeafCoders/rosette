@@ -14,24 +14,22 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:eventTypes"])
+		givenPermissionForUser(user1, ["update:eventTypes", "read:eventTypes", "read:resourceTypes", "read:groups"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
+		givenResourceType(userResourceTypeMultiAndText)
 		givenResourceType(uploadResourceTypeSingle)
+		givenResourceType(uploadResourceTypeMulti)
 		givenEventType(eventType1)
 		givenEventType(eventType2)
 
 		// When
 		String putUrl = "/eventTypes/${eventType2.id}"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"id" : "willNotChange",
 			"name" : "Changed name",
 			"description" : "New description",
 			"showOnPalmate" : true,
-			"resourceTypes" : [
-				{ "idRef": "${uploadResourceTypeSingle.id}" },
-				{ "idRef": "${userResourceTypeSingle.id}" }
-			]
+			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}""")
 
 		// Then
@@ -42,20 +40,14 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 				"name" : "EventType 1",
 				"description" : "Description...",
 				"showOnPalmate" : true,
-				"resourceTypes" : [
-					{ "idRef" : "${userResourceTypeSingle.id}", "referredObject" : null },
-					{ "idRef" : "${uploadResourceTypeSingle.id}", "referredObject" : null }
-				]
+				"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 			},
 			{
 				"id" : "${eventType2.id}",
 				"name" : "Changed name",
 				"description" : "New description",
 				"showOnPalmate" : true,
-				"resourceTypes" : [
-					{ "idRef" : "${uploadResourceTypeSingle.id}", "referredObject" : null },
-					{ "idRef" : "${userResourceTypeSingle.id}", "referredObject" : null }
-				]
+				"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 			}
 		]"""
 		thenDataInDatabaseIs(EventType.class, expectedData)

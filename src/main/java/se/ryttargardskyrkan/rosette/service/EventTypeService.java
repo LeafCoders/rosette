@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.model.EventType;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.resource.ResourceType;
 
 @Service
@@ -25,8 +24,10 @@ public class EventTypeService extends MongoTemplateCRUD<EventType> {
 
 	@Override
 	public void insertDependencies(EventType data) {
-		for (ObjectReference<ResourceType> resourceType : data.getResourceTypes()) {
-			resourceType.setReferredObject(resourceTypeService.readNoDep(resourceType.getIdRef()));
+		if (data.getResourceTypes() != null) {
+			for (ResourceType resourceType : data.getResourceTypes()) {
+				resourceType = resourceTypeService.read(resourceType.getId());
+			}
 		}
 	}
 }

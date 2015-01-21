@@ -11,12 +11,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
-import se.ryttargardskyrkan.rosette.model.EventType;
-import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
-import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
 import se.ryttargardskyrkan.rosette.model.event.Event;
-import se.ryttargardskyrkan.rosette.model.resource.*;
+import se.ryttargardskyrkan.rosette.model.resource.Resource;
+import se.ryttargardskyrkan.rosette.model.resource.ResourceType;
 
 @Service
 public class EventService extends MongoTemplateCRUD<Event> {
@@ -47,9 +44,9 @@ public class EventService extends MongoTemplateCRUD<Event> {
 
 		Query query = new Query(new Criteria().andOperator(
 		        Criteria.where("id").is(eventId),
-		        Criteria.where("resources.resourceType.idRef").is(resourceTypeId)));		
+		        Criteria.where("resources.resourceType.id").is(resourceTypeId)));		
 
-		ResourceType resourceType = resourceTypeService.readNoDep(resource.getResourceType().getIdRef());
+		ResourceType resourceType = resourceTypeService.readNoDep(resource.getResourceType().getId());
 		Update update = methodsService.of(resource).createAssignUpdate(resourceType);
 
 		if (mongoTemplate.updateFirst(query, update, Event.class).getN() == 0) {
@@ -60,18 +57,15 @@ public class EventService extends MongoTemplateCRUD<Event> {
 
 	@Override
 	public void insertDependencies(Event data) {
-		final ObjectReference<EventType> eventTypeRef = data.getEventType(); 
-		if (eventTypeRef != null) {
-			eventTypeRef.setReferredObject(eventTypeService.readNoDep(eventTypeRef.getIdRef()));
+		if (data.getEventType() != null) {
+			data.setEventType(eventTypeService.read(data.getEventType().getId()));
 		}
-		final ObjectReferenceOrText<Location> locationRef = data.getLocation(); 
-		if (locationRef != null && locationRef.hasIdRef()) {
-			locationRef.setReferredObject(locationService.readNoDep(locationRef.getIdRef()));
+		if (data.getLocation() != null && data.getLocation().hasRef()) {
+			data.getLocation().setRef(locationService.read(data.getLocation().refId()));
 		}
 		final List<Resource> resources = data.getResources();
 		for (Resource resource : resources) {
-			final ObjectReference<ResourceType> resourceTypeRef = resource.getResourceType();
-			resourceTypeRef.setReferredObject(resourceTypeService.readNoDep(resourceTypeRef.getIdRef()));
+			resource.setResourceType(resourceTypeService.read(resource.getResourceType().getId()));
 			methodsService.of(resource).insertDependencies();
 		}
 	}

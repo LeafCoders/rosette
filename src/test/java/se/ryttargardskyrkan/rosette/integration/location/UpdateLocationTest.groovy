@@ -25,7 +25,7 @@ public class UpdateLocationTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:locations"])
+		givenPermissionForUser(user1, ["update:locations", "read:locations", "read:uploads"])
 		Object image = givenUploadInFolder("locations", validPNGImage)
 		givenLocation(location1)
 
@@ -34,7 +34,7 @@ public class UpdateLocationTest extends AbstractIntegrationTest {
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"name" : "Stockholm",
 			"description" : "Capital",
-			"directionImage" : { "idRef" : "${ image['id'] }" }
+			"directionImage" : ${ toJSON(image) }
 		}""")
 
 		// Then
@@ -44,7 +44,7 @@ public class UpdateLocationTest extends AbstractIntegrationTest {
 			"id" : "${ location1.id }",
 			"name" : "Stockholm",
 			"description" : "Capital",
-			"directionImage" : { "idRef" : "${ image['id'] }", "referredObject" : null }
+			"directionImage" : ${ toJSON(image) }
 		}]"""
 		thenDataInDatabaseIs(Location.class, expectedData)
 		thenItemsInDatabaseIs(Location.class, 1)

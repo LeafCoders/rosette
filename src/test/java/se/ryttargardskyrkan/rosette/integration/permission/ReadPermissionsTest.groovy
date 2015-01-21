@@ -15,7 +15,7 @@ public class ReadPermissionsTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
-		String userPermissionId = givenPermissionForUser(user1, ["read:permissions", "read:users", "read:groups"])
+		String userPermissionId = givenPermissionForUser(user1, ["read:permissions"])
 		String groupPermissionId = givenPermissionForGroup(group1, ["update:posters:2", "update:locations"])
 		String everyonePermissionId = givenPermissionForEveryone(["read:events"])
 
@@ -38,34 +38,15 @@ public class ReadPermissionsTest extends AbstractIntegrationTest {
 			{
 				"id" : "${ userPermissionId }",
 				"everyone" : null,
-				"user" : {
-					"idRef" : "${ user1.id }",
-					"referredObject" : {
-						"id" : "${ user1.id }",
-						"username" : "user1",
-						"password" : null,
-						"status" : "active",
-						"firstName" : "User",
-						"lastName" : "One",
-						"email" : "u1@ser.se",
-						"fullName" : "User One"
-					}
-				},
+				"user" : ${ toJSON(user1) },
 				"group" : null,
-				"patterns" : ["read:permissions", "read:users", "read:groups"]
+				"patterns" : ["read:permissions"]
 			},
 			{
 				"id" : "${ groupPermissionId }",
 				"everyone" : null,
 				"user" : null,
-				"group" : {
-					"idRef" : "${ group1.id }",
-					"referredObject" : {
-						"id" : "${ group1.id }",
-						"name" : "Admins",
-						"description" : null
-					}
-				},
+				"group" : ${ toJSON(group1) },
 				"patterns" : ["update:posters:2", "update:locations"]
 			}
 		]"""

@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.model.Group;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.User;
 
 @Service
@@ -30,10 +29,10 @@ public class GroupService extends MongoTemplateCRUD<Group> {
 	public void insertDependencies(Group data) {
 	}
 	
-	public boolean containsUsers(String groupId, List<ObjectReference<User>> userIdRefs) {
+	public boolean containsUsers(String groupId, List<User> users) {
 		List<String> userIdsInGroup = groupMembershipService.getUserIdsInGroup(groupId);
-		for (ObjectReference<User> userIdRef : userIdRefs) {
-			if (!userIdsInGroup.contains(userIdRef.getIdRef())) {
+		for (User user : users) {
+			if (!userIdsInGroup.contains(user.getId())) {
 				return false;
 			}
 		}

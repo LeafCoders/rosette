@@ -32,7 +32,7 @@ public class ReadBookingTest extends AbstractIntegrationTest {
 			"customerName" : "Arla",
 			"startTime" : "2014-01-21 11:00 Europe/Stockholm",
 			"endTime" : "2014-01-22 12:00 Europe/Stockholm",
-			"location" : { "idRef" : null, "text" : "A location", "referredObject" : null }
+			"location" : { "ref" : null, "text" : "A location" }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 	}

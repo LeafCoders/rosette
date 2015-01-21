@@ -20,7 +20,7 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
-		givenPermissionForUser(user1, ["read:resourceTypes:${userResourceTypeSingle.id}", "read:groups"])
+		givenPermissionForUser(user1, ["read:resourceTypes:${userResourceTypeSingle.id}"])
 
 		// When
 		String getUrl = "/resourceTypes/${userResourceTypeSingle.id}"
@@ -38,14 +38,7 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "persons",
 			"multiSelect": false,
 			"allowText": false,
-			"group": {
-				"idRef": "${group1.id}",
-				"referredObject": {
-					"id": "${group1.id}",
-					"name": "Admins",
-					"description": null
-				}
-			}
+			"group": ${ toJSON(group1) }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
     }
@@ -54,7 +47,7 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
     public void failReadNotFound() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:resourceTypes", "read:groups"])
+		givenPermissionForUser(user1, ["read:resourceTypes"])
 
 		// When
 		String getUrl = "/resourceTypes/nonExistingKey"

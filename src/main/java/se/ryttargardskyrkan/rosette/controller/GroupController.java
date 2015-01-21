@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,20 +48,7 @@ public class GroupController extends AbstractController {
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putGroup(@PathVariable String id, @RequestBody Group group, HttpServletResponse response) {
-		Update update = new Update();
-		if (group.getName() != null) {
-			update.set("name", group.getName());
-		}
-		update.set("description", group.getDescription());
-		
-		groupService.update(id, group, update, response);
-		
-		// TODO: Change Permission to use ObjectReference to group
-		// Updating groupName in permissions
-		Group groupInDatabase = mongoTemplate.findById(id, Group.class);
-		Update permissionUpdate = new Update();
-		permissionUpdate.set("groupName", groupInDatabase.getName());
-		mongoTemplate.updateMulti(Query.query(Criteria.where("group.idRef").is(id)), permissionUpdate, Permission.class);
+		groupService.update(id, group, response);
 	}
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.DELETE, produces = "application/json")
@@ -70,10 +56,10 @@ public class GroupController extends AbstractController {
 		groupService.delete(id, response);
 
 		// Removing permissions for the group
-		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.idRef").is(id)), Permission.class);
+		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.id").is(id)), Permission.class);
 		
 		// Removing group memberships with the group that is about to be deleted
-		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.idRef").is(id)), GroupMembership.class);
+		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.id").is(id)), GroupMembership.class);
 		
 		// Clearing auth cache
 		mongoRealm.clearCache(null);

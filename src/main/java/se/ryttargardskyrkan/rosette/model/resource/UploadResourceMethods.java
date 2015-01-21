@@ -3,7 +3,6 @@ package se.ryttargardskyrkan.rosette.model.resource;
 import java.util.List;
 import org.springframework.data.mongodb.core.query.Update;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.UploadResponse;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
 import se.ryttargardskyrkan.rosette.service.UploadService;
@@ -34,10 +33,10 @@ public class UploadResourceMethods implements ResourceMethods {
 	}
 
 	public void insertDependencies() {
-		final List<ObjectReference<UploadResponse>> uploadRefs = resource.getUploads();
-		if (uploadRefs != null) {
-			for (ObjectReference<UploadResponse> uploadRef : uploadRefs) {
-				uploadRef.setReferredObject(uploadService.read(uploadRef.getIdRef()));
+		final List<UploadResponse> uploads = resource.getUploads();
+		if (uploads != null) {
+			for (UploadResponse upload : uploads) {
+				upload = uploadService.read(upload.getId());
 			}
 		}
 	}

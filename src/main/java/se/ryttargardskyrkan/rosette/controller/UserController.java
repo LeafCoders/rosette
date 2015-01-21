@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,33 +65,12 @@ public class UserController extends AbstractController {
 		String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
 		user.setHashedPassword(hashedPassword);
 		user.setPassword(null);
-		user.setStatus("active");
-
 		return userService.create(user, response);
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
-		Update update = new Update();
-		if (user.getUsername() != null)
-			update.set("username", user.getUsername());
-		if (user.getFirstName() != null)
-			update.set("firstName", user.getFirstName());
-		if (user.getLastName() != null)
-			update.set("lastName", user.getLastName());
-		if (user.getEmail() != null)
-			update.set("email", user.getEmail());
-
-		if (user.getPassword() != null && !"".equals(user.getPassword().trim())) {
-			String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
-			update.set("hashedPassword", hashedPassword);
-		}
-
-		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, User.class).getN() == 0) {
-			throw new NotFoundException();
-		}
-		
-		userService.update(id, user, update, response);
+		userService.update(id, user, response);
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")
@@ -104,10 +82,10 @@ public class UserController extends AbstractController {
 			throw new NotFoundException();
 		} else {
 			// Removing permissions for the user
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.idRef").is(id)), Permission.class);
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(id)), Permission.class);
 			
 			// Removing group memberships with the user that is about to be deleted
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.idRef").is(id)), GroupMembership.class);
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(id)), GroupMembership.class);
 
 			// Deleting the user
 			User deletedUser = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), User.class);

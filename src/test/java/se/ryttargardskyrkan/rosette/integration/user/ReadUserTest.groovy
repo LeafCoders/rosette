@@ -31,8 +31,7 @@ public class ReadUserTest extends AbstractIntegrationTest {
 			"lastName" : "One",
 			"fullName": "User One",
 			"email" : "u1@ser.se",
-			"password" : null,
-			"status" : "active"
+			"password" : null
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 	}

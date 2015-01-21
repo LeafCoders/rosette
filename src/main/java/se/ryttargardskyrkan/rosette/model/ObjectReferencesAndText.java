@@ -3,7 +3,7 @@ package se.ryttargardskyrkan.rosette.model;
 import java.util.List;
 
 public class ObjectReferencesAndText<T> {
-    private List<ObjectReference<T>> refs;
+    private List<T> refs;
 
     private String text;
 
@@ -21,11 +21,11 @@ public class ObjectReferencesAndText<T> {
 
     // Getters and setters
 
-	public List<ObjectReference<T>> getRefs() {
+	public List<T> getRefs() {
 		return refs;
 	}
 
-	public void setRefs(List<ObjectReference<T>> refs) {
+	public void setRefs(List<T> refs) {
 		this.refs = refs;
 	}
 

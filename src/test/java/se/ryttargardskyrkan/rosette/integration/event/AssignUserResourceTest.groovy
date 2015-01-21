@@ -31,9 +31,9 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		String putUrl = "/events/${ event2.id }/resources/${ userResourceTypeMultiAndText.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type" : "user",
-			"resourceType" : { "idRef" : "${ userResourceTypeMultiAndText.id }" },
+			"resourceType" : ${ toJSON(userResourceTypeMultiAndText) },
 			"users" : {
-				"refs" : [ { "idRef" : "${ user2.id }" } ],
+				"refs" : [ ${ toJSON(user2) } ],
 				"text" : "Kalle Boll"
 			}
 		}""")
@@ -63,9 +63,9 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type" : "user",
-			"resourceType" : { "idRef" : "${ userResourceTypeSingle.id }" },
+			"resourceType" : ${ toJSON(userResourceTypeSingle) },
 			"users" : {
-				"refs" : [ { "idRef" : "userThatDontExist" } ]
+				"refs" : [ { "id" : "userThatDontExist" } ]
 			}
 		}""")
 
@@ -99,9 +99,9 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type" : "user",
-			"resourceType" : { "idRef" : "${ userResourceTypeSingle.id }" },
+			"resourceType" : ${ toJSON(userResourceTypeSingle) },
 			"users" : {
-				"refs" : [ { "idRef" : "${ user1.id }" }, { "idRef" : "${ user2.id }" } ]
+				"refs" : [ ${ toJSON(user1) }, ${ toJSON(user2) } ]
 			}
 		}""")
 
@@ -114,9 +114,9 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		// When
 		HttpResponse putResponse2 = whenPut(putUrl, user1, """{
 			"type" : "user",
-			"resourceType" : { "idRef" : "${ userResourceTypeSingle.id }" },
+			"resourceType" : ${ toJSON(userResourceTypeSingle) },
 			"users" : {
-				"refs" : [ { "idRef" : "${ user1.id }" } ],
+				"refs" : [ ${ toJSON(user1) } ],
 				"text" : "Someone"
 			}
 		}""")
@@ -148,7 +148,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type" : "user",
-			"resourceType" : { "idRef" : "${ userResourceTypeSingle.id }" },
+			"resourceType" : ${ toJSON(userResourceTypeSingle) },
 			"users" : {
 				"text" : "Someone"
 			}

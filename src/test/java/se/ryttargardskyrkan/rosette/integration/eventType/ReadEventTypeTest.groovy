@@ -34,33 +34,7 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 			"name" : "EventType 1",
 			"description" : "Description...",
 			"showOnPalmate" : true,
-			"resourceTypes" : [
-				{
-					"idRef" : "${ userResourceTypeSingle.id }",
-					"referredObject" : {
-						"type" : "user",
-						"id" : "${ userResourceTypeSingle.id }",
-						"name" : "UserResourceType Single",
-						"description" : "Description here",
-						"section" : "persons",
-						"multiSelect" : false,
-						"allowText" : false,
-						"group" : { "idRef" : "${group1.id}", "referredObject" : null }
-					}
-				},
-				{
-					"idRef" : "${ uploadResourceTypeSingle.id }",
-					"referredObject" : {
-						"type" : "upload",
-						"id" : "${ uploadResourceTypeSingle.id }",
-						"name" : "UploadResourceType Single",
-						"description" : "A poster file",
-						"section" : "files",
-						"folderName" : "posters",
-						"multiSelect" : false
-					}
-				}
-			]
+			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		releaseGetRequest()

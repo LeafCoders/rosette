@@ -2,7 +2,6 @@ package se.ryttargardskyrkan.rosette.model.resource;
 
 import org.springframework.data.mongodb.core.query.Update;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.ObjectReferencesAndText;
 import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
@@ -33,8 +32,8 @@ public class UserResourceMethods implements ResourceMethods {
 				throw new SimpleValidationException(new ValidationError("resource", "userResource.userByTextNotAllowed"));
 			}
 			
-			String groupId = userResourceType.getGroup().getIdRef();
-			if (groupService.containsUsers(groupId, resource.getUsers().getRefs())) {
+			String groupId = userResourceType.getGroup().getId();
+			if (resource.getUsers() != null && groupService.containsUsers(groupId, resource.getUsers().getRefs())) {
 				return new Update().set("resources.$.users", resource.getUsers());
 			}
 		}
@@ -42,10 +41,10 @@ public class UserResourceMethods implements ResourceMethods {
 	}
 	
 	public void insertDependencies() {
-		final ObjectReferencesAndText<User> userRefs = resource.getUsers();
-		if (userRefs != null) {
-			for (ObjectReference<User> userRef : userRefs.getRefs()) {
-				userRef.setReferredObject(userService.readNoDep(userRef.getIdRef()));
+		final ObjectReferencesAndText<User> users = resource.getUsers();
+		if (users != null && users.hasRefs()) {
+			for (User userRef : users.getRefs()) {
+				userRef = userService.read(userRef.getId());
 			}
 		}
 	}

@@ -38,66 +38,14 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 				"name" : "EventType 1",
 				"description" : "Description...",
 				"showOnPalmate" : true,
-				"resourceTypes" : [
-					{
-						"idRef" : "${ userResourceTypeSingle.id }",
-						"referredObject" : {
-							"type" : "user",
-							"id" : "${ userResourceTypeSingle.id }",
-							"name" : "UserResourceType Single",
-							"description" : "Description here",
-							"section" : "persons",
-							"multiSelect" : false,
-							"allowText" : false,
-							"group" : { "idRef" : "${ group1.id }", "referredObject" : null }
-						}
-					},
-					{
-						"idRef" : "${ uploadResourceTypeSingle.id }",
-						"referredObject" : {
-							"type" : "upload",
-							"id" : "${ uploadResourceTypeSingle.id }",
-							"name" : "UploadResourceType Single",
-							"description" : "A poster file",
-							"section" : "files",
-							"folderName" : "posters",
-							"multiSelect" : false
-						}
-					}
-				]
+				"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 			},
 			{
 				"id" : "${ eventType2.id }",
 				"name" : "EventType 2",
 				"description" : "Description...",
 				"showOnPalmate" : false,
-				"resourceTypes" : [
-					{
-						"idRef" : "${ userResourceTypeMultiAndText.id }",
-						"referredObject" : {
-							"type" : "user",
-							"id" : "${ userResourceTypeMultiAndText.id }",
-							"name" : "UserResourceType Multi",
-							"description" : "Description here",
-							"section" : "persons",
-							"multiSelect" : true,
-							"allowText" : true,
-							"group" : { "idRef" : "${ group1.id }", "referredObject" : null }
-						}
-					},
-					{
-						"idRef" : "${ uploadResourceTypeMulti.id }",
-						"referredObject" : {
-							"type" : "upload",
-							"id" : "${ uploadResourceTypeMulti.id }",
-							"name" : "UploadResourceType Multi",
-							"description" : "Some poster files",
-							"section" : "files",
-							"folderName" : "posters",
-							"multiSelect" : true
-						}
-					}
-				]
+				"resourceTypes" : [ ${ toJSON(userResourceTypeMultiAndText) }, ${ toJSON(uploadResourceTypeMulti) } ] 
 			}
 		]"""
 		thenResponseDataIs(responseBody, expectedData)

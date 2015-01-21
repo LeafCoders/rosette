@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.validator.HasIdRefOrText;
+import se.ryttargardskyrkan.rosette.validator.HasRefOrText;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -33,8 +33,25 @@ public class Booking extends IdBasedModel {
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 
-	@HasIdRefOrText(message = "booking.location.oneMustBeSet")
+	@HasRefOrText(message = "booking.location.oneMustBeSet")
 	private ObjectReferenceOrText<Location> location;
+	
+	@Override
+	public void update(BaseModel updateFrom) {
+		Booking bookingUpdate = (Booking) updateFrom;
+		if (bookingUpdate.getCustomerName() != null) {
+			setCustomerName(bookingUpdate.getCustomerName());
+		}
+		if (bookingUpdate.getStartTime() != null) {
+			setStartTime(bookingUpdate.getStartTime());
+		}
+		if (bookingUpdate.getEndTime() != null) {
+			setEndTime(bookingUpdate.getEndTime());
+		}
+		if (bookingUpdate.getLocation() != null) {
+			setLocation(bookingUpdate.getLocation());
+		}
+	}
 
 	// Getters and setters
 

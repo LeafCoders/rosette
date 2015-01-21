@@ -15,9 +15,9 @@ public class ReadPermissionTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
-		String userPermissionId = givenPermissionForUser(user1, ["read:permissions", "read:users", "read:groups"])
-		String groupPermissionId = givenPermissionForGroup(group1, ["update:posters:2", "update:locations"])
 		String everyonePermissionId = givenPermissionForEveryone(["read:events"])
+		String userPermissionId = givenPermissionForUser(user1, ["read:permissions"])
+		String groupPermissionId = givenPermissionForGroup(group1, ["update:posters:2", "update:locations"])
 
 		// When
 		String getUrl = "/permissions/${ groupPermissionId }"
@@ -31,14 +31,7 @@ public class ReadPermissionTest extends AbstractIntegrationTest {
 			"id" : "${ groupPermissionId }",
 			"everyone" : null,
 			"user" : null,
-			"group" : {
-				"idRef" : "${ group1.id }",
-				"referredObject" : {
-					"id" : "${ group1.id }",
-					"name" : "Admins",
-					"description" : null
-				}
-			},
+			"group" : ${ toJSON(group1) },
 			"patterns" : ["update:posters:2", "update:locations"]
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
@@ -50,7 +43,7 @@ public class ReadPermissionTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenGroup(group1)
 		givenGroupMembership(user1, group1)
-		String groupPermissionId = givenPermissionForGroup(group1, ["read:permissions", "read:users", "read:groups"])
+		String groupPermissionId = givenPermissionForGroup(group1, ["read:permissions"])
 		String everyonePermissionId = givenPermissionForEveryone(["read:events"])
 
 		// When

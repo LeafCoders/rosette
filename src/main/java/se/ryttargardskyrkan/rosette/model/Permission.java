@@ -13,12 +13,20 @@ public class Permission extends IdBasedModel {
 	private Boolean everyone;
 
 	@Indexed
-	private ObjectReference<User> user;
+	private User user;
 
 	@Indexed
-	private ObjectReference<Group> group;
+	private Group group;
 
 	private List<String> patterns;
+
+	@Override
+	public void update(BaseModel updateFrom) {
+		Permission permissionUpdate = (Permission) updateFrom;
+    	if (permissionUpdate.getPatterns() != null) {
+    		setPatterns(permissionUpdate.getPatterns());
+    	}
+	}
 	
 	// Getters and setters
 
@@ -30,19 +38,19 @@ public class Permission extends IdBasedModel {
 		this.everyone = everyone;
 	}
 
-	public ObjectReference<User> getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(ObjectReference<User> user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
-	public ObjectReference<Group> getGroup() {
+	public Group getGroup() {
 		return group;
 	}
 
-	public void setGroup(ObjectReference<Group> group) {
+	public void setGroup(Group group) {
 		this.group = group;
 	}
 

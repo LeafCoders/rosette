@@ -7,11 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.Group;
 import se.ryttargardskyrkan.rosette.model.GroupMembership;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.Permission;
 import se.ryttargardskyrkan.rosette.model.User;
 import se.ryttargardskyrkan.rosette.security.MongoRealm;
@@ -39,11 +36,11 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	}
 
 	@Override
-	public void update(String id, Permission data, Update update, HttpServletResponse response) {
+	public void update(String id, Permission data, HttpServletResponse response) {
 		// Clearing auth cache
 		mongoRealm.clearCache(null);
 
-		super.update(id, data, update, response);
+		super.update(id, data, response);
 	}
 
 	@Override
@@ -56,13 +53,11 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 
 	@Override
 	public void insertDependencies(Permission data) {
-		final ObjectReference<User> userRef = data.getUser(); 
-		if (userRef != null) {
-			userRef.setReferredObject(userService.readNoDep(userRef.getIdRef()));
+		if (data.getUser() != null) {
+			data.setUser(userService.read(data.getUser().getId()));
 		}
-		final ObjectReference<Group> groupRef = data.getGroup(); 
-		if (groupRef != null) {
-			groupRef.setReferredObject(groupService.readNoDep(groupRef.getIdRef()));
+		if (data.getGroup() != null) {
+			data.setGroup(groupService.read(data.getGroup().getId()));
 		}
 	}
 	
@@ -79,15 +74,15 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 		User user = mongoTemplate.findById(userId, User.class);
 		if (user != null) {
 			// Adding group permissions
-			Query groupMembershipsQuery = new Query(Criteria.where("user.idRef").is(user.getId()));
+			Query groupMembershipsQuery = new Query(Criteria.where("user.id").is(user.getId()));
 			List<GroupMembership> groupMemberships = mongoTemplate.find(groupMembershipsQuery, GroupMembership.class);
 			if (groupMemberships != null) {
 				List<String> groupIds = new ArrayList<String>();
 				for (GroupMembership groupMembership : groupMemberships) {
-					groupIds.add(groupMembership.getGroup().getIdRef());
+					groupIds.add(groupMembership.getGroup().getId());
 				}
 	
-				Query groupPermissionQuery = Query.query(Criteria.where("group.idRef").in(groupIds));
+				Query groupPermissionQuery = Query.query(Criteria.where("group.id").in(groupIds));
 				List<Permission> groupPermissions = mongoTemplate.find(groupPermissionQuery, Permission.class);
 				if (groupPermissions != null) {
 					for (Permission groupPermission : groupPermissions) {
@@ -99,7 +94,7 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 			}
 	
 			// Adding user permissions
-			Query userPermissionQuery = Query.query(Criteria.where("user.idRef").is(user.getId()));
+			Query userPermissionQuery = Query.query(Criteria.where("user.id").is(user.getId()));
 			List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
 			if (userPermissions != null) {
 				for (Permission userPermission : userPermissions) {

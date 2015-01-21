@@ -15,7 +15,7 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 	public void updateBookingWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:bookings:${ booking2.id }"])
+		givenPermissionForUser(user1, ["update:bookings:${ booking2.id }", "read:bookings", "read:locations"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
@@ -38,14 +38,14 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 				"customerName" : "Scan",
 				"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 				"endTime" : "2012-03-26 11:00 Europe/Stockholm",
-	            "location" : { "idRef" : "${ location1.id }", "text" : null, "referredObject" : null }
+	            "location" : { "ref" : ${ toJSON(location1) }, "text" : null }
 			},
 			{
 				"id" : "${ booking2.id }",
 				"customerName" : "Customer 2",
 				"startTime" : "2012-10-26 08:30 Europe/Stockholm",
 				"endTime" : "2012-10-26 11:30 Europe/Stockholm",
-	            "location" : { "idRef" : null, "text" : "Aspen", "referredObject" : null }
+	            "location" : { "ref" : null, "text" : "Aspen" }
 			}
 		]"""
 		thenDataInDatabaseIs(Booking.class, expectedData)
@@ -56,7 +56,7 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 	public void failWhenUpdateBookingWithInvalidContent() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:bookings:${ booking2.id }"])
+		givenPermissionForUser(user1, ["update:bookings:${ booking2.id }", "read:bookings"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
@@ -67,7 +67,7 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 			"customerName" : "",
 			"startTime" : "2012-10-26 08:30 Europe/Stockholm",
 			"endTime" : "2012-10-01 11:30 Europe/Stockholm",
-            "location" : { "idRef" : null, "text" : null }
+            "location" : { "ref" : null, "text" : null }
 		}""")
 
 		// Then

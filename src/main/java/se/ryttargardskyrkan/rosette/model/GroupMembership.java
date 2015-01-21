@@ -2,34 +2,45 @@ package se.ryttargardskyrkan.rosette.model;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.ryttargardskyrkan.rosette.validator.HasIdRef;
+import se.ryttargardskyrkan.rosette.validator.HasRef;
 
 @Document(collection = "groupMemberships")
 public class GroupMembership extends IdBasedModel {
 
-    @Indexed
-    @HasIdRef(message = "groupMembership.group.mustBeSet")
-	private ObjectReference<Group> group;
+	@Indexed
+    @HasRef(message = "groupMembership.group.mustBeSet")
+	private Group group;
 
-    @Indexed
-    @HasIdRef(message = "groupMembership.user.mustBeSet")
-	private ObjectReference<User> user;
+	@Indexed
+    @HasRef(message = "groupMembership.user.mustBeSet")
+	private User user;
 
-    // Getters and setters
+	@Override
+	public void update(BaseModel updateFrom) {
+		GroupMembership groupMembershipUpdate = (GroupMembership) updateFrom;
+    	if (groupMembershipUpdate.getGroup() != null) {
+    		setGroup(groupMembershipUpdate.getGroup());
+    	}
+    	if (groupMembershipUpdate.getUser() != null) {
+    		setUser(groupMembershipUpdate.getUser());
+    	}
+	}
 
-    public ObjectReference<Group> getGroup() {
+	// Getters and setters
+
+    public Group getGroup() {
         return group;
     }
 
-    public void setGroup(ObjectReference<Group> group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 
-    public ObjectReference<User> getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(ObjectReference<User> user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

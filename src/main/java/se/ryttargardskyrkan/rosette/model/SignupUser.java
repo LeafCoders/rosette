@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.ryttargardskyrkan.rosette.security.RosettePasswordService;
 
 @Document(collection = "signupUsers")
 public class SignupUser extends IdBasedModel {
@@ -39,6 +40,30 @@ public class SignupUser extends IdBasedModel {
 
 	@NotEmpty(message = "user.permissions.notEmpty")
 	private String permissions;
+
+	@Override
+	public void update(BaseModel updateFrom) {
+		SignupUser signupUserUpdate = (SignupUser) updateFrom;
+		if (signupUserUpdate.getUsername() != null) {
+			setUsername(signupUserUpdate.getUsername());
+		}
+		if (signupUserUpdate.getPassword() != null && !"".equals(signupUserUpdate.getPassword().trim())) {
+			String hashedPassword = new RosettePasswordService().encryptPassword(signupUserUpdate.getPassword());
+			setHashedPassword(hashedPassword);
+		}
+		if (signupUserUpdate.getFirstName() != null) {
+			setFirstName(signupUserUpdate.getFirstName());
+		}
+		if (signupUserUpdate.getLastName() != null) {
+			setLastName(signupUserUpdate.getLastName());
+		}
+		if (signupUserUpdate.getEmail() != null) {
+			setEmail(signupUserUpdate.getEmail());
+		}
+		if (signupUserUpdate.getPermissions() != null) {
+			setPermissions(signupUserUpdate.getPermissions());
+		}
+	}
 
 	// Getters and setters
 

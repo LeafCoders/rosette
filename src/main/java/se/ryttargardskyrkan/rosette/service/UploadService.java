@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import se.ryttargardskyrkan.rosette.exception.ForbiddenException;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.UploadRequest;
 import se.ryttargardskyrkan.rosette.model.UploadResponse;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
@@ -113,10 +112,10 @@ public class UploadService {
 		}
 	}
 
-	public boolean containsUploads(String folder, List<ObjectReference<UploadResponse>> uploadIdRefs) {
+	public boolean containsUploads(String folder, List<UploadResponse> uploads) {
 		List<String> uploadIdsInFolder = getFileIdsInFolder(folder);
-		for (ObjectReference<UploadResponse> uploadIdRef : uploadIdRefs) {
-			if (!uploadIdsInFolder.contains(uploadIdRef.getIdRef())) {
+		for (UploadResponse upload : uploads) {
+			if (!uploadIdsInFolder.contains(upload.getId())) {
 				return false;
 			}
 		}

@@ -3,8 +3,6 @@ package se.ryttargardskyrkan.rosette.service;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ryttargardskyrkan.rosette.model.Group;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.resource.*;
 
 @Service
@@ -27,9 +25,9 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 	public void insertDependencies(ResourceType data) {
 		// TODO: Use methodService here
 		if (data instanceof UserResourceType) {
-			ObjectReference<Group> group = ((UserResourceType) data).getGroup();
-			if (group != null) {
-				group.setReferredObject(groupService.readNoDep(group.getIdRef()));
+			UserResourceType resourceType = (UserResourceType) data;
+			if (resourceType.getGroup() != null) {
+				resourceType.setGroup(groupService.read(resourceType.getGroup().getId()));
 			}
 		}
 	}

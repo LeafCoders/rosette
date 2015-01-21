@@ -3,8 +3,7 @@ package se.ryttargardskyrkan.rosette.model.resource;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotEmpty;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
-import se.ryttargardskyrkan.rosette.validator.HasIdRef;
+import se.ryttargardskyrkan.rosette.validator.HasRef;
 
 // The following annotations uses the property 'type' to decide which class to create
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
@@ -16,8 +15,8 @@ public abstract class Resource {
 	@NotEmpty(message = "resource.type.notEmpty")
 	private String type;
 
-	@HasIdRef(message = "error.resourceType.mustBeSet")
-    private ObjectReference<ResourceType> resourceType;
+	@HasRef(message = "error.resourceType.mustBeSet")
+    private ResourceType resourceType;
 	
     // Constructors
 
@@ -37,11 +36,11 @@ public abstract class Resource {
         this.type = type;
     }
 
-    public ObjectReference<ResourceType> getResourceType() {
+    public ResourceType getResourceType() {
 		return resourceType;
 	}
 
-	public void setResourceType(ObjectReference<ResourceType> resourceType) {
+	public void setResourceType(ResourceType resourceType) {
 		this.resourceType = resourceType;
 	}
 }

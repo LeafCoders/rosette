@@ -3,7 +3,6 @@ package se.ryttargardskyrkan.rosette.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.model.EventType;
@@ -36,13 +35,7 @@ public class EventTypeController extends AbstractController {
 
 	@RequestMapping(value = "eventTypes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putEventType(@PathVariable String id, @RequestBody EventType eventType, HttpServletResponse response) {
-		Update update = new Update();
-		update.set("name", eventType.getName());
-		update.set("description", eventType.getDescription());
-		update.set("showOnPalmate", eventType.getShowOnPalmate());
-		update.set("resourceTypes", eventType.getResourceTypes());
-
-		eventTypeService.update(id, eventType, update, response);
+		eventTypeService.update(id, eventType, response);
 	}
 
 	@RequestMapping(value = "eventTypes/{id}", method = RequestMethod.DELETE, produces = "application/json")

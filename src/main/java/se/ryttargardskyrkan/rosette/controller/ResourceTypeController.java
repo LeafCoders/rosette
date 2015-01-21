@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.model.resource.ResourceType;
@@ -40,8 +39,7 @@ public class ResourceTypeController extends AbstractController {
 	// ResourceType must contain the attribute 'type' that equals any string specified in ResourceType  
     @RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public void putResourceType(@PathVariable String key, @RequestBody ResourceType resourceType, HttpServletResponse response) {
-    	Update update = resourceType.addToUpdateQuery(new Update());
-		resourceTypeService.update(key, resourceType, update, response);
+		resourceTypeService.update(key, resourceType, response);
     }
 
 	@RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.DELETE, produces = "application/json")

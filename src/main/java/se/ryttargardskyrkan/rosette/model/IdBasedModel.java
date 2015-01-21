@@ -2,7 +2,7 @@ package se.ryttargardskyrkan.rosette.model;
 
 import org.springframework.data.annotation.Id;
 
-public class IdBasedModel implements BaseModel {
+public abstract class IdBasedModel implements BaseModel {
 	@Id
 	protected String id;
 

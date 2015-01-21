@@ -16,6 +16,7 @@ import se.ryttargardskyrkan.rosette.exception.ValidationException;
 import se.ryttargardskyrkan.rosette.model.Booking;
 import se.ryttargardskyrkan.rosette.model.Poster;
 import se.ryttargardskyrkan.rosette.model.ValidationError;
+import se.ryttargardskyrkan.rosette.model.event.Event;
 
 @Service
 public class SecurityService {
@@ -51,15 +52,18 @@ public class SecurityService {
 		}
 	}
     
-	// TODO: I very ugly method. Fix with annotaions? http://stackoverflow.com/a/4454783
+	// TODO: I very ugly method. Fix with annotations? http://stackoverflow.com/a/4454783
 	public void checkNotReferenced(final String id, final String permissionType) {
 		if (permissionType == "locations") {
-			if (mongoTemplate.exists(Query.query(Criteria.where("location.idRef").is(id)), Booking.class)) {
-				throw new SimpleValidationException(new ValidationError("location.idRef", "booking.isReferencedBy"));
+			if (mongoTemplate.exists(Query.query(Criteria.where("location.id").is(id)), Booking.class)) {
+				throw new SimpleValidationException(new ValidationError("location.id", "booking.isReferencedBy"));
+			}
+			if (mongoTemplate.exists(Query.query(Criteria.where("location.id").is(id)), Event.class)) {
+				throw new SimpleValidationException(new ValidationError("location.id", "event.isReferencedBy"));
 			}
 		} else if (permissionType == "uploads") {
-			if (mongoTemplate.exists(Query.query(Criteria.where("image.idRef").is(id)), Poster.class)) {
-				throw new SimpleValidationException(new ValidationError("image.idRef", "poster.isReferencedBy"));
+			if (mongoTemplate.exists(Query.query(Criteria.where("image.id").is(id)), Poster.class)) {
+				throw new SimpleValidationException(new ValidationError("image.id", "poster.isReferencedBy"));
 			}
 		}
 	}

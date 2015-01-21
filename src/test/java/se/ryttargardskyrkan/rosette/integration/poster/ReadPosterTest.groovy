@@ -8,6 +8,7 @@ import org.junit.Test
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Poster
+import se.ryttargardskyrkan.rosette.model.UploadResponse
 import com.mongodb.util.JSON
 
 public class ReadPosterTest extends AbstractIntegrationTest {
@@ -16,8 +17,8 @@ public class ReadPosterTest extends AbstractIntegrationTest {
 	public void readPosterWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:posters", "read:uploads:posters"])
-		def uploadItem = givenUploadInFolder("posters", validPNGImage)
+		givenPermissionForUser(user1, ["read:posters"])
+		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)
 		
@@ -35,19 +36,7 @@ public class ReadPosterTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
 			"duration" : 15,
-			"image" : {
-				"idRef" : "${ uploadItem['id'] }",
-				"referredObject" : {
-					"id" : "${ uploadItem['id'] }",
-					"fileName" : "image.png",
-					"folderName" : "posters",
-					"fileUrl" : "http://localhost:9000/api/v1-snapshot/assets/posters/image.png",
-					"mimeType" : "image/png",
-					"fileSize" : 1047,
-					"width" : 16,
-					"height" : 16
-				}
-			}
+			"image" : ${ toJSON(uploadItem) }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		thenItemsInDatabaseIs(Poster.class, 2)

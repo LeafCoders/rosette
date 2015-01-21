@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import se.ryttargardskyrkan.rosette.exception.NotFoundException;
 import se.ryttargardskyrkan.rosette.exception.SimpleValidationException;
@@ -42,6 +41,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	@Override
 	public T create(T data, HttpServletResponse response) {
 		checkPermission("create");
+		insertDependencies(data);
 		security.validate(data);
 		mongoTemplate.insert(data);
 		response.setStatus(HttpStatus.CREATED.value());
@@ -51,10 +51,10 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	@Override
 	public T read(String id) {
         T data = readNoDep(id);
-        insertDependencies(data);
 		return data;
 	}
 
+	// TODO: Remove this function. We dont need it now when all resources already has its dependencies stored in db
 	public T readNoDep(String id) {
 		checkPermission("read", id);
         T data = mongoTemplate.findById(id, entityClass);
@@ -71,7 +71,6 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		if (dataInDatabase != null) {
 			for (T data : dataInDatabase) {
 				if (security.isPermitted("read:" + permissionType + ":" + data.getId())) {
-			        insertDependencies(data);
 					result.add(data);
 				}
 			}
@@ -80,16 +79,19 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 
 	@Override
-	public void update(String id, T data, Update update, HttpServletResponse response) {
+	public void update(String id, T updateData, HttpServletResponse response) {
 		checkPermission("update", id);
-		security.validate(data);
-
-		if (mongoTemplate.updateFirst(getIdQuery(id), update, entityClass).getN() == 0) {
+		T dataInDbToUpdate = read(id);
+		if (dataInDbToUpdate == null) {
 			throw new NotFoundException();
 		}
+		insertDependencies(updateData);
+		dataInDbToUpdate.update(updateData);
+		security.validate(dataInDbToUpdate);
+		mongoTemplate.save(dataInDbToUpdate);
 		response.setStatus(HttpStatus.OK.value());
 	}
-
+	
 	@Override
 	public void delete(String id, HttpServletResponse response) {
 		checkPermission("delete", id);

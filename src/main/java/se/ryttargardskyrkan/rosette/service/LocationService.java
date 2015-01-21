@@ -10,6 +10,9 @@ import se.ryttargardskyrkan.rosette.model.UploadFolder;
 public class LocationService extends MongoTemplateCRUD<Location> {
 
 	@Autowired
+	private UploadService uploadService;
+
+	@Autowired
 	public LocationService(UploadFolderService uploadFolderService) {
 		super("locations", Location.class);
 
@@ -23,5 +26,8 @@ public class LocationService extends MongoTemplateCRUD<Location> {
 
 	@Override
 	public void insertDependencies(Location data) {
+		if (data.getDirectionImage() != null) {
+			data.setDirectionImage(uploadService.read(data.getDirectionImage().getId()));
+		}
 	}
 }

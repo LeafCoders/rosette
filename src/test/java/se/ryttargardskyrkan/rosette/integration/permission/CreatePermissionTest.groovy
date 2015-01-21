@@ -16,13 +16,13 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 	public void createPermissionWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		String userPermissionId = givenPermissionForUser(user1, ["create:permissions"])
+		String userPermissionId = givenPermissionForUser(user1, ["create:permissions", "read:users", "read:groups"])
 		givenGroup(group1)
 		
         // When
 		String postUrl = "/permissions"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"group" : { "idRef" : "${ group1.id }" },
+			"group" : ${ toJSON(group1) },
 			"patterns" : ["*:events"]
 		}""")
 
@@ -34,7 +34,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"everyone" : null,
 			"user" : null,
-			"group" : { "idRef" : "${ group1.id }", "referredObject" : null },
+			"group" : ${ toJSON(group1) },
 			"patterns" : ["*:events"]
 		}"""
 		thenResponseDataIs(responseBody, expectedResponseData)
@@ -44,15 +44,15 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 			{
 				"id" : "${ userPermissionId }",
 				"everyone" : null,
-				"user" : { "idRef" : "${ user1.id }", "referredObject" : null },
+				"user" : ${ toJSON(user1) },
 				"group" : null,
-				"patterns" : ["create:permissions"]
+				"patterns" : ["create:permissions", "read:users", "read:groups"]
 			},
 			{
 				"id" : "${ JSON.parse(responseBody)['id'] }",
 				"everyone" : null,
 				"user" : null,
-				"group" : { "idRef" : "${ group1.id }", "referredObject" : null },
+				"group" : ${ toJSON(group1) },
 				"patterns" : ["*:events"]
 			}
 		]"""
@@ -64,7 +64,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 	public void failCreatePermissionWhenInvalidContent() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		String userPermissionId = givenPermissionForUser(user1, ["create:permissions"])
+		String userPermissionId = givenPermissionForUser(user1, ["create:permissions", "read:users", "read:groups"])
 		givenGroup(group1)
 		
         // When
@@ -80,7 +80,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
         // When
 		postResponse = whenPost(postUrl, user1, """{
 			"everyone" : "true",
-			"user" : { "idRef" : "${ user1.id }",
+			"user" : ${ toJSON(user1) },
 			"patterns" : ["*:events"]
 		}""")
 
@@ -90,8 +90,8 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 		
 		// When
 		postResponse = whenPost(postUrl, user1, """{
-			"user" : { "idRef" : "${ user1.id }",
-			"group" : { "idRef" : "${ group1.id }",
+			"user" : ${ toJSON(user1) },
+			"group" : ${ toJSON(group1) },
 			"patterns" : ["*:events"]
 		}""")
 

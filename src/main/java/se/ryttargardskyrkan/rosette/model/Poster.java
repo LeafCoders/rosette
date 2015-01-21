@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.ryttargardskyrkan.rosette.validator.HasIdRef;
+import se.ryttargardskyrkan.rosette.validator.HasRef;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -36,11 +36,31 @@ public class Poster extends IdBasedModel {
 
 	// Number of seconds to display poster in "slide show"
 	@Min(value = 1, message = "poster.duration.tooShort")
-	private int duration;
+	private Integer duration;
 
-	@HasIdRef(message = "poster.image.mustBeSet")
-	private ObjectReference<UploadResponse> image;
+	@HasRef(message = "poster.image.mustBeSet")
+	private UploadResponse image;
 
+	@Override
+	public void update(BaseModel updateFrom) {
+		Poster posterUpdate = (Poster) updateFrom;
+		if (posterUpdate.getTitle() != null) {
+			setTitle(posterUpdate.getTitle());
+		}
+		if (posterUpdate.getStartTime() != null) {
+			setStartTime(posterUpdate.getStartTime());
+		}
+		if (posterUpdate.getEndTime() != null) {
+			setEndTime(posterUpdate.getEndTime());
+		}
+		if (posterUpdate.getDuration() != null) {
+			setDuration(posterUpdate.getDuration());
+		}
+		if (posterUpdate.getImage() != null) {
+			setImage(posterUpdate.getImage());
+		}
+	}
+	
 	// Getters and setters
 
 	public String getTitle() {
@@ -67,19 +87,19 @@ public class Poster extends IdBasedModel {
 		this.endTime = endTime;
 	}
 
-	public int getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
-    public ObjectReference<UploadResponse> getImage() {
+    public UploadResponse getImage() {
         return image;
     }
 
-    public void setImage(ObjectReference<UploadResponse> image) {
+    public void setImage(UploadResponse image) {
         this.image = image;
     }
 }

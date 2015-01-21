@@ -2,7 +2,6 @@ package se.ryttargardskyrkan.rosette.integration
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
-import java.util.List;
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
@@ -48,7 +47,7 @@ abstract class AbstractIntegrationTest {
 	static void beforeClass() throws UnknownHostException, MongoException {
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")
 		gridFsTemplate = new GridFsTemplate(mongoTemplate.mongoDbFactory, mongoTemplate.converter)
-		mapper = new ObjectMapper()		
+		mapper = new ObjectMapper()
 	}
 	
 	@Before
@@ -145,8 +144,7 @@ abstract class AbstractIntegrationTest {
 		username : "usertestupload",
 		firstName : "User",
 		lastName : "Test Upload",
-		hashedPassword : "${hashedPassword}",
-		status : "active"
+		hashedPassword : "${hashedPassword}"
 	)
 	protected final User user1 = new User(
 		id : getObjectId(),
@@ -154,8 +152,7 @@ abstract class AbstractIntegrationTest {
 		firstName : "User",
 		lastName : "One",
 		email : "u1@ser.se",
-		hashedPassword : hashedPassword,
-		status : "active"
+		hashedPassword : hashedPassword
 	)
 	protected final User user2 = new User(
 		id : getObjectId(),
@@ -163,8 +160,7 @@ abstract class AbstractIntegrationTest {
 		firstName : "User",
 		lastName : "Two",
 		email : "u2@ser.se",
-		hashedPassword : hashedPassword,
-		status : "active"
+		hashedPassword : hashedPassword
 	)
 	protected final SignupUser signupUser1 = new SignupUser(
 		id : getObjectId(),
@@ -176,11 +172,11 @@ abstract class AbstractIntegrationTest {
 		hashedPassword : hashedPassword
 	)
 	protected final Group group1 = new Group(
-		id : getObjectId(),
+		id : "adminsGroup",
 		name : "Admins"
 	)
 	protected final Group group2 = new Group(
-		id : getObjectId(),
+		id : "usersGroup",
 		name : "Users"
 	)
 
@@ -202,7 +198,7 @@ abstract class AbstractIntegrationTest {
 		customerName : "Scan",
 		startTime : TestUtil.modelDate("2012-03-25 11:00 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
-		location : new ObjectReferenceOrText<Location>(idRef: location1.id)
+		location : new ObjectReferenceOrText<Location>(ref: location1)
 	)
 	protected final Booking booking2 = new Booking(
 		id : getObjectId(),
@@ -248,7 +244,7 @@ abstract class AbstractIntegrationTest {
 		description : "Description here",
 		multiSelect : false,
 		allowText : false,
-		group : new ObjectReference<Group>(idRef: group1.id)
+		group : group1
 	)
 	protected final UserResourceType userResourceTypeMultiAndText = new UserResourceType(
 		type : 'user',
@@ -258,7 +254,7 @@ abstract class AbstractIntegrationTest {
 		description : "Description here",
 		multiSelect : true,
 		allowText : true,
-		group : new ObjectReference<Group>(idRef: group1.id)
+		group : group1
 	)
 	protected final UploadResourceType uploadResourceTypeSingle = new UploadResourceType(
 		type : 'upload',
@@ -284,46 +280,40 @@ abstract class AbstractIntegrationTest {
 		name : "EventType 1",
 		description : "Description...",
 		showOnPalmate : true,
-		resourceTypes : [
-			new ObjectReference<UserResourceType>(idRef: userResourceTypeSingle.id),
-			new ObjectReference<UploadResourceType>(idRef: uploadResourceTypeSingle.id)
-		]
+		resourceTypes : [ userResourceTypeSingle, uploadResourceTypeSingle ]
 	)
 	protected final EventType eventType2 = new EventType(
 		id : "groups",
 		name : "EventType 2",
 		description : "Description...",
 		showOnPalmate : false,
-		resourceTypes : [
-			new ObjectReference<UserResourceType>(idRef: userResourceTypeMultiAndText.id),
-			new ObjectReference<UploadResourceType>(idRef: uploadResourceTypeMulti.id)
-		]
+		resourceTypes : [ userResourceTypeMultiAndText, uploadResourceTypeMulti ]
 	)
 
 	protected final Event event1 = new Event(
 		id : getObjectId(),
-		eventType : new ObjectReference<EventType>(idRef: eventType1.id),
+		eventType : eventType1,
 		title : "An event",
 		startTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2012-03-26 12:00 Europe/Stockholm"),
 		description : "Description...",
-		location : new ObjectReferenceOrText<Location>(idRef: location1.id),
+		location : new ObjectReferenceOrText<Location>(ref: location1),
 		resources : [
 			new UserResource(
 				type : "user",
-				resourceType : new ObjectReference<ResourceType>(idRef: userResourceTypeSingle.id), 
-				users : new ObjectReferencesAndText<User>(refs: [new ObjectReference<User>(idRef: user1.id)])
+				resourceType : userResourceTypeSingle, 
+				users : new ObjectReferencesAndText<User>(refs: [ user1 ])
 			),
 			new UploadResource(
 				type : "upload",
-				resourceType : new ObjectReference<ResourceType>(idRef: uploadResourceTypeSingle.id), 
-				uploads : new ArrayList<ObjectReference<UploadResponse>>()
+				resourceType : uploadResourceTypeSingle, 
+				uploads : new ArrayList<UploadResponse>()
 			)
 		]
 	)
 	protected final Event event2 = new Event(
 		id : getObjectId(),
-		eventType : new ObjectReference<EventType>(idRef: eventType1.id),
+		eventType : eventType1,
 		title : "Another event",
 		startTime : TestUtil.modelDate("2014-10-05 18:30 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2014-10-05 20:00 Europe/Stockholm"),
@@ -332,13 +322,13 @@ abstract class AbstractIntegrationTest {
 		resources : [
 			new UserResource(
 				type : "user",
-				resourceType : new ObjectReference<ResourceType>(idRef: userResourceTypeMultiAndText.id), 
-				users : new ObjectReferencesAndText<User>(refs: [new ObjectReference<User>(idRef: user1.id)])
+				resourceType : userResourceTypeMultiAndText, 
+				users : new ObjectReferencesAndText<User>(refs: [ user1.id ])
 			),
 			new UploadResource(
 				type : "upload",
-				resourceType : new ObjectReference<ResourceType>(idRef: uploadResourceTypeMulti.id), 
-				uploads : new ArrayList<ObjectReference<UploadResponse>>()
+				resourceType : uploadResourceTypeMulti, 
+				uploads : new ArrayList<UploadResponse>()
 			)
 		]
 	)
@@ -367,7 +357,7 @@ abstract class AbstractIntegrationTest {
 		String permissionId = getObjectId()
 		mongoTemplate.insert(new Permission(
 			id : permissionId,
-			user : new ObjectReference<User>(idRef: user.id),
+			user : user,
 			patterns : permissions.collect { it.toString() } // Convert GString to String
 		))
 		return permissionId
@@ -376,7 +366,7 @@ abstract class AbstractIntegrationTest {
 		String permissionId = getObjectId()
 		mongoTemplate.insert(new Permission(
 			id : permissionId,
-			group : new ObjectReference<Group>(idRef: group.id),
+			group : group,
 			patterns : permissions.collect { it.toString() } // Convert GString to String
 		))
 		return permissionId
@@ -387,13 +377,13 @@ abstract class AbstractIntegrationTest {
 	}
 
 	protected String givenGroupMembership(User user, Group group) {
-		String id = getObjectId()
-		mongoTemplate.getCollection("groupMemberships").insert(JSON.parse("""[{
-			"_id" : "${id}",
-			"user" : { "idRef": "${user.id}" },
-			"group" : { "idRef": "${group.id}" }
-		}]"""))
-		return id
+		String groupMembershipId = getObjectId()
+		mongoTemplate.insert(new GroupMembership(
+			id : groupMembershipId,
+			user : user,
+			group : group
+		))
+		return groupMembershipId
 	}
 
 	protected void givenResourceType(ResourceType resourceType) {
@@ -416,18 +406,18 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(booking)
 	}
 
-	protected void givenPoster(Poster poster, def upload) {
-		poster.image = new ObjectReference<UploadResponse>(idRef: upload['id'])
+	protected void givenPoster(Poster poster, UploadResponse upload) {
+		poster.image = upload
 		mongoTemplate.insert(poster)
 	}
 	
-	protected Object givenUploadInFolder(String folder, UploadRequest upload) {
+	protected UploadResponse givenUploadInFolder(String folder, UploadRequest upload) {
 		createTestUploadUser()
         String postUrl = "/uploads/" + folder
-		String postContent = new ObjectMapper().writeValueAsString(upload)
+		String postContent = mapper.writeValueAsString(upload)
 		HttpResponse postResponse = whenPost(postUrl, userTestUpload, postContent)
 		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
-		Object responseObj = JSON.parse(responseBody)
+		UploadResponse responseObj = (UploadResponse) JSON.parse(responseBody)
 		releasePostRequest()
 		return responseObj 
 	}
@@ -497,7 +487,7 @@ abstract class AbstractIntegrationTest {
 
 	protected void thenDataInDatabaseIs(Class entityClass, String expectedBody) {
 		List<Object> inDatabase = mongoTemplate.findAll(entityClass)
-		TestUtil.assertJsonEquals(expectedBody, new ObjectMapper().writeValueAsString(inDatabase))
+		TestUtil.assertJsonEquals(expectedBody, mapper.writeValueAsString(inDatabase))
 	}
 
 	protected void thenItemsInDatabaseIs(Class entityClass, Long count) {
@@ -517,5 +507,9 @@ abstract class AbstractIntegrationTest {
 		HttpResponse assetsResponse = whenGet(fileUrl, userTestUpload, false)
 		assertEquals(HttpServletResponse.SC_NOT_FOUND, assetsResponse.getStatusLine().getStatusCode())
 		releaseGetRequest()
+	}
+	
+	protected String toJSON(Object data) {
+		return mapper.writeValueAsString(data);
 	}
 }

@@ -3,7 +3,6 @@ package se.ryttargardskyrkan.rosette.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.model.Location;
@@ -36,11 +35,7 @@ public class LocationController extends AbstractController {
 
 	@RequestMapping(value = "locations/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putLocation(@PathVariable String id, @RequestBody Location location, HttpServletResponse response) {
-		Update update = new Update();
-		update.set("name", location.getName());
-		update.set("description", location.getDescription());
-		update.set("directionImage", location.getDirectionImage());
-		locationService.update(id, location, update, response);
+		locationService.update(id, location, response);
 	}
 
 	@RequestMapping(value = "locations/{id}", method = RequestMethod.DELETE, produces = "application/json")

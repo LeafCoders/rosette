@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +32,8 @@ public class PermissionController extends AbstractController {
 	@ResponseBody
 	public List<Permission> getPermissions(HttpServletResponse response) {
 		Query query = new Query().with(new Sort(
-				new Sort.Order(Sort.Direction.ASC, "group.idRef"),
-				new Sort.Order(Sort.Direction.ASC, "user.idRef")));
+				new Sort.Order(Sort.Direction.ASC, "group.id"),
+				new Sort.Order(Sort.Direction.ASC, "user.id")));
 		return permissionService.readMany(query);
 	}
 
@@ -46,12 +45,7 @@ public class PermissionController extends AbstractController {
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putPermission(@PathVariable String id, @RequestBody Permission permission, HttpServletResponse response) {
-		Update update = new Update();
-		if (permission.getPatterns() != null) {
-			update.set("patterns", permission.getPatterns());
-		}
-
-		permissionService.update(id, permission, update, response);
+		permissionService.update(id, permission, response);
 	}
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.DELETE, produces = "application/json")

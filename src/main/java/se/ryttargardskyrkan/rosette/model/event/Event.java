@@ -11,21 +11,21 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.ryttargardskyrkan.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.ryttargardskyrkan.rosette.model.BaseModel;
 import se.ryttargardskyrkan.rosette.model.EventType;
 import se.ryttargardskyrkan.rosette.model.IdBasedModel;
 import se.ryttargardskyrkan.rosette.model.Location;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
 import se.ryttargardskyrkan.rosette.model.ObjectReferenceOrText;
 import se.ryttargardskyrkan.rosette.model.resource.Resource;
-import se.ryttargardskyrkan.rosette.validator.HasIdRef;
+import se.ryttargardskyrkan.rosette.validator.HasRef;
 
 @Document(collection = "events")
 @ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")
 public class Event extends IdBasedModel {
 
 	@Indexed
-	@HasIdRef(message = "event.eventType.notNull")
-    private ObjectReference<EventType> eventType;
+	@HasRef(message = "event.eventType.notNull")
+    private EventType eventType;
 
 	@NotEmpty(message = "event.title.notEmpty")
 	private String title;
@@ -45,10 +45,36 @@ public class Event extends IdBasedModel {
     private ObjectReferenceOrText<Location> location;
 
     private Boolean showOnPalmate;
-    
+
     @NotNull(message = "event.resources.notNull")
     private List<Resource> resources;
 	
+	@Override
+	public void update(BaseModel updateFrom) {
+		Event eventUpdate = (Event) updateFrom;
+		if (eventUpdate.getTitle() != null) {
+			setTitle(eventUpdate.getTitle());
+		}
+		if (eventUpdate.getStartTime() != null) {
+			setStartTime(eventUpdate.getStartTime());
+		}
+		if (eventUpdate.getEndTime() != null) {
+			setEndTime(eventUpdate.getEndTime());
+		}
+		if (eventUpdate.getDescription() != null) {
+			setDescription(eventUpdate.getDescription());
+		}
+		if (eventUpdate.getLocation() != null) {
+			setLocation(eventUpdate.getLocation());
+		}
+		if (eventUpdate.getShowOnPalmate() != null) {
+			setShowOnPalmate(eventUpdate.getShowOnPalmate());
+		}
+		if (eventUpdate.getResources() != null) {
+			setResources(eventUpdate.getResources());
+		}
+	}
+
 	// Getters and setters
 
     public String getTitle() {
@@ -83,11 +109,11 @@ public class Event extends IdBasedModel {
 		this.description = description;
 	}
 
-    public ObjectReference<EventType> getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(ObjectReference<EventType> eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 

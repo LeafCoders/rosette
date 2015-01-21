@@ -1,13 +1,12 @@
 package se.ryttargardskyrkan.rosette.model.resource;
 
-import org.springframework.data.mongodb.core.query.Update;
+import se.ryttargardskyrkan.rosette.model.BaseModel;
 import se.ryttargardskyrkan.rosette.model.Group;
-import se.ryttargardskyrkan.rosette.model.ObjectReference;
-import se.ryttargardskyrkan.rosette.validator.HasIdRef;
+import se.ryttargardskyrkan.rosette.validator.HasRef;
 
 public class UserResourceType extends ResourceType {
-	@HasIdRef(message = "userResorceType.group.mustBeSet")
-    private ObjectReference<Group> group;
+	@HasRef
+    private Group group;
 
 	private Boolean multiSelect;
 	private Boolean allowText;
@@ -19,20 +18,27 @@ public class UserResourceType extends ResourceType {
     }
 
     @Override
-	public Update addToUpdateQuery(Update update) {
-		update.set("group", group);
-		update.set("multiSelect", multiSelect);
-		update.set("allowText", allowText);
-		return super.addToUpdateQuery(update);
-	}
-	
+	public void update(BaseModel updateFrom) {
+    	UserResourceType resourceTypeUpdate = (UserResourceType) updateFrom;
+    	if (resourceTypeUpdate.getGroup() != null) {
+    		setGroup(resourceTypeUpdate.getGroup());
+    	}
+    	if (resourceTypeUpdate.getMultiSelect() != null) {
+    		setMultiSelect(resourceTypeUpdate.getMultiSelect());
+    	}
+    	if (resourceTypeUpdate.getAllowText() != null) {
+    		setAllowText(resourceTypeUpdate.getAllowText());
+    	}
+    	super.update(updateFrom);
+    }
+
     // Getters and setters
 
-    public ObjectReference<Group> getGroup() {
+    public Group getGroup() {
         return group;
     }
 
-    public void setGroup(ObjectReference<Group> group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 

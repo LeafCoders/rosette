@@ -1,7 +1,6 @@
 package se.ryttargardskyrkan.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.comparator.PosterComparator;
@@ -38,14 +37,7 @@ public class PosterController extends AbstractController {
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putPoster(@PathVariable String id, @RequestBody Poster poster, HttpServletResponse response) {
-		Update update = new Update();
-		update.set("title", poster.getTitle());
-		update.set("startTime", poster.getStartTime());
-		update.set("endTime", poster.getEndTime());
-		update.set("duration", poster.getDuration());
-		update.set("image", poster.getImage());
-
-		posterService.update(id, poster, update, response);
+		posterService.update(id, poster, response);
 	}
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.DELETE, produces = "application/json")

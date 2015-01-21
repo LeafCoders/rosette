@@ -20,7 +20,7 @@ public class ReadGroupMembershipsByGroupIdTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["read:groupMemberships", "read:users", "read:groups"])
+		givenPermissionForUser(user1, ["read:groupMemberships"])
 		givenGroup(group1)
 		givenGroup(group2)
 		String groupMembId1 = givenGroupMembership(user1, group1)
@@ -36,27 +36,8 @@ public class ReadGroupMembershipsByGroupIdTest extends AbstractIntegrationTest {
 
 		String expectedData = """[{
 			"id" : "${groupMembId2}",
-			"user" : {
-				"idRef": "${user2.id}",
-				"referredObject": {
-					"id": "${user2.id}",
-					"username" : "user2",
-					"firstName" : "User",
-					"lastName" : "Two",
-					"fullName" : "User Two",
-					"email" : "u2@ser.se",
-					"password" : null,
-					"status" : "active"
-				}
-			},
-			"group" : {
-				"idRef": "${group2.id}",
-				"referredObject": {
-					"id": "${group2.id}",
-					"name": "Users",
-					"description": null
-				}
-			}
+			"user" : ${ toJSON(user2) },
+			"group" : ${ toJSON(group2) }
 		}]"""
 		thenResponseDataIs(responseBody, expectedData)
 	}

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.ryttargardskyrkan.rosette.model.*;
@@ -28,9 +27,9 @@ public class GroupMembershipController extends AbstractController {
 	@ResponseBody
 	public List<GroupMembership> getGroupMemberships(@RequestParam(value = "groupId", required = false) String groupId, HttpServletRequest request, HttpServletResponse response) {
         Query query = new Query();
-        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "group.idRef")));
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "group.id")));
         if (groupId != null && !groupId.isEmpty()) {
-            query.addCriteria(Criteria.where("group.idRef").is(groupId));
+            query.addCriteria(Criteria.where("group.id").is(groupId));
         }
 		return groupMembershipService.readMany(query);
 	}
@@ -43,15 +42,7 @@ public class GroupMembershipController extends AbstractController {
 
     @RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public void putGroupMembership(@PathVariable String id, @RequestBody GroupMembership groupMembership, HttpServletResponse response) {
-    	Update update = new Update();
-        if (groupMembership.getGroup() != null) {
-            update.set("group", groupMembership.getGroup());
-        }
-        if (groupMembership.getUser() != null) {
-            update.set("user", groupMembership.getUser());
-        }
-
-		groupMembershipService.update(id, groupMembership, update, response);
+		groupMembershipService.update(id, groupMembership, response);
     }
 
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.DELETE, produces = "application/json")

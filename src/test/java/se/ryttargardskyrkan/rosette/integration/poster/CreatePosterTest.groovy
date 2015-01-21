@@ -9,6 +9,7 @@ import org.junit.Test
 import se.ryttargardskyrkan.rosette.integration.AbstractIntegrationTest
 import se.ryttargardskyrkan.rosette.integration.util.TestUtil
 import se.ryttargardskyrkan.rosette.model.Poster
+import se.ryttargardskyrkan.rosette.model.UploadResponse
 import com.mongodb.util.JSON
 
 public class CreatePosterTest extends AbstractIntegrationTest {
@@ -17,8 +18,8 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 	public void createPosterWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:posters"])
-		def uploadItem = givenUploadInFolder("posters", validPNGImage)
+		givenPermissionForUser(user1, ["create:posters", "read:posters", "read:uploads"])
+		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		
 		// When
 		String postUrl = "/posters"
@@ -27,7 +28,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
 			"duration" : 15,
-            "image" : { "idRef" : "${ uploadItem['id'] }" }
+            "image" : ${ toJSON(uploadItem) }
 		}""")
 
 		// Then
@@ -40,7 +41,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
 			"endTime" : "2012-03-26 11:00 Europe/Stockholm",
 			"duration" : 15,
-            "image" : { "idRef" : "${ uploadItem['id'] }", "referredObject" : null }
+            "image" : ${ toJSON(uploadItem) }
 		}"""
 
 		thenResponseDataIs(responseBody, expectedData)

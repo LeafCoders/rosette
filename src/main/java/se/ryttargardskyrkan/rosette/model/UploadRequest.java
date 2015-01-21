@@ -17,6 +17,20 @@ public class UploadRequest extends IdBasedModel {
     @NotNull(message = "upload.fileData.notNull")
 	private String fileData;
     
+	@Override
+	public void update(BaseModel updateFrom) {
+		UploadRequest uploadRequestUpdate = (UploadRequest) updateFrom;
+		if (uploadRequestUpdate.getFileName() != null) {
+			setFileName(uploadRequestUpdate.getFileName());
+		}
+		if (uploadRequestUpdate.getMimeType() != null) {
+			setMimeType(uploadRequestUpdate.getMimeType());
+		}
+		if (uploadRequestUpdate.getFileData() != null) {
+			setFileData(uploadRequestUpdate.getFileData());
+		}
+	}
+
 	// Getters and setters
 
 	public String getFileName() {

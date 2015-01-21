@@ -19,7 +19,7 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		givenGroup(group2)
 		givenResourceType(userResourceTypeSingle)
-		givenPermissionForUser(user1, ["update:resourceTypes:${userResourceTypeSingle.id}"])
+		givenPermissionForUser(user1, ["update:resourceTypes:${userResourceTypeSingle.id}", "read:resourceTypes", "read:groups"])
 
 		// When
 		String putUrl = "/resourceTypes/${userResourceTypeSingle.id}"
@@ -31,9 +31,7 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "users",
 			"multiSelect": true,
 			"allowText": true,
-			"group": {
-				"idRef": "${group2.id}"
-			}
+			"group": ${ toJSON(group2) }
 		}""")
 
 		// Then
@@ -46,39 +44,10 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 			"section" : "users",
 			"multiSelect": true,
 			"allowText": true,
-			"group": {
-				"idRef": "${group2.id}", "referredObject": null
-			}
+			"group": ${ toJSON(group2) }
 		}]"""
 		releasePutRequest()
 		thenDataInDatabaseIs(ResourceType.class, expectedData)
 		thenItemsInDatabaseIs(ResourceType.class, 1)
     }
-
-    @Test
-    public void failWhenUpdateToNoGroupReference() throws ClientProtocolException, IOException {
-		// Given
-		givenUser(user1)
-		givenPermissionForUser(user1, ["update:resourceTypes"])
-		givenGroup(group1)
-		givenResourceType(userResourceTypeSingle)
-
-		// When
-		String putUrl = "/resourceTypes/${userResourceTypeSingle.id}"
-		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"id": "${userResourceTypeSingle.id}",
-			"type" : "user",
-			"name": "UserResourceType Single",
-			"description": "Description here",
-			"multiSelect": false,
-			"allowText": false,
-			"group": {
-				"idRef": null
-			}
-		}""")
-
-		// Then
-		thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
-    }
-
 }
