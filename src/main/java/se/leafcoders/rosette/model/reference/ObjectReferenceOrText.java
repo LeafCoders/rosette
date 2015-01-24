@@ -1,4 +1,6 @@
-package se.leafcoders.rosette.model;
+package se.leafcoders.rosette.model.reference;
+
+import se.leafcoders.rosette.model.BaseModel;
 
 public class ObjectReferenceOrText<T extends BaseModel> {
     private T ref;

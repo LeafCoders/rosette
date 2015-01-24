@@ -23,6 +23,7 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.UploadRequest;
 import se.leafcoders.rosette.model.UploadResponse;
 import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.reference.UploadResponseRefs;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -112,7 +113,7 @@ public class UploadService {
 		}
 	}
 
-	public boolean containsUploads(String folder, List<UploadResponse> uploads) {
+	public boolean containsUploads(String folder, UploadResponseRefs uploads) {
 		List<String> uploadIdsInFolder = getFileIdsInFolder(folder);
 		for (UploadResponse upload : uploads) {
 			if (!uploadIdsInFolder.contains(upload.getId())) {

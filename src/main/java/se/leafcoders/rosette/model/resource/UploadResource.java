@@ -1,12 +1,11 @@
 package se.leafcoders.rosette.model.resource;
 
-import java.util.List;
 import javax.validation.constraints.NotNull;
-import se.leafcoders.rosette.model.UploadResponse;
+import se.leafcoders.rosette.model.reference.UploadResponseRefs;
 
 public class UploadResource extends Resource {
 	@NotNull(message = "uploadResource.uploads.notNull")
-    private List<UploadResponse> uploads;
+    private UploadResponseRefs uploads;
 
     // Constructors
 
@@ -16,11 +15,11 @@ public class UploadResource extends Resource {
 
     // Getters and setters
 
-	public List<UploadResponse> getUploads() {
+	public UploadResponseRefs getUploads() {
 		return uploads;
 	}
 
-	public void setUploads(List<UploadResponse> uploads) {
+	public void setUploads(UploadResponseRefs uploads) {
 		this.uploads = uploads;
 	}
 }

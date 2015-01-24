@@ -1,9 +1,9 @@
-package se.leafcoders.rosette.model;
+package se.leafcoders.rosette.model.reference;
 
-import java.util.List;
+import se.leafcoders.rosette.model.BaseModel;
 
-public class ObjectReferencesAndText<T> {
-    private List<T> refs;
+public class ObjectReferencesAndText<T extends BaseModel> {
+    private ObjectReferences<T> refs;
 
     private String text;
 
@@ -19,13 +19,17 @@ public class ObjectReferencesAndText<T> {
     	return (hasRefs() ? getRefs().size() : 0) + (hasText() ? 1 : 0);
     }
 
+    public boolean updateRef(T ref) {
+    	return refs.updateRef(ref);
+    }
+
     // Getters and setters
 
-	public List<T> getRefs() {
+	public ObjectReferences<T> getRefs() {
 		return refs;
 	}
 
-	public void setRefs(List<T> refs) {
+	public void setRefs(ObjectReferences<T> refs) {
 		this.refs = refs;
 	}
 

@@ -46,8 +46,8 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		        Criteria.where("id").is(eventId),
 		        Criteria.where("resources.resourceType.id").is(resourceTypeId)));		
 
-		ResourceType resourceType = resourceTypeService.readNoDep(resource.getResourceType().getId());
-		Update update = methodsService.of(resource).createAssignUpdate(resourceType);
+		ResourceType resourceTypeIn = resourceTypeService.read(resource.getResourceType().getId());
+		Update update = methodsService.of(resource).createAssignUpdate(resourceTypeIn);
 
 		if (mongoTemplate.updateFirst(query, update, Event.class).getN() == 0) {
 			throw new NotFoundException();

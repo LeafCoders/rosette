@@ -26,7 +26,8 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, [
 			"assign:resourceTypes:${ uploadResourceTypeMulti.id }",
 			"read:resourceTypes:${ uploadResourceTypeMulti.id }",
-			"read:events:${ event2.id }"
+			"read:events:${ event2.id }",
+			"read:uploads:posters"
 		])
 
 		// When
@@ -68,7 +69,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		// Then
 		String responseBody = thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
 		thenResponseDataIs(responseBody, """[
-			{ "property" : "resource", "message" : "uploadResource.assignedUploadNotInFolder" }
+			{ "property" : "resource", "message" : "uploadResource.uploadDoesNotExistInFolder" }
 		]""")
 	}
 

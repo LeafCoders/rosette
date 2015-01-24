@@ -14,8 +14,7 @@ import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.IdBasedModel;
-import se.leafcoders.rosette.model.Location;
-import se.leafcoders.rosette.model.ObjectReferenceOrText;
+import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.validator.HasRef;
 
@@ -42,7 +41,7 @@ public class Event extends IdBasedModel {
 
 	private String description;
 
-    private ObjectReferenceOrText<Location> location;
+    private LocationRefOrText location;
 
     private Boolean showOnPalmate;
 
@@ -117,11 +116,11 @@ public class Event extends IdBasedModel {
         this.eventType = eventType;
     }
 
-    public ObjectReferenceOrText<Location> getLocation() {
+    public LocationRefOrText getLocation() {
         return location;
     }
 
-    public void setLocation(ObjectReferenceOrText<Location> location) {
+    public void setLocation(LocationRefOrText location) {
         this.location = location;
     }
 

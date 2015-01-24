@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.validator;
 
-import se.leafcoders.rosette.model.ObjectReferenceOrText;
-
+import se.leafcoders.rosette.model.reference.ObjectReferenceOrText;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

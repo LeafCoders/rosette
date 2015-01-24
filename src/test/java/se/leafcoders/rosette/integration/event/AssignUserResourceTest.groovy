@@ -24,7 +24,8 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, [
 			"assign:resourceTypes:${ userResourceTypeMultiAndText.id }",
 			"read:resourceTypes:${ userResourceTypeMultiAndText.id }",
-			"read:events:${ event2.id }"
+			"read:events:${ event2.id }",
+			"read:users"
 		])
 
 		// When
@@ -72,7 +73,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		// Then
 		String responseBody = thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
 		thenResponseDataIs(responseBody, """[
-			{ "property" : "resource", "message" : "userResource.assignedUserNotInGroup" }
+			{ "property" : "resource", "message" : "userResource.userDoesNotExistInGroup" }
 		]""")
 	}
 	

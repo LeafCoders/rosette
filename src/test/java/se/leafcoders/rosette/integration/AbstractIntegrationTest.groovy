@@ -23,6 +23,10 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.*
 import se.leafcoders.rosette.model.event.Event
+import se.leafcoders.rosette.model.reference.LocationRefOrText
+import se.leafcoders.rosette.model.reference.ObjectReferences
+import se.leafcoders.rosette.model.reference.UploadResponseRefs
+import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
 import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.Mongo
@@ -198,14 +202,14 @@ abstract class AbstractIntegrationTest {
 		customerName : "Scan",
 		startTime : TestUtil.modelDate("2012-03-25 11:00 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
-		location : new ObjectReferenceOrText<Location>(ref: location1)
+		location : new LocationRefOrText(ref: location1)
 	)
 	protected final Booking booking2 = new Booking(
 		id : getObjectId(),
 		customerName : "Arla",
 		startTime : TestUtil.modelDate("2014-01-21 11:00 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2014-01-22 12:00 Europe/Stockholm"),
-		location : new ObjectReferenceOrText<Location>(text: "A location")
+		location : new LocationRefOrText(text: "A location")
 	)
 
 	protected final Poster poster1 = new Poster(
@@ -297,17 +301,17 @@ abstract class AbstractIntegrationTest {
 		startTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2012-03-26 12:00 Europe/Stockholm"),
 		description : "Description...",
-		location : new ObjectReferenceOrText<Location>(ref: location1),
+		location : new LocationRefOrText(ref: location1),
 		resources : [
 			new UserResource(
 				type : "user",
 				resourceType : userResourceTypeSingle, 
-				users : new ObjectReferencesAndText<User>(refs: [ user1 ])
+				users : new UserRefsAndText(refs: [ user1 ] as ObjectReferences<User>)
 			),
 			new UploadResource(
 				type : "upload",
 				resourceType : uploadResourceTypeSingle, 
-				uploads : new ArrayList<UploadResponse>()
+				uploads : new UploadResponseRefs()
 			)
 		]
 	)
@@ -323,12 +327,12 @@ abstract class AbstractIntegrationTest {
 			new UserResource(
 				type : "user",
 				resourceType : userResourceTypeMultiAndText, 
-				users : new ObjectReferencesAndText<User>(refs: [ user1.id ])
+				users : new UserRefsAndText(refs: [ user1 ] as ObjectReferences<User>)
 			),
 			new UploadResource(
 				type : "upload",
 				resourceType : uploadResourceTypeMulti, 
-				uploads : new ArrayList<UploadResponse>()
+				uploads : new UploadResponseRefs()
 			)
 		]
 	)

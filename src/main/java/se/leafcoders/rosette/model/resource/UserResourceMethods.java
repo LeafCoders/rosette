@@ -2,7 +2,6 @@ package se.leafcoders.rosette.model.resource;
 
 import org.springframework.data.mongodb.core.query.Update;
 import se.leafcoders.rosette.exception.SimpleValidationException;
-import se.leafcoders.rosette.model.ObjectReferencesAndText;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.ValidationError;
 import se.leafcoders.rosette.service.GroupService;
@@ -19,33 +18,39 @@ public class UserResourceMethods implements ResourceMethods {
 		this.groupService = groupService;
 	}
 
-	public Update createAssignUpdate(ResourceType resourceType) {
-		if (resourceType instanceof UserResourceType) {
-			UserResourceType userResourceType = (UserResourceType) resourceType;
+	public Update createAssignUpdate(ResourceType resourceTypeIn) {
+		validateAndUpdate(resourceTypeIn);
+		return new Update().set("resources.$.users", resource.getUsers());
+	}
 
-			int numUsers = resource.getUsers().totalNumRefsAndText();
-			if (!userResourceType.getMultiSelect() && numUsers > 1) {
-				throw new SimpleValidationException(new ValidationError("resource", "userResource.multiUsersNotAllowed"));
-			}
+	public void insertDependencies() {
+		validateAndUpdate(resource.getResourceType());
+	}
 
-			if (!userResourceType.getAllowText() && resource.getUsers().hasText()) {
-				throw new SimpleValidationException(new ValidationError("resource", "userResource.userByTextNotAllowed"));
-			}
-			
-			String groupId = userResourceType.getGroup().getId();
-			if (resource.getUsers() != null && groupService.containsUsers(groupId, resource.getUsers().getRefs())) {
-				return new Update().set("resources.$.users", resource.getUsers());
-			}
+	private void validateAndUpdate(ResourceType resourceType) {
+		if (!(resource.getResourceType() instanceof UserResourceType)) {
+			throw new SimpleValidationException(new ValidationError("resource", "userResource.wrongResourceType"));
 		}
-		throw new SimpleValidationException(new ValidationError("resource", "userResource.assignedUserNotInGroup"));
+		
+		UserResourceType userResourceType = (UserResourceType) resource.getResourceType();
+
+		int numUsers = resource.getUsers().totalNumRefsAndText();
+		if (!userResourceType.getMultiSelect() && numUsers > 1) {
+			throw new SimpleValidationException(new ValidationError("resource", "userResource.multiUsersNotAllowed"));
+		}
+
+		if (!userResourceType.getAllowText() && resource.getUsers().hasText()) {
+			throw new SimpleValidationException(new ValidationError("resource", "userResource.userByTextNotAllowed"));
+		}
+		
+		String groupId = userResourceType.getGroup().getId();
+		if (resource.getUsers().hasRefs() && !groupService.containsUsers(groupId, resource.getUsers().getRefs())) {
+			throw new SimpleValidationException(new ValidationError("resource", "userResource.userDoesNotExistInGroup"));
+		}
+
+		for (User user : resource.getUsers().getRefs()) {
+			resource.getUsers().updateRef(userService.read(user.getId()));
+		}
 	}
 	
-	public void insertDependencies() {
-		final ObjectReferencesAndText<User> users = resource.getUsers();
-		if (users != null && users.hasRefs()) {
-			for (User userRef : users.getRefs()) {
-				userRef = userService.read(userRef.getId());
-			}
-		}
-	}
 }

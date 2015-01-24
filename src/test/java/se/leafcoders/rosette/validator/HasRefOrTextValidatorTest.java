@@ -2,8 +2,7 @@ package se.leafcoders.rosette.validator;
 
 import org.junit.Test;
 import se.leafcoders.rosette.model.Location;
-import se.leafcoders.rosette.model.ObjectReferenceOrText;
-
+import se.leafcoders.rosette.model.reference.ObjectReferenceOrText;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

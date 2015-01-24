@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.model.resource;
 
-import java.util.List;
 import org.springframework.data.mongodb.core.query.Update;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.UploadResponse;
@@ -16,28 +15,33 @@ public class UploadResourceMethods implements ResourceMethods {
 		this.uploadService = uploadService;
 	}
 
-	public Update createAssignUpdate(ResourceType resourceType) {
-		if (resourceType instanceof UploadResourceType) {
-			UploadResourceType uploadResourceType = (UploadResourceType) resourceType;
-			
-			if (!uploadResourceType.getMultiSelect() && resource.getUploads().size() > 1) {
-				throw new SimpleValidationException(new ValidationError("resource", "uploadResource.multiUploadsNotAllowed"));
-			}
-			
-			String folder = uploadResourceType.getFolderName();
-			if (uploadService.containsUploads(folder, resource.getUploads())) {
-				return new Update().set("resources.$.uploads", resource.getUploads());
-			}
-		}
-		throw new SimpleValidationException(new ValidationError("resource", "uploadResource.assignedUploadNotInFolder"));
+	public Update createAssignUpdate(ResourceType resourceTypeIn) {
+		validateAndUpdate(resourceTypeIn);
+		return new Update().set("resources.$.uploads", resource.getUploads());
 	}
 
 	public void insertDependencies() {
-		final List<UploadResponse> uploads = resource.getUploads();
-		if (uploads != null) {
-			for (UploadResponse upload : uploads) {
-				upload = uploadService.read(upload.getId());
-			}
+		validateAndUpdate(resource.getResourceType());
+	}
+
+	private void validateAndUpdate(ResourceType resourceType) {
+		if (!(resource.getResourceType() instanceof UploadResourceType)) {
+			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.wrongResourceType"));
+		}
+
+		UploadResourceType uploadResourceType = (UploadResourceType) resource.getResourceType();
+		
+		if (!uploadResourceType.getMultiSelect() && resource.getUploads().size() > 1) {
+			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.multiUploadsNotAllowed"));
+		}
+		
+		String folder = uploadResourceType.getFolderName();
+		if (resource.getUploads().hasRefs() && !uploadService.containsUploads(folder, resource.getUploads())) {
+			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.uploadDoesNotExistInFolder"));
+		}
+		
+		for (UploadResponse upload : resource.getUploads()) {
+			resource.getUploads().updateRef(uploadService.read(upload.getId()));
 		}
 	}
 }

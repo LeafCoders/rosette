@@ -18,6 +18,8 @@ public class DeleteEventTest extends AbstractIntegrationTest {
 		givenEventType(eventType1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
+		givenResourceType(userResourceTypeMultiAndText)
+		givenResourceType(uploadResourceTypeMulti)
 		givenEvent(event1)
 		givenEvent(event2)
 		
