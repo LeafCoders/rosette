@@ -1,22 +1,22 @@
 package se.leafcoders.rosette.application;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 
+@Profile("!production")
 @Configuration
 @EnableMongoAuditing
-@Profile("production")
-public class PersistenceConfig extends AbstractMongoConfiguration {
+public class PersistenceConfigDefault extends AbstractMongoConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return "rosette";
+        return "rosette-test";
     }
 
     @Override

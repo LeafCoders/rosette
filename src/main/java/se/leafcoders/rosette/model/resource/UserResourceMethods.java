@@ -31,26 +31,27 @@ public class UserResourceMethods implements ResourceMethods {
 		if (!(resource.getResourceType() instanceof UserResourceType)) {
 			throw new SimpleValidationException(new ValidationError("resource", "userResource.wrongResourceType"));
 		}
-		
-		UserResourceType userResourceType = (UserResourceType) resource.getResourceType();
 
-		int numUsers = resource.getUsers().totalNumRefsAndText();
-		if (!userResourceType.getMultiSelect() && numUsers > 1) {
-			throw new SimpleValidationException(new ValidationError("resource", "userResource.multiUsersNotAllowed"));
-		}
+		if (resource.getUsers() != null) {
+			UserResourceType userResourceType = (UserResourceType) resource.getResourceType();
 
-		if (!userResourceType.getAllowText() && resource.getUsers().hasText()) {
-			throw new SimpleValidationException(new ValidationError("resource", "userResource.userByTextNotAllowed"));
-		}
-		
-		String groupId = userResourceType.getGroup().getId();
-		if (resource.getUsers().hasRefs() && !groupService.containsUsers(groupId, resource.getUsers().getRefs())) {
-			throw new SimpleValidationException(new ValidationError("resource", "userResource.userDoesNotExistInGroup"));
-		}
+			int numUsers = resource.getUsers().totalNumRefsAndText();
+			if (!userResourceType.getMultiSelect() && numUsers > 1) {
+				throw new SimpleValidationException(new ValidationError("resource", "userResource.multiUsersNotAllowed"));
+			}
 
-		for (User user : resource.getUsers().getRefs()) {
-			resource.getUsers().updateRef(userService.read(user.getId()));
+			if (!userResourceType.getAllowText() && resource.getUsers().hasText()) {
+				throw new SimpleValidationException(new ValidationError("resource", "userResource.userByTextNotAllowed"));
+			}
+
+			String groupId = userResourceType.getGroup().getId();
+			if (resource.getUsers().hasRefs() && !groupService.containsUsers(groupId, resource.getUsers().getRefs())) {
+				throw new SimpleValidationException(new ValidationError("resource", "userResource.userDoesNotExistInGroup"));
+			}
+
+			for (User user : resource.getUsers().getRefs()) {
+				resource.getUsers().updateRef(userService.read(user.getId()));
+			}
 		}
 	}
-	
 }

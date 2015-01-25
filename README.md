@@ -3,12 +3,26 @@
 A REST server for events, posters, bookings, uploads and more.
 
 
+## Installation
+
+1. Install MongoDB
+
+  > Install `MongoDB 2.4.6` from http://www.mongodb.org/downloads
+  > Follow instructions in its README file
+  > MongoDB shall be run with its default port number `27017`
+
+2. Set the following JVM args when starting Tomcat 7:
+
+  > -Dspring.profiles.active=production                      // For production mode
+  > -Drosette.baseUrl=http://rosetteHostName:rosettePortNr   // Url where server is hosted
+
+
 ## Development setup
 
 ### MongoDB
 
 1. Install `MongoDB 2.4.6` from http://www.mongodb.org/downloads
-2. Follow instructions in its READMY file
+2. Follow instructions in its README file
 3. MongoDB shall be run with its default port number `27017`
 3. Install `MongoHub` from http://mongohub.todayclose.com and use it to inspect the databases
 
@@ -36,9 +50,3 @@ A REST server for events, posters, bookings, uploads and more.
 9. Double-click at `VMware vFabric tc Server Developer Edition v2.9` in `Servers` view.
 10. Change `bio.http.port` to `9000`
 11. Click at the `Modules` tab and change `rosette` to have path `/`
-
-
-## Installation
-
-1. Set profile to "production" with JVM arg `-Dspring.profiles.active=production`
-2. Set JVM arg `-Drosette.baseUrl=http://rosetteHostName:rosettePortNr`

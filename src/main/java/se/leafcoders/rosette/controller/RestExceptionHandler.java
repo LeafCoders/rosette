@@ -31,6 +31,8 @@ import java.util.List;
 @ControllerAdvice
 public class RestExceptionHandler {
     static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
+    
+    private static final String GLOBAL_ERROR = "global"; 
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -38,41 +40,36 @@ public class RestExceptionHandler {
                                               HttpServletResponse response) throws IOException {
 
         // Default response
-        Object responseBody = "Internal server error";
+        List<ValidationError> errors = new ArrayList<ValidationError>();
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         response.setContentType("application/json;charset=UTF-8");
 
         if (exception instanceof ForbiddenException) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            responseBody = "Forbidden: " + exception.getMessage();
+    		errors.add(new ValidationError(GLOBAL_ERROR, "error.permissionDenied"));
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            responseBody = "Not found";
+    		errors.add(new ValidationError(GLOBAL_ERROR, "error.notFound"));
         } else if (exception instanceof ValidationException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
             ValidationException validationException = (ValidationException) exception;
-            List<ValidationError> errors = new ArrayList<ValidationError>();
             for (ConstraintViolation<Object> constraintViolation : validationException.getConstraintViolations()) {
         		errors.add(new ValidationError(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()));
             }
             // Sort all errors by message text
             Collections.sort(errors, new ValidationErrorComparator());
-            responseBody = errors;
         } else if (exception instanceof SimpleValidationException) {
             SimpleValidationException simpleValidationException = (SimpleValidationException) exception;
-
-            List<ValidationError> errors = new ArrayList<ValidationError>();
             errors.add(simpleValidationException.getValidationError());
-
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseBody = errors;
         } else if (exception instanceof HttpMessageNotReadableException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseBody = "Bad request";
+    		errors.add(new ValidationError(GLOBAL_ERROR, "error.badRequest"));
+        } else {
+    		errors.add(new ValidationError(GLOBAL_ERROR, "error.unknownError"));
         }
 
         logger.error("Error", exception);
-        return responseBody;
+        return errors;
     }
 }

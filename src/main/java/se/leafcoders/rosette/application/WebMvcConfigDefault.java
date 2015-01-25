@@ -7,12 +7,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import se.leafcoders.rosette.aspect.MethodLogger;
 import se.leafcoders.rosette.filter.JsonpCallbackFilter;
 
+@Profile("!production")
 @Configuration
 @ComponentScan(basePackages = {"se.leafcoders.rosette"})
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @PropertySource("classpath:/settings.properties")
-class WebMvcConfig extends WebMvcConfigurerAdapter {
+class WebMvcConfigDefault extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public MethodLogger methodLogger() {
@@ -27,5 +28,10 @@ class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
        return new PropertySourcesPlaceholderConfigurer();
+    }
+    
+    @Bean
+    public ApplicationSettings applicationSettings() {
+    	return new ApplicationSettings().lock();
     }
 }

@@ -29,19 +29,21 @@ public class UploadResourceMethods implements ResourceMethods {
 			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.wrongResourceType"));
 		}
 
-		UploadResourceType uploadResourceType = (UploadResourceType) resource.getResourceType();
-		
-		if (!uploadResourceType.getMultiSelect() && resource.getUploads().size() > 1) {
-			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.multiUploadsNotAllowed"));
-		}
-		
-		String folder = uploadResourceType.getFolderName();
-		if (resource.getUploads().hasRefs() && !uploadService.containsUploads(folder, resource.getUploads())) {
-			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.uploadDoesNotExistInFolder"));
-		}
-		
-		for (UploadResponse upload : resource.getUploads()) {
-			resource.getUploads().updateRef(uploadService.read(upload.getId()));
+		if (resource.getUploads() != null) {
+			UploadResourceType uploadResourceType = (UploadResourceType) resource.getResourceType();
+			
+			if (!uploadResourceType.getMultiSelect() && resource.getUploads().size() > 1) {
+				throw new SimpleValidationException(new ValidationError("resource", "uploadResource.multiUploadsNotAllowed"));
+			}
+			
+			String folder = uploadResourceType.getFolderName();
+			if (resource.getUploads().hasRefs() && !uploadService.containsUploads(folder, resource.getUploads())) {
+				throw new SimpleValidationException(new ValidationError("resource", "uploadResource.uploadDoesNotExistInFolder"));
+			}
+			
+			for (UploadResponse upload : resource.getUploads()) {
+				resource.getUploads().updateRef(uploadService.read(upload.getId()));
+			}
 		}
 	}
 }

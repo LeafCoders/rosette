@@ -1,14 +1,16 @@
 package se.leafcoders.rosette.application;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
+@Profile("production")
 @Configuration
 @EnableMongoAuditing
-public class DevPersistenceConfig extends PersistenceConfig {
+public class PersistenceConfigProduction extends PersistenceConfigDefault {
 
     @Override
     protected String getDatabaseName() {
-        return "rosette-test";
+        return "rosette";
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import se.leafcoders.rosette.application.ApplicationSettings;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
@@ -47,6 +48,8 @@ public class UploadService {
 	private SecurityService security;
 	@Autowired
 	private UploadFolderService uploadFolderService;
+	@Autowired
+	ApplicationSettings applicationSettings;
 
 	public UploadResponse create(final String folder, UploadRequest upload, HttpServletResponse response) {
 		response.setStatus(HttpStatus.CREATED.value());
@@ -150,7 +153,9 @@ public class UploadService {
 		if (file != null) {
 			try {
 		        response.addHeader("Cache-Control", "public");
-//TODO: Remove when production		        response.addHeader("Cache-Control", "max-age=86400"); // One day
+		        if (applicationSettings.useUploadCacheMaxAge()) {
+		        	response.addHeader("Cache-Control", "max-age=604800"); // One week 
+		        }
 		        response.addHeader("Content-disposition", "attachment; filename=\"" + file.getFilename() + "\"");
 		        response.setContentType(file.getContentType());
 		        response.setContentLength((int)file.getLength());
