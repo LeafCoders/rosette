@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 public class Location extends IdBasedModel {
 
     @NotNull(message = "location.name.notNull")
-	@Indexed(unique = true)
+	@Indexed
 	private String name;
 	private String description;
 
