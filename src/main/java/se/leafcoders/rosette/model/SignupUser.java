@@ -20,9 +20,9 @@ public class SignupUser extends IdBasedModel {
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
     private Date createdTime;	
 
-	@NotEmpty(message = "user.username.notEmpty")
-	private String username;
-	
+	@NotEmpty(message = "user.email.notEmpty")
+	private String email;
+
 	@Transient
 	private String password;
 
@@ -35,17 +35,14 @@ public class SignupUser extends IdBasedModel {
 	@NotEmpty(message = "user.lastName.notEmpty")
 	private String lastName;
 
-	@NotEmpty(message = "user.email.notEmpty")
-	private String email;
-
 	@NotEmpty(message = "user.permissions.notEmpty")
 	private String permissions;
 
 	@Override
 	public void update(BaseModel updateFrom) {
 		SignupUser signupUserUpdate = (SignupUser) updateFrom;
-		if (signupUserUpdate.getUsername() != null) {
-			setUsername(signupUserUpdate.getUsername());
+		if (signupUserUpdate.getEmail() != null) {
+			setEmail(signupUserUpdate.getEmail());
 		}
 		if (signupUserUpdate.getPassword() != null && !"".equals(signupUserUpdate.getPassword().trim())) {
 			String hashedPassword = new RosettePasswordService().encryptPassword(signupUserUpdate.getPassword());
@@ -56,9 +53,6 @@ public class SignupUser extends IdBasedModel {
 		}
 		if (signupUserUpdate.getLastName() != null) {
 			setLastName(signupUserUpdate.getLastName());
-		}
-		if (signupUserUpdate.getEmail() != null) {
-			setEmail(signupUserUpdate.getEmail());
 		}
 		if (signupUserUpdate.getPermissions() != null) {
 			setPermissions(signupUserUpdate.getPermissions());
@@ -75,12 +69,12 @@ public class SignupUser extends IdBasedModel {
 		this.createdTime = createdTime;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -113,14 +107,6 @@ public class SignupUser extends IdBasedModel {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getPermissions() {

@@ -29,7 +29,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 		mongoTemplate.getCollection("users").insert(JSON.parse("""
 		[{
 			"_id" : "1",
-			"username" : "lars.arvidsson@gmail.com",
+			"email" : "lars.arvidsson@gmail.com",
 			"hashedPassword" : "${hashedPassword}",
 			"status" : "active"
 		}]

@@ -20,10 +20,9 @@ public class CreateSignupUserTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/signupUsers"
 		HttpResponse postResponse = whenPost(postUrl, null, """{
-			"username" : "hubbe",
+			"email" : "n@is.se",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
-			"email" : "n@is.se",
 			"password" : "password",
 			"permissions" : "All please"
 		}""")
@@ -46,10 +45,9 @@ public class CreateSignupUserTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/signupUsers"
 		HttpResponse postResponse1 = whenPost(postUrl, null, """{
-			"username" : "hubbe1",
+			"email" : "n1@is.se",
 			"firstName" : "Nisse1",
 			"lastName" : "Hult1",
-			"email" : "n1@is.se",
 			"password" : "password",
 			"permissions" : "Perms for hubbe1"
 		}""")
@@ -58,10 +56,9 @@ public class CreateSignupUserTest extends AbstractIntegrationTest {
 		thenItemsInDatabaseIs(SignupUser.class, 1)
 		
 		HttpResponse postResponse2 = whenPost(postUrl, null, """{
-			"username" : "hubbe2",
+			"email" : "n2@is.se",
 			"firstName" : "Nisse2",
 			"lastName" : "Hult2",
-			"email" : "n2@is.se",
 			"password" : "password",
 			"permissions" : "Perms for hubbe2"
 		}""")

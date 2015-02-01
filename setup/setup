@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# Add an admin user to "rosette" database. User has password "password" and username "admin"
+# Add an admin user to "rosette" database. User has password "password" and username "a@dmin.se"
 mongo localhost:27017/rosette addAdminUser.js

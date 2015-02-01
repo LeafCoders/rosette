@@ -12,8 +12,9 @@ import se.leafcoders.rosette.security.RosettePasswordService;
 public class User extends IdBasedModel {
 
 	@Indexed(unique = true)
-	@NotEmpty(message = "user.username.notEmpty")
-	private String username;
+	@NotEmpty(message = "user.email.notEmpty")
+	@Email(message = "user.email.invalid")
+	private String email;
 	
 	@Transient
 	private String password;
@@ -27,15 +28,11 @@ public class User extends IdBasedModel {
 	@NotEmpty(message = "user.lastName.notEmpty")
 	private String lastName;
 
-	@NotEmpty(message = "user.email.notEmpty")
-	@Email(message = "user.email.invalid")
-	private String email;
-
 	@Override
 	public void update(BaseModel updateFrom) {
 		User userUpdate = (User) updateFrom;
-		if (userUpdate.getUsername() != null) {
-			setUsername(userUpdate.getUsername());
+		if (userUpdate.getEmail() != null) {
+			setEmail(userUpdate.getEmail());
 		}
 		if (userUpdate.getPassword() != null && !"".equals(userUpdate.getPassword().trim())) {
 			String hashedPassword = new RosettePasswordService().encryptPassword(userUpdate.getPassword());
@@ -47,21 +44,18 @@ public class User extends IdBasedModel {
 		if (userUpdate.getLastName() != null) {
 			setLastName(userUpdate.getLastName());
 		}
-		if (userUpdate.getEmail() != null) {
-			setEmail(userUpdate.getEmail());
-		}
 	}
 
 	// Getters and setters
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-
+	
 	public String getPassword() {
 		return password;
 	}
@@ -94,14 +88,6 @@ public class User extends IdBasedModel {
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
 	// Helpers
 	
 	@Transient

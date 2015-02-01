@@ -18,9 +18,9 @@ public class UserService extends MongoTemplateCRUD<User> {
 
 	@Override
 	public User create(User user, HttpServletResponse response) {
-		long count = mongoTemplate.count(Query.query(Criteria.where("username").is(user.getUsername())), User.class);
+		long count = mongoTemplate.count(Query.query(Criteria.where("email").is(user.getEmail())), User.class);
 		if (count > 0) {
-			throw new SimpleValidationException(new ValidationError("username", "user.username.duplicatedUsernameNotAllowed"));
+			throw new SimpleValidationException(new ValidationError("email", "user.email.mustBeUnique"));
 		} else {
 			return super.create(user, response);
 		}

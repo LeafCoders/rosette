@@ -76,10 +76,9 @@ public class SignupUserController extends AbstractController {
 	public void transformSignupUser(@PathVariable String id, HttpServletResponse response) {
 		SignupUser signupUser = signupUserService.read(id);
 		User user = new User();
-		user.setUsername(signupUser.getUsername());
+		user.setEmail(signupUser.getEmail());
 		user.setFirstName(signupUser.getFirstName());
 		user.setLastName(signupUser.getLastName());
-		user.setEmail(signupUser.getEmail());
 		user.setHashedPassword(signupUser.getHashedPassword());
 		userService.create(user, response);
 		signupUserService.delete(id, response);

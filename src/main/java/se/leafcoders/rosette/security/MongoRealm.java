@@ -62,7 +62,7 @@ public class MongoRealm extends AuthorizingRealm {
 			UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 			String providedUsername = token.getUsername();
 
-			final User user = mongoTemplate.findOne(Query.query(Criteria.where("username").is(providedUsername)), User.class);
+			final User user = mongoTemplate.findOne(Query.query(Criteria.where("email").is(providedUsername)), User.class);
 			if (user != null) {
 				simpleAuthenticationInfo = new SimpleAuthenticationInfo(user.getId(), user.getHashedPassword(), "mongoRealm");
 			}

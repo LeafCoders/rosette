@@ -31,10 +31,9 @@ public class ReadSignupUsersTest extends AbstractIntegrationTest {
 		String expectedData = """[
 			{
 				"id" : "${ signupUser1.id }",
-				"username" : "signupUser1",
+				"email" : "u1@sign.se",
 				"firstName" : "User",
 				"lastName" : "One",
-				"email" : "u1@sign.se",
 				"password" : null,
 				"permissions" : "Perms for u1",
 				"createdTime" : null

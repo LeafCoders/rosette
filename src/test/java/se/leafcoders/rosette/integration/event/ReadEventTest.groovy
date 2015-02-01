@@ -86,7 +86,7 @@ public class ReadEventTest extends AbstractIntegrationTest {
 								"idRef" : "${ user1.id }",
 								"referredObject" : {
 									"id" : "${ user1.id }",
-									"username" : "user1",
+									"email" : "user1",
 									"password" : null,
 									"status" : "active",
 									"firstName" : "User",

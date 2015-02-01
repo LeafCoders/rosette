@@ -32,19 +32,17 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 		String expectedData = """[
 			{
 				"id" : "${ user1.id }",
-				"username" : "user1",
+				"email" : "u1@ser.se",
 				"firstName" : "User",
 				"lastName" : "One",
-				"email" : "u1@ser.se",
 				"password" : null,
 			    "fullName" : "User One"
 			},
 			{
 				"id" : "${ user2.id }",
-				"username" : "user2",
+				"email" : "u2@ser.se",
 				"firstName" : "User",
 				"lastName" : "Two",
-				"email" : "u2@ser.se",
 				"password" : null,
 			    "fullName" : "User Two"
 			}

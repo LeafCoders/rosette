@@ -26,11 +26,10 @@ public class ReadUserTest extends AbstractIntegrationTest {
 
 		String expectedData = """{
 			"id" : "${ user1.id }",
-			"username" : "user1",
+			"email" : "u1@ser.se",
 			"firstName" : "User",
 			"lastName" : "One",
 			"fullName": "User One",
-			"email" : "u1@ser.se",
 			"password" : null
 		}"""
 		thenResponseDataIs(responseBody, expectedData)

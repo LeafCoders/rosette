@@ -23,10 +23,9 @@ public class CreateUserTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/users"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"username" : "hubbe",
+			"email" : "n@is.se",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
-			"email" : "n@is.se",
 			"password" : "password"
 		}""")
 
@@ -36,10 +35,9 @@ public class CreateUserTest extends AbstractIntegrationTest {
 
 		String expectedResponseData = """{
 			"id" : "${ JSON.parse(responseBody)['id'] }",
-			"username" : "hubbe",
+			"email" : "n@is.se",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
-			"email" : "n@is.se",
 			"password" : null,
 		    "fullName" : "Nisse Hult"
 		}"""
@@ -61,10 +59,9 @@ public class CreateUserTest extends AbstractIntegrationTest {
         // When
 		String postUrl = "/users"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"username" : "hubbe",
+			"email" : "n@is.se",
 			"firstName" : "Nisse",
 			"lastName" : "Hult",
-			"email" : "n@is.se",
 			"password" : "password"
 		}""")
 

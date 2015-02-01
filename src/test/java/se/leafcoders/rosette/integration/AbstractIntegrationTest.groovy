@@ -145,33 +145,30 @@ abstract class AbstractIntegrationTest {
 	private final hashedPassword = new RosettePasswordService().encryptPassword("password")
 	private final User userTestUpload = new User(
 		id : getObjectId(),
-		username : "usertestupload",
+		email : "user@testupload.com",
 		firstName : "User",
 		lastName : "Test Upload",
 		hashedPassword : "${hashedPassword}"
 	)
 	protected final User user1 = new User(
 		id : getObjectId(),
-		username : "user1",
+		email : "u1@ser.se",
 		firstName : "User",
 		lastName : "One",
-		email : "u1@ser.se",
 		hashedPassword : hashedPassword
 	)
 	protected final User user2 = new User(
 		id : getObjectId(),
-		username : "user2",
+		email : "u2@ser.se",
 		firstName : "User",
 		lastName : "Two",
-		email : "u2@ser.se",
 		hashedPassword : hashedPassword
 	)
 	protected final SignupUser signupUser1 = new SignupUser(
 		id : getObjectId(),
-		username : "signupUser1",
+		email : "u1@sign.se",
 		firstName : "User",
 		lastName : "One",
-		email : "u1@sign.se",
 		permissions : "Perms for u1",
 		hashedPassword : hashedPassword
 	)
@@ -435,7 +432,7 @@ abstract class AbstractIntegrationTest {
         postRequest = new HttpPost(baseUrl + postUrl)
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), postRequest))
+			postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), postRequest))
 		}
 		HttpResponse resp = httpClient.execute(postRequest)
 		return resp
@@ -446,7 +443,7 @@ abstract class AbstractIntegrationTest {
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		if (user != null) {
-			getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), getRequest))
+			getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), getRequest))
 		}
 		HttpResponse resp = httpClient.execute(getRequest)
 		return resp
@@ -456,7 +453,7 @@ abstract class AbstractIntegrationTest {
         putRequest = new HttpPut(baseUrl + putUrl)
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), putRequest))
+			putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), putRequest))
 		}
 		HttpResponse resp = httpClient.execute(putRequest)
 		return resp
@@ -466,7 +463,7 @@ abstract class AbstractIntegrationTest {
         deleteRequest = new HttpDelete(baseUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		if (user != null) {
-			deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.username, "password"), deleteRequest))
+			deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), deleteRequest))
 		}
 		HttpResponse resp = httpClient.execute(deleteRequest)
 		return resp

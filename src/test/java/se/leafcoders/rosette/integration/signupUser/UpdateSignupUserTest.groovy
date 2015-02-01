@@ -20,10 +20,9 @@ public class UpdateSignupUserTest extends AbstractIntegrationTest {
 		// When
 		String putUrl = "/signupUsers/${ signupUser1.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"username" : "stubbe",
+			"email" : "new@ser.se",
 			"firstName" : "Misse",
 			"lastName" : "Bult",
-			"email" : "new@ser.se",
 			"permissions" : "New permissions"
 		}""")
 
@@ -33,10 +32,9 @@ public class UpdateSignupUserTest extends AbstractIntegrationTest {
 		String expectedData = """[
 			{
 				"id" : "${ signupUser1.id }",
-				"username" : "stubbe",
+				"email" : "new@ser.se",
 				"firstName" : "Misse",
 				"lastName" : "Bult",
-				"email" : "new@ser.se",
 				"password" : null,
 				"permissions" : "New permissions",
 				"createdTime" : null
@@ -55,7 +53,7 @@ public class UpdateSignupUserTest extends AbstractIntegrationTest {
 		// When
 		String putUrl = "/signupUsers/4711"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"username" : "stubbe",
+			"email" : "stubbe@stubbe.se",
 			"firstName" : "Misse",
 			"lastName" : "Bult"
 		}""")

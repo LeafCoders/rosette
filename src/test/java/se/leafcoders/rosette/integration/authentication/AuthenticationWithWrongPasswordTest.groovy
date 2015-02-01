@@ -23,7 +23,7 @@ public class AuthenticationWithWrongPasswordTest extends AbstractIntegrationTest
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/authentication")
 		getRequest.addHeader(new BasicScheme().authenticate(
-			new UsernamePasswordCredentials(user1.username, "invalidPassword"), getRequest));
+			new UsernamePasswordCredentials(user1.email, "invalidPassword"), getRequest));
 		HttpResponse getResponse = httpClient.execute(getRequest)
 
 		// Then
