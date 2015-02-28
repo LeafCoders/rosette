@@ -1,12 +1,15 @@
 package se.leafcoders.rosette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.leafcoders.rosette.comparator.PosterComparator;
 import se.leafcoders.rosette.model.Poster;
 import se.leafcoders.rosette.service.PosterService;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,8 +26,12 @@ public class PosterController extends AbstractController {
 
 	@RequestMapping(value = "posters", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Poster> getPosters(HttpServletResponse response) {
-		List<Poster> posters = posterService.readMany(null);
+	public List<Poster> getPosters(@RequestParam(defaultValue = "false") boolean onlyActive, HttpServletResponse response) {
+		Query query = new Query();
+		if (onlyActive) {
+			query.addCriteria(activeCriteria());
+		}
+		List<Poster> posters = posterService.readMany(query);
         Collections.sort(posters, new PosterComparator());
 		return posters;
 	}
@@ -43,5 +50,10 @@ public class PosterController extends AbstractController {
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deletePoster(@PathVariable String id, HttpServletResponse response) {
 		posterService.delete(id, response);
+	}
+	
+	private Criteria activeCriteria() {
+		final Calendar now = Calendar.getInstance();
+		return Criteria.where("endTime").gt(now.getTime()).and("startTime").lt(now.getTime());
 	}
 }
