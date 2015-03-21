@@ -26,7 +26,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		// When
 		String postUrl = "/groupMemberships"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"group" : ${ toJSON(group1) }
 		}""")
 
@@ -36,7 +36,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 
 		String expectedData = """{
 			"id" : "${ JSON.parse(responseBody)['id'] }",
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"group" : ${ toJSON(group1) }
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
@@ -56,7 +56,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 		// When
 		String postUrl = "/groupMemberships"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"group" : ${ toJSON(group1) }
 		}""")
 

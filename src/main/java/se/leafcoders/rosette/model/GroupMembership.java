@@ -2,6 +2,7 @@ package se.leafcoders.rosette.model;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "groupMemberships")
@@ -13,7 +14,7 @@ public class GroupMembership extends IdBasedModel {
 
 	@Indexed
     @HasRef(message = "groupMembership.user.mustBeSet")
-	private User user;
+	private UserRef user;
 
 	@Override
 	public void update(BaseModel updateFrom) {
@@ -36,11 +37,11 @@ public class GroupMembership extends IdBasedModel {
         this.group = group;
     }
 
-    public User getUser() {
+    public UserRef getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserRef user) {
         this.user = user;
     }
 }

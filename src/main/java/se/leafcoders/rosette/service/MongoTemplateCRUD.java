@@ -50,12 +50,6 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public T read(String id) {
-        T data = readNoDep(id);
-		return data;
-	}
-
-	// TODO: Remove this function. We dont need it now when all resources already has its dependencies stored in db
-	public T readNoDep(String id) {
 		checkPermission("read", id);
         T data = mongoTemplate.findById(id, entityClass);
 		if (data == null) {

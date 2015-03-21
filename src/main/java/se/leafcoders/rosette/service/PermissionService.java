@@ -22,6 +22,8 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	private UserService userService;
 	@Autowired
 	private GroupService groupService;
+	@Autowired
+	private GroupMembershipService groupMembershipService;
 
 	public PermissionService() {
 		super("permissions", Permission.class);
@@ -54,7 +56,7 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	@Override
 	public void insertDependencies(Permission data) {
 		if (data.getUser() != null) {
-			data.setUser(userService.read(data.getUser().getId()));
+			data.setUser(userService.readAsRef(data.getUser().getId()));
 		}
 		if (data.getGroup() != null) {
 			data.setGroup(groupService.read(data.getGroup().getId()));
@@ -71,38 +73,10 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 		if (userId == null || userId.isEmpty()) {
 			return permissions;
 		}
-		User user = mongoTemplate.findById(userId, User.class);
+		User user = mongoTemplate.findById(userId, User.class);		
 		if (user != null) {
-			// Adding group permissions
-			Query groupMembershipsQuery = new Query(Criteria.where("user.id").is(user.getId()));
-			List<GroupMembership> groupMemberships = mongoTemplate.find(groupMembershipsQuery, GroupMembership.class);
-			if (groupMemberships != null) {
-				List<String> groupIds = new ArrayList<String>();
-				for (GroupMembership groupMembership : groupMemberships) {
-					groupIds.add(groupMembership.getGroup().getId());
-				}
-	
-				Query groupPermissionQuery = Query.query(Criteria.where("group.id").in(groupIds));
-				List<Permission> groupPermissions = mongoTemplate.find(groupPermissionQuery, Permission.class);
-				if (groupPermissions != null) {
-					for (Permission groupPermission : groupPermissions) {
-						if (groupPermission.getPatterns() != null) {
-							permissions.addAll(groupPermission.getPatterns());
-						}
-					}
-				}
-			}
-	
-			// Adding user permissions
-			Query userPermissionQuery = Query.query(Criteria.where("user.id").is(user.getId()));
-			List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
-			if (userPermissions != null) {
-				for (Permission userPermission : userPermissions) {
-					if (userPermission.getPatterns() != null) {
-						permissions.addAll(userPermission.getPatterns());
-					}
-				}
-			}
+			permissions.addAll(getPermissionsForUser(user));
+			permissions.addAll(getPermissionsForGroups(user));
 		}
 		return permissions;
 	}
@@ -115,4 +89,58 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 		}
 		return new LinkedList<String>();
 	}
+	
+	private List<String> getPermissionsForUser(User user) {
+		List<String> permissions = new ArrayList<String>();
+
+		// Add read/update permissions for own user
+		permissions.add("read:users:" + user.getId());
+		permissions.add("update:users:" + user.getId());
+		
+		// Adding permissions specific for this user
+		Query userPermissionQuery = Query.query(Criteria.where("user.id").is(user.getId()));
+		List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
+		if (userPermissions != null) {
+			for (Permission userPermission : userPermissions) {
+				if (userPermission.getPatterns() != null) {
+					permissions.addAll(userPermission.getPatterns());
+				}
+			}
+		}
+		return permissions;
+	}
+
+	private List<String> getPermissionsForGroups(User user) {
+		List<String> permissions = new ArrayList<String>();
+
+		// Adding permissions from group where user is member
+		List<GroupMembership> groupMemberships = groupMembershipService.getForUser(user);
+		if (groupMemberships != null) {
+			List<String> groupIds = new ArrayList<String>();
+			for (GroupMembership groupMembership : groupMemberships) {
+				groupIds.add(groupMembership.getGroup().getId());
+			}
+
+			// Adding permissions specific for each group
+			Query groupPermissionQuery = Query.query(Criteria.where("group.id").in(groupIds));
+			List<Permission> groupPermissions = mongoTemplate.find(groupPermissionQuery, Permission.class);
+			if (groupPermissions != null) {
+				for (Permission groupPermission : groupPermissions) {
+					if (groupPermission.getPatterns() != null) {
+						permissions.addAll(groupPermission.getPatterns());
+					}
+				}
+			}
+
+			// Add read permission for each user in groups
+			List<GroupMembership> groupMemberships2 = groupMembershipService.getForGroupIds(groupIds);
+			if (groupMemberships2 != null) {
+				for (GroupMembership groupMembership2 : groupMemberships2) {
+					permissions.add("read:users:" + groupMembership2.getUser().getId());
+				}
+			}
+		}
+		return permissions;
+	}
+
 }

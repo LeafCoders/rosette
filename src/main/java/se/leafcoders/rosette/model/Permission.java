@@ -4,6 +4,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se.leafcoders.rosette.model.reference.UserRef;
 
 @Document(collection = "permissions")
 @ScriptAssert(lang = "javascript", script = "((_this.everyone?1:0)+(_this.user?1:0)+(_this.group?1:0)) == 1")
@@ -13,7 +14,7 @@ public class Permission extends IdBasedModel {
 	private Boolean everyone;
 
 	@Indexed
-	private User user;
+	private UserRef user;
 
 	@Indexed
 	private Group group;
@@ -38,11 +39,11 @@ public class Permission extends IdBasedModel {
 		this.everyone = everyone;
 	}
 
-	public User getUser() {
+	public UserRef getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserRef user) {
 		this.user = user;
 	}
 

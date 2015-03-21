@@ -15,6 +15,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenUser(user2)
 		givenGroup(group1)
+		givenGroupMembership(user1, group1)
 		givenGroupMembership(user2, group1)
 		givenLocation(location1)
 		givenEventType(eventType2)
@@ -24,8 +25,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenPermissionForUser(user1, [
 			"assign:resourceTypes:${ userResourceTypeMultiAndText.id }",
 			"read:resourceTypes:${ userResourceTypeMultiAndText.id }",
-			"read:events:${ event2.id }",
-			"read:users"
+			"read:events:${ event2.id }"
 		])
 
 		// When
@@ -34,7 +34,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 			"type" : "user",
 			"resourceType" : ${ toJSON(userResourceTypeMultiAndText) },
 			"users" : {
-				"refs" : [ ${ toJSON(user2) } ],
+				"refs" : [ ${ toJSON(userRef2) } ],
 				"text" : "Kalle Boll"
 			}
 		}""")
@@ -102,7 +102,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 			"type" : "user",
 			"resourceType" : ${ toJSON(userResourceTypeSingle) },
 			"users" : {
-				"refs" : [ ${ toJSON(user1) }, ${ toJSON(user2) } ]
+				"refs" : [ ${ toJSON(userRef1) }, ${ toJSON(userRef2) } ]
 			}
 		}""")
 
@@ -117,7 +117,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 			"type" : "user",
 			"resourceType" : ${ toJSON(userResourceTypeSingle) },
 			"users" : {
-				"refs" : [ ${ toJSON(user1) } ],
+				"refs" : [ ${ toJSON(userRef1) } ],
 				"text" : "Someone"
 			}
 		}""")

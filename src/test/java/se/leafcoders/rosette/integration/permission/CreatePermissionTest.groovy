@@ -44,7 +44,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 			{
 				"id" : "${ userPermissionId }",
 				"everyone" : null,
-				"user" : ${ toJSON(user1) },
+				"user" : ${ toJSON(userRef1) },
 				"group" : null,
 				"patterns" : ["create:permissions", "read:users", "read:groups"]
 			},
@@ -80,7 +80,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
         // When
 		postResponse = whenPost(postUrl, user1, """{
 			"everyone" : "true",
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"patterns" : ["*:events"]
 		}""")
 
@@ -90,7 +90,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 		
 		// When
 		postResponse = whenPost(postUrl, user1, """{
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"group" : ${ toJSON(group1) },
 			"patterns" : ["*:events"]
 		}""")

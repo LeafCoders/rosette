@@ -30,7 +30,7 @@ public class EventWeekController extends AbstractController {
 	@RequestMapping(value = "eventWeeks/current", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public EventWeek getCurrentEventWeek(HttpServletResponse response) {
-		security.checkPermission("read:eventweek");
+		security.checkPermission("read:eventWeeks");
 		DateTime now = DateTime.now();
 		int year = now.getWeekyear();
 		int week = now.getWeekOfWeekyear();
@@ -42,7 +42,7 @@ public class EventWeekController extends AbstractController {
 	@RequestMapping(value = "eventWeeks/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public EventWeek getEventWeek(@PathVariable String id, HttpServletResponse response) {
-		security.checkPermission("read:eventweek");
+		security.checkPermission("read:eventWeeks");
 		int weekyear = Integer.parseInt(id.substring(0, 4));
 		int weekOfWeekyear = Integer.parseInt(id.substring(6, 8));
 		

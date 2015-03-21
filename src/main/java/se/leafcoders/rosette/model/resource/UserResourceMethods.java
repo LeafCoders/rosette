@@ -2,8 +2,8 @@ package se.leafcoders.rosette.model.resource;
 
 import org.springframework.data.mongodb.core.query.Update;
 import se.leafcoders.rosette.exception.SimpleValidationException;
-import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.service.GroupService;
 import se.leafcoders.rosette.service.UserService;
 
@@ -49,8 +49,8 @@ public class UserResourceMethods implements ResourceMethods {
 				throw new SimpleValidationException(new ValidationError("resource", "userResource.userDoesNotExistInGroup"));
 			}
 
-			for (User user : resource.getUsers().getRefs()) {
-				resource.getUsers().updateRef(userService.read(user.getId()));
+			for (UserRef user : resource.getUsers().getRefs()) {
+				resource.getUsers().updateRef(userService.readAsRef(user.getId()));
 			}
 		}
 	}

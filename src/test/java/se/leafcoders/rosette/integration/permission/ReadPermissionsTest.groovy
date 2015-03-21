@@ -38,7 +38,7 @@ public class ReadPermissionsTest extends AbstractIntegrationTest {
 			{
 				"id" : "${ userPermissionId }",
 				"everyone" : null,
-				"user" : ${ toJSON(user1) },
+				"user" : ${ toJSON(userRef1) },
 				"group" : null,
 				"patterns" : ["read:permissions"]
 			},

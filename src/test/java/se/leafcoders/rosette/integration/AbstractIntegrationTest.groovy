@@ -26,6 +26,7 @@ import se.leafcoders.rosette.model.event.Event
 import se.leafcoders.rosette.model.reference.LocationRefOrText
 import se.leafcoders.rosette.model.reference.ObjectReferences
 import se.leafcoders.rosette.model.reference.UploadResponseRefs
+import se.leafcoders.rosette.model.reference.UserRef
 import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
 import se.leafcoders.rosette.security.RosettePasswordService
@@ -157,6 +158,7 @@ abstract class AbstractIntegrationTest {
 		lastName : "One",
 		hashedPassword : hashedPassword
 	)
+	protected final UserRef userRef1 = new UserRef(user1)
 	protected final User user2 = new User(
 		id : getObjectId(),
 		email : "u2@ser.se",
@@ -164,6 +166,7 @@ abstract class AbstractIntegrationTest {
 		lastName : "Two",
 		hashedPassword : hashedPassword
 	)
+	protected final UserRef userRef2 = new UserRef(user2)
 	protected final SignupUser signupUser1 = new SignupUser(
 		id : getObjectId(),
 		email : "u1@sign.se",
@@ -303,7 +306,7 @@ abstract class AbstractIntegrationTest {
 			new UserResource(
 				type : "user",
 				resourceType : userResourceTypeSingle, 
-				users : new UserRefsAndText(refs: [ user1 ] as ObjectReferences<User>)
+				users : new UserRefsAndText(refs: [ userRef1 ] as ObjectReferences<UserRef>)
 			),
 			new UploadResource(
 				type : "upload",
@@ -324,7 +327,7 @@ abstract class AbstractIntegrationTest {
 			new UserResource(
 				type : "user",
 				resourceType : userResourceTypeMultiAndText, 
-				users : new UserRefsAndText(refs: [ user1 ] as ObjectReferences<User>)
+				users : new UserRefsAndText(refs: [ userRef1 ] as ObjectReferences<UserRef>)
 			),
 			new UploadResource(
 				type : "upload",
@@ -358,7 +361,7 @@ abstract class AbstractIntegrationTest {
 		String permissionId = getObjectId()
 		mongoTemplate.insert(new Permission(
 			id : permissionId,
-			user : user,
+			user : new UserRef(user),
 			patterns : permissions.collect { it.toString() } // Convert GString to String
 		))
 		return permissionId
@@ -381,7 +384,7 @@ abstract class AbstractIntegrationTest {
 		String groupMembershipId = getObjectId()
 		mongoTemplate.insert(new GroupMembership(
 			id : groupMembershipId,
-			user : user,
+			user : new UserRef(user),
 			group : group
 		))
 		return groupMembershipId

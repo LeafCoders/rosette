@@ -55,7 +55,6 @@ public class UserController extends AbstractController {
         	List<String> userIds = groupMembershipService.getUserIdsInGroup(groupId);
         	query.addCriteria(Criteria.where("id").in(userIds));
         }
-        
         return userService.readMany(query);
 	}
 

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.GroupMembership;
+import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.ValidationError;
 import se.leafcoders.rosette.security.MongoRealm;
 
@@ -57,7 +58,7 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 	@Override
 	public void insertDependencies(GroupMembership data) {
 		if (data.getUser() != null) {
-			data.setUser(userService.read(data.getUser().getId()));
+			data.setUser(userService.readAsRef(data.getUser().getId()));
 		}
 		if (data.getGroup() != null) {
 			data.setGroup(groupService.read(data.getGroup().getId()));
@@ -71,9 +72,19 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
         return count > 0;
 	}
 
+	public List<GroupMembership> getForUser(User user) {
+		Query query = new Query(Criteria.where("user.id").is(user.getId()));
+		return mongoTemplate.find(query, GroupMembership.class);
+	}
+
+	public List<GroupMembership> getForGroupIds(List<String> groupIds) {
+		Query query = new Query(Criteria.where("group.id").in(groupIds));
+		return mongoTemplate.find(query, GroupMembership.class);
+	}
+
 	public List<String> getUserIdsInGroup(String groupId) {
-		List<GroupMembership> groupMemberships = mongoTemplate.find(
-        		Query.query(Criteria.where("group.id").is(groupId)), GroupMembership.class);
+		Query query = Query.query(Criteria.where("group.id").is(groupId));
+		List<GroupMembership> groupMemberships = mongoTemplate.find(query, GroupMembership.class);
 		ArrayList<String> result = new ArrayList<String>(groupMemberships.size());
 		if (groupMemberships != null) {
 			for (GroupMembership gm : groupMemberships) {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.reference.UserRef;
 
 @Service
 public class UserService extends MongoTemplateCRUD<User> {
@@ -31,6 +32,10 @@ public class UserService extends MongoTemplateCRUD<User> {
         User user = super.read(id);
         user.setHashedPassword(null);
 		return user;
+	}
+
+	public UserRef readAsRef(String id) {
+        return new UserRef(super.read(id));
 	}
 
 	@Override

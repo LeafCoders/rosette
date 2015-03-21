@@ -36,7 +36,7 @@ public class ReadGroupMembershipsByGroupIdTest extends AbstractIntegrationTest {
 
 		String expectedData = """[{
 			"id" : "${groupMembId2}",
-			"user" : ${ toJSON(user2) },
+			"user" : ${ toJSON(userRef2) },
 			"group" : ${ toJSON(group2) }
 		}]"""
 		thenResponseDataIs(responseBody, expectedData)

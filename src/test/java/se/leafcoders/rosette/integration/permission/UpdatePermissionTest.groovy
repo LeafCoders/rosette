@@ -19,7 +19,7 @@ public class UpdatePermissionTest extends AbstractIntegrationTest {
 		// When
 		String putUrl = "/permissions/${ userPermissionId }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"patterns" : ["read:events"]
 		}""")
 
@@ -29,7 +29,7 @@ public class UpdatePermissionTest extends AbstractIntegrationTest {
 		String expectedData = """[{
 			"id" : "${ userPermissionId }",
 			"everyone" : null,
-			"user" : ${ toJSON(user1) },
+			"user" : ${ toJSON(userRef1) },
 			"group" : null,
 			"patterns" : ["read:events"]
 		}]"""
