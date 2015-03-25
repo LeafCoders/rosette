@@ -70,7 +70,6 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("groupMemberships")
 		mongoTemplate.dropCollection("events")
         mongoTemplate.dropCollection("eventTypes")
-		mongoTemplate.dropCollection("themes")
 		mongoTemplate.dropCollection("permissions")
         mongoTemplate.dropCollection("posters")
         mongoTemplate.dropCollection("resourceTypes")

@@ -1,18 +1,15 @@
 package se.leafcoders.rosette.integration.util;
 
 import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.SimpleTimeZone;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneConverter;
 
 public class TestUtil {

@@ -13,7 +13,7 @@ public class UploadResourceType extends ResourceType {
     // Constructors
 
     public UploadResourceType() {
-		super("user");
+		super("upload");
     }
 
     @Override
