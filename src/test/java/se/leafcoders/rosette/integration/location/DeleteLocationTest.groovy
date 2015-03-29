@@ -15,6 +15,7 @@ public class DeleteLocationTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["delete:locations:${ location1.id }"])
+		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 
 		// When

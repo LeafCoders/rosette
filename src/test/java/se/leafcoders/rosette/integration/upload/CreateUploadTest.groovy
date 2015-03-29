@@ -16,6 +16,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
     public void createUploadWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
+		givenUploadFolder(uploadFolderPosters)
 		givenPermissionForUser(user1, ["create:uploads:posters"])
 
         // When
@@ -49,6 +50,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 	public void failWhenUploadFileWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
+		givenUploadFolder(uploadFolderPosters)
 		givenPermissionForUser(user1, ["create:uploads:invalid"])
 
 		// When

@@ -29,6 +29,7 @@ import se.leafcoders.rosette.model.reference.UploadResponseRefs
 import se.leafcoders.rosette.model.reference.UserRef
 import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
+import se.leafcoders.rosette.model.upload.UploadFolder
 import se.leafcoders.rosette.model.upload.UploadFolderRef
 import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
@@ -232,7 +233,21 @@ abstract class AbstractIntegrationTest {
         image : null
 	)
 
-	protected final UploadFolderRef uploadFolderPosters = new UploadFolderRef(id: "posters", name: "Posters")
+	protected final UploadFolder uploadFolderPosters = new UploadFolder(
+		id: "posters",
+		name: "Posters",
+		isPublic: true,
+		mimeTypes: ["image/"]
+	)
+	protected final UploadFolderRef uploadFolderPostersRef = new UploadFolderRef(uploadFolderPosters)
+
+	protected final UploadFolder uploadFolderLocations = new UploadFolder(
+		id: "locations",
+		name: "Locations",
+		isPublic: true,
+		mimeTypes: ["image/"]
+	)
+	protected final UploadFolderRef uploadFolderLocationsRef = new UploadFolderRef(uploadFolderLocations)
 
 	protected final UploadRequest validPNGImage = new UploadRequest(
         fileName : "image.png",
@@ -272,7 +287,7 @@ abstract class AbstractIntegrationTest {
 		name : "UploadResourceType Single",
 		description : "A poster file",
 		multiSelect : false,
-		uploadFolder : uploadFolderPosters
+		uploadFolder : uploadFolderPostersRef
 	)
 	protected final UploadResourceType uploadResourceTypeMulti = new UploadResourceType(
 		type : 'upload',
@@ -281,7 +296,7 @@ abstract class AbstractIntegrationTest {
 		name : "UploadResourceType Multi",
 		description : "Some poster files",
 		multiSelect : true,
-		uploadFolder : uploadFolderPosters
+		uploadFolder : uploadFolderPostersRef
 	)
 
 	protected final EventType eventType1 = new EventType(
@@ -418,6 +433,10 @@ abstract class AbstractIntegrationTest {
 	protected void givenPoster(Poster poster, UploadResponse upload) {
 		poster.image = upload
 		mongoTemplate.insert(poster)
+	}
+	
+	protected void givenUploadFolder(UploadFolder uploadFolder) {
+		mongoTemplate.insert(uploadFolder)
 	}
 	
 	protected UploadResponse givenUploadInFolder(String folderId, UploadRequest upload) {

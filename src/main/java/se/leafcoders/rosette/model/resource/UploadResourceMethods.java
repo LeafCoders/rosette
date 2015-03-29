@@ -33,7 +33,7 @@ public class UploadResourceMethods implements ResourceMethods {
 		if (resource.getUploads() != null) {
 			UploadResourceType uploadResourceType = (UploadResourceType) resource.getResourceType();
 			
-			if (!uploadResourceType.getMultiSelect() && resource.getUploads().size() > 1) {
+			if (uploadResourceType.getMultiSelect() != Boolean.TRUE && resource.getUploads().size() > 1) {
 				throw new SimpleValidationException(new ValidationError("resource", "uploadResource.multiUploadsNotAllowed"));
 			}
 			

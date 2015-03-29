@@ -15,6 +15,7 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
     public void successToDeleteUpload() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
+		givenUploadFolder(uploadFolderPosters)
 		givenPermissionForUser(user1, ["delete:uploads:posters"])
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 
@@ -31,6 +32,7 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
 	public void failToDeleteWhenUploadIsReferenced() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
+		givenUploadFolder(uploadFolderPosters)
 		givenPermissionForUser(user1, ["delete:uploads:posters"])
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)

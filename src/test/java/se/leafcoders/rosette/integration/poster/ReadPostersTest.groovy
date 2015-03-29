@@ -19,6 +19,7 @@ public class ReadPostersTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:posters"])
+		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)

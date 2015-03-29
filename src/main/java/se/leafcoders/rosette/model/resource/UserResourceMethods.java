@@ -36,11 +36,11 @@ public class UserResourceMethods implements ResourceMethods {
 			UserResourceType userResourceType = (UserResourceType) resource.getResourceType();
 
 			int numUsers = resource.getUsers().totalNumRefsAndText();
-			if (!userResourceType.getMultiSelect() && numUsers > 1) {
+			if (userResourceType.getMultiSelect() != Boolean.TRUE && numUsers > 1) {
 				throw new SimpleValidationException(new ValidationError("resource", "userResource.multiUsersNotAllowed"));
 			}
 
-			if (!userResourceType.getAllowText() && resource.getUsers().hasText()) {
+			if (userResourceType.getAllowText() != Boolean.TRUE && resource.getUsers().hasText()) {
 				throw new SimpleValidationException(new ValidationError("resource", "userResource.userByTextNotAllowed"));
 			}
 

@@ -19,6 +19,7 @@ public class ReadLocationsTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:locations"])
+		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 		givenLocation(location2)
 

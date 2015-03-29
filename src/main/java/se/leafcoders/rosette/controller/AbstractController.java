@@ -45,17 +45,15 @@ public class AbstractController {
     public Object handleApplicationExceptions(Throwable exception,
                                               HttpServletResponse response) throws IOException {
 
-        // Default response
-        Object responseBody = "Internal server error";
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        logger.error("Error", exception);
         response.setContentType("application/json;charset=UTF-8");
 
         if (exception instanceof ForbiddenException) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            responseBody = new ExceptionError("error.forbidden", exception.getMessage(), ((ForbiddenException) exception).getReasonParams());
+            return new ExceptionError("error.forbidden", exception.getMessage(), ((ForbiddenException) exception).getReasonParams());
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            responseBody = new ExceptionError("error.notFound", exception.getMessage(), null);
+            return new ExceptionError("error.notFound", exception.getMessage(), null);
         } else if (exception instanceof ValidationException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
@@ -66,7 +64,7 @@ public class AbstractController {
             }
             // Sort all errors by message text
             Collections.sort(errors, new ValidationErrorComparator());
-            responseBody = errors;
+            return errors;
         } else if (exception instanceof SimpleValidationException) {
             SimpleValidationException simpleValidationException = (SimpleValidationException) exception;
 
@@ -74,13 +72,13 @@ public class AbstractController {
             errors.add(simpleValidationException.getValidationError());
 
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseBody = errors;
+            return errors;
         } else if (exception instanceof HttpMessageNotReadableException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseBody = new ExceptionError("error.badRequest", exception.getMessage(), null);
+            return new ExceptionError("error.badRequest", exception.getMessage(), null);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return new ExceptionError("error.unknownError", null, null);
         }
-
-        logger.error("Error", exception);
-        return responseBody;
     }
 }

@@ -17,6 +17,7 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
     public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
+		givenUploadFolder(uploadFolderPosters)
 		givenPermissionForUser(user1, ["read:uploads:posters"])
 		def uploadItem1 = givenUploadInFolder("posters", validPNGImage)
 		def uploadItem2 = givenUploadInFolder("posters", validJPEGImage)

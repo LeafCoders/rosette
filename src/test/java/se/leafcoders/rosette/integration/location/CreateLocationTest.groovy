@@ -27,6 +27,7 @@ public class CreateLocationTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["create:locations", "read:locations", "read:uploads"])
+		givenUploadFolder(uploadFolderLocations)
 		Object image = givenUploadInFolder("locations", validPNGImage)
 		
 		// When

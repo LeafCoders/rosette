@@ -19,6 +19,7 @@ public class UpdatePosterTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["update:posters", "read:posters", "read:uploads"])
+		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 
@@ -52,6 +53,7 @@ public class UpdatePosterTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["update:posters", "read:posters", "read:uploads"])
+		givenUploadFolder(uploadFolderPosters)
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 

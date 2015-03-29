@@ -38,7 +38,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
 			"description": "A poster file",
 			"section" : "files",
 			"multiSelect": false,
-			"uploadFolder": ${ toJSON(uploadFolderPosters) }
+			"uploadFolder": ${ toJSON(uploadFolderPostersRef) }
 		}, {
 			"id" : "speaker",
 			"type" : "user",

@@ -19,6 +19,7 @@ public class ReadLocationTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:locations:${ location1.id }"])
+		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 		givenLocation(location2)
 
@@ -44,6 +45,7 @@ public class ReadLocationTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:locations:${ location1.id }"])
+		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 		givenLocation(location2)
 

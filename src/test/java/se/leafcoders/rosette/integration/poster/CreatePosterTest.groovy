@@ -19,6 +19,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["create:posters", "read:posters", "read:uploads"])
+		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		
 		// When
@@ -54,7 +55,8 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["create:posters"])
-
+		givenUploadFolder(uploadFolderPosters)
+		
 		// When
 		String postUrl = "/posters"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{

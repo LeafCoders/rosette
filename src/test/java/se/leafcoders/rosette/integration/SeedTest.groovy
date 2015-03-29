@@ -24,6 +24,8 @@ class SeedTest extends AbstractIntegrationTest {
 		givenBooking(booking1)
 		givenBooking(booking2)
 
+		givenUploadFolder(uploadFolderPosters)
+		givenUploadFolder(uploadFolderLocations)
 		def uploadItem1 = givenUploadInFolder("posters", validPNGImage)
 		def uploadItem2 = givenUploadInFolder("posters", validJPEGImage)
 		givenPoster(poster1, uploadItem1)

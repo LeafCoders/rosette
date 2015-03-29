@@ -174,14 +174,14 @@ public class UploadService {
 	}
 
 	private void validateFolderExist(String folderId) {
-		if (uploadFolderService.read(folderId) == null) {
+		if (uploadFolderService.folderExist(folderId) == false) {
 			throw new SimpleValidationException(new ValidationError("upload", "uploadFolder.dontExist"));
 		}
 	}
 
 	private void checkMimeTypePermission(final String folderId, final String mimeType) {
 		if (!uploadFolderService.isPermittedMimeType(folderId, mimeType)) {
-			throw new SimpleValidationException(new ValidationError("upload", "upload.mimeTypeNotAllowed"));
+			throw new SimpleValidationException(new ValidationError("upload", "upload.mimeType.notAllowed"));
 		}
 	}
 

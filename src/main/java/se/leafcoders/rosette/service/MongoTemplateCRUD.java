@@ -51,11 +51,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	@Override
 	public T read(String id) {
 		checkPermission("read", id);
-        T data = mongoTemplate.findById(id, entityClass);
-		if (data == null) {
-			throw new NotFoundException();
-		}
-		return data;
+		return readWithoutPermission(id);
 	}
 	
 	@Override
@@ -108,4 +104,13 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		}
 		return result;
 	}
+
+	protected T readWithoutPermission(String id) {
+        T data = mongoTemplate.findById(id, entityClass);
+		if (data == null) {
+			throw new NotFoundException();
+		}
+		return data;
+	}
+
 }
