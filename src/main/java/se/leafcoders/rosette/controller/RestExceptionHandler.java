@@ -11,8 +11,7 @@ import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.exception.ValidationException;
-import se.leafcoders.rosette.model.ValidationError;
-
+import se.leafcoders.rosette.model.error.ValidationError;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import java.io.IOException;
@@ -46,7 +45,7 @@ public class RestExceptionHandler {
 
         if (exception instanceof ForbiddenException) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    		errors.add(new ValidationError(GLOBAL_ERROR, "error.permissionDenied"));
+    		errors.add(new ValidationError(GLOBAL_ERROR, "error.forbidden"));
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     		errors.add(new ValidationError(GLOBAL_ERROR, "error.notFound"));

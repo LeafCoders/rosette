@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -21,10 +22,10 @@ import se.leafcoders.rosette.application.ApplicationSettings;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
-import se.leafcoders.rosette.model.UploadRequest;
-import se.leafcoders.rosette.model.UploadResponse;
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UploadResponseRefs;
+import se.leafcoders.rosette.model.upload.UploadRequest;
+import se.leafcoders.rosette.model.upload.UploadResponse;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -32,7 +33,7 @@ import com.mongodb.gridfs.GridFSFile;
 
 @Service
 public class UploadService {
-	public static final String METADATA_FOLDER = "folder";
+	public static final String METADATA_FOLDER_ID = "folderId";
 	public static final String METADATA_WIDTH = "width";
 	public static final String METADATA_HEIGHT = "height";
 
@@ -43,6 +44,8 @@ public class UploadService {
 	private String apiVersion;
 	
 	@Autowired
+	private MongoTemplate mongoTemplate;
+	@Autowired
 	private GridFsTemplate gridFsTemplate;
 	@Autowired
 	private SecurityService security;
@@ -51,21 +54,21 @@ public class UploadService {
 	@Autowired
 	ApplicationSettings applicationSettings;
 
-	public UploadResponse create(final String folder, UploadRequest upload, HttpServletResponse response) {
+	public UploadResponse create(final String folderId, UploadRequest upload, HttpServletResponse response) {
 		response.setStatus(HttpStatus.CREATED.value());
 
-		sanitizeAndValidateFolder(folder);
-		security.checkPermission("create:uploads:" + folder);
-		checkMimeTypePermission(folder, upload.getMimeType());
+		validateFolderExist(folderId);
+		security.checkPermission("create:uploads:" + folderId);
+		checkMimeTypePermission(folderId, upload.getMimeType());
 
-		if (getFileByName(folder, upload.getFileName()) != null) {
+		if (getFileByName(folderId, upload.getFileName()) != null) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.alreadyExists"));
 		}
 		byte[] fileData = upload.getFileDataAsBytes(); 
 
 		// Set meta data
 		DBObject metaData = new BasicDBObject();
-		metaData.put(UploadService.METADATA_FOLDER, folder);
+		metaData.put(UploadService.METADATA_FOLDER_ID, folderId);
 		if (upload.getMimeType().startsWith("image") && !setImageSizeMetadata(metaData, fileData)) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.image.invalidSize"));
 		}
@@ -79,24 +82,24 @@ public class UploadService {
 		return fileToUpload(file);
 	}
 
-	public UploadResponse read(final String id) {
-		GridFSDBFile file = getFileById(id);
+	public UploadResponse read(final String uploadId) {
+		GridFSDBFile file = getFileById(uploadId);
 		if (file != null) {
-			security.checkPermission("read:uploads:" + getMetadataFolder(file) + ":" + id);
+			security.checkPermission("read:uploads:" + getMetadataFolderId(file) + ":" + uploadId);
 	        return fileToUpload(file);
         } else {
 			throw new NotFoundException();
 		}
 	}
 	
-	public List<UploadResponse> readAll(final String folder) {
-		sanitizeAndValidateFolder(folder);
+	public List<UploadResponse> readAll(final String folderId) {
+		validateFolderExist(folderId);
 
-		List<GridFSDBFile> filesInFolder = getFilesInFolder(folder);
+		List<GridFSDBFile> filesInFolder = getFilesInFolder(folderId);
 		List<UploadResponse> uploads = new LinkedList<UploadResponse>();
 		if (filesInFolder != null) {
 			for (GridFSDBFile file : filesInFolder) {
-				if (security.isPermitted("read:uploads:" + folder + ":" + file.getId())) {
+				if (security.isPermitted("read:uploads:" + folderId + ":" + file.getId())) {
 					uploads.add(fileToUpload(file));
 				}
 			}
@@ -104,20 +107,20 @@ public class UploadService {
 		return uploads;
 	}
 
-	public void delete(final String folder, final String id, HttpServletResponse response) {
-		sanitizeAndValidateFolder(folder);
-		security.checkPermission("delete:uploads:" + folder + ":" + id);
-		security.checkNotReferenced(id, "uploads");
+	public void delete(final String folderId, final String uploadId, HttpServletResponse response) {
+		validateFolderExist(folderId);
+		security.checkPermission("delete:uploads:" + folderId + ":" + uploadId);
+		security.checkNotReferenced(uploadId, "uploads");
 
-		if (deleteFileById(folder, id)) {
+		if (deleteFileById(folderId, uploadId)) {
 			response.setStatus(HttpStatus.OK.value());
 		} else {
 			throw new NotFoundException();
 		}
 	}
 
-	public boolean containsUploads(String folder, UploadResponseRefs uploads) {
-		List<String> uploadIdsInFolder = getFileIdsInFolder(folder);
+	public boolean containsUploads(String folderId, UploadResponseRefs uploads) {
+		List<String> uploadIdsInFolder = getFileIdsInFolder(folderId);
 		for (UploadResponse upload : uploads) {
 			if (!uploadIdsInFolder.contains(upload.getId())) {
 				return false;
@@ -126,8 +129,8 @@ public class UploadService {
 		return true;
 	}
 
-	public List<String> getFileIdsInFolder(String folder) {
-		List<GridFSDBFile> filesInFolder = getFilesInFolder(folder);
+	public List<String> getFileIdsInFolder(String folderId) {
+		List<GridFSDBFile> filesInFolder = getFilesInFolder(folderId);
 		List<String> uploadIds = new LinkedList<String>();
 		if (filesInFolder != null) {
 			for (GridFSDBFile file : filesInFolder) {
@@ -137,18 +140,18 @@ public class UploadService {
 		return uploadIds;
 	}
 
-	public void streamAsset(final String folder, final String fileName, HttpServletResponse response) {
-		sanitizeAndValidateFolder(folder);
-		if (uploadFolderService.isPublic(folder) == false) {
-			if (!(security.isPermitted("read:assets:" + folder) || security.isPermitted("read:uploads:" + folder))) {
-				throw new ForbiddenException("Missing permission: One of read:assets:" + folder + " or read:uploads:" + folder + " must be permitted.");
+	public void streamAsset(final String folderId, final String fileName, HttpServletResponse response) {
+		validateFolderExist(folderId);
+		if (uploadFolderService.isPublic(folderId) == false) {
+			if (!(security.isPermitted("read:assets:" + folderId) || security.isPermitted("read:uploads:" + folderId))) {
+				throw new ForbiddenException("error.missingPermission", "read:assets:" + folderId + " | read:uploads:" + folderId);
 			}
 		}
 
-		GridFSDBFile file = getFileByName(folder, fileName);
+		GridFSDBFile file = getFileByName(folderId, fileName);
 		if (file == null) {
 			// Find file by id if not found by file name
-			file = getFileById(folder, fileName);
+			file = getFileById(folderId, fileName);
 		}
 		if (file != null) {
 			try {
@@ -170,15 +173,14 @@ public class UploadService {
 		}
 	}
 
-	private void sanitizeAndValidateFolder(String folderName) {
-		folderName = folderName.toLowerCase();
-		if (!uploadFolderService.folderExist(folderName)) {
+	private void validateFolderExist(String folderId) {
+		if (uploadFolderService.read(folderId) == null) {
 			throw new SimpleValidationException(new ValidationError("upload", "uploadFolder.dontExist"));
 		}
 	}
 
-	private void checkMimeTypePermission(final String folderName, final String mimeType) {
-		if (!uploadFolderService.isPermittedMimeType(folderName, mimeType)) {
+	private void checkMimeTypePermission(final String folderId, final String mimeType) {
+		if (!uploadFolderService.isPermittedMimeType(folderId, mimeType)) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.mimeTypeNotAllowed"));
 		}
 	}
@@ -192,41 +194,41 @@ public class UploadService {
 		}
 	}
 
-	private GridFSDBFile getFileById(String id) {
-		if (ObjectId.isValid(id)) {
-			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(id))));
+	private GridFSDBFile getFileById(String uploadId) {
+		if (ObjectId.isValid(uploadId)) {
+			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(uploadId))));
 		}
 		return null;
 	}
 
-	private GridFSDBFile getFileById(String folder, String id) {
-		if (ObjectId.isValid(id)) {
-			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(id)).and("metadata." + METADATA_FOLDER).is(folder)));
+	private GridFSDBFile getFileById(String folderId, String uploadId) {
+		if (ObjectId.isValid(uploadId)) {
+			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId)));
 		}
 		return null;
 	}
 
-	private GridFSDBFile getFileByName(String folder, String fileName) {
-		Query query = new Query(Criteria.where("filename").is(fileName).and("metadata." + METADATA_FOLDER).is(folder));
+	private GridFSDBFile getFileByName(String folderId, String fileName) {
+		Query query = new Query(Criteria.where("filename").is(fileName).and("metadata." + METADATA_FOLDER_ID).is(folderId));
 		return gridFsTemplate.findOne(query);
 	}
 
-	private List<GridFSDBFile> getFilesInFolder(String folder) {
-		Query query = new Query(Criteria.where("metadata." + METADATA_FOLDER).is(folder));
+	private List<GridFSDBFile> getFilesInFolder(String folderId) {
+		Query query = new Query(Criteria.where("metadata." + METADATA_FOLDER_ID).is(folderId));
 		return gridFsTemplate.find(query);
 	}
 
-	private boolean deleteFileById(String folder, String id) {
-		if (getFileById(folder, id) != null) {
-			Query query = new Query(Criteria.where("_id").is(new ObjectId(id)).and("metadata." + METADATA_FOLDER).is(folder));
+	private boolean deleteFileById(String folderId, String uploadId) {
+		if (getFileById(folderId, uploadId) != null) {
+			Query query = new Query(Criteria.where("_id").is(new ObjectId(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId));
 			gridFsTemplate.delete(query);
 			return true;
 		}
 		return false;
 	}
 
-	private String getMetadataFolder(GridFSFile file) {
-		return file.getMetaData().get(METADATA_FOLDER).toString();
+	private String getMetadataFolderId(GridFSFile file) {
+		return file.getMetaData().get(METADATA_FOLDER_ID).toString();
 	}
 
 	private Long getMetadataWidth(GridFSFile file) {
@@ -246,16 +248,16 @@ public class UploadService {
 	}
 
 	private UploadResponse fileToUpload(GridFSFile file) {
-		final String folderName = getMetadataFolder(file);
+		final String folderId = getMetadataFolderId(file);
 		UploadResponse upload = new UploadResponse();
 		upload.setId(file.getId().toString());
 		upload.setFileName(file.getFilename());
-		upload.setFolderName(folderName);
-		if (uploadFolderService.isPublic(folderName)) {
-			upload.setFileUrl(baseUrl + "/api/" + apiVersion + "/assets/" + folderName + "/" + file.getFilename());
+		upload.setFolderId(folderId);
+		if (uploadFolderService.isPublic(folderId)) {
+			upload.setFileUrl(baseUrl + "/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename());
 		} else {
 			// Need to stream content through cordate server when folder isn't public
-			upload.setFileUrl(baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderName + "/" + file.getFilename());
+			upload.setFileUrl(baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename());
 		}
         upload.setMimeType(file.getContentType());
 		upload.setFileSize(file.getLength());

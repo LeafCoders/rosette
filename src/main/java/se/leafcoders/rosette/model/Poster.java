@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.validator.HasRef;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

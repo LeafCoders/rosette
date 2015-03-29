@@ -2,8 +2,9 @@ package se.leafcoders.rosette.model.resource;
 
 import org.springframework.data.mongodb.core.query.Update;
 import se.leafcoders.rosette.exception.SimpleValidationException;
-import se.leafcoders.rosette.model.UploadResponse;
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ValidationError;
+import se.leafcoders.rosette.model.upload.UploadFolderRef;
+import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.service.UploadService;
 
 public class UploadResourceMethods implements ResourceMethods {
@@ -36,8 +37,8 @@ public class UploadResourceMethods implements ResourceMethods {
 				throw new SimpleValidationException(new ValidationError("resource", "uploadResource.multiUploadsNotAllowed"));
 			}
 			
-			String folder = uploadResourceType.getFolderName();
-			if (resource.getUploads().hasRefs() && !uploadService.containsUploads(folder, resource.getUploads())) {
+			UploadFolderRef uploadFolder = uploadResourceType.getUploadFolder();
+			if (resource.getUploads().hasRefs() && !uploadService.containsUploads(uploadFolder.getId(), resource.getUploads())) {
 				throw new SimpleValidationException(new ValidationError("resource", "uploadResource.uploadDoesNotExistInFolder"));
 			}
 			

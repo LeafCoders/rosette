@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.model;
+package se.leafcoders.rosette.model.upload;
 
 import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.IdBasedModel;
 
 @Document
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
@@ -11,7 +13,7 @@ public class UploadResponse extends IdBasedModel {
     @NotNull
 	private String fileName;
     @NotNull
-	private String folderName;
+	private String folderId;
     @NotNull
 	private String fileUrl; // Absolute url to downloadable file
     @NotNull
@@ -35,12 +37,12 @@ public class UploadResponse extends IdBasedModel {
 		this.fileName = fileName;
 	}
 
-	public String getFolderName() {
-		return folderName;
+	public String getFolderId() {
+		return folderId;
 	}
 
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
+	public void setFolderId(String folderId) {
+		this.folderId = folderId;
 	}
 
 	public String getFileUrl() {

@@ -2,40 +2,74 @@ package se.leafcoders.rosette.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import se.leafcoders.rosette.model.UploadFolder;
+import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.model.upload.UploadFolder;
 
 @Service
-public class UploadFolderService {
+public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 
 	@Autowired
 	private SecurityService security;
-	List<UploadFolder> folders = new ArrayList<UploadFolder>();
+	@Autowired
+	private UploadService uploadService;
 
-	public void addFolder(final UploadFolder folder) {
-		if (!folderExist(folder.getName())) {
-			folders.add(folder);
+	List<UploadFolder> staticFolders = new ArrayList<UploadFolder>();
+
+	public UploadFolderService() {
+		super("uploadFolders", UploadFolder.class);
+	}
+
+	@Override
+	public UploadFolder create(UploadFolder uploadFolder, HttpServletResponse response) {
+		validateNotStatic(uploadFolder.getId());
+		return super.create(uploadFolder, response);
+	}
+
+	@Override
+	public UploadFolder read(String folderId) {
+		UploadFolder staticFolder = getStaticFolder(folderId);
+		if (staticFolder != null) {
+			return staticFolder;
+		}
+		return super.read(folderId);
+	}
+
+	@Override
+	public List<UploadFolder> readMany(final Query query) {
+		List<UploadFolder> many = super.readMany(query);
+		many.addAll(filterPermittedItems(staticFolders));
+		return many;
+	}
+
+	@Override
+	public void update(String folderId, UploadFolder updateData, HttpServletResponse response) {
+		validateNotStatic(folderId);
+		super.update(folderId, updateData, response);
+	}
+	
+	@Override
+	public void delete(String folderId, HttpServletResponse response) {
+		validateNotStatic(folderId);
+		validateNoFilesInFolder(folderId);
+		super.delete(folderId, response);
+	}
+
+	@Override
+	public void insertDependencies(UploadFolder data) {
+	}
+
+	public void addStaticFolder(final UploadFolder folder) {
+		if (getStaticFolder(folder.getId()) == null) {
+			staticFolders.add(folder);
 		}
 	}
 
-	public List<UploadFolder> getAllPermitted() {
-		List<UploadFolder> permittedFolders = new ArrayList<UploadFolder>();
-		for (final UploadFolder f : folders) {
-			// Use same key as for uploads when testing for permitted folder name
-			if (security.isPermitted("read:uploads:" + f.getName())) {
-				permittedFolders.add(f);
-			}
-		}
-		return permittedFolders;
-	}
-
-	public boolean folderExist(final String folderName) {
-		return getFolder(folderName) != null;
-	}
-
-	public boolean isPermittedMimeType(final String folderName, final String mimeType) {
-		UploadFolder folder = getFolder(folderName);
+	public boolean isPermittedMimeType(final String folderId, final String mimeType) {
+		UploadFolder folder = getStaticFolder(folderId);
 		if (folder != null) {
 			for (String match : folder.getMimeTypes()) {
 				if (mimeType.startsWith(match)) {
@@ -46,14 +80,26 @@ public class UploadFolderService {
 		return false;
 	}
 
-	public boolean isPublic(final String folderName) {
-		UploadFolder folder = getFolder(folderName);
+	public boolean isPublic(final String folderId) {
+		UploadFolder folder = getStaticFolder(folderId);
 		return (folder != null) && folder.getIsPublic();
 	}
+
+	private void validateNotStatic(final String folderId) {
+		if (getStaticFolder(folderId) != null) {
+			throw new ForbiddenException("Can't modify static folder!");
+		}
+	}
 	
-	private final UploadFolder getFolder(final String folderName) {
-		for (final UploadFolder folder : folders) {
-			if (folder.getName().compareTo(folderName) == 0) {
+	private void validateNoFilesInFolder(String folderId) {
+		if (!uploadService.getFileIdsInFolder(folderId).isEmpty()) {
+			throw new ForbiddenException("error.referencedBy", "upload");
+		}
+	}
+
+	private final UploadFolder getStaticFolder(final String folderId) {
+		for (final UploadFolder folder : staticFolders) {
+			if (folder.getId().compareTo(folderId) == 0) {
 				return folder;
 			}
 		}

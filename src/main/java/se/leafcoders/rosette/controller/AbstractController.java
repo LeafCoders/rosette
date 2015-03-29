@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +15,13 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import se.leafcoders.rosette.comparator.ValidationErrorComparator;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.exception.ValidationException;
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ExceptionError;
+import se.leafcoders.rosette.model.error.ValidationError;
 
 @RequestMapping("v1-snapshot")
 public class AbstractController {
@@ -38,7 +36,7 @@ public class AbstractController {
 
     protected void checkPermission(String permission) {
         if (!SecurityUtils.getSubject().isPermitted(permission)) {
-            throw new ForbiddenException("Missing permission: " + permission);
+            throw new ForbiddenException("error.missingPermission", permission);
         }
     }
 
@@ -54,10 +52,10 @@ public class AbstractController {
 
         if (exception instanceof ForbiddenException) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            responseBody = "Forbidden: " + exception.getMessage();
+            responseBody = new ExceptionError("error.forbidden", exception.getMessage(), ((ForbiddenException) exception).getReasonParams());
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            responseBody = "Not found";
+            responseBody = new ExceptionError("error.notFound", exception.getMessage(), null);
         } else if (exception instanceof ValidationException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
@@ -79,7 +77,7 @@ public class AbstractController {
             responseBody = errors;
         } else if (exception instanceof HttpMessageNotReadableException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseBody = "Bad request";
+            responseBody = new ExceptionError("error.badRequest", exception.getMessage(), null);
         }
 
         logger.error("Error", exception);

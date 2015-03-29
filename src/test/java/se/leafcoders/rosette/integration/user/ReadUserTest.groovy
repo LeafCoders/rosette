@@ -40,13 +40,10 @@ public class ReadUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["read:users:${ user2.id }"])
-		givenLocation(location1)
-		givenBooking(booking1)
-		givenBooking(booking2)
+		givenPermissionForUser(user1, ["read:users:${ user1.id }"])
 
 		// When
-		String getUrl = "/users/${ user1.id }"
+		String getUrl = "/users/${ user2.id }"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -58,9 +55,6 @@ public class ReadUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["read:users"])
-		givenLocation(location1)
-		givenBooking(booking1)
-		givenBooking(booking2)
 
 		// When
 		String getUrl = "/users/${ user2.id }"

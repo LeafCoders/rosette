@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ValidationError;
 
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
 	@Autowired
@@ -60,16 +60,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	
 	@Override
 	public List<T> readMany(final Query query) {
-		List<T> dataInDatabase = mongoTemplate.find(query, entityClass);
-		List<T> result = new LinkedList<T>();
-		if (dataInDatabase != null) {
-			for (T data : dataInDatabase) {
-				if (security.isPermitted("read:" + permissionType + ":" + data.getId())) {
-					result.add(data);
-				}
-			}
-		}
-		return result;
+		return filterPermittedItems(mongoTemplate.find(query, entityClass));
 	}
 
 	@Override
@@ -104,5 +95,17 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	
 	public void validateUniqueId(T data) {
 		validateUnique("id", data.getId(), "error.id.mustBeUnique");
+	}
+	
+	public List<T> filterPermittedItems(List<T> items) {
+		List<T> result = new LinkedList<T>();
+		if (items != null) {
+			for (T data : items) {
+				if (security.isPermitted("read:" + permissionType + ":" + data.getId())) {
+					result.add(data);
+				}
+			}
+		}
+		return result;
 	}
 }

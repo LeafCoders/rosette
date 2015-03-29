@@ -1,6 +1,6 @@
 package se.leafcoders.rosette.exception;
 
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ValidationError;
 
 public class SimpleValidationException extends RuntimeException {
     private static final long serialVersionUID = 1L;

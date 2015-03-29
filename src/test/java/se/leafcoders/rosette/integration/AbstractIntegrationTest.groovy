@@ -29,6 +29,9 @@ import se.leafcoders.rosette.model.reference.UploadResponseRefs
 import se.leafcoders.rosette.model.reference.UserRef
 import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
+import se.leafcoders.rosette.model.upload.UploadFolderRef
+import se.leafcoders.rosette.model.upload.UploadRequest;
+import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.Mongo
 import com.mongodb.MongoException
@@ -76,6 +79,7 @@ abstract class AbstractIntegrationTest {
         mongoTemplate.dropCollection("userResourceTypes")
         mongoTemplate.dropCollection("locations")
         mongoTemplate.dropCollection("bookings")
+        mongoTemplate.dropCollection("uploadFolders")
         gridFsTemplate.delete(null)
 	}
 
@@ -228,6 +232,8 @@ abstract class AbstractIntegrationTest {
         image : null
 	)
 
+	protected final UploadFolderRef uploadFolderPosters = new UploadFolderRef(id: "posters", name: "Posters")
+
 	protected final UploadRequest validPNGImage = new UploadRequest(
         fileName : "image.png",
         mimeType : "image/png",
@@ -266,7 +272,7 @@ abstract class AbstractIntegrationTest {
 		name : "UploadResourceType Single",
 		description : "A poster file",
 		multiSelect : false,
-		folderName : "posters"
+		uploadFolder : uploadFolderPosters
 	)
 	protected final UploadResourceType uploadResourceTypeMulti = new UploadResourceType(
 		type : 'upload',
@@ -275,7 +281,7 @@ abstract class AbstractIntegrationTest {
 		name : "UploadResourceType Multi",
 		description : "Some poster files",
 		multiSelect : true,
-		folderName : "posters"
+		uploadFolder : uploadFolderPosters
 	)
 
 	protected final EventType eventType1 = new EventType(
@@ -414,9 +420,9 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(poster)
 	}
 	
-	protected UploadResponse givenUploadInFolder(String folder, UploadRequest upload) {
+	protected UploadResponse givenUploadInFolder(String folderId, UploadRequest upload) {
 		createTestUploadUser()
-        String postUrl = "/uploads/" + folder
+        String postUrl = "/uploads/" + folderId
 		String postContent = mapper.writeValueAsString(upload)
 		HttpResponse postResponse = whenPost(postUrl, userTestUpload, postContent)
 		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)

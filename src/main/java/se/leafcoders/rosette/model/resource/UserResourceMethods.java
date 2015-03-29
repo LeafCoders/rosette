@@ -2,7 +2,7 @@ package se.leafcoders.rosette.model.resource;
 
 import org.springframework.data.mongodb.core.query.Update;
 import se.leafcoders.rosette.exception.SimpleValidationException;
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.service.GroupService;
 import se.leafcoders.rosette.service.UserService;

@@ -33,7 +33,7 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 			{
 				"id" : "${ uploadItem1['id'] }",
 				"fileName" : "image.png",
-	            "folderName": "posters",
+	            "folderId": "posters",
 				"fileUrl" : "${ baseUrl }/assets/posters/image.png",
 	            "mimeType" : "image/png",
 				"fileSize" : 1047,
@@ -43,7 +43,7 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 			{
 				"id" : "${ uploadItem2['id'] }",
 				"fileName" : "image.jpg",
-	            "folderName": "posters",
+	            "folderId": "posters",
 				"fileUrl" : "${ baseUrl }/assets/posters/image.jpg",
 	            "mimeType" : "image/jpg",
 				"fileSize" : 1476,

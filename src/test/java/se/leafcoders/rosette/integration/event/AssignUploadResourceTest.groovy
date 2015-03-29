@@ -5,8 +5,8 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
-import se.leafcoders.rosette.model.UploadResponse
 import se.leafcoders.rosette.model.event.Event
+import se.leafcoders.rosette.model.upload.UploadResponse;
 
 public class AssignUploadResourceTest extends AbstractIntegrationTest {
 

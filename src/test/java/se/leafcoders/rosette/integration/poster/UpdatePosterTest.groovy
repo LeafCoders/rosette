@@ -9,7 +9,7 @@ import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.Poster
-import se.leafcoders.rosette.model.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadResponse;
 import com.mongodb.util.JSON
 
 public class UpdatePosterTest extends AbstractIntegrationTest {

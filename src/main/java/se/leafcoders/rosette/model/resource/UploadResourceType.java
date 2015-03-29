@@ -1,12 +1,13 @@
 package se.leafcoders.rosette.model.resource;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.upload.UploadFolderRef;
 
 public class UploadResourceType extends ResourceType {
 
-	@NotEmpty(message = "uploadResourceType.folderName.notEmpty")
-    private String folderName;
+	@NotNull(message = "uploadResourceType.uploadFolder.notEmpty")
+    private UploadFolderRef uploadFolder;
 
 	private Boolean multiSelect;
 	
@@ -19,8 +20,8 @@ public class UploadResourceType extends ResourceType {
     @Override
 	public void update(BaseModel updateFrom) {
     	UploadResourceType resourceTypeUpdate = (UploadResourceType) updateFrom;
-    	if (resourceTypeUpdate.getFolderName() != null) {
-    		setFolderName(resourceTypeUpdate.getFolderName());
+    	if (resourceTypeUpdate.getUploadFolder() != null) {
+    		setUploadFolder(resourceTypeUpdate.getUploadFolder());
     	}
     	if (resourceTypeUpdate.getMultiSelect() != null) {
     		setMultiSelect(resourceTypeUpdate.getMultiSelect());
@@ -30,12 +31,12 @@ public class UploadResourceType extends ResourceType {
 
     // Getters and setters
 
-	public String getFolderName() {
-		return folderName;
+	public UploadFolderRef getUploadFolder() {
+		return uploadFolder;
 	}
 
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
+	public void setUploadFolder(UploadFolderRef uploadFolder) {
+		this.uploadFolder = uploadFolder;
 	}
 
 	public Boolean getMultiSelect() {

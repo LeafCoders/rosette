@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.User;
-import se.leafcoders.rosette.model.ValidationError;
+import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.MongoRealm;
 
 @Service

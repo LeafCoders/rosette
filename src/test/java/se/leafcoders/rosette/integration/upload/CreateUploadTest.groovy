@@ -33,7 +33,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 		String expectedData = """{
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"fileName" : "image.png",
-            "folderName": "posters",
+            "folderId": "posters",
 			"fileUrl" : "${baseUrl}/assets/posters/image.png",
             "mimeType" : "image/png",
 			"fileSize" : 1047,

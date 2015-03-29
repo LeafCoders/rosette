@@ -12,7 +12,7 @@ import se.leafcoders.rosette.integration.AbstractIntegrationTest
 public class DeleteUploadTest extends AbstractIntegrationTest {
 
     @Test
-    public void test() throws ClientProtocolException, IOException {
+    public void successToDeleteUpload() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, ["delete:uploads:posters"])
@@ -22,9 +22,27 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
 		String deleteUrl = "/uploads/posters/${uploadItem['id']}"
 		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
 		releaseDeleteRequest()
-
+		
         // Then
 		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
-		thenAssetDontExist(uploadItem['fileUrl'])
     }
+
+	@Test
+	public void failToDeleteWhenUploadIsReferenced() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenPermissionForUser(user1, ["delete:uploads:posters"])
+		def uploadItem = givenUploadInFolder("posters", validPNGImage)
+		givenPoster(poster1, uploadItem)
+		
+		// When
+		String deleteUrl = "/uploads/posters/${uploadItem['id']}"
+		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+
+		// Then
+		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_FORBIDDEN)
+		releaseDeleteRequest()
+		thenAssetWithNameExist(uploadItem['fileName'], uploadItem['fileUrl'])
+	}
+
 }
