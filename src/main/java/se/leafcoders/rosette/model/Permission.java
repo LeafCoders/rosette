@@ -1,10 +1,12 @@
 package se.leafcoders.rosette.model;
 
+import java.util.Arrays;
 import java.util.List;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.reference.UserRef;
+import se.leafcoders.rosette.validator.ValidPermissions;
 
 @Document(collection = "permissions")
 @ScriptAssert(lang = "javascript", script = "((_this.everyone?1:0)+(_this.user?1:0)+(_this.group?1:0)) == 1")
@@ -19,6 +21,7 @@ public class Permission extends IdBasedModel {
 	@Indexed
 	private Group group;
 
+	@ValidPermissions
 	private List<String> patterns;
 
 	@Override
@@ -56,10 +59,17 @@ public class Permission extends IdBasedModel {
 	}
 
 	public List<String> getPatterns() {
-		return patterns;
+		return cleanPatterns(patterns);
 	}
 
 	public void setPatterns(List<String> patterns) {
-		this.patterns = patterns;
+		this.patterns = cleanPatterns(patterns);
+	}
+	
+	private List<String> cleanPatterns(List<String> patternsToClean) {
+		if (patternsToClean != null) {
+			patternsToClean.removeAll(Arrays.asList("", null));
+		}
+		return patternsToClean;
 	}
 }
