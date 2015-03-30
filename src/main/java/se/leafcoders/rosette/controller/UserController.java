@@ -3,6 +3,7 @@ package se.leafcoders.rosette.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -81,13 +82,13 @@ public class UserController extends AbstractController {
 			throw new NotFoundException();
 		} else {
 			// Removing permissions for the user
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(id)), Permission.class);
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(new ObjectId(id))), Permission.class);
 			
 			// Removing group memberships with the user that is about to be deleted
-			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(id)), GroupMembership.class);
+			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(new ObjectId(id))), GroupMembership.class);
 
 			// Deleting the user
-			User deletedUser = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), User.class);
+			User deletedUser = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(new ObjectId(id))), User.class);
 			if (deletedUser == null) {
 				throw new NotFoundException();
 			} else {

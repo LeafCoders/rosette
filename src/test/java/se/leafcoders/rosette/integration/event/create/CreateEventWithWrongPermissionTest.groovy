@@ -8,13 +8,15 @@ import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
+import org.junit.Ignore
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
-import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.model.event.Event
 import se.leafcoders.rosette.security.RosettePasswordService
 import com.mongodb.util.JSON
 
+@Ignore
 public class CreateEventWithWrongPermissionTest extends AbstractIntegrationTest {
 
 	@Test

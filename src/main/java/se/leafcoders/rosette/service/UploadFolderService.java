@@ -1,7 +1,9 @@
 package se.leafcoders.rosette.service;
 
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.model.upload.UploadFolder;
@@ -16,6 +18,11 @@ public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 
 	public UploadFolderService() {
 		super("uploadFolders", UploadFolder.class);
+	}
+
+	@Override
+	public List<UploadFolder> readMany(final Query query) {
+		return filterPermittedItems(mongoTemplate.find(query, UploadFolder.class), "read:uploads");
 	}
 
 	@Override

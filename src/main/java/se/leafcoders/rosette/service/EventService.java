@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -43,7 +44,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		security.validate(resource);
 
 		Query query = new Query(new Criteria().andOperator(
-		        Criteria.where("id").is(eventId),
+		        Criteria.where("id").is(new ObjectId(eventId)),
 		        Criteria.where("resources.resourceType.id").is(resourceTypeId)));		
 
 		ResourceType resourceTypeIn = resourceTypeService.read(resource.getResourceType().getId());

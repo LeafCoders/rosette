@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.http.impl.client.DefaultHttpClient
+import org.bson.types.ObjectId
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.After
 import org.junit.AfterClass
@@ -131,8 +132,7 @@ abstract class AbstractIntegrationTest {
 	/*
 	 *  Helper data and methods
 	 */
-	private int objectId = 1
-	private int getObjectId() { return objectId++ }
+	public String getObjectId() { return new ObjectId().toString() }
 
 	private boolean hasAddedUploadUser = false
 	private void createTestUploadUser() {

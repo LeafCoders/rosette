@@ -53,10 +53,10 @@ public class SecurityService {
 	// TODO: I very ugly method. Fix with annotations? http://stackoverflow.com/a/4454783
 	public void checkNotReferenced(final String id, final String permissionType) {
 		if (permissionType == "locations") {
-			if (mongoTemplate.exists(Query.query(Criteria.where("location.id").is(id)), Booking.class)) {
+			if (mongoTemplate.exists(Query.query(Criteria.where("location.id").is(new ObjectId(id))), Booking.class)) {
 				throw new ForbiddenException("error.referencedBy", "booking");
 			}
-			if (mongoTemplate.exists(Query.query(Criteria.where("location.id").is(id)), Event.class)) {
+			if (mongoTemplate.exists(Query.query(Criteria.where("location.id").is(new ObjectId(id))), Event.class)) {
 				throw new ForbiddenException("error.referencedBy", "event");
 			}
 		} else if (permissionType == "uploads") {

@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.controller;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -75,7 +76,7 @@ public class UserResourceTypeController extends AbstractController {
 		update.set("group", userResourceType.getGroup());
 //TODO:...        update.set("sortOrder", userResourceType.getSortOrder());
 
-		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, UserResourceType.class).getN() == 0) {
+		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(new ObjectId(id))), update, UserResourceType.class).getN() == 0) {
 			throw new NotFoundException();
 		}
 
@@ -86,7 +87,7 @@ public class UserResourceTypeController extends AbstractController {
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
 		checkPermission("delete:userResourceTypes:" + id);
 
-        UserResourceType deletedUserResourceType = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(id)), UserResourceType.class);
+        UserResourceType deletedUserResourceType = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(new ObjectId(id))), UserResourceType.class);
 		if (deletedUserResourceType == null) {
 			throw new NotFoundException();
 		} else {

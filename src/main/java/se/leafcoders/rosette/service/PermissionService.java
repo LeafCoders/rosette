@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -98,7 +99,7 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 		permissions.add("update:users:" + user.getId());
 		
 		// Adding permissions specific for this user
-		Query userPermissionQuery = Query.query(Criteria.where("user.id").is(user.getId()));
+		Query userPermissionQuery = Query.query(Criteria.where("user.id").is(new ObjectId(user.getId())));
 		List<Permission> userPermissions = mongoTemplate.find(userPermissionQuery, Permission.class);
 		if (userPermissions != null) {
 			for (Permission userPermission : userPermissions) {

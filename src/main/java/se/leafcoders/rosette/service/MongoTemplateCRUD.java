@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,7 +36,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 
 	protected Query getIdQuery(String id) {
-		return Query.query(Criteria.where("id").is(id));
+		return Query.query(Criteria.where("id").is(ObjectId.isValid(id) ? new ObjectId(id) : id));
 	}
 
 	@Override
@@ -84,21 +85,34 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 	
 	public void validateUnique(String property, Object value, String message) {
-		if (value == null || value == "" || mongoTemplate.count(Query.query(Criteria.where(property).is(value)), entityClass) > 0) {
-			throw new SimpleValidationException(new ValidationError(property, message));
+		if (value != null && value != "") {
+			Object valueQuery = value;
+			if (value instanceof String && ObjectId.isValid((String)value)) {
+				valueQuery = new ObjectId((String)value);
+			}
+			if (mongoTemplate.count(Query.query(Criteria.where(property).is(valueQuery)), entityClass) == 0) {
+				return;
+			}
 		}
+		throw new SimpleValidationException(new ValidationError(property, message));
 	}
 	
 	public void validateUniqueId(T data) {
 		validateUnique("id", data.getId(), "error.id.mustBeUnique");
 	}
 	
-	public List<T> filterPermittedItems(List<T> items) {
+	public List<T> filterPermittedItems(List<T> items, String... extraAcceptedPermissions) {
 		List<T> result = new LinkedList<T>();
 		if (items != null) {
 			for (T data : items) {
 				if (security.isPermitted("read:" + permissionType + ":" + data.getId())) {
 					result.add(data);
+				}
+				for (String extraPermission : extraAcceptedPermissions) {
+					if (security.isPermitted(extraPermission + ":" + data.getId())) {
+						result.add(data);
+						break;
+					}
 				}
 			}
 		}

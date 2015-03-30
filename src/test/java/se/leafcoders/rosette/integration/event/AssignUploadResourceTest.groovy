@@ -64,7 +64,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type" : "upload",
 			"resourceType" : ${ toJSON(uploadResourceTypeSingle) },
-			"uploads" : [ { "id" : "fileThatDontExist" } ]
+			"uploads" : [ { "id" : "${ getObjectId() }" } ]
 		}""")
 
 		// Then
