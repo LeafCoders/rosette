@@ -1,6 +1,8 @@
 package se.leafcoders.rosette.controller;
 
-import org.bson.types.ObjectId;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -9,13 +11,15 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.resource.UserResourceType;
 import se.leafcoders.rosette.service.SecurityService;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import util.QueryId;
 
 @Controller
 public class UserResourceTypeController extends AbstractController {
@@ -76,7 +80,7 @@ public class UserResourceTypeController extends AbstractController {
 		update.set("group", userResourceType.getGroup());
 //TODO:...        update.set("sortOrder", userResourceType.getSortOrder());
 
-		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(new ObjectId(id))), update, UserResourceType.class).getN() == 0) {
+		if (mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(QueryId.get(id))), update, UserResourceType.class).getN() == 0) {
 			throw new NotFoundException();
 		}
 
@@ -87,7 +91,7 @@ public class UserResourceTypeController extends AbstractController {
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
 		checkPermission("delete:userResourceTypes:" + id);
 
-        UserResourceType deletedUserResourceType = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(new ObjectId(id))), UserResourceType.class);
+        UserResourceType deletedUserResourceType = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(QueryId.get(id))), UserResourceType.class);
 		if (deletedUserResourceType == null) {
 			throw new NotFoundException();
 		} else {

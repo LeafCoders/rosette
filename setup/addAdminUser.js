@@ -1,7 +1,7 @@
 // Adds a user with username "a@dmin.se" and password "password" with full permissions.
 
 db.users.insert({
-  "_id" : "4711",
+  "_id" : ObjectId( "5519a6563004ba8bee704b62" ),
   "email" : "a@dmin.se",
   "firstName" : "Admin",
   "lastName" : "Admin",
@@ -9,6 +9,6 @@ db.users.insert({
 });
 
 db.permissions.insert({
-  "user" : { "id" : "4711" },
+  "user" : { "id" : ObjectId( "5519a6563004ba8bee704b62" ) },
   "patterns" : [ "*" ]
 });

@@ -13,6 +13,7 @@ import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.error.ValidationError;
+import util.QueryId;
 
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
 	@Autowired
@@ -36,7 +37,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 
 	protected Query getIdQuery(String id) {
-		return Query.query(Criteria.where("id").is(ObjectId.isValid(id) ? new ObjectId(id) : id));
+		return Query.query(Criteria.where("id").is(QueryId.get(id)));
 	}
 
 	@Override
@@ -107,11 +108,12 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 			for (T data : items) {
 				if (security.isPermitted("read:" + permissionType + ":" + data.getId())) {
 					result.add(data);
-				}
-				for (String extraPermission : extraAcceptedPermissions) {
-					if (security.isPermitted(extraPermission + ":" + data.getId())) {
-						result.add(data);
-						break;
+				} else {
+					for (String extraPermission : extraAcceptedPermissions) {
+						if (security.isPermitted(extraPermission + ":" + data.getId())) {
+							result.add(data);
+							break;
+						}
 					}
 				}
 			}

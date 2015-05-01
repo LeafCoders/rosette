@@ -26,6 +26,7 @@ import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UploadResponseRefs;
 import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
+import util.QueryId;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -196,14 +197,14 @@ public class UploadService {
 
 	private GridFSDBFile getFileById(String uploadId) {
 		if (ObjectId.isValid(uploadId)) {
-			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(uploadId))));
+			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(QueryId.get(uploadId))));
 		}
 		return null;
 	}
 
 	private GridFSDBFile getFileById(String folderId, String uploadId) {
 		if (ObjectId.isValid(uploadId)) {
-			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId)));
+			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(QueryId.get(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId)));
 		}
 		return null;
 	}
@@ -220,7 +221,7 @@ public class UploadService {
 
 	private boolean deleteFileById(String folderId, String uploadId) {
 		if (getFileById(folderId, uploadId) != null) {
-			Query query = new Query(Criteria.where("_id").is(new ObjectId(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId));
+			Query query = new Query(Criteria.where("_id").is(QueryId.get(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId));
 			gridFsTemplate.delete(query);
 			return true;
 		}

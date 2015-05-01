@@ -3,7 +3,6 @@ package se.leafcoders.rosette.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,6 +12,7 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.MongoRealm;
+import util.QueryId;
 
 @Service
 public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
@@ -68,13 +68,13 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 
 	private boolean membershipExist(GroupMembership groupMembership) {
         long count = mongoTemplate.count(Query.query(Criteria
-        		.where("user.id").is(new ObjectId(groupMembership.getUser().getId()))
+        		.where("user.id").is(QueryId.get(groupMembership.getUser().getId()))
         		.and("group.id").is(groupMembership.getGroup().getId())), GroupMembership.class);
         return count > 0;
 	}
 
 	public List<GroupMembership> getForUser(User user) {
-		Query query = new Query(Criteria.where("user.id").is(new ObjectId(user.getId())));
+		Query query = new Query(Criteria.where("user.id").is(QueryId.get(user.getId())));
 		return mongoTemplate.find(query, GroupMembership.class);
 	}
 
