@@ -20,7 +20,7 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
-		givenPermissionForUser(user1, ["read:resourceTypes:${userResourceTypeSingle.id}"])
+		givenPermissionForUser(user1, ["resourceTypes:read:${userResourceTypeSingle.id}"])
 
 		// When
 		String getUrl = "/resourceTypes/${userResourceTypeSingle.id}"
@@ -47,7 +47,7 @@ public class ReadResourceTypeTest extends AbstractIntegrationTest {
     public void failReadNotFound() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:resourceTypes"])
+		givenPermissionForUser(user1, ["resourceTypes:read"])
 
 		// When
 		String getUrl = "/resourceTypes/nonExistingKey"

@@ -15,7 +15,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 	public void createGroupWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:groups"])
+		givenPermissionForUser(user1, ["groups:create"])
 		
         // When
 		String postUrl = "/groups"
@@ -44,7 +44,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 	public void failCreateGroupWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:groups"])
+		givenPermissionForUser(user1, ["groups:read"])
 
         // When
 		String postUrl = "/groups"
@@ -63,7 +63,7 @@ public class CreateGroupTest extends AbstractIntegrationTest {
 	public void failCreateGroupWhenMissingId() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:groups"])
+		givenPermissionForUser(user1, ["groups:create"])
 
         // When
 		String postUrl = "/groups"

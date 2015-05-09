@@ -18,7 +18,7 @@ public class DeletePosterTest extends AbstractIntegrationTest {
 
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:posters"])
+		givenPermissionForUser(user1, ["posters:delete"])
 		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)

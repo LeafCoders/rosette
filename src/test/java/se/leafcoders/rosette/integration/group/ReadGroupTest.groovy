@@ -13,7 +13,7 @@ public class ReadGroupTest extends AbstractIntegrationTest {
 	public void readGroupWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:groups:${ group2.id }"])
+		givenPermissionForUser(user1, ["groups:read:${ group2.id }"])
 		givenGroup(group1)
 		givenGroup(group2)
 		
@@ -37,7 +37,7 @@ public class ReadGroupTest extends AbstractIntegrationTest {
 	public void failReadGroupThatDontExist() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:groups"])
+		givenPermissionForUser(user1, ["groups:read"])
 		givenGroup(group1)
 		givenGroup(group2)
 		

@@ -14,13 +14,13 @@ public class UpdatePermissionTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		String userPermissionId = givenPermissionForUser(user1, ["update:permissions", "read:permissions", "read:users"])
+		String userPermissionId = givenPermissionForUser(user1, ["permissions:update", "permissions:read", "users:read"])
 
 		// When
 		String putUrl = "/permissions/${ userPermissionId }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"user" : ${ toJSON(userRef1) },
-			"patterns" : ["read:events"]
+			"patterns" : ["events:read"]
 		}""")
 
 		// Then
@@ -31,7 +31,7 @@ public class UpdatePermissionTest extends AbstractIntegrationTest {
 			"everyone" : null,
 			"user" : ${ toJSON(userRef1) },
 			"group" : null,
-			"patterns" : ["read:events"]
+			"patterns" : ["events:read"]
 		}]"""
 		thenDataInDatabaseIs(Permission.class, expectedData)
 		thenItemsInDatabaseIs(Permission.class, 1)

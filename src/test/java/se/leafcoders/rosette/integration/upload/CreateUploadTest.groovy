@@ -17,7 +17,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
         // Given
 		givenUser(user1)
 		givenUploadFolder(uploadFolderPosters)
-		givenPermissionForUser(user1, ["create:uploads:posters"])
+		givenPermissionForUser(user1, ["uploads:create:posters"])
 
         // When
 		String postUrl = "/uploads/posters"
@@ -51,7 +51,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUploadFolder(uploadFolderPosters)
-		givenPermissionForUser(user1, ["create:uploads:invalid"])
+		givenPermissionForUser(user1, ["uploads:create:invalid"])
 
 		// When
 		String postUrl = "/uploads/posters"

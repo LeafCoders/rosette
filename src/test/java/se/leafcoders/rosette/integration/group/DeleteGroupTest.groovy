@@ -13,7 +13,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 	public void deleteGroupWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:groups:${ group1.id }"])
+		givenPermissionForUser(user1, ["groups:delete:${ group1.id }"])
 		givenGroup(group1)
 		givenGroup(group2)
 
@@ -30,7 +30,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 	public void failDeleteGroupWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:groups:${ group1.id }"])
+		givenPermissionForUser(user1, ["groups:delete:${ group1.id }"])
 		givenGroup(group1)
 		givenGroup(group2)
 
@@ -47,7 +47,7 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 	public void failDeleteGroupThatDontExist() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:groups"])
+		givenPermissionForUser(user1, ["groups:delete"])
 		givenGroup(group1)
 		givenGroup(group2)
 

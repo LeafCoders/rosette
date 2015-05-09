@@ -13,7 +13,7 @@ public class DeleteEventTest extends AbstractIntegrationTest {
 	public void deleteEventWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:events:${ event2.id }"])
+		givenPermissionForUser(user1, ["events:delete:${ event2.id }"])
 		givenLocation(location1)
 		givenEventType(eventType1)
 		givenResourceType(userResourceTypeSingle)
@@ -36,7 +36,7 @@ public class DeleteEventTest extends AbstractIntegrationTest {
 	public void failDeleteEventWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:events:invalid"])
+		givenPermissionForUser(user1, ["events:delete:invalid"])
 		givenLocation(location1)
 		givenEventType(eventType1)
 		givenResourceType(userResourceTypeSingle)

@@ -24,7 +24,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 	public void createWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:events", "read:eventTypes", "read:resourceTypes"])
+		givenPermissionForUser(user1, ["events:create", "eventTypes:read", "resourceTypes:read"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
@@ -92,7 +92,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 	public void failWhenCreateWithoutFullPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:events", "read:eventTypes"])
+		givenPermissionForUser(user1, ["events:create", "eventTypes:read"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)

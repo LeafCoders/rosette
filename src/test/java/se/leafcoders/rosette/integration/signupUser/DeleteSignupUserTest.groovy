@@ -14,7 +14,7 @@ public class DeleteSignupUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenSignupUser(signupUser1)
-		givenPermissionForUser(user1, ["delete:signupUsers:${ signupUser1.id }"])
+		givenPermissionForUser(user1, ["signupUsers:delete:${ signupUser1.id }"])
 
 		// When
 		String deleteUrl = "/signupUsers/${ signupUser1.id }"

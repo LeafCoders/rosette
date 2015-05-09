@@ -15,12 +15,12 @@ public class ReadEventTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenPermissionForUser(user1, [
-			"read:events:${ event1.id }",
-			"read:eventTypes",
-			"read:locations",
-			"read:users",
-			"read:uploads",
-			"read:resourceTypes"
+			"events:read:${ event1.id }",
+			"eventTypes:read",
+			"locations:read",
+			"users:read",
+			"uploads:read",
+			"resourceTypes:read"
 		])
 		givenLocation(location1)
 		givenEventType(eventType1)

@@ -14,7 +14,7 @@ public class DeleteUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["delete:users:${ user2.id }"])
+		givenPermissionForUser(user1, ["users:delete:${ user2.id }"])
 
 		// When
 		String deleteUrl = "/users/${ user2.id }"

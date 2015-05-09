@@ -19,7 +19,7 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["read:users"])
+		givenPermissionForUser(user1, ["users:read"])
 
 		// When
 		String getUrl = "/users"
@@ -58,7 +58,7 @@ public class ReadUsersTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		givenGroupMembership(user1, group1)
 		givenGroupMembership(user2, group1)
-		givenPermissionForUser(user1, ["read:groups"])
+		givenPermissionForUser(user1, ["groups:read"])
 
 		// When
 		String getUrl = "/users"

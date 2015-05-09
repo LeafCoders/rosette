@@ -139,7 +139,7 @@ abstract class AbstractIntegrationTest {
 		if (!hasAddedUploadUser) {
 			hasAddedUploadUser = true
 			givenUser(userTestUpload)
-			givenPermissionForUser(userTestUpload, ["*:uploads"])
+			givenPermissionForUser(userTestUpload, ["uploads:*"])
 			System.sleep(100);
 		}
 	}

@@ -18,7 +18,7 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUploadFolder(uploadFolderPosters)
-		givenPermissionForUser(user1, ["read:uploads:posters"])
+		givenPermissionForUser(user1, ["uploads:read:posters"])
 		def uploadItem1 = givenUploadInFolder("posters", validPNGImage)
 		def uploadItem2 = givenUploadInFolder("posters", validJPEGImage)
 

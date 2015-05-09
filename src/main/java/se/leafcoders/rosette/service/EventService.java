@@ -38,7 +38,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	@Override
 	public Event create(Event event, HttpServletResponse response) {
 		if (event.getEventType() != null) {
-			security.checkPermission(EVENTS, CREATE, EVENT_TYPES.toString(), event.getEventType().getId());
+			security.checkPermission(EVENTS_EVENTTYPES, CREATE, event.getEventType().getId());
 		} else {
 			security.checkPermission(EVENTS, CREATE);
 		}
@@ -117,30 +117,30 @@ public class EventService extends MongoTemplateCRUD<Event> {
 
 	protected void checkEventTypesPermission(PermissionAction actionType, Event event) {
 		if (!security.isPermitted(EVENTS, actionType, event.getId())) {
-			if (!security.isPermitted(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId())) {
+			if (!security.isPermitted(EVENTS_EVENTTYPES, actionType, event.getEventType().getId())) {
 				security.throwPermissionMissing(
 						security.getPermissionString(EVENTS, actionType, event.getId()),
-						security.getPermissionString(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId()));						
+						security.getPermissionString(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()));						
 			}
 		}
 	}
 
 	protected void checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {
 		if (!security.isPermitted(EVENTS, actionType, event.getId())) {
-			if (!security.isPermitted(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId())) {
+			if (!security.isPermitted(EVENTS_EVENTTYPES, actionType, event.getEventType().getId())) {
 				if (resourceTypeId != null) {
-					security.checkPermission(EVENTS, actionType, RESOURCE_TYPES.toString(), resourceTypeId);
+					security.checkPermission(EVENTS_RESOURCETYPES, actionType, resourceTypeId);
 					return;
 				} else {
 					for (Resource resource : event.getResources()) {
-						if (security.isPermitted(EVENTS, actionType, RESOURCE_TYPES.toString(), resource.getResourceType().getId())) {
+						if (security.isPermitted(EVENTS_RESOURCETYPES, actionType, resource.getResourceType().getId())) {
 							return;
 						}
 					}
 				}
 				security.throwPermissionMissing(
 						security.getPermissionString(EVENTS, actionType, event.getId()),
-						security.getPermissionString(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId()));						
+						security.getPermissionString(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()));						
 			}
 		}
 	}

@@ -16,7 +16,7 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUploadFolder(uploadFolderPosters)
-		givenPermissionForUser(user1, ["delete:uploads:posters"])
+		givenPermissionForUser(user1, ["uploads:delete:posters"])
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 
         // When
@@ -33,7 +33,7 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUploadFolder(uploadFolderPosters)
-		givenPermissionForUser(user1, ["delete:uploads:posters"])
+		givenPermissionForUser(user1, ["uploads:delete:posters"])
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		

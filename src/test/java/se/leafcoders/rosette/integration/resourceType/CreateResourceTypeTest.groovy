@@ -17,7 +17,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
     public void createUserResourceTypeWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:resourceTypes", "read:groups"])
+		givenPermissionForUser(user1, ["resourceTypes:create", "groups:read"])
 		givenGroup(group1)
 		
 		// When
@@ -57,7 +57,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 	public void failsWhenCreateWithoutType() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:resourceTypes"])
+		givenPermissionForUser(user1, ["resourceTypes:create"])
 		givenGroup(group1)
 		
 		// When
@@ -78,7 +78,7 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 	public void failsWhenCreateWithoutUniqueKey() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:resourceTypes", "read:groups"])
+		givenPermissionForUser(user1, ["resourceTypes:create", "groups:read"])
 		givenGroup(group1)
 		
 		// When

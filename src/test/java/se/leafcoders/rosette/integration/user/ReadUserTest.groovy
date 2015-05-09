@@ -14,7 +14,7 @@ public class ReadUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["read:users:${ user1.id }"])
+		givenPermissionForUser(user1, ["users:read:${ user1.id }"])
 
 		// When
 		String getUrl = "/users/${ user1.id }"
@@ -40,7 +40,7 @@ public class ReadUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["read:users:${ user1.id }"])
+		givenPermissionForUser(user1, ["users:read:${ user1.id }"])
 
 		// When
 		String getUrl = "/users/${ user2.id }"
@@ -54,7 +54,7 @@ public class ReadUserTest extends AbstractIntegrationTest {
 	public void failWhenReadUserThatDontExist() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:users"])
+		givenPermissionForUser(user1, ["users:read"])
 
 		// When
 		String getUrl = "/users/${ user2.id }"

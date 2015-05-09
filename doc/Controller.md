@@ -8,22 +8,22 @@ The controller shall handle Create, Read, Update and Delete requests. The reques
 
 * `POST /events`
   * Creates a new event
-  * Needs permission `create:events:2`, `create:events` or `create`
+  * Needs permission `events:create:2`, `events:create` or `create`
 * `GET /events/2`
   * Gets event with id 2
-  * Needs permission `read:events:2`, `read:events` or `read`
+  * Needs permission `events:read:2`, `events:read` or `read`
 * `GET /events`
   * Gets all events
-  * Needs permission `read:events` or `read`
+  * Needs permission `events:read` or `read`
 * `PUT /events/2`
   * Updates event with id 2
-  * Needs permission `update:events:2`, `update:events` or `update`
+  * Needs permission `events:update:2`, `events:update` or `update`
 * `DELETE /events/2`
   * Delete event with id 2
-  * Needs permission `delete:events:2`, `delete:events` or `delete`
+  * Needs permission `events:delete:2`, `events:delete` or `delete`
 * `DELETE /events`
   * Delete all events
-  * Needs permission `delete:events` or `delete`
+  * Needs permission `events:delete` or `delete`
 
 ## Permission check
 
@@ -32,7 +32,7 @@ The controller shall handle Create, Read, Update and Delete requests. The reques
 @RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 @ResponseBody
 public Booking postEvent(@RequestBody Event event, HttpServletResponse response) {
-  checkPermission("create:events");
+  checkPermission("events:create");
   ...
 }
 ```
@@ -42,7 +42,7 @@ public Booking postEvent(@RequestBody Event event, HttpServletResponse response)
 @RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
 @ResponseBody
 public Booking getEvent(@PathVariable String id) {
-  checkPermissions("create:events:" + id);
+  checkPermissions("events:create:" + id);
   ...
 }
 ```
@@ -54,7 +54,7 @@ public Booking getEvent(@PathVariable String id) {
 public List<Booking> getEvents(HttpServletResponse response) {
   ...
   for (Event event : eventsInDatabase) {
-    if (isPermitted("read:events:" + event.getId())) {
+    if (isPermitted("events:read:" + event.getId())) {
       ...
     }
   }
@@ -66,7 +66,7 @@ public List<Booking> getEvents(HttpServletResponse response) {
 ```java
 @RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServletResponse response) {
-  checkPermission("update:events:" + id);
+  checkPermission("events:update:" + id);
   ...
 }
 ```
@@ -75,7 +75,7 @@ public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServ
 ```java
 @RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")
 public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
-  checkPermission("delete:events:" + id);
+  checkPermission("events:delete:" + id);
   ...
 }
 ```
@@ -84,7 +84,7 @@ public void deleteEvent(@PathVariable String id, HttpServletResponse response) {
 ```java
 @RequestMapping(value = "events", method = RequestMethod.DELETE, produces = "application/json")
 public void deleteEvents(HttpServletResponse response) {
-  checkPermission("delete:events");
+  checkPermission("events:delete");
   ...
 }
 ```

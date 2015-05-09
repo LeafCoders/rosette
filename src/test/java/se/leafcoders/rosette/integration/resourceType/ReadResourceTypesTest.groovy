@@ -18,7 +18,7 @@ public class ReadResourceTypesTest extends AbstractIntegrationTest {
     public void successReadAll() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:resourceTypes"])
+		givenPermissionForUser(user1, ["resourceTypes:read"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)

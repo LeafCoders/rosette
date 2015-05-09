@@ -18,7 +18,7 @@ public class ReadLocationTest extends AbstractIntegrationTest {
 	public void readLocationWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:locations:${ location1.id }"])
+		givenPermissionForUser(user1, ["locations:read:${ location1.id }"])
 		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 		givenLocation(location2)
@@ -44,7 +44,7 @@ public class ReadLocationTest extends AbstractIntegrationTest {
 	public void failWhenReadLocationWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:locations:${ location1.id }"])
+		givenPermissionForUser(user1, ["locations:read:${ location1.id }"])
 		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 		givenLocation(location2)

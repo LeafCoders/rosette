@@ -13,7 +13,7 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 	public void updateGroupWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:groups:${ group1.id }", "read:groups"])
+		givenPermissionForUser(user1, ["groups:update:${ group1.id }", "groups:read"])
 		givenGroup(group1)
 		givenGroup(group2)
 
@@ -47,7 +47,7 @@ public class UpdateGroupTest extends AbstractIntegrationTest {
 	public void failUpdateGroupThatDontExist() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:groups", "read:groups"])
+		givenPermissionForUser(user1, ["groups:update", "groups:read"])
 		givenGroup(group1)
 		givenGroup(group2)
 

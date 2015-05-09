@@ -14,7 +14,7 @@ public class DeleteLocationTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:locations:${ location1.id }"])
+		givenPermissionForUser(user1, ["locations:delete:${ location1.id }"])
 		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 

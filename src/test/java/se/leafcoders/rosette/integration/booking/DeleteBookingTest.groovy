@@ -17,7 +17,7 @@ public class DeleteBookingTest extends AbstractIntegrationTest {
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
-		givenPermissionForUser(user1, ["delete:bookings:${ booking2.id }"])
+		givenPermissionForUser(user1, ["bookings:delete:${ booking2.id }"])
 
 		// When
 		String deleteUrl = "/bookings/${ booking2.id }"
@@ -32,7 +32,7 @@ public class DeleteBookingTest extends AbstractIntegrationTest {
 	public void deleteAllBookingsWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:bookings"])
+		givenPermissionForUser(user1, ["bookings:delete"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
@@ -50,7 +50,7 @@ public class DeleteBookingTest extends AbstractIntegrationTest {
 	public void failWhenDeleteBookingWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:bookings:4711"])
+		givenPermissionForUser(user1, ["bookings:delete:4711"])
 		givenLocation(location1)
 		givenBooking(booking1)
 

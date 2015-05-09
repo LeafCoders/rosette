@@ -20,7 +20,7 @@ public class ReadGroupMembershipsByGroupIdTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["read:groupMemberships"])
+		givenPermissionForUser(user1, ["groupMemberships:read"])
 		givenGroup(group1)
 		givenGroup(group2)
 		String groupMembId1 = givenGroupMembership(user1, group1)

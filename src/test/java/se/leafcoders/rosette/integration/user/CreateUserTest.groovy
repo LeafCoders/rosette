@@ -17,7 +17,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 	public void createUserWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:users", "read:users"])
+		givenPermissionForUser(user1, ["users:create", "users:read"])
 		givenLocation(location1)
 
         // When
@@ -53,7 +53,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 	public void failCreateUserWithoutPermission() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:users"])
+		givenPermissionForUser(user1, ["users:read"])
 		givenLocation(location1)
 
         // When
@@ -74,7 +74,7 @@ public class CreateUserTest extends AbstractIntegrationTest {
 	public void failCreateUserWithInvalidContent() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:users", "read:users"])
+		givenPermissionForUser(user1, ["users:create", "users:read"])
 		givenLocation(location1)
 
         // When

@@ -17,7 +17,7 @@ public class ReadPosterTest extends AbstractIntegrationTest {
 	public void readPosterWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:posters"])
+		givenPermissionForUser(user1, ["posters:read"])
 		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)

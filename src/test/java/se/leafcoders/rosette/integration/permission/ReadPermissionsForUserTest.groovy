@@ -16,9 +16,9 @@ public class ReadPermissionsForUserTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenGroup(group1)
 		givenGroupMembership(user1, group1)
-		givenPermissionForEveryone(["read:events"])
-		givenPermissionForUser(user1, ["read:permissions"])
-		givenPermissionForGroup(group1, ["read:posters"])
+		givenPermissionForEveryone(["events:read"])
+		givenPermissionForUser(user1, ["permissions:read"])
+		givenPermissionForGroup(group1, ["posters:read"])
 
 		// When
 		String getUrl = "/permissionsForUser"
@@ -29,8 +29,8 @@ public class ReadPermissionsForUserTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[
-			"read:events", "read:users:${user1.id}", "update:users:${user1.id}", "read:permissions",
-			"read:posters", "read:users:${user1.id}"
+			"events:read", "users:read:${user1.id}", "users:update:${user1.id}", "permissions:read",
+			"posters:read", "users:read:${user1.id}"
 		]"""
 		thenResponseDataIs(responseBody, expectedData)
 	}
@@ -50,16 +50,16 @@ public class ReadPermissionsForUserTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[
-			"read:users:${user1.id}", "update:users:${user1.id}"
+			"users:read:${user1.id}", "users:update:${user1.id}"
 		]"""
 		thenResponseDataIs(responseBody, expectedData)
 		
 		// When
 		givenGroup(group1)
 		givenGroupMembership(user1, group1)
-		givenPermissionForEveryone(["read:events"])
-		givenPermissionForUser(user1, ["read:permissions"])
-		givenPermissionForGroup(group1, ["read:posters"])
+		givenPermissionForEveryone(["events:read"])
+		givenPermissionForUser(user1, ["permissions:read"])
+		givenPermissionForGroup(group1, ["posters:read"])
 		getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -67,8 +67,8 @@ public class ReadPermissionsForUserTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		expectedData = """[
-			"read:events", "read:users:${user1.id}", "update:users:${user1.id}", "read:permissions",
-			"read:posters", "read:users:${user1.id}"
+			"events:read", "users:read:${user1.id}", "users:update:${user1.id}", "permissions:read",
+			"posters:read", "users:read:${user1.id}"
 		]"""
 		thenResponseDataIs(responseBody, expectedData)
 

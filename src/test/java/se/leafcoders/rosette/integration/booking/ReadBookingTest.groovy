@@ -14,7 +14,7 @@ public class ReadBookingTest extends AbstractIntegrationTest {
 	public void readBookingWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:bookings:${ booking2.id }"])
+		givenPermissionForUser(user1, ["bookings:read:${ booking2.id }"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
@@ -41,7 +41,7 @@ public class ReadBookingTest extends AbstractIntegrationTest {
 	public void failWhenReadBookingWithoutPermission() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:bookings:${ booking1.id }"])
+		givenPermissionForUser(user1, ["bookings:read:${ booking1.id }"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)

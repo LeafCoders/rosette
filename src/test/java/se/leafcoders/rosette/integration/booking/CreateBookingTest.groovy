@@ -16,7 +16,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
     public void createBookingWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:bookings", "read:locations"])
+		givenPermissionForUser(user1, ["bookings:create", "locations:read"])
 		givenLocation(location1)
 		
         // When
@@ -48,7 +48,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
     @Test
     public void failWhenCreateBookingWithInvalidLocation() throws ClientProtocolException, IOException {
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:bookings", "read:locations"])
+		givenPermissionForUser(user1, ["bookings:create", "locations:read"])
 		givenLocation(location1)
 		
         // When
@@ -75,7 +75,7 @@ public class CreateBookingTest extends AbstractIntegrationTest {
     @Test
     public void failWhenCreateBookingWithInvalidContent() throws ClientProtocolException, IOException {
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:bookings"])
+		givenPermissionForUser(user1, ["bookings:create"])
 		givenLocation(location1)
 		
         // When

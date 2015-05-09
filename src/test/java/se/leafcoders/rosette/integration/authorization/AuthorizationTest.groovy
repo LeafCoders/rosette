@@ -15,10 +15,10 @@ public class AuthorizationTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:events"])
+		givenPermissionForUser(user1, ["events:read"])
 		
 		// When
-		String getUrl = "/authorizations?permissions=read:events,update:events,%20read:events"
+		String getUrl = "/authorizations?permissions=events:read,events:update,%20events:read"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then
@@ -26,8 +26,8 @@ public class AuthorizationTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """{
-			"read:events" : true,
-		    "update:events" : false
+			"events:read" : true,
+		    "events:update" : false
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 	}

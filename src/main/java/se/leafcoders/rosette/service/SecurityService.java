@@ -29,9 +29,9 @@ public class SecurityService {
 
     public String getPermissionString(PermissionType permissionType, PermissionAction permissionAction, String... params) {
 		if (params.length > 0) {
-			return permissionAction + ":" + permissionType + ":" + StringUtils.arrayToDelimitedString(params, ":");
+			return permissionType + ":" + permissionAction + ":" + StringUtils.arrayToDelimitedString(params, ":");
 		} else {
-			return permissionAction + ":" + permissionType;
+			return permissionType + ":" + permissionAction;
 		}
     }
     

@@ -14,7 +14,7 @@ public class DeletePermissionTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		String userPermissionId = givenPermissionForUser(user1, ["delete:permissions"])
+		String userPermissionId = givenPermissionForUser(user1, ["permissions:delete"])
 
 		// When
 		String deleteUrl = "/permissions/${ userPermissionId }"

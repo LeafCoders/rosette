@@ -26,7 +26,7 @@ public class CreateLocationTest extends AbstractIntegrationTest {
     public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:locations", "read:locations", "read:uploads"])
+		givenPermissionForUser(user1, ["locations:create", "locations:read", "uploads:read"])
 		givenUploadFolder(uploadFolderLocations)
 		Object image = givenUploadInFolder("locations", validPNGImage)
 		

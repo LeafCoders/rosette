@@ -16,7 +16,7 @@ public class TransformSignupUserTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenSignupUser(signupUser1)
-		givenPermissionForUser(user1, ["read:signupUsers", "create:users", "delete:signupUsers"])
+		givenPermissionForUser(user1, ["signupUsers:read", "users:create", "signupUsers:delete"])
 
         // When
 		String postUrl = "/signupUsersTransform/${ signupUser1.id }"

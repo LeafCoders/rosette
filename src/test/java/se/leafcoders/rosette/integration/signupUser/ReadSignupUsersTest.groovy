@@ -18,7 +18,7 @@ public class ReadSignupUsersTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenSignupUser(signupUser1)
-		givenPermissionForUser(user1, ["read:signupUsers"])
+		givenPermissionForUser(user1, ["signupUsers:read"])
 
 		// When
 		String getUrl = "/signupUsers"

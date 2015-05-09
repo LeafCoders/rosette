@@ -18,7 +18,7 @@ public class ReadLocationsTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:locations"])
+		givenPermissionForUser(user1, ["locations:read"])
 		givenUploadFolder(uploadFolderLocations)
 		givenLocation(location1)
 		givenLocation(location2)

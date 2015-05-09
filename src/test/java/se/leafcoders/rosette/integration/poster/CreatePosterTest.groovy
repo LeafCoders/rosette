@@ -18,7 +18,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 	public void createPosterWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:posters", "read:posters", "read:uploads"])
+		givenPermissionForUser(user1, ["posters:create", "posters:read", "uploads:read"])
 		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		
@@ -54,7 +54,7 @@ public class CreatePosterTest extends AbstractIntegrationTest {
 	public void failWhenCreatePosterWithInvalidContent() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:posters"])
+		givenPermissionForUser(user1, ["posters:create"])
 		givenUploadFolder(uploadFolderPosters)
 		
 		// When

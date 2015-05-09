@@ -19,7 +19,7 @@ public class UpdateResourceTypeTest extends AbstractIntegrationTest {
 		givenGroup(group1)
 		givenGroup(group2)
 		givenResourceType(userResourceTypeSingle)
-		givenPermissionForUser(user1, ["update:resourceTypes:${userResourceTypeSingle.id}", "read:resourceTypes", "read:groups"])
+		givenPermissionForUser(user1, ["resourceTypes:update:${userResourceTypeSingle.id}", "resourceTypes:read", "groups:read"])
 
 		// When
 		String putUrl = "/resourceTypes/${userResourceTypeSingle.id}"

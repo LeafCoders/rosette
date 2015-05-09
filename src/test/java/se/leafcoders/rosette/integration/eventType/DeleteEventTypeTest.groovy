@@ -14,7 +14,7 @@ public class DeleteEventTypeTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["delete:eventTypes"])
+		givenPermissionForUser(user1, ["eventTypes:delete"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)

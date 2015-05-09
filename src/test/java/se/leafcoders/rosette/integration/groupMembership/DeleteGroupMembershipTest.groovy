@@ -26,7 +26,7 @@ public class DeleteGroupMembershipTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
-		givenPermissionForUser(user1, ["delete:groupMemberships"])
+		givenPermissionForUser(user1, ["groupMemberships:delete"])
 		String groupMemb1 = givenGroupMembership(user1, group1)
 		String groupMemb2 = givenGroupMembership(user2, group1)
 

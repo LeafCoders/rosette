@@ -16,7 +16,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 	public void createPermissionWithSuccess() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		String userPermissionId = givenPermissionForUser(user1, ["create:permissions", "read:users", "read:groups"])
+		String userPermissionId = givenPermissionForUser(user1, ["permissions:create", "users:read", "groups:read"])
 		givenGroup(group1)
 		
         // When
@@ -46,7 +46,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 				"everyone" : null,
 				"user" : ${ toJSON(userRef1) },
 				"group" : null,
-				"patterns" : ["create:permissions", "read:users", "read:groups"]
+				"patterns" : ["permissions:create", "users:read", "groups:read"]
 			},
 			{
 				"id" : "${ JSON.parse(responseBody)['id'] }",
@@ -64,7 +64,7 @@ public class CreatePermissionTest extends AbstractIntegrationTest {
 	public void failCreatePermissionWhenInvalidContent() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		String userPermissionId = givenPermissionForUser(user1, ["create:permissions", "read:users", "read:groups"])
+		String userPermissionId = givenPermissionForUser(user1, ["permissions:create", "users:read", "groups:read"])
 		givenGroup(group1)
 		
         // When

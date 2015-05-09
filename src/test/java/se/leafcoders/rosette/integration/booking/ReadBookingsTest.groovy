@@ -16,7 +16,7 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 	public void readAllBookingsWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:bookings", "read:locations"])
+		givenPermissionForUser(user1, ["bookings:read", "locations:read"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
@@ -55,7 +55,7 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:bookings"])
+		givenPermissionForUser(user1, ["bookings:read"])
 
 		mongoTemplate.getCollection("bookings").insert(JSON.parse("""[
 			{

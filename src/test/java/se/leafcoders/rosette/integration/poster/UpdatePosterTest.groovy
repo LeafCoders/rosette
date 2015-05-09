@@ -18,7 +18,7 @@ public class UpdatePosterTest extends AbstractIntegrationTest {
 	public void updatePosterWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:posters", "read:posters", "read:uploads"])
+		givenPermissionForUser(user1, ["posters:update", "posters:read", "uploads:read"])
 		givenUploadFolder(uploadFolderPosters)
 		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
@@ -52,7 +52,7 @@ public class UpdatePosterTest extends AbstractIntegrationTest {
 	public void failWhenUpdatePosterWithEmptyTitle() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:posters", "read:posters", "read:uploads"])
+		givenPermissionForUser(user1, ["posters:update", "posters:read", "uploads:read"])
 		givenUploadFolder(uploadFolderPosters)
 		def uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)

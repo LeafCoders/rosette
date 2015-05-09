@@ -16,7 +16,7 @@ class SeedTest extends AbstractIntegrationTest {
 		givenGroupMembership(user2, group2)
 		givenPermissionForUser(user1, ["*"])
 		givenPermissionForGroup(group2, ["*"])
-		givenPermissionForEveryone(["read:events"])
+		givenPermissionForEveryone(["events:read"])
 
 		givenLocation(location1)
 		givenLocation(location2)

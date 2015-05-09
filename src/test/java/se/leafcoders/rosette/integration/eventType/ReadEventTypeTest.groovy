@@ -15,7 +15,7 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 	public void test() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["read:eventTypes", "read:resourceTypes", "read:groups"])
+		givenPermissionForUser(user1, ["eventTypes:read", "resourceTypes:read", "groups:read"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)

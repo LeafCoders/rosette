@@ -16,7 +16,7 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
     public void test() throws ClientProtocolException, IOException {
         // Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:eventTypes", "read:*"])
+		givenPermissionForUser(user1, ["eventTypes:create", "*:read"])
 		givenGroup(group1)
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)

@@ -5,6 +5,8 @@ public enum PermissionType {
 	ASSETS("assets"),
 	BOOKINGS("bookings"),
 	EVENTS("events"),
+	EVENTS_EVENTTYPES("events:eventTypes"),
+	EVENTS_RESOURCETYPES("events:resourceTypes"),
 	EVENT_TYPES("eventTypes"),
 	EVENT_WEEKS("eventWeeks"),
 	GROUP_MEMBERSHIPS("groupMemberships"),

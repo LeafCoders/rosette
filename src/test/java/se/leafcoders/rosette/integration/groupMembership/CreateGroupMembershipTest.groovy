@@ -20,7 +20,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 	public void testSucces() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:groupMemberships", "read:*"])
+		givenPermissionForUser(user1, ["groupMemberships:create", "*:read"])
 		givenGroup(group1)
 		
 		// When
@@ -49,7 +49,7 @@ public class CreateGroupMembershipTest extends AbstractIntegrationTest {
 	public void testFailBecauseAlreadyExists() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["create:groupMemberships", "read:*"])
+		givenPermissionForUser(user1, ["groupMemberships:create", "*:read"])
 		givenGroup(group1)
 		givenGroupMembership(user1, group1)
 

@@ -15,9 +15,9 @@ public class ReadPermissionsTest extends AbstractIntegrationTest {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
-		String userPermissionId = givenPermissionForUser(user1, ["read:permissions"])
-		String groupPermissionId = givenPermissionForGroup(group1, ["update:posters:2", "update:locations"])
-		String everyonePermissionId = givenPermissionForEveryone(["read:events"])
+		String userPermissionId = givenPermissionForUser(user1, ["permissions:read"])
+		String groupPermissionId = givenPermissionForGroup(group1, ["posters:update:2", "locations:update"])
+		String everyonePermissionId = givenPermissionForEveryone(["events:read"])
 
 		// When
 		String getUrl = "/permissions"
@@ -33,21 +33,21 @@ public class ReadPermissionsTest extends AbstractIntegrationTest {
 				"everyone" : true,
 				"user" : null,
 				"group" : null,
-				"patterns" : ["read:events"]
+				"patterns" : ["events:read"]
 			},
 			{
 				"id" : "${ userPermissionId }",
 				"everyone" : null,
 				"user" : ${ toJSON(userRef1) },
 				"group" : null,
-				"patterns" : ["read:permissions"]
+				"patterns" : ["permissions:read"]
 			},
 			{
 				"id" : "${ groupPermissionId }",
 				"everyone" : null,
 				"user" : null,
 				"group" : ${ toJSON(group1) },
-				"patterns" : ["update:posters:2", "update:locations"]
+				"patterns" : ["posters:update:2", "locations:update"]
 			}
 		]"""
 		thenResponseDataIs(responseBody, expectedData)

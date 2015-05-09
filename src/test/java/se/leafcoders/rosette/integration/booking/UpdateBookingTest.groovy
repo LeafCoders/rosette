@@ -15,7 +15,7 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 	public void updateBookingWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:bookings:${ booking2.id }", "read:bookings", "read:locations"])
+		givenPermissionForUser(user1, ["bookings:update:${ booking2.id }", "bookings:read", "locations:read"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
@@ -56,7 +56,7 @@ public class UpdateBookingTest extends AbstractIntegrationTest {
 	public void failWhenUpdateBookingWithInvalidContent() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["update:bookings:${ booking2.id }", "read:bookings"])
+		givenPermissionForUser(user1, ["bookings:update:${ booking2.id }", "bookings:read"])
 		givenLocation(location1)
 		givenBooking(booking1)
 		givenBooking(booking2)
