@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.leafcoders.rosette.model.Booking;
+import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.service.BookingService;
 import se.leafcoders.rosette.service.SecurityService;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +60,7 @@ public class BookingController extends AbstractController {
 
 	@RequestMapping(value = "bookings", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteBookings(HttpServletResponse response) {
-		security.checkPermission("delete:bookings");
+		security.checkPermission(PermissionType.BOOKINGS, PermissionAction.DELETE);
 		mongoTemplate.dropCollection("bookings");
 		response.setStatus(HttpStatus.OK.value());
 	}

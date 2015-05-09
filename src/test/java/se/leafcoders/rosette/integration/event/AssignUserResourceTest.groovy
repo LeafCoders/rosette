@@ -22,11 +22,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeMultiAndText)
 		givenResourceType(uploadResourceTypeMulti)
 		givenEvent(event2)
-		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ userResourceTypeMultiAndText.id }",
-			"read:resourceTypes:${ userResourceTypeMultiAndText.id }",
-			"read:events:${ event2.id }"
-		])
+		givenPermissionForUser(user1, ["update:events:resourceTypes:${ userResourceTypeMultiAndText.id }"])
 
 		// When
 		String putUrl = "/events/${ event2.id }/resources/${ userResourceTypeMultiAndText.id }"
@@ -54,11 +50,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ userResourceTypeSingle.id }",
-			"read:resourceTypes:${ userResourceTypeSingle.id }",
-			"read:events:${ event1.id }"
-		])
+		givenPermissionForUser(user1, ["update:events:resourceTypes:${ userResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
@@ -90,11 +82,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ userResourceTypeSingle.id }",
-			"read:resourceTypes:${ userResourceTypeSingle.id }",
-			"read:events:${ event1.id }"
-		])
+		givenPermissionForUser(user1, ["update:events:resourceTypes:${ userResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
@@ -139,11 +127,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ userResourceTypeSingle.id }",
-			"read:resourceTypes:${ userResourceTypeSingle.id }",
-			"read:events:${ event1.id }"
-		])
+		givenPermissionForUser(user1, ["update:events:resourceTypes:${ userResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"

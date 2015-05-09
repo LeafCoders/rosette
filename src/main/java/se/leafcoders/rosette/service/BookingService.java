@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.Booking;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class BookingService extends MongoTemplateCRUD<Booking> {
@@ -11,7 +12,7 @@ public class BookingService extends MongoTemplateCRUD<Booking> {
 	private LocationService locationService;
 
 	public BookingService() {
-		super("bookings", Booking.class);
+		super(Booking.class, PermissionType.BOOKINGS);
 	}
 
 	@Override

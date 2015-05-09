@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.resource.ResourceType;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class EventTypeService extends MongoTemplateCRUD<EventType> {
@@ -13,7 +14,7 @@ public class EventTypeService extends MongoTemplateCRUD<EventType> {
 	ResourceTypeService resourceTypeService;
 
 	public EventTypeService() {
-		super("eventTypes", EventType.class);
+		super(EventType.class, PermissionType.EVENT_TYPES);
 	}
 
 	@Override

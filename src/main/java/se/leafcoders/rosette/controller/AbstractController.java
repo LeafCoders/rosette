@@ -6,11 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,19 +23,6 @@ import se.leafcoders.rosette.model.error.ValidationError;
 @RequestMapping("v1-snapshot")
 public class AbstractController {
     static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
-
-    @Autowired
-    private Validator validator;
-
-    protected boolean isPermitted(String permission) {
-        return SecurityUtils.getSubject().isPermitted(permission);
-    }
-
-    protected void checkPermission(String permission) {
-        if (!SecurityUtils.getSubject().isPermitted(permission)) {
-            throw new ForbiddenException("error.missingPermission", permission);
-        }
-    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody

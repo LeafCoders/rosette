@@ -6,12 +6,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.SignupUser;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class SignupUserService extends MongoTemplateCRUD<SignupUser> {
 
 	public SignupUserService() {
-		super("signupUsers", SignupUser.class);
+		super(SignupUser.class, PermissionType.SIGNUP_USERS);
 	}
 
 	@Override

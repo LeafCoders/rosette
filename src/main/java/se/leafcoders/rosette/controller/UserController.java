@@ -21,6 +21,8 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.security.MongoRealm;
+import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.RosettePasswordService;
 import se.leafcoders.rosette.service.GroupMembershipService;
 import se.leafcoders.rosette.service.SecurityService;
@@ -75,7 +77,7 @@ public class UserController extends AbstractController {
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteUser(@PathVariable String id, HttpServletResponse response) {
-		checkPermission("delete:users:" + id);
+		securityService.checkPermission(PermissionType.USERS, PermissionAction.DELETE, id);
 
 		User user = mongoTemplate.findById(id, User.class);
 		if (user == null) {

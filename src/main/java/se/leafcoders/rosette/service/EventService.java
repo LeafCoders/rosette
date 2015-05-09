@@ -14,6 +14,10 @@ import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.ResourceType;
+import static se.leafcoders.rosette.security.PermissionAction.*;
+import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionCheckFilter;
+import static se.leafcoders.rosette.security.PermissionType.*;
 import util.QueryId;
 
 @Service
@@ -28,26 +32,66 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	MethodsService methodsService;
 
 	public EventService() {
-		super("events", Event.class);
+		super(Event.class, EVENTS, PermissionCheckFilter.NONE);
 	}
 
+	@Override
+	public Event create(Event event, HttpServletResponse response) {
+		if (event.getEventType() != null) {
+			security.checkPermission(EVENTS, CREATE, EVENT_TYPES.toString(), event.getEventType().getId());
+		} else {
+			security.checkPermission(EVENTS, CREATE);
+		}
+		return super.create(event, response);
+	}
+
+	@Override
+	public Event read(String id) {
+		Event event = super.read(id);
+		checkAnyEventPermission(READ, event, null);
+		return event;
+	}
+	
 	public List<Event> readMany(Date from, Date to) {
 		Query query = new Query();
 		if (from != null && to != null) {
 			query.addCriteria(Criteria.where("startTime").gte(from).lt(to));
 		}
-		return readMany(query.with(new Sort(Sort.Direction.ASC, "startTime")));
+
+		return super.readMany(query.with(new Sort(Sort.Direction.ASC, "startTime")));
+	}
+
+	@Override
+	public boolean readManyItemFilter(Event event) {
+		try {
+			checkAnyEventPermission(READ, event, null);
+		} catch (Exception ignore) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void update(String eventId, Event updateData, HttpServletResponse response) {
+		checkEventTypesPermission(UPDATE, readWithoutPermission(eventId));
+		super.update(eventId, updateData, response);
+	}
+	
+	@Override
+	public void delete(String eventId, HttpServletResponse response) {
+		checkEventTypesPermission(DELETE, readWithoutPermission(eventId));
+		super.delete(eventId, response);
 	}
 
 	public void assignResource(String eventId, String resourceTypeId, Resource resource, HttpServletResponse response) {
-		security.checkPermission("assign:resourceTypes:" + resourceTypeId);
+		checkAnyEventPermission(UPDATE, readWithoutPermission(eventId), resourceTypeId);
 		security.validate(resource);
 
 		Query query = new Query(new Criteria().andOperator(
 		        Criteria.where("id").is(QueryId.get(eventId)),
 		        Criteria.where("resources.resourceType.id").is(resourceTypeId)));		
 
-		ResourceType resourceTypeIn = resourceTypeService.read(resource.getResourceType().getId());
+		ResourceType resourceTypeIn = resourceTypeService.readWithoutPermission(resource.getResourceType().getId());
 		Update update = methodsService.of(resource).createAssignUpdate(resourceTypeIn);
 
 		if (mongoTemplate.updateFirst(query, update, Event.class).getN() == 0) {
@@ -70,4 +114,35 @@ public class EventService extends MongoTemplateCRUD<Event> {
 			methodsService.of(resource).insertDependencies();
 		}
 	}
+
+	protected void checkEventTypesPermission(PermissionAction actionType, Event event) {
+		if (!security.isPermitted(EVENTS, actionType, event.getId())) {
+			if (!security.isPermitted(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId())) {
+				security.throwPermissionMissing(
+						security.getPermissionString(EVENTS, actionType, event.getId()),
+						security.getPermissionString(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId()));						
+			}
+		}
+	}
+
+	protected void checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {
+		if (!security.isPermitted(EVENTS, actionType, event.getId())) {
+			if (!security.isPermitted(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId())) {
+				if (resourceTypeId != null) {
+					security.checkPermission(EVENTS, actionType, RESOURCE_TYPES.toString(), resourceTypeId);
+					return;
+				} else {
+					for (Resource resource : event.getResources()) {
+						if (security.isPermitted(EVENTS, actionType, RESOURCE_TYPES.toString(), resource.getResourceType().getId())) {
+							return;
+						}
+					}
+				}
+				security.throwPermissionMissing(
+						security.getPermissionString(EVENTS, actionType, event.getId()),
+						security.getPermissionString(EVENTS, actionType, EVENT_TYPES.toString(), event.getEventType().getId()));						
+			}
+		}
+	}
+
 }

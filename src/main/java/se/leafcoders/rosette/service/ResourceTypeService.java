@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.resource.*;
 import se.leafcoders.rosette.model.upload.UploadFolderRef;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
@@ -15,7 +16,7 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 	private UploadFolderService uploadFolderService;
 
 	public ResourceTypeService() {
-		super("resourceTypes", ResourceType.class);
+		super(ResourceType.class, PermissionType.RESOURCE_TYPES);
 	}
 
 	@Override

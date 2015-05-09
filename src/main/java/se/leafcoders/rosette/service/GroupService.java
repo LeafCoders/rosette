@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.Group;
 import se.leafcoders.rosette.model.reference.UserRef;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class GroupService extends MongoTemplateCRUD<Group> {
@@ -16,7 +17,7 @@ public class GroupService extends MongoTemplateCRUD<Group> {
 	GroupMembershipService groupMembershipService;
 	
 	public GroupService() {
-		super("groups", Group.class);
+		super(Group.class, PermissionType.GROUPS);
 	}
 
 	@Override

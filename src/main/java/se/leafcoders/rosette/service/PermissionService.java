@@ -12,6 +12,8 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.security.MongoRealm;
+import static se.leafcoders.rosette.security.PermissionAction.*;
+import static se.leafcoders.rosette.security.PermissionType.*;
 import util.QueryId;
 
 @Service
@@ -27,7 +29,7 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	private GroupMembershipService groupMembershipService;
 
 	public PermissionService() {
-		super("permissions", Permission.class);
+		super(Permission.class, PERMISSIONS);
 	}
 
 	@Override
@@ -95,8 +97,8 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 		List<String> permissions = new ArrayList<String>();
 
 		// Add read/update permissions for own user
-		permissions.add("read:users:" + user.getId());
-		permissions.add("update:users:" + user.getId());
+		permissions.add(security.getPermissionString(USERS, READ, user.getId()));
+		permissions.add(security.getPermissionString(USERS, UPDATE, user.getId()));
 		
 		// Adding permissions specific for this user
 		Query userPermissionQuery = Query.query(Criteria.where("user.id").is(QueryId.get(user.getId())));
@@ -137,7 +139,7 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 			List<GroupMembership> groupMemberships2 = groupMembershipService.getForGroupIds(groupIds);
 			if (groupMemberships2 != null) {
 				for (GroupMembership groupMembership2 : groupMemberships2) {
-					permissions.add("read:users:" + groupMembership2.getUser().getId());
+					permissions.add(security.getPermissionString(USERS, READ, groupMembership2.getUser().getId()));
 				}
 			}
 		}

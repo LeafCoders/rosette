@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import se.leafcoders.rosette.exception.ForbiddenException;
 
 @Controller
 public class DbController extends AbstractController {
@@ -32,4 +34,11 @@ public class DbController extends AbstractController {
 		}
 		return "Failed to copy collection '" + collectionName + "'. It doesn't exist.\n";
 	}
+
+    protected void checkPermission(String permission) {
+        if (!SecurityUtils.getSubject().isPermitted(permission)) {
+            throw new ForbiddenException("error.missingPermission", permission);
+        }
+    }
+
 }

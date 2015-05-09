@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.event.EventDay;
 import se.leafcoders.rosette.model.event.EventWeek;
+import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.service.SecurityService;
 
 @Controller
@@ -30,7 +32,7 @@ public class EventWeekController extends AbstractController {
 	@RequestMapping(value = "eventWeeks/current", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public EventWeek getCurrentEventWeek(HttpServletResponse response) {
-		security.checkPermission("read:eventWeeks");
+		security.checkPermission(PermissionType.EVENT_WEEKS, PermissionAction.READ);
 		DateTime now = DateTime.now();
 		int year = now.getWeekyear();
 		int week = now.getWeekOfWeekyear();
@@ -42,7 +44,7 @@ public class EventWeekController extends AbstractController {
 	@RequestMapping(value = "eventWeeks/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public EventWeek getEventWeek(@PathVariable String id, HttpServletResponse response) {
-		security.checkPermission("read:eventWeeks");
+		security.checkPermission(PermissionType.EVENT_WEEKS, PermissionAction.READ);
 		int weekyear = Integer.parseInt(id.substring(0, 4));
 		int weekOfWeekyear = Integer.parseInt(id.substring(6, 8));
 		
@@ -76,7 +78,7 @@ public class EventWeekController extends AbstractController {
 			List<Event> events = new ArrayList<Event>();
 			if (eventsInDatabase != null) {
 				for (Event eventInDatabase : eventsInDatabase) {
-					if (isPermitted("read:events:" + eventInDatabase.getId())) {
+					if (security.isPermitted(PermissionType.EVENTS, PermissionAction.READ, eventInDatabase.getId())) {
 						events.add(eventInDatabase);
 					}
 				}

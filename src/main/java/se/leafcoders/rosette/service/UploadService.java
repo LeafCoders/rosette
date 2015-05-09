@@ -19,13 +19,14 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.application.ApplicationSettings;
-import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UploadResponseRefs;
 import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionType;
 import util.QueryId;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -59,7 +60,7 @@ public class UploadService {
 		response.setStatus(HttpStatus.CREATED.value());
 
 		validateFolderExist(folderId);
-		security.checkPermission("create:uploads:" + folderId);
+		security.checkPermission(PermissionType.UPLOADS, PermissionAction.CREATE, folderId);
 		checkMimeTypePermission(folderId, upload.getMimeType());
 
 		if (getFileByName(folderId, upload.getFileName()) != null) {
@@ -86,7 +87,7 @@ public class UploadService {
 	public UploadResponse read(final String uploadId) {
 		GridFSDBFile file = getFileById(uploadId);
 		if (file != null) {
-			security.checkPermission("read:uploads:" + getMetadataFolderId(file) + ":" + uploadId);
+			security.checkPermission(PermissionType.UPLOADS, PermissionAction.READ, getMetadataFolderId(file), uploadId);
 	        return fileToUpload(file);
         } else {
 			throw new NotFoundException();
@@ -100,7 +101,7 @@ public class UploadService {
 		List<UploadResponse> uploads = new LinkedList<UploadResponse>();
 		if (filesInFolder != null) {
 			for (GridFSDBFile file : filesInFolder) {
-				if (security.isPermitted("read:uploads:" + folderId + ":" + file.getId())) {
+				if (security.isPermitted(PermissionType.UPLOADS, PermissionAction.READ, folderId, file.getId().toString())) {
 					uploads.add(fileToUpload(file));
 				}
 			}
@@ -110,8 +111,8 @@ public class UploadService {
 
 	public void delete(final String folderId, final String uploadId, HttpServletResponse response) {
 		validateFolderExist(folderId);
-		security.checkPermission("delete:uploads:" + folderId + ":" + uploadId);
-		security.checkNotReferenced(uploadId, "uploads");
+		security.checkPermission(PermissionType.UPLOADS, PermissionAction.DELETE, folderId, uploadId);
+		security.checkNotReferenced(uploadId, PermissionType.UPLOADS);
 
 		if (deleteFileById(folderId, uploadId)) {
 			response.setStatus(HttpStatus.OK.value());
@@ -144,8 +145,11 @@ public class UploadService {
 	public void streamAsset(final String folderId, final String fileName, HttpServletResponse response) {
 		validateFolderExist(folderId);
 		if (uploadFolderService.isPublic(folderId) == false) {
-			if (!(security.isPermitted("read:assets:" + folderId) || security.isPermitted("read:uploads:" + folderId))) {
-				throw new ForbiddenException("error.missingPermission", "read:assets:" + folderId + " | read:uploads:" + folderId);
+			if (!(security.isPermitted(PermissionType.ASSETS, PermissionAction.READ, folderId) ||
+					security.isPermitted(PermissionType.UPLOADS, PermissionAction.READ, folderId))) {
+				security.throwPermissionMissing(
+						security.getPermissionString(PermissionType.ASSETS, PermissionAction.READ, folderId),
+						security.getPermissionString(PermissionType.UPLOADS, PermissionAction.READ, folderId));
 			}
 		}
 

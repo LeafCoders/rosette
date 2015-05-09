@@ -9,12 +9,13 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UserRef;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class UserService extends MongoTemplateCRUD<User> {
 
 	public UserService() {
-		super("users", User.class);
+		super(User.class, PermissionType.USERS);
 	}
 
 	@Override

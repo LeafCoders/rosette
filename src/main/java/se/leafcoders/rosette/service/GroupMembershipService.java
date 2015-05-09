@@ -12,6 +12,7 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.MongoRealm;
+import se.leafcoders.rosette.security.PermissionType;
 import util.QueryId;
 
 @Service
@@ -27,7 +28,7 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 	private GroupService groupService;
 
 	public GroupMembershipService() {
-		super("groupMemberships", GroupMembership.class);
+		super(GroupMembership.class, PermissionType.GROUP_MEMBERSHIPS);
 	}
 
 	@Override

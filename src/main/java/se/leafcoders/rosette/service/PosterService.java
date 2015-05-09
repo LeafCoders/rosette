@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.Poster;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class PosterService extends MongoTemplateCRUD<Poster> {
@@ -11,7 +12,7 @@ public class PosterService extends MongoTemplateCRUD<Poster> {
 	private UploadService uploadService;
 
 	public PosterService() {
-		super("posters", Poster.class);
+		super(Poster.class, PermissionType.POSTERS);
 	}
 
 	@Override

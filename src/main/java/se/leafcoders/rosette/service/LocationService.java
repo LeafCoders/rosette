@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class LocationService extends MongoTemplateCRUD<Location> {
@@ -11,7 +12,7 @@ public class LocationService extends MongoTemplateCRUD<Location> {
 	private UploadService uploadService;
 
 	public LocationService() {
-		super("locations", Location.class);
+		super(Location.class, PermissionType.LOCATIONS);
 	}
 
 	@Override

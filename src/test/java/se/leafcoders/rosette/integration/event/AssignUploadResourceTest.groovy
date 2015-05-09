@@ -25,9 +25,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenResourceType(uploadResourceTypeMulti)
 		givenEvent(event2)
 		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ uploadResourceTypeMulti.id }",
-			"read:resourceTypes:${ uploadResourceTypeMulti.id }",
-			"read:events:${ event2.id }",
+			"update:events:resourceTypes:${ uploadResourceTypeMulti.id }",
 			"read:uploads:posters"
 		])
 
@@ -53,11 +51,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ uploadResourceTypeSingle.id }",
-			"read:resourceTypes:${ uploadResourceTypeSingle.id }",
-			"read:events:${ event1.id }"
-		])
+		givenPermissionForUser(user1, ["update:events:resourceTypes:${ uploadResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ uploadResourceTypeSingle.id }"
@@ -88,9 +82,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		UploadResponse image2 = givenUploadInFolder("posters", validJPEGImage)
 		givenEvent(event1)
 		givenPermissionForUser(user1, [
-			"assign:resourceTypes:${ uploadResourceTypeSingle.id }",
-			"read:resourceTypes:${ uploadResourceTypeSingle.id }",
-			"read:events:${ event1.id }"
+			"update:events:resourceTypes:${ uploadResourceTypeSingle.id }"
 		])
 		
 		// When
