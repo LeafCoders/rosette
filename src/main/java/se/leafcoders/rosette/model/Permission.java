@@ -69,6 +69,14 @@ public class Permission extends IdBasedModel {
 	private List<String> cleanPatterns(List<String> patternsToClean) {
 		if (patternsToClean != null) {
 			patternsToClean.removeAll(Arrays.asList("", null));
+			
+			for (int index = 0; index < patternsToClean.size(); ++index) {
+				String permission = patternsToClean.get(index);
+				while (permission.endsWith(":*")) {
+					permission = permission.substring(0, permission.length() - 2);
+				}
+				patternsToClean.set(index, permission);
+			}
 		}
 		return patternsToClean;
 	}
