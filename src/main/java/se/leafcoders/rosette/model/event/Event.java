@@ -5,15 +5,18 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.IdBasedModel;
+import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.validator.HasRef;
@@ -39,18 +42,22 @@ public class Event extends IdBasedModel {
 	@JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
 	private Date endTime;
 
+    @Length(max = 200, message = "error.description.max200Chars")
 	private String description;
 
     private LocationRefOrText location;
 
     private Boolean showOnPalmate;
 
-    @NotNull(message = "event.resources.notNull")
     private List<Resource> resources;
 	
 	@Override
 	public void update(BaseModel updateFrom) {
 		Event eventUpdate = (Event) updateFrom;
+		if (eventUpdate.getEventType() != null && !eventUpdate.getEventType().getId().equals(getEventType().getId())) {
+			throw new SimpleValidationException(new ValidationError("event", "event.eventType.notAllowedToChange"));
+		}
+
 		if (eventUpdate.getTitle() != null) {
 			setTitle(eventUpdate.getTitle());
 		}

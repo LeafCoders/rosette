@@ -13,7 +13,7 @@ public abstract class TypeBasedModel implements BaseModel {
     @NotEmpty(message = "type.name.notEmpty")
     protected String name;
 
-    @Length(max = 200, message = "type.description.max200Chars")
+    @Length(max = 200, message = "error.description.max200Chars")
     protected String description;
 
     @Override

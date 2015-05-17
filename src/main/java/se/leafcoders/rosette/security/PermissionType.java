@@ -30,4 +30,12 @@ public enum PermissionType {
 		return type;
 	}
 
+	public String withAction(final PermissionAction action) {
+		if (type.contains(":")) {
+			return type.replaceFirst(":", ":" + action + ":");
+		} else {
+			return type + ":" + action;
+		}
+	}
+
 }

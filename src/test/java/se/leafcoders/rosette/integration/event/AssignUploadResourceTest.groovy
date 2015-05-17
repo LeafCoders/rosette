@@ -25,7 +25,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenResourceType(uploadResourceTypeMulti)
 		givenEvent(event2)
 		givenPermissionForUser(user1, [
-			"events:resourceTypes:update:${ uploadResourceTypeMulti.id }",
+			"events:update:resourceTypes:${ uploadResourceTypeMulti.id }",
 			"uploads:read:posters"
 		])
 
@@ -39,6 +39,12 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 
 		// Then
 		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
+		thenDataInDatabaseIs(Event, event2.id,
+			{ Event event -> return event.resources.find { it.type == "upload" } },	"""{
+			"type" : "upload",
+			"resourceType" : ${ toJSON(uploadResourceTypeMulti) },
+			"uploads" : [ ${ toJSON(image1) }, ${ toJSON(image2) } ]
+		}""")
 	}
 
 	@Test
@@ -51,7 +57,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, ["events:resourceTypes:update:${ uploadResourceTypeSingle.id }"])
+		givenPermissionForUser(user1, ["events:update:resourceTypes:${ uploadResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ uploadResourceTypeSingle.id }"
@@ -82,7 +88,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		UploadResponse image2 = givenUploadInFolder("posters", validJPEGImage)
 		givenEvent(event1)
 		givenPermissionForUser(user1, [
-			"events:resourceTypes:update:${ uploadResourceTypeSingle.id }"
+			"events:update:resourceTypes:${ uploadResourceTypeSingle.id }"
 		])
 		
 		// When

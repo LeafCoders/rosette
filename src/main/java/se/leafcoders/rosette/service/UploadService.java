@@ -27,6 +27,7 @@ import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
+import se.leafcoders.rosette.security.PermissionValue;
 import util.QueryId;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -60,7 +61,7 @@ public class UploadService {
 		response.setStatus(HttpStatus.CREATED.value());
 
 		validateFolderExist(folderId);
-		security.checkPermission(PermissionType.UPLOADS, PermissionAction.CREATE, folderId);
+		security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.CREATE, folderId));
 		checkMimeTypePermission(folderId, upload.getMimeType());
 
 		if (getFileByName(folderId, upload.getFileName()) != null) {
@@ -87,7 +88,7 @@ public class UploadService {
 	public UploadResponse read(final String uploadId) {
 		GridFSDBFile file = getFileById(uploadId);
 		if (file != null) {
-			security.checkPermission(PermissionType.UPLOADS, PermissionAction.READ, getMetadataFolderId(file), uploadId);
+			security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, getMetadataFolderId(file), uploadId));
 	        return fileToUpload(file);
         } else {
 			throw new NotFoundException();
@@ -101,7 +102,7 @@ public class UploadService {
 		List<UploadResponse> uploads = new LinkedList<UploadResponse>();
 		if (filesInFolder != null) {
 			for (GridFSDBFile file : filesInFolder) {
-				if (security.isPermitted(PermissionType.UPLOADS, PermissionAction.READ, folderId, file.getId().toString())) {
+				if (security.isPermitted(new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, folderId, file.getId().toString()))) {
 					uploads.add(fileToUpload(file));
 				}
 			}
@@ -111,7 +112,7 @@ public class UploadService {
 
 	public void delete(final String folderId, final String uploadId, HttpServletResponse response) {
 		validateFolderExist(folderId);
-		security.checkPermission(PermissionType.UPLOADS, PermissionAction.DELETE, folderId, uploadId);
+		security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.DELETE, folderId, uploadId));
 		security.checkNotReferenced(uploadId, PermissionType.UPLOADS);
 
 		if (deleteFileById(folderId, uploadId)) {
@@ -145,12 +146,9 @@ public class UploadService {
 	public void streamAsset(final String folderId, final String fileName, HttpServletResponse response) {
 		validateFolderExist(folderId);
 		if (uploadFolderService.isPublic(folderId) == false) {
-			if (!(security.isPermitted(PermissionType.ASSETS, PermissionAction.READ, folderId) ||
-					security.isPermitted(PermissionType.UPLOADS, PermissionAction.READ, folderId))) {
-				security.throwPermissionMissing(
-						security.getPermissionString(PermissionType.ASSETS, PermissionAction.READ, folderId),
-						security.getPermissionString(PermissionType.UPLOADS, PermissionAction.READ, folderId));
-			}
+			security.checkPermission(
+					new PermissionValue(PermissionType.ASSETS, PermissionAction.READ, folderId),
+					new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, folderId));
 		}
 
 		GridFSDBFile file = getFileByName(folderId, fileName);

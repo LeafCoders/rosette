@@ -7,21 +7,14 @@ import org.junit.*
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 
-@Ignore
+
 public class ReadEventTest extends AbstractIntegrationTest {
 
 	@Test
 	public void readEventWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, [
-			"events:read:${ event1.id }",
-			"eventTypes:read",
-			"locations:read",
-			"users:read",
-			"uploads:read",
-			"resourceTypes:read"
-		])
+		givenPermissionForUser(user1, ["events:read:${ event1.id }"])
 		givenLocation(location1)
 		givenEventType(eventType1)
 		givenResourceType(userResourceTypeSingle)
@@ -38,84 +31,78 @@ public class ReadEventTest extends AbstractIntegrationTest {
 
 		thenResponseDataIs(responseBody, """{
 			"id" : "${ event1.id }",
-			"eventType" : {
-				"idRef" : "${ eventType1.id }",
-				"referredObject" : {
-					"id" : "${ eventType1.id }",
-					"name" : "EventType 1",
-					"description" : "Description...",
-					"resourceTypes": [
-						{ "idRef" : "${ userResourceTypeSingle.id }", "referredObject" : null },
-						{ "idRef" : "${ uploadResourceTypeSingle.id }", "referredObject" : null }
-					]
-				}
-			},
+			"eventType" : ${ toJSON(eventType1) },
 			"title" : "An event",
 			"startTime" : "2012-03-26 11:00 Europe/Stockholm",
 			"endTime" : "2012-03-26 12:00 Europe/Stockholm",
 			"description" : "Description...",
-			"location" : {
-				"idRef" : "${ location1.id }",
-				"text" : null,
-				"referredObject" : {
-					"id" : "${ location1.id }",
-					"name" : "Away",
-					"description" : "Description...",
-					"directionImage" : null
-				}
-			},
+			"location" : { "ref" : ${ toJSON(location1) }, "text" : null },
+			"showOnPalmate" : true,
 			"resources" : [
 				{
 					"type" : "user",
-					"resourceType" : {
-						"idRef" : "${ userResourceTypeSingle.id }",
-						"referredObject" : {
-							"type" : "user",
-							"id" : "${ userResourceTypeSingle.id }",
-							"name" : "UserResourceType Single",
-							"description" : "Description here",
-							"section" : "persons",
-							"group" : { "idRef" : "${ group1.id }", "referredObject" : null },
-							"multiSelect" : false,
-							"allowText" : false
-						}
-					},
-					"users" : {
-						"refs" : [
-							{
-								"idRef" : "${ user1.id }",
-								"referredObject" : {
-									"id" : "${ user1.id }",
-									"email" : "user1",
-									"password" : null,
-									"status" : "active",
-									"firstName" : "User",
-									"lastName" : "One",
-									"fullName" : "User One"
-								}
-							}
-						],
-						"text" : null
-					}
+					"resourceType" : ${ toJSON(userResourceTypeSingle) },
+					"users" : {	"refs" : [ ${ toJSON(userRef1) } ],	"text" : null }
 				},
 				{
 					"type" : "upload",
-					"resourceType" : {
-						"idRef" : "${ uploadResourceTypeSingle.id }",
-						"referredObject" : {
-							"type" : "upload",
-							"id" : "${ uploadResourceTypeSingle.id }",
-							"name" : "UploadResourceType Single",
-							"description" : "A poster file",
-							"section" : "files",
-							"folderName" : "posters",
-							"multiSelect" : false
-						}
-					},
+					"resourceType" : ${ toJSON(uploadResourceTypeSingle) },
 					"uploads" : []
 				}
 			]
 		}""")
+	}
+
+	@Test
+	public void readEventWithEventTypePermission() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenLocation(location1)
+		givenEventType(eventType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
+		givenEvent(event1)
+
+		// When
+		String getUrl = "/events/${ event1.id }"
+		HttpResponse getResponseFail = whenGet(getUrl, user1)
+
+		// Then
+		thenResponseCodeIs(getResponseFail, HttpServletResponse.SC_FORBIDDEN)
+
+		// When
+		givenPermissionForUser(user1, ["events:read:eventTypes:${ eventType1.id }"])
+		resetAuthCaches()
+		HttpResponse getResponseSuccess = whenGet(getUrl, user1)
+
+		// Then
+		thenResponseCodeIs(getResponseSuccess, HttpServletResponse.SC_OK)
+	}
+
+	@Test
+	public void readEventWithResourceTypePermission() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenLocation(location1)
+		givenEventType(eventType1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
+		givenEvent(event1)
+
+		// When
+		String getUrl = "/events/${ event1.id }"
+		HttpResponse getResponseFail = whenGet(getUrl, user1)
+
+		// Then
+		thenResponseCodeIs(getResponseFail, HttpServletResponse.SC_FORBIDDEN)
+
+		// When
+		givenPermissionForUser(user1, ["events:read:resourceTypes:${ userResourceTypeSingle.id }"])
+		resetAuthCaches()
+		HttpResponse getResponseSuccess = whenGet(getUrl, user1)
+
+		// Then
+		thenResponseCodeIs(getResponseSuccess, HttpServletResponse.SC_OK)
 	}
 
 	@Test

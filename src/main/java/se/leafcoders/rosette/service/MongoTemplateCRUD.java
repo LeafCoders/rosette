@@ -16,6 +16,7 @@ import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionType;
+import se.leafcoders.rosette.security.PermissionValue;
 import util.QueryId;
 
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
@@ -39,19 +40,19 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 
 	protected void checkPermission(PermissionAction actionType) {
-		security.checkPermission(permissionType, actionType);
+		security.checkPermission(new PermissionValue(permissionType, actionType));
 	}
 
 	protected void checkPermission(PermissionAction actionType, String id) {
-		security.checkPermission(permissionType, actionType, id);
+		security.checkPermission(new PermissionValue(permissionType, actionType, id));
 	}
 
 	protected boolean isPermitted(PermissionAction accessType) {
-		return security.isPermitted(permissionType, accessType);
+		return security.isPermitted(new PermissionValue(permissionType, accessType));
 	}
 
 	protected boolean isPermitted(PermissionAction accessType, String id) {
-		return security.isPermitted(permissionType, accessType, id);
+		return security.isPermitted(new PermissionValue(permissionType, accessType, id));
 	}
 
 	protected Query getIdQuery(String id) {
@@ -148,7 +149,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public boolean readManyItemFilter(T item) {
-		return security.isPermitted(permissionType, PermissionAction.READ, item.getId());
+		return isPermitted(PermissionAction.READ, item.getId());
 	}
 	
 	protected T readWithoutPermission(String id) {

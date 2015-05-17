@@ -15,8 +15,8 @@ import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.Booking;
 import se.leafcoders.rosette.model.Poster;
 import se.leafcoders.rosette.model.event.Event;
-import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
+import se.leafcoders.rosette.security.PermissionValue;
 import util.QueryId;
 
 @Service
@@ -27,29 +27,26 @@ public class SecurityService {
     @Autowired
     private Validator validator;
 
-    public String getPermissionString(PermissionType permissionType, PermissionAction permissionAction, String... params) {
-		if (params.length > 0) {
-			return permissionType + ":" + permissionAction + ":" + StringUtils.arrayToDelimitedString(params, ":");
-		} else {
-			return permissionType + ":" + permissionAction;
+    public boolean isPermitted(PermissionValue... permissionValues) {
+		for (PermissionValue value : permissionValues) {
+			if (SecurityUtils.getSubject().isPermitted(value.toString())) {
+				return true;
+			}
 		}
-    }
-    
-	public boolean isPermitted(PermissionType permissionType, PermissionAction permissionAction, String... params) {
-		return SecurityUtils.getSubject().isPermitted(getPermissionString(permissionType, permissionAction, params));
+		return false;
 	}
 
-	public void checkPermission(PermissionType permissionType, PermissionAction permissionAction, String... params) {
-		if (!isPermitted(permissionType, permissionAction, params)) {
-			throwPermissionMissing(getPermissionString(permissionType, permissionAction, params));
+	public void checkPermission(PermissionValue... permissionValues) {
+		if (!isPermitted(permissionValues)) {
+			throwPermissionMissing(permissionValues);
 		}
 	}
 
-	public void throwPermissionMissing(String... permissions) {
-		throw new ForbiddenException("error.missingPermission",	StringUtils.arrayToCommaDelimitedString(permissions));
+	public void throwPermissionMissing(PermissionValue... permissionValues) {
+		throw new ForbiddenException("error.missingPermission", StringUtils.arrayToCommaDelimitedString(permissionValues));
 	}
-	
-    public void validate(Object object) {
+
+	public void validate(Object object) {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
         if (constraintViolations != null && !constraintViolations.isEmpty()) {
             throw new ValidationException(constraintViolations);

@@ -17,6 +17,7 @@ import se.leafcoders.rosette.model.resource.ResourceType;
 import static se.leafcoders.rosette.security.PermissionAction.*;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionCheckFilter;
+import se.leafcoders.rosette.security.PermissionValue;
 import static se.leafcoders.rosette.security.PermissionType.*;
 import util.QueryId;
 
@@ -38,9 +39,11 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	@Override
 	public Event create(Event event, HttpServletResponse response) {
 		if (event.getEventType() != null) {
-			security.checkPermission(EVENTS_EVENTTYPES, CREATE, event.getEventType().getId());
+			security.checkPermission(
+					new PermissionValue(EVENTS_EVENTTYPES, CREATE, event.getEventType().getId()),
+					new PermissionValue(EVENTS, CREATE));
 		} else {
-			security.checkPermission(EVENTS, CREATE);
+			checkPermission(CREATE);
 		}
 		return super.create(event, response);
 	}
@@ -109,39 +112,36 @@ public class EventService extends MongoTemplateCRUD<Event> {
 			data.getLocation().setRef(locationService.read(data.getLocation().refId()));
 		}
 		final List<Resource> resources = data.getResources();
-		for (Resource resource : resources) {
-			resource.setResourceType(resourceTypeService.read(resource.getResourceType().getId()));
-			methodsService.of(resource).insertDependencies();
+		if (resources != null) {
+			for (Resource resource : resources) {
+				resource.setResourceType(resourceTypeService.read(resource.getResourceType().getId()));
+				methodsService.of(resource).insertDependencies();
+			}
 		}
 	}
 
 	protected void checkEventTypesPermission(PermissionAction actionType, Event event) {
-		if (!security.isPermitted(EVENTS, actionType, event.getId())) {
-			if (!security.isPermitted(EVENTS_EVENTTYPES, actionType, event.getEventType().getId())) {
-				security.throwPermissionMissing(
-						security.getPermissionString(EVENTS, actionType, event.getId()),
-						security.getPermissionString(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()));						
-			}
-		}
+		security.checkPermission(
+				new PermissionValue(EVENTS, actionType, event.getId()),
+				new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()));
 	}
 
 	protected void checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {
-		if (!security.isPermitted(EVENTS, actionType, event.getId())) {
-			if (!security.isPermitted(EVENTS_EVENTTYPES, actionType, event.getEventType().getId())) {
-				if (resourceTypeId != null) {
-					security.checkPermission(EVENTS_RESOURCETYPES, actionType, resourceTypeId);
-					return;
-				} else {
-					for (Resource resource : event.getResources()) {
-						if (security.isPermitted(EVENTS_RESOURCETYPES, actionType, resource.getResourceType().getId())) {
-							return;
-						}
+		PermissionValue eventsPermission = new PermissionValue(EVENTS, actionType, event.getId());
+		PermissionValue eventsEventTypesPermission = new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId());
+		
+		if (!security.isPermitted(eventsPermission, eventsEventTypesPermission)) {
+			if (resourceTypeId != null) {
+				security.checkPermission(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resourceTypeId));
+				return;
+			} else {
+				for (Resource resource : event.getResources()) {
+					if (security.isPermitted(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resource.getResourceType().getId()))) {
+						return;
 					}
 				}
-				security.throwPermissionMissing(
-						security.getPermissionString(EVENTS, actionType, event.getId()),
-						security.getPermissionString(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()));						
 			}
+			security.throwPermissionMissing(eventsPermission, eventsEventTypesPermission);
 		}
 	}
 

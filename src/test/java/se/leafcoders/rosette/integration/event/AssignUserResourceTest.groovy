@@ -22,7 +22,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeMultiAndText)
 		givenResourceType(uploadResourceTypeMulti)
 		givenEvent(event2)
-		givenPermissionForUser(user1, ["events:resourceTypes:update:${ userResourceTypeMultiAndText.id }"])
+		givenPermissionForUser(user1, ["events:update:resourceTypes:${ userResourceTypeMultiAndText.id }"])
 
 		// When
 		String putUrl = "/events/${ event2.id }/resources/${ userResourceTypeMultiAndText.id }"
@@ -36,7 +36,16 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		}""")
 
 		// Then
-		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
+		String responseBody = thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
+		thenDataInDatabaseIs(Event, event2.id,
+			{ Event event -> return event.resources.find { it.type == "user" } }, """{
+			"type" : "user",
+			"resourceType" : ${ toJSON(userResourceTypeMultiAndText) },
+			"users" : {
+				"refs" : [ ${ toJSON(userRef2) } ],
+				"text" : "Kalle Boll"
+			}
+		}""")
 	}
 
 	@Test
@@ -50,7 +59,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, ["events:resourceTypes:update:${ userResourceTypeSingle.id }"])
+		givenPermissionForUser(user1, ["events:update:resourceTypes:${ userResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
@@ -82,7 +91,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, ["events:resourceTypes:update:${ userResourceTypeSingle.id }"])
+		givenPermissionForUser(user1, ["events:update:resourceTypes:${ userResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"
@@ -127,7 +136,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenEvent(event1)
-		givenPermissionForUser(user1, ["events:resourceTypes:update:${ userResourceTypeSingle.id }"])
+		givenPermissionForUser(user1, ["events:update:resourceTypes:${ userResourceTypeSingle.id }"])
 		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ userResourceTypeSingle.id }"

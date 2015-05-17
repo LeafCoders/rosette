@@ -13,12 +13,14 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.http.impl.client.DefaultHttpClient
 import org.bson.types.ObjectId
+import org.codehaus.jackson.JsonNode
 import org.codehaus.jackson.map.ObjectMapper
 import org.junit.After
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
 import se.leafcoders.rosette.integration.util.TestUtil
@@ -35,8 +37,10 @@ import se.leafcoders.rosette.model.upload.UploadFolderRef
 import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.security.RosettePasswordService
+import util.QueryId;
 import com.mongodb.Mongo
 import com.mongodb.MongoException
+import com.mongodb.WriteConcern;
 import com.mongodb.util.JSON
 
 abstract class AbstractIntegrationTest {
@@ -52,10 +56,10 @@ abstract class AbstractIntegrationTest {
 	private HttpPut putRequest = null;
 	private HttpDelete deleteRequest = null;
 	
-	
 	@BeforeClass
 	static void beforeClass() throws UnknownHostException, MongoException {
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")
+		mongoTemplate.setWriteConcern(WriteConcern.ACKNOWLEDGED)
 		gridFsTemplate = new GridFsTemplate(mongoTemplate.mongoDbFactory, mongoTemplate.converter)
 		mapper = new ObjectMapper()
 	}
@@ -64,8 +68,7 @@ abstract class AbstractIntegrationTest {
 	public void before() {
 		// Clearing auth cache
 		httpClient = new DefaultHttpClient();
-		HttpDelete httpDelete = new HttpDelete(baseUrl + "/authCaches")
-		httpClient.execute(httpDelete)
+		resetAuthCaches()
 		httpClient.getConnectionManager().shutdown()
 		httpClient = new DefaultHttpClient()
 
@@ -127,6 +130,12 @@ abstract class AbstractIntegrationTest {
 			deleteRequest.releaseConnection()
 			deleteRequest = null
 		}
+	}
+
+	void resetAuthCaches() {
+		HttpDelete httpDelete = new HttpDelete(baseUrl + "/authCaches")
+		httpClient.execute(httpDelete)
+		httpDelete.releaseConnection()
 	}
 
 	/*
@@ -322,6 +331,7 @@ abstract class AbstractIntegrationTest {
 		endTime : TestUtil.modelDate("2012-03-26 12:00 Europe/Stockholm"),
 		description : "Description...",
 		location : new LocationRefOrText(ref: location1),
+		showOnPalmate : true,
 		resources : [
 			new UserResource(
 				type : "user",
@@ -516,6 +526,13 @@ abstract class AbstractIntegrationTest {
 	protected void thenDataInDatabaseIs(Class entityClass, String expectedBody) {
 		List<Object> inDatabase = mongoTemplate.findAll(entityClass)
 		TestUtil.assertJsonEquals(expectedBody, mapper.writeValueAsString(inDatabase))
+	}
+
+	protected void thenDataInDatabaseIs(Class entityClass, String itemId, Closure findSubContent, String expectedBody) {
+		Query findOneQuery = Query.query(Criteria.where("id").is(QueryId.get(itemId)))
+		Object inDatabase = mongoTemplate.findOne(findOneQuery, entityClass)
+		Object subContent = findSubContent.call(inDatabase)
+		TestUtil.assertJsonEquals(expectedBody, mapper.writeValueAsString(subContent))
 	}
 
 	protected void thenItemsInDatabaseIs(Class entityClass, Long count) {

@@ -7,6 +7,7 @@ import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.model.upload.UploadFolder;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
+import se.leafcoders.rosette.security.PermissionValue;
 
 @Service
 public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
@@ -22,8 +23,9 @@ public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 
 	@Override
 	public boolean readManyItemFilter(UploadFolder uploadFolder) {
-		return security.isPermitted(permissionType, PermissionAction.READ, uploadFolder.getId()) ||
-				security.isPermitted(PermissionType.UPLOADS, PermissionAction.READ, uploadFolder.getId());
+		return security.isPermitted(
+				new PermissionValue(permissionType, PermissionAction.READ, uploadFolder.getId()),
+				new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, uploadFolder.getId()));
 	}
 
 	@Override
