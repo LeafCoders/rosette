@@ -10,15 +10,14 @@ import se.leafcoders.rosette.model.IdBasedModel;
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class UploadResponse extends IdBasedModel {
 
-    @NotNull
+    @NotNull(message = "uploadResponse.fileName.notNull")
 	private String fileName;
-    @NotNull
+    @NotNull(message = "uploadResponse.folderId.notNull")
 	private String folderId;
-    @NotNull
+    @NotNull(message = "uploadResponse.fileUrl.notNull")
 	private String fileUrl; // Absolute url to downloadable file
-    @NotNull
+    @NotNull(message = "uploadResponse.mimeType.notNull")
 	private String mimeType;
-    @NotNull
 	private long fileSize; // Bytes
 	private Long width;
 	private Long height;

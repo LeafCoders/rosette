@@ -1,10 +1,12 @@
 package se.leafcoders.rosette.model.resource;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import se.leafcoders.rosette.model.reference.UploadResponseRefs;
 
 public class UploadResource extends Resource {
 	@NotNull(message = "uploadResource.uploads.notNull")
+	@Valid
     private UploadResponseRefs uploads;
 
     // Constructors

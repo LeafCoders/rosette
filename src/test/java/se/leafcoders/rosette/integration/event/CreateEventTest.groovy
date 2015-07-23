@@ -146,4 +146,41 @@ public class CreateEventTest extends AbstractIntegrationTest {
 		thenItemsInDatabaseIs(Event.class, 0)
 	}
 
+	@Test
+	public void createWithValidationErrorsForResources() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenGroup(group1)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
+		givenEventType(eventType1)
+		givenPermissionForUser(user1, ["events:create", "eventTypes:read", "resourceTypes:read"])
+
+		// When
+		String postUrl = "/events"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"eventType" : { "id" : "${ eventType1.id }" },
+			"title" : "Gudstjänst",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"resources" : [
+				{
+					"type" : "user",
+					"resourceType" : ${ toJSON(userResourceTypeSingle) }  
+				},
+				{
+					"type" : "upload",
+					"resourceType" : ${ toJSON(uploadResourceTypeSingle) }  
+				}
+			]
+		}""")
+
+		// Then
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
+		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
+		thenResponseDataIs(responseBody, """[
+			{ "property" : "resources[1].uploads", "message" : "uploadResource.uploads.notNull" },
+			{ "property" : "resources[0].users",   "message" : "userResource.users.notNull" }
+		]""")
+	}
+
 }

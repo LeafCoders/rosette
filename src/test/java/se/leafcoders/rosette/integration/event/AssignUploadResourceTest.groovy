@@ -6,7 +6,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.event.Event
-import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.model.upload.UploadResponse
 
 public class AssignUploadResourceTest extends AbstractIntegrationTest {
 
@@ -59,12 +59,20 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenEvent(event1)
 		givenPermissionForUser(user1, ["events:update:resourceTypes:${ uploadResourceTypeSingle.id }"])
 		
+		UploadResponse image1 = new UploadResponse(
+			id: getObjectId(),
+			fileName: "anyName",
+			folderId: "someFolder",
+			fileUrl: "/fileName.jpg",
+			mimeType: "image/jpg"
+		)
+		
 		// When
 		String putUrl = "/events/${ event1.id }/resources/${ uploadResourceTypeSingle.id }"
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type" : "upload",
 			"resourceType" : ${ toJSON(uploadResourceTypeSingle) },
-			"uploads" : [ { "id" : "${ getObjectId() }" } ]
+			"uploads" : [ ${ toJSON(image1) } ]
 		}""")
 
 		// Then

@@ -2,6 +2,7 @@ package se.leafcoders.rosette.model.event;
 
 import java.util.Date;
 import java.util.List;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -49,6 +50,7 @@ public class Event extends IdBasedModel {
 
     private Boolean showOnPalmate;
 
+    @Valid
     private List<Resource> resources;
 	
 	@Override
