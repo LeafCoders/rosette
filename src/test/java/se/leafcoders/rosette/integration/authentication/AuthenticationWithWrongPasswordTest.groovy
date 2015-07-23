@@ -8,6 +8,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.protocol.HTTP;
 import org.junit.Test;
 import se.leafcoders.rosette.integration.AbstractIntegrationTest;
 
@@ -22,8 +23,8 @@ public class AuthenticationWithWrongPasswordTest extends AbstractIntegrationTest
 
 		// When
 		HttpGet getRequest = new HttpGet(baseUrl + "/authentication")
-		getRequest.addHeader(new BasicScheme().authenticate(
-			new UsernamePasswordCredentials(user1.email, "invalidPassword"), getRequest));
+		getRequest.addHeader(BasicScheme.authenticate(
+			new UsernamePasswordCredentials(user1.email, "invalidPassword"), HTTP.UTF_8, false));
 		HttpResponse getResponse = httpClient.execute(getRequest)
 
 		// Then

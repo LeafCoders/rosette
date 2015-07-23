@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
 import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.protocol.HTTP;
 import org.bson.types.ObjectId
 import org.codehaus.jackson.JsonNode
 import org.codehaus.jackson.map.ObjectMapper
@@ -469,7 +470,7 @@ abstract class AbstractIntegrationTest {
         postRequest = new HttpPost(baseUrl + postUrl)
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			postRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), postRequest))
+			postRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
 		}
 		HttpResponse resp = httpClient.execute(postRequest)
 		return resp
@@ -480,7 +481,7 @@ abstract class AbstractIntegrationTest {
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		if (user != null) {
-			getRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), getRequest))
+			getRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
 		}
 		HttpResponse resp = httpClient.execute(getRequest)
 		return resp
@@ -490,7 +491,7 @@ abstract class AbstractIntegrationTest {
         putRequest = new HttpPut(baseUrl + putUrl)
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			putRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), putRequest))
+			putRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
 		}
 		HttpResponse resp = httpClient.execute(putRequest)
 		return resp
@@ -500,7 +501,7 @@ abstract class AbstractIntegrationTest {
         deleteRequest = new HttpDelete(baseUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		if (user != null) {
-			deleteRequest.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user.email, "password"), deleteRequest))
+			deleteRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
 		}
 		HttpResponse resp = httpClient.execute(deleteRequest)
 		return resp
