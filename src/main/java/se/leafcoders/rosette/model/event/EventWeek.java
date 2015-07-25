@@ -2,12 +2,10 @@ package se.leafcoders.rosette.model.event;
 
 import java.util.Date;
 import java.util.List;
-
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import se.leafcoders.rosette.converter.RosetteDateJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateJsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class EventWeek {
 	private Integer week;

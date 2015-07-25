@@ -1,9 +1,9 @@
 package se.leafcoders.rosette.model.resource;
 
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.TypeBasedModel;
 

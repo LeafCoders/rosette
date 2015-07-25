@@ -8,9 +8,17 @@
 	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 
+    <repositories>
+		<repository>
+		    <id>springsource-repository</id>
+		    <name>Spring project snapshots, milestones, and releases</name>
+		    <url>http://repo.spring.io/milestone</url>
+		</repository>
+    </repositories>
+
 	<properties>
 		<java-version>1.6</java-version>
-		<org.springframework-version>4.0.3.RELEASE</org.springframework-version>
+		<org.springframework-version>4.2.0.RC3</org.springframework-version>
 		<org.aspectj-version>1.7.3</org.aspectj-version>
         <cglib-version>2.2.2</cglib-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
@@ -188,10 +196,15 @@
 
 		<!-- Jackson (JSON) -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${jackson-mapper-asl-version}</version>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.4.1</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.4.1.1</version>
+		</dependency>		
 
 		<!-- Joda Time -->
 		<dependency>

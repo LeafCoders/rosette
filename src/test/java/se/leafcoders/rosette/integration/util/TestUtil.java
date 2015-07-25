@@ -8,8 +8,8 @@ import java.util.GregorianCalendar;
 import java.util.SimpleTimeZone;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneConverter;
 
 public class TestUtil {

@@ -7,8 +7,6 @@ import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
-import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
 import org.junit.Test
 import org.springframework.data.mongodb.core.query.Query
 import se.leafcoders.rosette.integration.AbstractIntegrationTest

@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
-import org.codehaus.jackson.map.ObjectMapper
-import org.codehaus.jackson.type.TypeReference
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -16,6 +14,8 @@ import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneConverter
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.event.Event;
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.util.JSON
 
 @Ignore

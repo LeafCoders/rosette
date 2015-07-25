@@ -5,17 +5,16 @@ import static org.junit.Assert.assertTrue
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
 import org.apache.http.auth.UsernamePasswordCredentials
+import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpDelete
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.auth.BasicScheme
-import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
 import org.bson.types.ObjectId
-import org.codehaus.jackson.JsonNode
-import org.codehaus.jackson.map.ObjectMapper
 import org.junit.After
 import org.junit.AfterClass
 import org.junit.Before
@@ -39,6 +38,7 @@ import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.security.RosettePasswordService
 import util.QueryId;
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.Mongo
 import com.mongodb.MongoException
 import com.mongodb.WriteConcern;
@@ -47,7 +47,7 @@ import com.mongodb.util.JSON
 abstract class AbstractIntegrationTest {
 	protected static MongoTemplate mongoTemplate
 	protected static GridFsTemplate gridFsTemplate
-	protected static DefaultHttpClient httpClient
+	protected static HttpClient httpClient
 	protected static ObjectMapper mapper
 
 	protected static String baseUrl = "http://localhost:9000/api/v1-snapshot"
@@ -68,10 +68,10 @@ abstract class AbstractIntegrationTest {
 	@Before
 	public void before() {
 		// Clearing auth cache
-		httpClient = new DefaultHttpClient();
+		httpClient = HttpClientBuilder.create().build()
 		resetAuthCaches()
 		httpClient.getConnectionManager().shutdown()
-		httpClient = new DefaultHttpClient()
+		httpClient = HttpClientBuilder.create().build()
 
 		mongoTemplate.dropCollection("signupUsers")
 		mongoTemplate.dropCollection("users")

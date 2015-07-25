@@ -1,12 +1,12 @@
 package se.leafcoders.rosette.model.upload;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.DatatypeConverter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.DatatypeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document
 @JsonIgnoreProperties(ignoreUnknown = true)

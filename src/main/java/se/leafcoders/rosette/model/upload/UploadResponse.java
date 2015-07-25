@@ -1,10 +1,10 @@
 package se.leafcoders.rosette.model.upload;
 
 import javax.validation.constraints.NotNull;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Document
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
