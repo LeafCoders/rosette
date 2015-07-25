@@ -44,7 +44,8 @@ public class MongoRealm extends AuthorizingRealm {
 		Set<String> permissions = new HashSet<String>();
 		boolean isKnownUser = principalCollection.fromRealm("anonymousRealm").isEmpty();
 		if (isKnownUser) {
-			permissions.addAll(permissionService.getForUser((String)principalCollection.getPrimaryPrincipal()));
+			User user = (User)principalCollection.getPrimaryPrincipal();
+			permissions.addAll(permissionService.getForUser(user.getId()));
 		} else {
 			permissions.addAll(permissionService.getForEveryone());
 		}
@@ -64,7 +65,7 @@ public class MongoRealm extends AuthorizingRealm {
 
 			final User user = mongoTemplate.findOne(Query.query(Criteria.where("email").is(providedUsername)), User.class);
 			if (user != null) {
-				simpleAuthenticationInfo = new SimpleAuthenticationInfo(user.getId(), user.getHashedPassword(), "mongoRealm");
+				simpleAuthenticationInfo = new SimpleAuthenticationInfo(user, user.getHashedPassword(), "mongoRealm");
 			}
 
 			return simpleAuthenticationInfo;

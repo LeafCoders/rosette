@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.controller;
 
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.security.MongoRealm;
 
 @Controller
@@ -23,16 +22,14 @@ public class AuthenticationController extends AbstractController {
 
 	@RequestMapping(value = "authentication", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public String getAuthentication(HttpServletResponse response) {
-		String responseBody = "";
-		
+	public User getAuthentication(HttpServletResponse response) {
 		if ("".equals(SecurityUtils.getSubject().getPrincipal())) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			responseBody = "Unauthorized";
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+			return null;
 		} else {
 			response.setStatus(HttpStatus.OK.value()); 
+			return (User)SecurityUtils.getSubject().getPrincipal();
 		}
-		return responseBody;
 	}
 	
 	@RequestMapping(value = "authCaches", method = RequestMethod.DELETE, produces = "application/json")

@@ -55,7 +55,7 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["bookings:read"])
+		givenPermissionForUser(user1, ["publicData:read"])
 
 		mongoTemplate.getCollection("bookings").insert(JSON.parse("""[
 			{
@@ -89,7 +89,7 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 		]"""))
 
 		// When
-		String getUrl = "/bookings?onlyActiveToday=true"
+		String getUrl = "/public/bookings"
 		HttpResponse getResponse = whenGet(getUrl, user1)
 
 		// Then

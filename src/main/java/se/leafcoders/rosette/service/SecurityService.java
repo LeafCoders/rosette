@@ -14,6 +14,7 @@ import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.Booking;
 import se.leafcoders.rosette.model.Poster;
+import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
@@ -54,9 +55,9 @@ public class SecurityService {
     }
 
 	public String requestUserId() {
-		Object principal = SecurityUtils.getSubject().getPrincipal();
+		User principal = (User)SecurityUtils.getSubject().getPrincipal();
 		if (principal != null) {
-			return principal.toString();
+			return principal.getId();
 		} else {
 			return null;
 		}
