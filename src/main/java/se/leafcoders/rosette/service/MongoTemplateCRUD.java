@@ -78,6 +78,10 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		}
 		return readWithoutPermission(id);
 	}
+
+	public List<T> readManyNoPermissionCheck(final Query query) {
+		return mongoTemplate.find(query, entityClass);
+	}
 	
 	@Override
 	public List<T> readMany(final Query query) {

@@ -18,7 +18,8 @@ public enum PermissionType {
 	SIGNUP_USERS("signupUsers"),
 	UPLOAD_FOLDERS("uploadFolders"),
 	UPLOADS("uploads"),
-	USERS("users");
+	USERS("users"),
+	PUBLIC_DATA("publicData");
 
 	private final String type;
 

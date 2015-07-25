@@ -1,22 +1,17 @@
 package se.leafcoders.rosette.model.upload;
 
-import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Document
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UploadResponse extends IdBasedModel {
 
-    @NotNull(message = "uploadResponse.fileName.notNull")
 	private String fileName;
-    @NotNull(message = "uploadResponse.folderId.notNull")
 	private String folderId;
-    @NotNull(message = "uploadResponse.fileUrl.notNull")
 	private String fileUrl; // Absolute url to downloadable file
-    @NotNull(message = "uploadResponse.mimeType.notNull")
 	private String mimeType;
 	private long fileSize; // Bytes
 	private Long width;
