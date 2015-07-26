@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 import se.leafcoders.rosette.integration.AbstractIntegrationTest;
+import se.leafcoders.rosette.model.DefaultSetting
 import se.leafcoders.rosette.model.EventType;
 
 public class UpdateEventTypeTest extends AbstractIntegrationTest {
@@ -25,10 +26,11 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 
 		// When
 		String putUrl = "/eventTypes/${eventType2.id}"
+		DefaultSetting<Boolean> newHasPublicEvents = new DefaultSetting<Boolean>(value: true, allowChange: true)
 		HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"name" : "Changed name",
 			"description" : "New description",
-			"showOnPalmate" : true,
+			"hasPublicEvents" : ${ toJSON(newHasPublicEvents) },
 			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}""")
 
@@ -39,14 +41,14 @@ public class UpdateEventTypeTest extends AbstractIntegrationTest {
 				"id" : "${eventType1.id}",
 				"name" : "EventType 1",
 				"description" : "Description...",
-				"showOnPalmate" : true,
+				"hasPublicEvents" : ${ toJSON(eventType1.hasPublicEvents) },
 				"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 			},
 			{
 				"id" : "${eventType2.id}",
 				"name" : "Changed name",
 				"description" : "New description",
-				"showOnPalmate" : true,
+				"hasPublicEvents" : ${ toJSON(newHasPublicEvents) },
 				"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 			}
 		]"""

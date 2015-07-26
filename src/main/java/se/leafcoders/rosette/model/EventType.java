@@ -11,7 +11,7 @@ public class EventType extends TypeBasedModel {
 	@NotNull(message = "eventType.resourceTypes.notNull")
     private List<ResourceType> resourceTypes;
 
-    private Boolean showOnPalmate;
+    private DefaultSetting<Boolean> hasPublicEvents;
 
     @Override
 	public void update(BaseModel updateFrom) {
@@ -19,8 +19,8 @@ public class EventType extends TypeBasedModel {
     	if (eventTypeUpdate.getResourceTypes() != null) {
     		setResourceTypes(eventTypeUpdate.getResourceTypes());
     	}
-    	if (eventTypeUpdate.getShowOnPalmate() != null) {
-    		setShowOnPalmate(eventTypeUpdate.getShowOnPalmate());
+    	if (eventTypeUpdate.getHasPublicEvents() != null) {
+    		sethasPublicEvents(eventTypeUpdate.getHasPublicEvents());
     	}
     	super.update(updateFrom);
     }
@@ -35,11 +35,11 @@ public class EventType extends TypeBasedModel {
         this.resourceTypes = resourceTypes;
     }
 
-	public Boolean getShowOnPalmate() {
-		return showOnPalmate;
+	public DefaultSetting<Boolean> getHasPublicEvents() {
+		return hasPublicEvents;
 	}
 
-	public void setShowOnPalmate(Boolean showOnPalmate) {
-		this.showOnPalmate = showOnPalmate;
+	public void sethasPublicEvents(DefaultSetting<Boolean> hasPublicEvents) {
+		this.hasPublicEvents = hasPublicEvents;
 	}
 }

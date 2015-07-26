@@ -37,14 +37,14 @@ public class ReadEventTypesTest extends AbstractIntegrationTest {
 				"id" : "${ eventType1.id }",
 				"name" : "EventType 1",
 				"description" : "Description...",
-				"showOnPalmate" : true,
+				"hasPublicEvents" : ${ toJSON(eventType1.hasPublicEvents) },
 				"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 			},
 			{
 				"id" : "${ eventType2.id }",
 				"name" : "EventType 2",
 				"description" : "Description...",
-				"showOnPalmate" : false,
+				"hasPublicEvents" : ${ toJSON(eventType2.hasPublicEvents) },
 				"resourceTypes" : [ ${ toJSON(userResourceTypeMultiAndText) }, ${ toJSON(uploadResourceTypeMulti) } ] 
 			}
 		]"""

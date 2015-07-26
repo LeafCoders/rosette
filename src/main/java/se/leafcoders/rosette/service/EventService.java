@@ -1,5 +1,12 @@
 package se.leafcoders.rosette.service;
 
+import static se.leafcoders.rosette.security.PermissionAction.CREATE;
+import static se.leafcoders.rosette.security.PermissionAction.DELETE;
+import static se.leafcoders.rosette.security.PermissionAction.READ;
+import static se.leafcoders.rosette.security.PermissionAction.UPDATE;
+import static se.leafcoders.rosette.security.PermissionType.EVENTS;
+import static se.leafcoders.rosette.security.PermissionType.EVENTS_EVENTTYPES;
+import static se.leafcoders.rosette.security.PermissionType.EVENTS_RESOURCETYPES;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -14,11 +21,9 @@ import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.ResourceType;
-import static se.leafcoders.rosette.security.PermissionAction.*;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionValue;
-import static se.leafcoders.rosette.security.PermissionType.*;
 import util.QueryId;
 
 @Service
@@ -45,6 +50,16 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		} else {
 			checkPermission(CREATE);
 		}
+
+		// Validate 'isPublic'
+		if (event.getEventType() != null && event.getEventType().getHasPublicEvents() != null) {
+			if (event.getIsPublic() == null || event.getEventType().getHasPublicEvents().getAllowChange() == false) {
+				event.setIsPublic(event.getEventType().getHasPublicEvents().getValue());
+			}
+		} else if (event.getIsPublic() == null) {
+			event.setIsPublic(false);
+		}
+
 		return super.create(event, response);
 	}
 

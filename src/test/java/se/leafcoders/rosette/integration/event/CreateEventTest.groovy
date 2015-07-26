@@ -6,6 +6,7 @@ import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpPost
 import org.junit.*
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.model.DefaultSetting
 import se.leafcoders.rosette.model.event.Event
 import com.mongodb.util.JSON
 
@@ -39,7 +40,47 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"endTime" : null,
 			"description" : null,
 			"location" : null,
-			"showOnPalmate" : null,
+			"isPublic" : false,
+			"resources" : null
+		}"""
+		thenResponseDataIs(responseBody, expectedData)
+		releasePostRequest()
+		thenItemsInDatabaseIs(Event.class, 1)
+	}
+
+	@Test
+	public void isPublicShallNotBeChangable() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenGroup(group1)
+		givenEventType(eventType2)
+		givenPermissionForUser(user1, ["events:create", "eventTypes:read"])
+
+		assert(eventType2.hasPublicEvents.value == false)
+		assert(eventType2.hasPublicEvents.allowChange == false)
+		
+		// When
+		String postUrl = "/events"
+		HttpResponse postResponse = whenPost(postUrl, user1, """{
+			"eventType" : ${ toJSON(eventType2) },
+			"title" : "Gudstjänst",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"isPublic" : ${ !eventType2.hasPublicEvents.value }
+		}""")
+
+		// Then
+		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
+		thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
+
+		String expectedData = """{
+			"id" : "${ JSON.parse(responseBody)['id'] }",
+			"eventType" : ${ toJSON(eventType2) },
+			"title" : "Gudstjänst",
+			"startTime" : "2012-03-25 11:00 Europe/Stockholm",
+			"endTime" : null,
+			"description" : null,
+			"location" : null,
+			"isPublic" : ${ eventType2.hasPublicEvents.value },
 			"resources" : null
 		}"""
 		thenResponseDataIs(responseBody, expectedData)

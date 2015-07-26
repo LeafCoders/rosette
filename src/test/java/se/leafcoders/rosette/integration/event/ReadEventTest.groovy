@@ -37,7 +37,7 @@ public class ReadEventTest extends AbstractIntegrationTest {
 			"endTime" : "2012-03-26 12:00 Europe/Stockholm",
 			"description" : "Description...",
 			"location" : { "ref" : ${ toJSON(location1) }, "text" : null },
-			"showOnPalmate" : true,
+			"isPublic" : true,
 			"resources" : [
 				{
 					"type" : "user",

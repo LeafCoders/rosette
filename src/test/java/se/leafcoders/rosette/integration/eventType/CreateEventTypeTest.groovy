@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.mongodb.util.JSON;
 import se.leafcoders.rosette.integration.AbstractIntegrationTest;
 import se.leafcoders.rosette.integration.util.TestUtil;
+import se.leafcoders.rosette.model.DefaultSetting
 import se.leafcoders.rosette.model.EventType;
 
 public class CreateEventTypeTest extends AbstractIntegrationTest {
@@ -23,11 +24,12 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 
 		// When
 		String postUrl = "/eventTypes"
+		DefaultSetting<Boolean> hasPublicEvents = new DefaultSetting<Boolean>(value: true, allowChange: true)
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"id" : "speakers",
 			"name" : "Speakers",
 			"description" : "Description",
-			"showOnPalmate" : true,
+			"hasPublicEvents" : ${ toJSON(hasPublicEvents) },
 			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}""")
 
@@ -39,7 +41,7 @@ public class CreateEventTypeTest extends AbstractIntegrationTest {
 			"id" : "speakers",
 			"name" : "Speakers",
 			"description" : "Description",
-			"showOnPalmate" : true,
+			"hasPublicEvents" : ${ toJSON(hasPublicEvents) },
 			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
