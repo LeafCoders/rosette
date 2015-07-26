@@ -17,12 +17,12 @@ import se.leafcoders.rosette.model.calendar.Calendar;
 import se.leafcoders.rosette.model.calendar.CalendarDay;
 import se.leafcoders.rosette.model.calendar.CalendarEvent;
 import se.leafcoders.rosette.model.event.Event;
-import se.leafcoders.rosette.service.EventService;
+import se.leafcoders.rosette.service.PublicEventService;
 
 @Controller
 public class CalendarController extends PublicDataController {
 	@Autowired
-	private EventService eventService;
+	private PublicEventService publicEventService;
 
 	private static final String WEEK = "week";
 	private static final String MONTH = "month";
@@ -57,7 +57,7 @@ public class CalendarController extends PublicDataController {
 			before = from.plusMonths(numRanges);
 		}
 
-		List<Event> events = eventService.readMany(from.toDate(), before.toDate());
+		List<Event> events = publicEventService.calendarEventsBetween(from.toDate(), before.toDate());
 
 		Calendar calendar = new Calendar();
 		calendar.setYear(from.getWeekyear());
@@ -77,7 +77,7 @@ public class CalendarController extends PublicDataController {
 			day.setWeekDay(iterDate.getDayOfWeek());
 
 			while (currentEvent != null && currentEvent.getStartTime().before(endOfDay)) {
-				if (currentEvent.getShowOnPalmate()) {
+				if (currentEvent.getIsPublic()) {
 					CalendarEvent event = new CalendarEvent();
 					event.setTitle(currentEvent.getTitle());
 					event.setDescription(currentEvent.getDescription());

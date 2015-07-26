@@ -30,7 +30,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"endTime" : "2015-05-05 06:00 Europe/Stockholm",
 			"description" : "New description",
 			"location" : { "ref" : ${ toJSON(location1) } },
-			"showOnPalmate" : false
+			"isPublic" : false
 		}""")
 
 		// Then
@@ -44,7 +44,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"endTime" : "2015-05-05 06:00 Europe/Stockholm",
 			"description" : "New description",
 			"location" : { "ref" : ${ toJSON(location1) }, "text" : null },
-			"showOnPalmate" : false,
+			"isPublic" : false,
 			"resources" : [
 				{
 					"type" : "user",
@@ -57,6 +57,51 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 					"uploads" : []
 				}
 			]
+		}]"""
+		thenDataInDatabaseIs(Event.class, expectedData)
+		thenItemsInDatabaseIs(Event.class, 1)
+	}
+
+	@Test
+	public void isPublicShalNotBeChangable() throws ClientProtocolException, IOException {
+		// Given
+		givenUser(user1)
+		givenLocation(location1)
+		givenEventType(eventType2)
+		givenResourceType(userResourceTypeSingle)
+		givenResourceType(uploadResourceTypeSingle)
+		givenEvent(event3)
+		givenPermissionForUser(user1, ["events:read,update:${ event3.id }", "locations:read", "eventTypes:read"])
+
+		assert(event3.isPublic == false)
+		assert(eventType2.hasPublicEvents.value == false)
+		assert(eventType2.hasPublicEvents.allowChange == false)
+
+		// When
+		String putUrl = "/events/${ event3.id }"
+		HttpResponse putResponse = whenPut(putUrl, user1, """{
+			"id" : "${ event3.id }",
+			"eventType" : ${ toJSON(eventType2) },
+			"title" : "New title",
+			"startTime" : "2015-05-05 05:00 Europe/Stockholm",
+			"endTime" : "2015-05-05 06:00 Europe/Stockholm",
+			"description" : "New description",
+			"isPublic" : true
+		}""")
+
+		// Then
+		thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
+
+		String expectedData = """[{
+			"id" : "${ event3.id }",
+			"eventType" : ${ toJSON(eventType2) },
+			"title" : "New title",
+			"startTime" : "2015-05-05 05:00 Europe/Stockholm",
+			"endTime" : "2015-05-05 06:00 Europe/Stockholm",
+			"description" : "New description",
+			"location" : null,
+			"isPublic" : false,
+			"resources" : []
 		}]"""
 		thenDataInDatabaseIs(Event.class, expectedData)
 		thenItemsInDatabaseIs(Event.class, 1)

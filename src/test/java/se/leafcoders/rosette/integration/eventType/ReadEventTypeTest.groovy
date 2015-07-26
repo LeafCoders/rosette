@@ -33,7 +33,7 @@ public class ReadEventTypeTest extends AbstractIntegrationTest {
 			"id" : "${eventType1.id}",
 			"name" : "EventType 1",
 			"description" : "Description...",
-			"showOnPalmate" : true,
+			"hasPublicEvents" : ${ toJSON(eventType1.hasPublicEvents) },
 			"resourceTypes" : [ ${ toJSON(userResourceTypeSingle) }, ${ toJSON(uploadResourceTypeSingle) } ] 
 		}"""
 		thenResponseDataIs(responseBody, expectedData)

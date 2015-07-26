@@ -151,6 +151,13 @@
 			<version>${jstl-version}</version>
 		</dependency>
 
+        <!-- iCalendar support -->
+		<dependency>
+			<groupId>net.sf.biweekly</groupId>
+			<artifactId>biweekly</artifactId>
+			<version>0.4.2</version>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>

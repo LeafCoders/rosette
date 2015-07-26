@@ -48,7 +48,7 @@ public class Event extends IdBasedModel {
 
     private LocationRefOrText location;
 
-    private Boolean showOnPalmate;
+    private Boolean isPublic;
 
     @Valid
     private List<Resource> resources;
@@ -75,8 +75,8 @@ public class Event extends IdBasedModel {
 		if (eventUpdate.getLocation() != null) {
 			setLocation(eventUpdate.getLocation());
 		}
-		if (eventUpdate.getShowOnPalmate() != null) {
-			setShowOnPalmate(eventUpdate.getShowOnPalmate());
+		if (eventUpdate.getIsPublic() != null && eventType.getHasPublicEvents().getAllowChange()) {
+			setIsPublic(eventUpdate.getIsPublic());
 		}
 		if (eventUpdate.getResources() != null) {
 			setResources(eventUpdate.getResources());
@@ -133,12 +133,12 @@ public class Event extends IdBasedModel {
         this.location = location;
     }
 
-	public Boolean getShowOnPalmate() {
-		return showOnPalmate;
+	public Boolean getIsPublic() {
+		return isPublic;
 	}
 
-	public void setShowOnPalmate(Boolean showOnPalmate) {
-		this.showOnPalmate = showOnPalmate;
+	public void setIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
 	}
 
 	public List<Resource> getResources() {

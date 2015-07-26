@@ -313,14 +313,14 @@ abstract class AbstractIntegrationTest {
 		id : "people",
 		name : "EventType 1",
 		description : "Description...",
-		showOnPalmate : true,
+		hasPublicEvents : new DefaultSetting<Boolean>(value: true, allowChange: true),
 		resourceTypes : [ userResourceTypeSingle, uploadResourceTypeSingle ]
 	)
 	protected final EventType eventType2 = new EventType(
 		id : "groups",
 		name : "EventType 2",
 		description : "Description...",
-		showOnPalmate : false,
+		hasPublicEvents : new DefaultSetting<Boolean>(value: false, allowChange: false),
 		resourceTypes : [ userResourceTypeMultiAndText, uploadResourceTypeMulti ]
 	)
 
@@ -332,7 +332,7 @@ abstract class AbstractIntegrationTest {
 		endTime : TestUtil.modelDate("2012-03-26 12:00 Europe/Stockholm"),
 		description : "Description...",
 		location : new LocationRefOrText(ref: location1),
-		showOnPalmate : true,
+		isPublic : true,
 		resources : [
 			new UserResource(
 				type : "user",
@@ -354,6 +354,7 @@ abstract class AbstractIntegrationTest {
 		endTime : TestUtil.modelDate("2014-10-05 20:00 Europe/Stockholm"),
 		description : null,
 		location : null,
+		isPublic: false,
 		resources : [
 			new UserResource(
 				type : "user",
@@ -366,6 +367,17 @@ abstract class AbstractIntegrationTest {
 				uploads : new UploadResponseRefs()
 			)
 		]
+	)
+	protected final Event event3 = new Event(
+		id : getObjectId(),
+		eventType : eventType2,
+		title : "Some event",
+		startTime : TestUtil.modelDate("2015-01-01 08:30 Europe/Stockholm"),
+		endTime : TestUtil.modelDate("2015-01-01 10:00 Europe/Stockholm"),
+		description : null,
+		location : null,
+		isPublic: false,
+		resources : []
 	)
 
 	/*
