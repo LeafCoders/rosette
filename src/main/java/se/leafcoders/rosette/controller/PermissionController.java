@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -44,8 +45,8 @@ public class PermissionController extends AbstractController {
 	}
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putPermission(@PathVariable String id, @RequestBody Permission permission, HttpServletResponse response) {
-		permissionService.update(id, permission, response);
+	public void putPermission(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		permissionService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "permissions/{id}", method = RequestMethod.DELETE, produces = "application/json")

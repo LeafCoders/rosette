@@ -10,6 +10,7 @@ import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.validator.HasRefOrText;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -38,18 +39,18 @@ public class Booking extends IdBasedModel {
 	private LocationRefOrText location;
 	
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		Booking bookingUpdate = (Booking) updateFrom;
-		if (bookingUpdate.getCustomerName() != null) {
+		if (rawData.has("customerName")) {
 			setCustomerName(bookingUpdate.getCustomerName());
 		}
-		if (bookingUpdate.getStartTime() != null) {
+		if (rawData.has("startTime")) {
 			setStartTime(bookingUpdate.getStartTime());
 		}
-		if (bookingUpdate.getEndTime() != null) {
+		if (rawData.has("endTime")) {
 			setEndTime(bookingUpdate.getEndTime());
 		}
-		if (bookingUpdate.getLocation() != null) {
+		if (rawData.has("location")) {
 			setLocation(bookingUpdate.getLocation());
 		}
 	}

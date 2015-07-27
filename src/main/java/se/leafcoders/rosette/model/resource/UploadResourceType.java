@@ -3,6 +3,7 @@ package se.leafcoders.rosette.model.resource;
 import javax.validation.constraints.NotNull;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.upload.UploadFolderRef;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class UploadResourceType extends ResourceType {
 
@@ -18,15 +19,15 @@ public class UploadResourceType extends ResourceType {
     }
 
     @Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
     	UploadResourceType resourceTypeUpdate = (UploadResourceType) updateFrom;
-    	if (resourceTypeUpdate.getUploadFolder() != null) {
+    	if (rawData.has("uploadFolder")) {
     		setUploadFolder(resourceTypeUpdate.getUploadFolder());
     	}
-    	if (resourceTypeUpdate.getMultiSelect() != null) {
+    	if (rawData.has("multiSelect")) {
     		setMultiSelect(resourceTypeUpdate.getMultiSelect());
     	}
-    	super.update(updateFrom);
+    	super.update(rawData, updateFrom);
     }
 
     // Getters and setters

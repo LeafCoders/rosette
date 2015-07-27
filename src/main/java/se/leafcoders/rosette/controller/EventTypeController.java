@@ -1,14 +1,19 @@
 package se.leafcoders.rosette.controller;
 
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.service.EventTypeService;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @Controller
 public class EventTypeController extends AbstractController {
@@ -34,8 +39,8 @@ public class EventTypeController extends AbstractController {
 	}
 
 	@RequestMapping(value = "eventTypes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putEventType(@PathVariable String id, @RequestBody EventType eventType, HttpServletResponse response) {
-		eventTypeService.update(id, eventType, response);
+	public void putEventType(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		eventTypeService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "eventTypes/{id}", method = RequestMethod.DELETE, produces = "application/json")

@@ -1,18 +1,19 @@
 package se.leafcoders.rosette.model;
 
+import java.util.Date;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.validator.HasRef;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Document(collection = "posters")
 @ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
@@ -43,21 +44,21 @@ public class Poster extends IdBasedModel {
 	private UploadResponse image;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		Poster posterUpdate = (Poster) updateFrom;
-		if (posterUpdate.getTitle() != null) {
+		if (rawData.has("title")) {
 			setTitle(posterUpdate.getTitle());
 		}
-		if (posterUpdate.getStartTime() != null) {
+		if (rawData.has("startTime")) {
 			setStartTime(posterUpdate.getStartTime());
 		}
-		if (posterUpdate.getEndTime() != null) {
+		if (rawData.has("endTime")) {
 			setEndTime(posterUpdate.getEndTime());
 		}
-		if (posterUpdate.getDuration() != null) {
+		if (rawData.has("duration")) {
 			setDuration(posterUpdate.getDuration());
 		}
-		if (posterUpdate.getImage() != null) {
+		if (rawData.has("image")) {
 			setImage(posterUpdate.getImage());
 		}
 	}

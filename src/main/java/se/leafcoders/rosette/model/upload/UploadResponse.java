@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -18,7 +19,7 @@ public class UploadResponse extends IdBasedModel {
 	private Long height;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 	}
 
 	// Getters and setters

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.validator.ValidPermissions;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "permissions")
 @ScriptAssert(lang = "javascript", script = "((_this.everyone?1:0)+(_this.user?1:0)+(_this.group?1:0)) == 1")
@@ -25,9 +26,9 @@ public class Permission extends IdBasedModel {
 	private List<String> patterns;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		Permission permissionUpdate = (Permission) updateFrom;
-    	if (permissionUpdate.getPatterns() != null) {
+    	if (rawData.has("patterns")) {
     		setPatterns(permissionUpdate.getPatterns());
     	}
 	}

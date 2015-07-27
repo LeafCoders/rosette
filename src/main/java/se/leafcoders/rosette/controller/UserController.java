@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +73,8 @@ public class UserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putUser(@PathVariable String id, @RequestBody User user, HttpServletResponse response) {
-		userService.update(id, user, response);
+	public void putUser(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		userService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.DELETE, produces = "application/json")

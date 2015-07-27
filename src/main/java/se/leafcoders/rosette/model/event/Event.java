@@ -19,6 +19,7 @@ import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.validator.HasRef;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -54,31 +55,33 @@ public class Event extends IdBasedModel {
     private List<Resource> resources;
 	
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		Event eventUpdate = (Event) updateFrom;
 		if (eventUpdate.getEventType() != null && !eventUpdate.getEventType().getId().equals(getEventType().getId())) {
 			throw new SimpleValidationException(new ValidationError("event", "event.eventType.notAllowedToChange"));
 		}
 
-		if (eventUpdate.getTitle() != null) {
+		if (rawData.has("title")) {
 			setTitle(eventUpdate.getTitle());
 		}
-		if (eventUpdate.getStartTime() != null) {
+		if (rawData.has("startTime")) {
 			setStartTime(eventUpdate.getStartTime());
 		}
-		if (eventUpdate.getEndTime() != null) {
+		if (rawData.has("endTime")) {
 			setEndTime(eventUpdate.getEndTime());
 		}
-		if (eventUpdate.getDescription() != null) {
+		if (rawData.has("description")) {
 			setDescription(eventUpdate.getDescription());
 		}
-		if (eventUpdate.getLocation() != null) {
+		if (rawData.has("location")) {
 			setLocation(eventUpdate.getLocation());
 		}
-		if (eventUpdate.getIsPublic() != null && eventType.getHasPublicEvents().getAllowChange()) {
+		if (rawData.has("isPublic") &&
+				eventUpdate.getIsPublic() != null &&
+				eventType.getHasPublicEvents().getAllowChange()) {
 			setIsPublic(eventUpdate.getIsPublic());
 		}
-		if (eventUpdate.getResources() != null) {
+		if (rawData.has("resources")) {
 			setResources(eventUpdate.getResources());
 		}
 	}

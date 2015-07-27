@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -46,8 +47,8 @@ public class EventController extends AbstractController {
 	}
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putEvent(@PathVariable String id, @RequestBody Event event, HttpServletResponse response) {
-		eventService.update(id, event, response);
+	public void putEvent(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		eventService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "events/{eventId}/resources/{resourceTypeId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")

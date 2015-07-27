@@ -2,10 +2,11 @@ package se.leafcoders.rosette.model.resource;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.TypeBasedModel;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "resourceTypes")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
@@ -27,12 +28,12 @@ public abstract class ResourceType extends TypeBasedModel {
     }
 
     @Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
     	ResourceType resourceTypeUpdate = (ResourceType) updateFrom;
-    	if (resourceTypeUpdate.getSection() != null) {
+    	if (rawData.has("section")) {
     		setSection(resourceTypeUpdate.getSection());
     	}
-    	super.update(updateFrom);
+    	super.update(rawData, updateFrom);
     }
 
     // Getters and setters

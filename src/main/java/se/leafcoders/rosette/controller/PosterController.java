@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Collections;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,8 +42,8 @@ public class PosterController extends AbstractController {
 	}
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putPoster(@PathVariable String id, @RequestBody Poster poster, HttpServletResponse response) {
-		posterService.update(id, poster, response);
+	public void putPoster(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		posterService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.DELETE, produces = "application/json")

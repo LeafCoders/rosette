@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -47,8 +48,8 @@ public class GroupController extends AbstractController {
 	}
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putGroup(@PathVariable String id, @RequestBody Group group, HttpServletResponse response) {
-		groupService.update(id, group, response);
+	public void putGroup(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		groupService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.DELETE, produces = "application/json")

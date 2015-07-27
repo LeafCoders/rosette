@@ -4,6 +4,7 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public abstract class TypeBasedModel implements BaseModel {
 	@Id
@@ -17,12 +18,12 @@ public abstract class TypeBasedModel implements BaseModel {
     protected String description;
 
     @Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
     	TypeBasedModel modelUpdate = (TypeBasedModel) updateFrom;
-    	if (modelUpdate.getName() != null) {
+    	if (rawData.has("name")) {
     		setName(modelUpdate.getName());
     	}
-    	if (modelUpdate.getDescription() != null) {
+    	if (rawData.has("description")) {
     		setDescription(modelUpdate.getDescription());
     	}
     }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.leafcoders.rosette.model.Location;
 import se.leafcoders.rosette.service.LocationService;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class LocationController extends AbstractController {
 	}
 
 	@RequestMapping(value = "locations/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putLocation(@PathVariable String id, @RequestBody Location location, HttpServletResponse response) {
-		locationService.update(id, location, response);
+	public void putLocation(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		locationService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "locations/{id}", method = RequestMethod.DELETE, produces = "application/json")

@@ -5,12 +5,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 import se.leafcoders.rosette.security.RosettePasswordService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Document(collection = "signupUsers")
 public class SignupUser extends IdBasedModel {
@@ -39,22 +40,22 @@ public class SignupUser extends IdBasedModel {
 	private String permissions;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		SignupUser signupUserUpdate = (SignupUser) updateFrom;
-		if (signupUserUpdate.getEmail() != null) {
+		if (rawData.has("email")) {
 			setEmail(signupUserUpdate.getEmail());
 		}
-		if (signupUserUpdate.getPassword() != null && !"".equals(signupUserUpdate.getPassword().trim())) {
+		if (rawData.has("password") && !"".equals(signupUserUpdate.getPassword().trim())) {
 			String hashedPassword = new RosettePasswordService().encryptPassword(signupUserUpdate.getPassword());
 			setHashedPassword(hashedPassword);
 		}
-		if (signupUserUpdate.getFirstName() != null) {
+		if (rawData.has("firstName")) {
 			setFirstName(signupUserUpdate.getFirstName());
 		}
-		if (signupUserUpdate.getLastName() != null) {
+		if (rawData.has("lastName")) {
 			setLastName(signupUserUpdate.getLastName());
 		}
-		if (signupUserUpdate.getPermissions() != null) {
+		if (rawData.has("permissions")) {
 			setPermissions(signupUserUpdate.getPermissions());
 		}
 	}

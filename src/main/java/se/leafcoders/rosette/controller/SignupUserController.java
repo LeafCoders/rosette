@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -63,8 +64,8 @@ public class SignupUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "signupUsers/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putSignupUser(@PathVariable String id, @RequestBody SignupUser signupUser, HttpServletResponse response) {
-		signupUserService.update(id, signupUser, response);
+	public void putSignupUser(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		signupUserService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "signupUsers/{id}", method = RequestMethod.DELETE, produces = "application/json")

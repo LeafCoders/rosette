@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.TypeBasedModel;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "uploadFolders")
 public class UploadFolder extends TypeBasedModel {
@@ -15,15 +16,15 @@ public class UploadFolder extends TypeBasedModel {
 	private List<String> mimeTypes;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		UploadFolder uploadFolderUpdate = (UploadFolder) updateFrom;
-		if (uploadFolderUpdate.getIsPublic() != null) {
+		if (rawData.has("isPublic")) {
 			setIsPublic(uploadFolderUpdate.getIsPublic());
 		}
-		if (uploadFolderUpdate.getMimeTypes() != null) {
+		if (rawData.has("mimeTypes")) {
 			setMimeTypes(uploadFolderUpdate.getMimeTypes());
 		}
-		super.update(uploadFolderUpdate);
+		super.update(rawData, uploadFolderUpdate);
 	}
 
 	// Getters and setters

@@ -38,8 +38,8 @@ public class ResourceTypeController extends AbstractController {
 
 	// ResourceType must contain the attribute 'type' that equals any string specified in ResourceType  
     @RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public void putResourceType(@PathVariable String key, @RequestBody ResourceType resourceType, HttpServletResponse response) {
-		resourceTypeService.update(key, resourceType, response);
+    public void putResourceType(@PathVariable String key, HttpServletRequest request, HttpServletResponse response) {
+		resourceTypeService.update(key, request, response);
     }
 
 	@RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.DELETE, produces = "application/json")

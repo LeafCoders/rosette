@@ -1,9 +1,10 @@
 package se.leafcoders.rosette.model;
 
+import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.upload.UploadResponse;
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "locations")
 public class Location extends IdBasedModel {
@@ -17,15 +18,15 @@ public class Location extends IdBasedModel {
 	private UploadResponse directionImage;
 	
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		Location locationUpdate = (Location) updateFrom;
-    	if (locationUpdate.getName() != null) {
+    	if (rawData.has("name")) {
     		setName(locationUpdate.getName());
     	}
-    	if (locationUpdate.getDescription() != null) {
+    	if (rawData.has("description")) {
     		setDescription(locationUpdate.getDescription());
     	}
-    	if (locationUpdate.getDirectionImage() != null) {
+    	if (rawData.has("directionImage")) {
     		setDirectionImage(locationUpdate.getDirectionImage());
     	}
 	}

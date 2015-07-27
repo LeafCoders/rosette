@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.validator.HasRef;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "groupMemberships")
 public class GroupMembership extends IdBasedModel {
@@ -17,12 +18,12 @@ public class GroupMembership extends IdBasedModel {
 	private UserRef user;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		GroupMembership groupMembershipUpdate = (GroupMembership) updateFrom;
-    	if (groupMembershipUpdate.getGroup() != null) {
+    	if (rawData.has("group")) {
     		setGroup(groupMembershipUpdate.getGroup());
     	}
-    	if (groupMembershipUpdate.getUser() != null) {
+    	if (rawData.has("user")) {
     		setUser(groupMembershipUpdate.getUser());
     	}
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.leafcoders.rosette.model.resource.ResourceType;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "eventTypes")
 public class EventType extends TypeBasedModel {
@@ -14,15 +15,15 @@ public class EventType extends TypeBasedModel {
     private DefaultSetting<Boolean> hasPublicEvents;
 
     @Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
     	EventType eventTypeUpdate = (EventType) updateFrom;
-    	if (eventTypeUpdate.getResourceTypes() != null) {
+    	if (rawData.has("resourceTypes")) {
     		setResourceTypes(eventTypeUpdate.getResourceTypes());
     	}
-    	if (eventTypeUpdate.getHasPublicEvents() != null) {
+    	if (rawData.has("hasPublicEvents")) {
     		sethasPublicEvents(eventTypeUpdate.getHasPublicEvents());
     	}
-    	super.update(updateFrom);
+    	super.update(rawData, updateFrom);
     }
 
     // Getter and setters

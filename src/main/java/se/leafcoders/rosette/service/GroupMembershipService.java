@@ -42,13 +42,11 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 	}
 
 	@Override
-	public void update(String id, GroupMembership data, HttpServletResponse response) {
+	public void beforeUpdate(String id, GroupMembership data) {
         if (membershipExist(data)) {
             throw new SimpleValidationException(new ValidationError("groupMembership", "groupMembership.alreadyExists"));
         }
-
 		mongoRealm.clearCache(null);
-		super.update(id, data, response);
 	}
 
 	@Override

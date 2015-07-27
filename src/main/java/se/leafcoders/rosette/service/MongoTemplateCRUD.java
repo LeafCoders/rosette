@@ -2,6 +2,7 @@ package se.leafcoders.rosette.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,16 @@ import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import util.QueryId;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 	@Autowired
 	protected SecurityService security;
+
+	protected ObjectMapper objectMapper = new ObjectMapper();
 
 	protected final PermissionType permissionType;
 	protected final PermissionCheckFilter permissionFilter;
@@ -95,7 +100,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 
 	@Override
-	public void update(String id, T updateData, HttpServletResponse response) {
+	public void update(String id, HttpServletRequest request, HttpServletResponse response) {
 		if (permissionFilter.shallCheck(PermissionAction.UPDATE)) {
 			checkPermission(PermissionAction.UPDATE, id);
 		}
@@ -103,11 +108,24 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		if (dataInDbToUpdate == null) {
 			throw new NotFoundException();
 		}
-		insertDependencies(updateData);
-		dataInDbToUpdate.update(updateData);
+
+		JsonNode rawData = null;
+		T updateData = null;
+		try {
+			rawData = objectMapper.readTree(request.getReader());
+			updateData = objectMapper.treeToValue(rawData, entityClass);
+		} catch (Exception ignore) {
+			throw new NotFoundException();
+		}
+
+		beforeUpdate(id, updateData);
+		dataInDbToUpdate.update(rawData, updateData);
 		security.validate(dataInDbToUpdate);
 		mongoTemplate.save(dataInDbToUpdate);
 		response.setStatus(HttpStatus.OK.value());
+	}
+
+	protected void beforeUpdate(String id, T updateData) {
 	}
 	
 	@Override

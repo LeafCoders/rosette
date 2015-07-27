@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -38,8 +39,8 @@ public class UploadFolderController extends AbstractController {
 	}
 
 	@RequestMapping(value = "uploadFolders/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putBooking(@PathVariable String id, @RequestBody UploadFolder uploadFolder, HttpServletResponse response) {
-		uploadFolderService.update(id, uploadFolder, response);
+	public void putBooking(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		uploadFolderService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "uploadFolders/{id}", method = RequestMethod.DELETE, produces = "application/json")

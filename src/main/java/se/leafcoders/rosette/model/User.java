@@ -5,8 +5,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.leafcoders.rosette.security.RosettePasswordService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document(collection = "users")
 public class User extends IdBasedModel {
@@ -29,19 +30,19 @@ public class User extends IdBasedModel {
 	private String lastName;
 
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		User userUpdate = (User) updateFrom;
-		if (userUpdate.getEmail() != null) {
+		if (rawData.has("email")) {
 			setEmail(userUpdate.getEmail());
 		}
-		if (userUpdate.getPassword() != null && !"".equals(userUpdate.getPassword().trim())) {
+		if (rawData.has("password") && !"".equals(userUpdate.getPassword().trim())) {
 			String hashedPassword = new RosettePasswordService().encryptPassword(userUpdate.getPassword());
 			setHashedPassword(hashedPassword);
 		}
-		if (userUpdate.getFirstName() != null) {
+		if (rawData.has("firstName")) {
 			setFirstName(userUpdate.getFirstName());
 		}
-		if (userUpdate.getLastName() != null) {
+		if (rawData.has("lastName")) {
 			setLastName(userUpdate.getLastName());
 		}
 	}

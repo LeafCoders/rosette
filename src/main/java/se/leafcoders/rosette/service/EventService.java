@@ -9,6 +9,7 @@ import static se.leafcoders.rosette.security.PermissionType.EVENTS_EVENTTYPES;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS_RESOURCETYPES;
 import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -90,9 +91,9 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	}
 
 	@Override
-	public void update(String eventId, Event updateData, HttpServletResponse response) {
+	public void update(String eventId, HttpServletRequest request, HttpServletResponse response) {
 		checkEventTypesPermission(UPDATE, readWithoutPermission(eventId));
-		super.update(eventId, updateData, response);
+		super.update(eventId, request, response);
 	}
 	
 	@Override

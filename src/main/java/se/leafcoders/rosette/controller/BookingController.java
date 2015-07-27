@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -49,8 +50,8 @@ public class BookingController extends AbstractController {
 	}
 
 	@RequestMapping(value = "bookings/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void putBooking(@PathVariable String id, @RequestBody Booking booking, HttpServletResponse response) {
-		bookingService.update(id, booking, response);
+	public void putBooking(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		bookingService.update(id, request, response);
 	}
 
 	@RequestMapping(value = "bookings/{id}", method = RequestMethod.DELETE, produces = "application/json")

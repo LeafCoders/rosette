@@ -1,5 +1,9 @@
 package se.leafcoders.rosette.service;
 
+import static se.leafcoders.rosette.security.PermissionAction.READ;
+import static se.leafcoders.rosette.security.PermissionAction.UPDATE;
+import static se.leafcoders.rosette.security.PermissionType.PERMISSIONS;
+import static se.leafcoders.rosette.security.PermissionType.USERS;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,8 +17,6 @@ import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.security.PermissionValue;
-import static se.leafcoders.rosette.security.PermissionAction.*;
-import static se.leafcoders.rosette.security.PermissionType.*;
 import util.QueryId;
 
 @Service
@@ -42,11 +44,9 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	}
 
 	@Override
-	public void update(String id, Permission data, HttpServletResponse response) {
+	public void beforeUpdate(String id, Permission data) {
 		// Clearing auth cache
 		mongoRealm.clearCache(null);
-
-		super.update(id, data, response);
 	}
 
 	@Override

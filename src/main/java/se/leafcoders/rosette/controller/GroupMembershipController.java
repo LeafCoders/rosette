@@ -41,8 +41,8 @@ public class GroupMembershipController extends AbstractController {
 	}
 
     @RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public void putGroupMembership(@PathVariable String id, @RequestBody GroupMembership groupMembership, HttpServletResponse response) {
-		groupMembershipService.update(id, groupMembership, response);
+    public void putGroupMembership(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		groupMembershipService.update(id, request, response);
     }
 
 	@RequestMapping(value = "groupMemberships/{id}", method = RequestMethod.DELETE, produces = "application/json")

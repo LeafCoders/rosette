@@ -7,6 +7,7 @@ import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Document
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,15 +21,15 @@ public class UploadRequest extends IdBasedModel {
 	private String fileData;
     
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		UploadRequest uploadRequestUpdate = (UploadRequest) updateFrom;
-		if (uploadRequestUpdate.getFileName() != null) {
+		if (rawData.has("fileName")) {
 			setFileName(uploadRequestUpdate.getFileName());
 		}
-		if (uploadRequestUpdate.getMimeType() != null) {
+		if (rawData.has("mimeType")) {
 			setMimeType(uploadRequestUpdate.getMimeType());
 		}
-		if (uploadRequestUpdate.getFileData() != null) {
+		if (rawData.has("fileData")) {
 			setFileData(uploadRequestUpdate.getFileData());
 		}
 	}

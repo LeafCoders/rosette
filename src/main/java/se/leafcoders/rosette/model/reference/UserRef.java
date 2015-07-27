@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Transient;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import se.leafcoders.rosette.model.User;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class UserRef extends IdBasedModel {
 	private String firstName;
@@ -18,12 +19,12 @@ public class UserRef extends IdBasedModel {
 	}
 	
 	@Override
-	public void update(BaseModel updateFrom) {
+	public void update(JsonNode rawData, BaseModel updateFrom) {
 		User userUpdate = (User) updateFrom;
-		if (userUpdate.getFirstName() != null) {
+		if (rawData.has("firstName")) {
 			setFirstName(userUpdate.getFirstName());
 		}
-		if (userUpdate.getLastName() != null) {
+		if (rawData.has("lastName")) {
 			setLastName(userUpdate.getLastName());
 		}
 	}
