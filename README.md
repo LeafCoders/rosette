@@ -39,7 +39,7 @@ A REST server for events, posters, bookings, uploads and more.
 5. Import the Rosette project with `File -> Import... -> Maven -> Existing Maven Projects`
 6. If you get errors that says
 
-  > The declaration package "se.rytt..." does not match the expected package "main.se.rytt..."
+  > The declaration package "se.leafcoders..." does not match the expected package "main.se.leafcoders..."
 
   then do the following:
   1. Right-click at "src" below "rosette" in `Package Explorer` and select `Build Path -> Remove from Build Path`

@@ -9,7 +9,7 @@ import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.service.SecurityService;
 
-@RequestMapping("v1-snapshot/public")
+@RequestMapping("v1/public")
 @CrossOrigin
 public class PublicDataController extends AbstractController {
 

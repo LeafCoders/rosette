@@ -20,7 +20,7 @@ import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.error.ExceptionError;
 import se.leafcoders.rosette.model.error.ValidationError;
 
-@RequestMapping("v1-snapshot")
+@RequestMapping("v1")
 public class AbstractController {
     static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
