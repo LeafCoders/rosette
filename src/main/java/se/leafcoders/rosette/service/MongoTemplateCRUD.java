@@ -119,6 +119,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		}
 
 		beforeUpdate(id, updateData);
+		insertDependencies(updateData);
 		dataInDbToUpdate.update(rawData, updateData);
 		security.validate(dataInDbToUpdate);
 		mongoTemplate.save(dataInDbToUpdate);
