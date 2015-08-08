@@ -83,7 +83,7 @@ Det går att ge läsrättigheter för händelser som innehåller en specifik res
 ## uploads
 Anger rättigheter för filer. T.ex. `uploads:read:postersFolder`. Den tredje delen i `uploads`-rättigheten är inte ett resurs-id som för de andra rättigheterna. Här är den tredje delen ett id för en filkatalog. I exemplet här innan ges rättigheten att läsa filer som ligger i katalogen med id `postersFolder`.
 
-Rättigheten `uploads:read:xxx` get automatiskt rättigheten `read:uploadFolders:xxx`.
+Rättigheten `uploads:read:xxx` get automatiskt rättigheten `uploadFolders:read:xxx`.
 
 **create** - Får skapa ny fil  
 **read** - Får läsa fil  

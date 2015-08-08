@@ -91,12 +91,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	@Override
 	public List<T> readMany(final Query query) {
 		List<T> items = mongoTemplate.find(query, entityClass);
-
-		if (permissionFilter.shallCheck(PermissionAction.READ)) {
-			return filterPermittedItems(items);
-		} else {
-			return items;
-		}
+		return filterPermittedItems(items);
 	}
 
 	@Override
