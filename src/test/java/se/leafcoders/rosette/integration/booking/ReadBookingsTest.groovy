@@ -55,7 +55,7 @@ public class ReadBookingsTest extends AbstractIntegrationTest {
 
 		// Given
 		givenUser(user1)
-		givenPermissionForUser(user1, ["publicData:read"])
+		givenPermissionForUser(user1, ["public:read"])
 
 		mongoTemplate.getCollection("bookings").insert(JSON.parse("""[
 			{

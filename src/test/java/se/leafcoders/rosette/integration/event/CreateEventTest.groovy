@@ -41,6 +41,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"description" : null,
 			"location" : null,
 			"isPublic" : false,
+			"version": 1,
 			"resources" : null
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
@@ -81,6 +82,7 @@ public class CreateEventTest extends AbstractIntegrationTest {
 			"description" : null,
 			"location" : null,
 			"isPublic" : ${ eventType2.hasPublicEvents.value },
+			"version": 1,
 			"resources" : null
 		}"""
 		thenResponseDataIs(responseBody, expectedData)

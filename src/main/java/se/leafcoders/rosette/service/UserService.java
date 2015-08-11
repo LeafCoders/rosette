@@ -45,7 +45,7 @@ public class UserService extends MongoTemplateCRUD<User> {
 	}
 
 	@Override
-	public void beforeUpdate(String id, User updateData) {
+	public void beforeUpdate(String id, User updateData, User dataInDatabase) {
 		if (updateData.getPassword() != null) {
 			mongoRealm.clearCache(null);
 		}

@@ -17,6 +17,6 @@ public class PublicDataController extends AbstractController {
 	protected SecurityService security;
 
 	protected void checkPermission() {
-		security.checkPermission(new PermissionValue(PermissionType.PUBLIC_DATA, PermissionAction.READ));
+		security.checkPermission(new PermissionValue(PermissionType.PUBLIC, PermissionAction.READ));
 	}
 }

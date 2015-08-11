@@ -45,6 +45,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"description" : "New description",
 			"location" : { "ref" : ${ toJSON(location1) }, "text" : null },
 			"isPublic" : false,
+			"version" : 2,
 			"resources" : [
 				{
 					"type" : "user",
@@ -63,7 +64,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void isPublicShalNotBeChangable() throws ClientProtocolException, IOException {
+	public void isPublicShallNotBeChangable() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenLocation(location1)
@@ -86,7 +87,8 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"startTime" : "2015-05-05 05:00 Europe/Stockholm",
 			"endTime" : "2015-05-05 06:00 Europe/Stockholm",
 			"description" : "New description",
-			"isPublic" : true
+			"isPublic" : true,
+			"version": 4711
 		}""")
 
 		// Then
@@ -101,6 +103,7 @@ public class UpdateEventTest extends AbstractIntegrationTest {
 			"description" : "New description",
 			"location" : null,
 			"isPublic" : false,
+			"version": 2,
 			"resources" : []
 		}]"""
 		thenDataInDatabaseIs(Event.class, expectedData)

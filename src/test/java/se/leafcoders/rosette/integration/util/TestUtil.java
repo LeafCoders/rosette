@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import se.leafcoders.rosette.converter.RosetteDateConverter;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneConverter;
 
 public class TestUtil {
@@ -50,5 +51,19 @@ public class TestUtil {
 		GregorianCalendar calendar = new GregorianCalendar(new SimpleTimeZone(0, "GMT"));
         format.setCalendar(calendar);
 		return RosetteDateTimeTimezoneConverter.stringToDate(rosetteDateTime);
+	}
+
+	/*
+	 * Converts java Date to server model DateTime format.
+	 */
+	public static String dateToModelTime(Date javaDate) {
+		return RosetteDateTimeTimezoneConverter.dateToString(javaDate, "Europe/Stockholm");
+	}
+
+	/*
+	 * Converts java Date to server model Date format.
+	 */
+	public static String dateToModelDate(Date javaDate) {
+		return RosetteDateConverter.dateToString(javaDate);
 	}
 }

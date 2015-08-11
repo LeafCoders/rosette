@@ -44,7 +44,7 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	}
 
 	@Override
-	public void beforeUpdate(String id, Permission data) {
+	public void beforeUpdate(String id, Permission data, Permission dataInDatabase) {
 		// Clearing auth cache
 		mongoRealm.clearCache(null);
 	}

@@ -38,6 +38,7 @@ public class ReadEventTest extends AbstractIntegrationTest {
 			"description" : "Description...",
 			"location" : { "ref" : ${ toJSON(location1) }, "text" : null },
 			"isPublic" : true,
+			"version": 1,
 			"resources" : [
 				{
 					"type" : "user",

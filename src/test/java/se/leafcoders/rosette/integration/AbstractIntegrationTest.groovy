@@ -488,7 +488,7 @@ abstract class AbstractIntegrationTest {
 		return resp
 	}
 
-	protected HttpResponse whenGet(String getUrl, User user, boolean relativeUrl = true) {
+	protected HttpResponse whenGet(String getUrl, User user = null, boolean relativeUrl = true) {
         getRequest = new HttpGet(relativeUrl ? (baseUrl + getUrl) : getUrl)
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")

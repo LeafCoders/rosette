@@ -61,6 +61,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 			event.setIsPublic(false);
 		}
 
+		event.setVersion(1);
 		return super.create(event, response);
 	}
 
@@ -95,7 +96,12 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		checkEventTypesPermission(UPDATE, readWithoutPermission(eventId));
 		super.update(eventId, request, response);
 	}
-	
+
+	@Override
+	protected void beforeUpdate(String id, Event updateData, Event dataInDatabase) {
+		dataInDatabase.setVersion(dataInDatabase.getVersion() + 1);
+	}
+
 	@Override
 	public void delete(String eventId, HttpServletResponse response) {
 		checkEventTypesPermission(DELETE, readWithoutPermission(eventId));

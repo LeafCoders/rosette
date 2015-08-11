@@ -53,7 +53,9 @@ public class Event extends IdBasedModel {
 
     @Valid
     private List<Resource> resources;
-	
+
+    private Integer version = 1;
+
 	@Override
 	public void update(JsonNode rawData, BaseModel updateFrom) {
 		Event eventUpdate = (Event) updateFrom;
@@ -151,4 +153,12 @@ public class Event extends IdBasedModel {
     public void setResources(List<Resource> resources) {
         this.resources = resources;
     }
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 }

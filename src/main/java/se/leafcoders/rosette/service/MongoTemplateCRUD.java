@@ -113,7 +113,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 			throw new NotFoundException();
 		}
 
-		beforeUpdate(id, updateData);
+		beforeUpdate(id, updateData, dataInDbToUpdate);
 		insertDependencies(updateData);
 		dataInDbToUpdate.update(rawData, updateData);
 		security.validate(dataInDbToUpdate);
@@ -121,7 +121,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		response.setStatus(HttpStatus.OK.value());
 	}
 
-	protected void beforeUpdate(String id, T updateData) {
+	protected void beforeUpdate(String id, T updateData, T dataInDbToUpdate) {
 	}
 	
 	@Override

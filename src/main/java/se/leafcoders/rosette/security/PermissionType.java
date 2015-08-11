@@ -19,7 +19,7 @@ public enum PermissionType {
 	UPLOAD_FOLDERS("uploadFolders"),
 	UPLOADS("uploads"),
 	USERS("users"),
-	PUBLIC_DATA("publicData");
+	PUBLIC("public");
 
 	private final String type;
 
