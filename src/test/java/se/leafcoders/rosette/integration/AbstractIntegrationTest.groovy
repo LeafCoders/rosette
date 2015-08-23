@@ -482,7 +482,7 @@ abstract class AbstractIntegrationTest {
         postRequest = new HttpPost(baseUrl + postUrl)
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			postRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
+			postRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
 		}
 		HttpResponse resp = httpClient.execute(postRequest)
 		return resp
@@ -493,7 +493,7 @@ abstract class AbstractIntegrationTest {
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		if (user != null) {
-			getRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
+			getRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
 		}
 		HttpResponse resp = httpClient.execute(getRequest)
 		return resp
@@ -503,7 +503,7 @@ abstract class AbstractIntegrationTest {
         putRequest = new HttpPut(baseUrl + putUrl)
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			putRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
+			putRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
 		}
 		HttpResponse resp = httpClient.execute(putRequest)
 		return resp
@@ -513,7 +513,7 @@ abstract class AbstractIntegrationTest {
         deleteRequest = new HttpDelete(baseUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		if (user != null) {
-			deleteRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), , HTTP.UTF_8, false))
+			deleteRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
 		}
 		HttpResponse resp = httpClient.execute(deleteRequest)
 		return resp

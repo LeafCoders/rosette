@@ -36,7 +36,6 @@ public class UserService extends MongoTemplateCRUD<User> {
 	@Override
 	public User read(String id) {
         User user = super.read(id);
-        user.setHashedPassword(null);
 		return user;
 	}
 
@@ -46,9 +45,7 @@ public class UserService extends MongoTemplateCRUD<User> {
 
 	@Override
 	public void beforeUpdate(String id, User updateData, User dataInDatabase) {
-		if (updateData.getPassword() != null) {
-			mongoRealm.clearCache(null);
-		}
+		mongoRealm.clearCache(null);
 	}	
 	
 	@Override
