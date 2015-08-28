@@ -1,16 +1,17 @@
 package se.leafcoders.rosette.comparator;
 
 import java.util.Comparator;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+
 import se.leafcoders.rosette.model.Poster;
 
 public class PosterComparator implements Comparator<Poster> {
 
 	private final DateTime now = new DateTime();
 
-	@Override
-    public int compare(Poster poster1, Poster poster2) {
+	public int compare(Poster poster1, Poster poster2) {
     	int days1 = daysValue(poster1);
     	int days2 = daysValue(poster2);
     	if (days1 < days2) {

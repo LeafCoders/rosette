@@ -7,5 +7,6 @@ target
 rosette.iml
 Test.iml
 .idea
+.gradle
 /build
 /bin

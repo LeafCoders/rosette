@@ -4,12 +4,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 
 import se.leafcoders.rosette.security.AnonymousToken;
-
+/*
 public class OptionalBasicHttpAuthenticationFilter extends BasicHttpAuthenticationFilter {
 
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
@@ -33,3 +30,4 @@ public class OptionalBasicHttpAuthenticationFilter extends BasicHttpAuthenticati
     }
 
 }
+*/

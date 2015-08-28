@@ -2,7 +2,9 @@ package se.leafcoders.rosette.security;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -19,25 +21,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.service.PermissionService;
 
-@Service("mongoRealm")
+//@Service("mongoRealm")
+@Component
 public class MongoRealm extends AuthorizingRealm {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private PermissionService permissionService;
-
-	PasswordMatcher passwordMatcher;
-
-	@PostConstruct
-	public void initialize() {
-		setAuthenticationCachingEnabled(true);
-		passwordMatcher = new RosettePasswordMatcher();
-	}
 
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -74,11 +71,6 @@ public class MongoRealm extends AuthorizingRealm {
 		} else {
 			throw new AuthenticationException("Unexpected '" + authenticationToken.getClass().getName() + "'. Expected UsernamePasswordToken instead.");
 		}
-	}
-
-	@Override
-	public CredentialsMatcher getCredentialsMatcher() {
-		return passwordMatcher;
 	}
 
 	@Override

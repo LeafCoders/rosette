@@ -30,9 +30,10 @@ public class SecurityService {
 
     public boolean isPermitted(PermissionValue... permissionValues) {
 		for (PermissionValue value : permissionValues) {
-			if (SecurityUtils.getSubject().isPermitted(value.toString())) {
+		    // TODO: Remove this...
+//			if (SecurityUtils.getSubject().isPermitted(value.toString())) {
 				return true;
-			}
+//			}
 		}
 		return false;
 	}
