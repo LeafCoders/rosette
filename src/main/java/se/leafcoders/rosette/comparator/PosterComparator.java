@@ -11,6 +11,7 @@ public class PosterComparator implements Comparator<Poster> {
 
 	private final DateTime now = new DateTime();
 
+	@Override
 	public int compare(Poster poster1, Poster poster2) {
     	int days1 = daysValue(poster1);
     	int days2 = daysValue(poster2);
