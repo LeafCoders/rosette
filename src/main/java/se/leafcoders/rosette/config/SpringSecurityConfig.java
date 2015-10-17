@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -58,24 +58,24 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     // Allow anonymous logins
                     .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                    // Allow anonymous sign up
+                    .antMatchers(HttpMethod.POST, "/api/v1/signupUsers").permitAll()
                     // Allow anonymous public resource requests
-                    .antMatchers(HttpMethod.GET, "/v1/public/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/v1/public/**").permitAll()
                     // All other request need to be authenticated
                     .anyRequest().authenticated().and()
 
                  // Custom authentication which sets the token header upon authentication
-                .addFilterBefore(new JwtLoginFilter("/auth/login", tokenAuthenticationService, userDetailsService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtLoginFilter("/auth/login", tokenAuthenticationService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                     
                 // Custom Token based authentication with header value
                 // previously given to the client
                 .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService), AnonymousAuthenticationFilter.class);
-        
-
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(NoOpPasswordEncoder.getInstance()); // TODO: Use new BCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsService()).passwordEncoder(new BCryptPasswordEncoder());
         auth.eraseCredentials(true);
     }
 

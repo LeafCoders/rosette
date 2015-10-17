@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,20 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.SignupUser;
 import se.leafcoders.rosette.model.User;
-import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.security.RosettePasswordService;
-import se.leafcoders.rosette.service.SecurityService;
 import se.leafcoders.rosette.service.SignupUserService;
 import se.leafcoders.rosette.service.UserService;
 
 @Controller
 public class SignupUserController extends AbstractController {
-	@Autowired
-	private MongoTemplate mongoTemplate;
-	@Autowired
-	private MongoRealm mongoRealm;
-	@Autowired
-	private SecurityService securityService;
 	@Autowired
 	private SignupUserService signupUserService;
 	@Autowired

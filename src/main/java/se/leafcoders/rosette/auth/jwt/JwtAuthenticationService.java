@@ -6,15 +6,19 @@ import javax.servlet.http.HttpServletResponse;
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
+import se.leafcoders.rosette.model.PermissionTree;
+import se.leafcoders.rosette.security.PermissionTreeHelper;
 
 public class JwtAuthenticationService {
 
     private static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 
     private final JwtHandler tokenHandler;
+    private CurrentUserService currentUserService;
 
-    public JwtAuthenticationService(String secret, CurrentUserService userService) {
-        tokenHandler = new JwtHandler(secret, userService);
+    public JwtAuthenticationService(String secret, CurrentUserService currentUserService) {
+        tokenHandler = new JwtHandler(secret, currentUserService);
+        this.currentUserService = currentUserService;
     }
 
     public String addAuthentication(HttpServletResponse response, CurrentUserAuthentication authentication) {
@@ -29,7 +33,11 @@ public class JwtAuthenticationService {
         if (token != null) {
             final CurrentUser user = tokenHandler.parseUserFromToken(token);
             if (user != null) {
-                return new CurrentUserAuthentication(user);
+                PermissionTreeHelper ph = new PermissionTreeHelper();
+                ph.create(currentUserService.getUserPermissions(user.getId()));
+                PermissionTree tree = new PermissionTree();
+                tree.setTree(ph.getTree());
+                return new CurrentUserAuthentication(user, tree);
             }
         }
         return null;

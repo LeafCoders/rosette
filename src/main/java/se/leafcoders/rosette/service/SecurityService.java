@@ -3,19 +3,21 @@ package se.leafcoders.rosette.service;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.Booking;
 import se.leafcoders.rosette.model.Poster;
-import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.security.PermissionTreeHelper;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import util.QueryId;
@@ -30,10 +32,9 @@ public class SecurityService {
 
     public boolean isPermitted(PermissionValue... permissionValues) {
 		for (PermissionValue value : permissionValues) {
-		    // TODO: Remove this...
-//			if (SecurityUtils.getSubject().isPermitted(value.toString())) {
+		    if (isPermitted(value.toString())) {
 				return true;
-//			}
+			}
 		}
 		return false;
 	}
@@ -44,6 +45,11 @@ public class SecurityService {
 		}
 	}
 
+	private boolean isPermitted(String permission) {
+	    CurrentUserAuthentication currentUserAuth = (CurrentUserAuthentication) SecurityContextHolder.getContext().getAuthentication();
+	    return PermissionTreeHelper.checkPermission(currentUserAuth.getPermissionTree().getTree(), permission);
+	}
+	
 	public void throwPermissionMissing(PermissionValue... permissionValues) {
 		throw new ForbiddenException("error.missingPermission", StringUtils.arrayToCommaDelimitedString(permissionValues));
 	}
@@ -56,14 +62,18 @@ public class SecurityService {
     }
 
 	public String requestUserId() {
-		User principal = (User)SecurityUtils.getSubject().getPrincipal();
-		if (principal != null) {
-			return principal.getId();
+        CurrentUserAuthentication currentUserAuth = (CurrentUserAuthentication) SecurityContextHolder.getContext().getAuthentication();
+		if (currentUserAuth != null) {
+			return (String) currentUserAuth.getPrincipal();
 		} else {
 			return null;
 		}
 	}
 
+	public void resetPermissionCache() {
+	    // TODO: Clean permissionTree collection in MongoDb
+	}
+	
 	// TODO: I very ugly method. Fix with annotations? http://stackoverflow.com/a/4454783
 	public void checkNotReferenced(final String id, final PermissionType permissionType) {
 		if (permissionType == PermissionType.LOCATIONS) {

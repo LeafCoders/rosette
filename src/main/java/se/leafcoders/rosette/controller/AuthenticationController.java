@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.User;
-import se.leafcoders.rosette.security.MongoRealm;
+import se.leafcoders.rosette.service.SecurityService;
 
 @Controller
 public class AuthenticationController extends AbstractController {
 	@Autowired
-	private MongoRealm mongoRealm;
+	private SecurityService securityService;
 	
 	public AuthenticationController() {
 		super();
@@ -34,8 +34,7 @@ public class AuthenticationController extends AbstractController {
 	
 	@RequestMapping(value = "authCaches", method = RequestMethod.DELETE, produces = "application/json")
 	public void clearAuthCaches(HttpServletResponse response) {
-		mongoRealm.clearCache(null);
-		
+		securityService.resetPermissionCache();
 		response.setStatus(HttpStatus.OK.value()); 
 	}
 

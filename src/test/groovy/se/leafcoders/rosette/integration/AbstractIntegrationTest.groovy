@@ -23,6 +23,8 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.*
 import se.leafcoders.rosette.model.event.Event
@@ -43,6 +45,9 @@ import com.mongodb.Mongo
 import com.mongodb.MongoException
 import com.mongodb.WriteConcern;
 import com.mongodb.util.JSON
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 abstract class AbstractIntegrationTest {
 	protected static MongoTemplate mongoTemplate
@@ -157,38 +162,42 @@ abstract class AbstractIntegrationTest {
 	/*
 	 *  Data objects
 	 */
-	private final hashedPassword = new RosettePasswordService().encryptPassword("password")
+
+    private final String userTestUploadId = getObjectId()
 	private final User userTestUpload = new User(
-		id : getObjectId(),
+		id : userTestUploadId,
 		email : "user@testupload.com",
 		firstName : "User",
-		lastName : "Test Upload",
-		hashedPassword : "${hashedPassword}"
+		lastName : "Test Upload"
 	)
+
+    private final String user1Id = getObjectId()
 	protected final User user1 = new User(
-		id : getObjectId(),
+		id : user1Id,
 		email : "u1@ser.se",
 		firstName : "User",
-		lastName : "One",
-		hashedPassword : hashedPassword
+		lastName : "One"
 	)
 	protected final UserRef userRef1 = new UserRef(user1)
+
+    private final String user2Id = getObjectId()
 	protected final User user2 = new User(
-		id : getObjectId(),
+		id : user2Id,
 		email : "u2@ser.se",
 		firstName : "User",
-		lastName : "Two",
-		hashedPassword : hashedPassword
+		lastName : "Two"
 	)
 	protected final UserRef userRef2 = new UserRef(user2)
+
+    private final String signupUser1Id = getObjectId()
 	protected final SignupUser signupUser1 = new SignupUser(
-		id : getObjectId(),
+		id : signupUser1Id,
 		email : "u1@sign.se",
 		firstName : "User",
 		lastName : "One",
-		permissions : "Perms for u1",
-		hashedPassword : hashedPassword
+		permissions : "Perms for u1"
 	)
+    
 	protected final Group group1 = new Group(
 		id : "adminsGroup",
 		name : "Admins"
@@ -482,7 +491,7 @@ abstract class AbstractIntegrationTest {
         postRequest = new HttpPost(baseUrl + postUrl)
 		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			postRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
+            postRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
 		HttpResponse resp = httpClient.execute(postRequest)
 		return resp
@@ -493,7 +502,7 @@ abstract class AbstractIntegrationTest {
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		if (user != null) {
-			getRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
+            getRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
 		HttpResponse resp = httpClient.execute(getRequest)
 		return resp
@@ -503,7 +512,7 @@ abstract class AbstractIntegrationTest {
         putRequest = new HttpPut(baseUrl + putUrl)
 		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
 		if (user != null) {
-			putRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
+            putRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
 		HttpResponse resp = httpClient.execute(putRequest)
 		return resp
@@ -513,11 +522,16 @@ abstract class AbstractIntegrationTest {
         deleteRequest = new HttpDelete(baseUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		if (user != null) {
-			deleteRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(user.email, "password"), "UTF-8", false))
+            deleteRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
 		HttpResponse resp = httpClient.execute(deleteRequest)
 		return resp
 	}
+
+    private String xAuthToken(String userId) {
+        final String jwtSecret = "tooManySecrets"
+        return Jwts.builder().setSubject(userId).signWith(SignatureAlgorithm.HS512, jwtSecret).compact()
+    }
 
 	/*
 	 *  Then

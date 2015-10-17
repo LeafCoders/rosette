@@ -11,16 +11,12 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
-import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.security.PermissionType;
 import util.QueryId;
 
 @Service
 public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 
-	@Autowired
-	private MongoRealm mongoRealm;
-	
 	@Autowired
 	private UserService userService;
 
@@ -37,7 +33,7 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
             throw new SimpleValidationException(new ValidationError("groupMembership", "groupMembership.alreadyExists"));
         }
 
-        mongoRealm.clearCache(null);
+        security.resetPermissionCache();
 		return super.create(data, response);
 	}
 
@@ -46,12 +42,12 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
         if (membershipExist(data)) {
             throw new SimpleValidationException(new ValidationError("groupMembership", "groupMembership.alreadyExists"));
         }
-		mongoRealm.clearCache(null);
+        security.resetPermissionCache();
 	}
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-		mongoRealm.clearCache(null);
+        security.resetPermissionCache();
 		super.delete(id, response);
 	}
 

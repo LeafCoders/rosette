@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.Group;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
-import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.service.GroupService;
+import se.leafcoders.rosette.service.SecurityService;
 
 @Controller
 public class GroupController extends AbstractController {
@@ -27,7 +27,7 @@ public class GroupController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
-	private MongoRealm mongoRealm;
+	private SecurityService security;
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -63,6 +63,6 @@ public class GroupController extends AbstractController {
 		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.id").is(id)), GroupMembership.class);
 		
 		// Clearing auth cache
-		mongoRealm.clearCache(null);
+		security.resetPermissionCache();
 	}
 }

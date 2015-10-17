@@ -19,9 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
-import se.leafcoders.rosette.auth.CurrentUserService;
-import se.leafcoders.rosette.security.RosettePasswordService;
-
+import se.leafcoders.rosette.model.PermissionTree;
 
 /*
 
@@ -42,21 +40,15 @@ GET with authentication
 
 curl -H "X-AUTH-TOKEN: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NWQ5ZmJjYTMwMDQ5N2E1ZTY2NWFiMWEifQ.JeQCDONYTe_Kdf0bv70F2y20AaSDHQWgtrU0JFpMRvKExCv72__-w8Ww4u1Y3GCR43zjXgNvArWqqdYePSEQkg" -i http://localhost:8080/v1/users
 
-
-
-
  */
-
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final JwtAuthenticationService jwtAuthenticationService;
-    private final CurrentUserService currentUserService;
 
     public JwtLoginFilter(String urlMapping, JwtAuthenticationService tokenAuthenticationService,
-            CurrentUserService currentUserService, AuthenticationManager authManager) {
+            AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(urlMapping));
-        this.currentUserService = currentUserService;
         this.jwtAuthenticationService = tokenAuthenticationService;
         setAuthenticationManager(authManager);
     }
@@ -88,7 +80,8 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             Authentication authentication) throws IOException, ServletException {
 
         final CurrentUser authenticatedUser = (CurrentUser) authentication.getPrincipal();
-        final CurrentUserAuthentication userAuthentication = new CurrentUserAuthentication(authenticatedUser);
+        final CurrentUserAuthentication userAuthentication =
+                new CurrentUserAuthentication(authenticatedUser, new PermissionTree());
 
         // Add the custom token as HTTP header to the response
         jwtAuthenticationService.addAuthentication(response, userAuthentication);

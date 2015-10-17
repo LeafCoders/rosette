@@ -6,15 +6,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import se.leafcoders.rosette.model.PermissionTree;
+
 public class CurrentUserAuthentication implements Authentication {
 
     private static final long serialVersionUID = -5506484510955451195L;
 
     private final CurrentUser user;
+    private final PermissionTree permissionTree;
     private boolean authenticated = true;
 
-    public CurrentUserAuthentication(CurrentUser user) {
+    public CurrentUserAuthentication(CurrentUser user, PermissionTree permissionTree) {
         this.user = user;
+        this.permissionTree = permissionTree;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class CurrentUserAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return user.getUsername();
+        return user.getId();
     }
 
     @Override
@@ -50,5 +54,9 @@ public class CurrentUserAuthentication implements Authentication {
     @Override
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
+    }
+    
+    public PermissionTree getPermissionTree() {
+        return permissionTree;
     }
 }

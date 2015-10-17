@@ -13,6 +13,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
 apply plugin: 'spring-boot' 
@@ -46,6 +47,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compile("org.springframework.boot:spring-boot-starter-aop")
+    
+	compile("org.codehaus.groovy:groovy-all:2.3.10")
 
 	// Don't know why this is needed. Strange...
 	compile("com.mysema.querydsl:querydsl-jpa:3.6.6")

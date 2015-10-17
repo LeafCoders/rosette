@@ -2,7 +2,6 @@ package se.leafcoders.rosette.service;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -10,15 +9,11 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UserRef;
-import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.security.PermissionType;
 
 @Service
 public class UserService extends MongoTemplateCRUD<User> {
 
-	@Autowired
-	private MongoRealm mongoRealm;
-	
 	public UserService() {
 		super(User.class, PermissionType.USERS);
 	}
@@ -45,7 +40,9 @@ public class UserService extends MongoTemplateCRUD<User> {
 
 	@Override
 	public void beforeUpdate(String id, User updateData, User dataInDatabase) {
-		mongoRealm.clearCache(null);
+		if (updateData.getPassword() != null) {
+	        security.resetPermissionCache();
+		}
 	}	
 	
 	@Override

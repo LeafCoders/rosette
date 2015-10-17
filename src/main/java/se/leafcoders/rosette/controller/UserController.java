@@ -21,7 +21,6 @@ import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
-import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
@@ -35,8 +34,6 @@ import util.QueryId;
 public class UserController extends AbstractController {
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	@Autowired
-	private MongoRealm mongoRealm;
 	@Autowired
 	private SecurityService securityService;
 	@Autowired
@@ -100,7 +97,7 @@ public class UserController extends AbstractController {
 			}
 			
 			// Clearing auth cache
-			mongoRealm.clearCache(new SimplePrincipalCollection(id, "mongoRealm"));
+			securityService.resetPermissionCache();
 		}
 	}
 }

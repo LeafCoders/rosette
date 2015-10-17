@@ -10,12 +10,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.service.PermissionService;
 
 @Service
 public class CurrentUserService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Override
     public final CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,6 +39,14 @@ public class CurrentUserService implements org.springframework.security.core.use
             return new CurrentUser(userId, user.getEmail(), "");
         } else {
             return null;
+        }
+    }
+    
+    public List<String> getUserPermissions(String userId) {
+        if (userId != null) {
+            return permissionService.getForUser(userId);
+        } else {
+            return permissionService.getForEveryone();
         }
     }
 }

@@ -15,15 +15,12 @@ import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
-import se.leafcoders.rosette.security.MongoRealm;
 import se.leafcoders.rosette.security.PermissionValue;
 import util.QueryId;
 
 @Service
 public class PermissionService extends MongoTemplateCRUD<Permission> {
 
-	@Autowired
-	private MongoRealm mongoRealm;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -37,23 +34,19 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 
 	@Override
 	public Permission create(Permission data, HttpServletResponse response) {
-		// Clearing auth cache
-		mongoRealm.clearCache(null);
+	    security.resetPermissionCache();
 
 		return super.create(data, response);
 	}
 
 	@Override
 	public void beforeUpdate(String id, Permission data, Permission dataInDatabase) {
-		// Clearing auth cache
-		mongoRealm.clearCache(null);
+        security.resetPermissionCache();
 	}
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-		// Clearing auth cache
-		mongoRealm.clearCache(null);
-
+        security.resetPermissionCache();
 		super.delete(id, response);
 	}
 
