@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.query.Query
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.Location
-import se.leafcoders.rosette.security.RosettePasswordService
 
 import javax.servlet.http.HttpServletResponse
 

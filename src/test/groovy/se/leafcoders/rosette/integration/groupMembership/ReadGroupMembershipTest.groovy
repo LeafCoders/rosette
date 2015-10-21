@@ -9,7 +9,6 @@ import org.junit.Test
 
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
-import se.leafcoders.rosette.security.RosettePasswordService
 
 import com.mongodb.util.JSON
 

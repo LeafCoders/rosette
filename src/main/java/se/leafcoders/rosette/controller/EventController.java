@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +21,6 @@ import se.leafcoders.rosette.service.EventService;
 public class EventController extends AbstractController {
 	@Autowired
 	private EventService eventService;
-	@Autowired
-	private MongoTemplate mongoTemplate;
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody

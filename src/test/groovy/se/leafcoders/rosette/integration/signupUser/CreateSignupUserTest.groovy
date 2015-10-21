@@ -9,7 +9,6 @@ import com.mongodb.util.JSON;
 import se.leafcoders.rosette.integration.AbstractIntegrationTest;
 import se.leafcoders.rosette.integration.util.TestUtil;
 import se.leafcoders.rosette.model.SignupUser;
-import se.leafcoders.rosette.security.RosettePasswordService;
 
 public class CreateSignupUserTest extends AbstractIntegrationTest {
 
@@ -35,7 +34,7 @@ public class CreateSignupUserTest extends AbstractIntegrationTest {
 		
 		// Asserting database
 		SignupUser userInDatabase = mongoTemplate.findById(JSON.parse(responseBody)['id'], SignupUser.class)
-		assertTrue(userInDatabase.hashedPassword.startsWith("\$shiro1\$SHA-256\$"))
+		assertTrue(userInDatabase.hashedPassword.startsWith("\$2a\$"))
 	}
 
 	@Test

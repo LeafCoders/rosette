@@ -5,9 +5,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.leafcoders.rosette.security.RosettePasswordService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -46,7 +47,7 @@ public class SignupUser extends IdBasedModel {
 			setEmail(signupUserUpdate.getEmail());
 		}
 		if (rawData.has("password") && !"".equals(signupUserUpdate.getPassword().trim())) {
-			String hashedPassword = new RosettePasswordService().encryptPassword(signupUserUpdate.getPassword());
+ 			String hashedPassword = new BCryptPasswordEncoder().encode(signupUserUpdate.getPassword());
 			setHashedPassword(hashedPassword);
 		}
 		if (rawData.has("firstName")) {

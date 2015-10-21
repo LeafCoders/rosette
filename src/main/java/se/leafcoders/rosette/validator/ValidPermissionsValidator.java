@@ -3,7 +3,8 @@ package se.leafcoders.rosette.validator;
 import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.apache.shiro.authz.permission.WildcardPermission;
+
+import se.leafcoders.rosette.security.PermissionTreeHelper;
 
 /*
  * Validates that each permission in list is valid
@@ -17,13 +18,7 @@ public class ValidPermissionsValidator implements ConstraintValidator<ValidPermi
     public boolean isValid(List<String> permissions, ConstraintValidatorContext context) {
     	if (permissions != null) {
     		for (String permission : permissions) {
-    			if (permission != null && !permission.isEmpty()) {
-	    			try {
-	    				new WildcardPermission(permission);
-	    			} catch (Exception ignore) {
-	    				return false;
-	    			}
-    			}
+				return PermissionTreeHelper.hasValidPermissionFormat(permission);
     		}
     	}
         return true;

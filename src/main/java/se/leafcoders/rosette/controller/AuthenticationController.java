@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.controller;
 
 import javax.servlet.http.HttpServletResponse;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,13 +22,15 @@ public class AuthenticationController extends AbstractController {
 	@RequestMapping(value = "authentication", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public User getAuthentication(HttpServletResponse response) {
-		if ("".equals(SecurityUtils.getSubject().getPrincipal())) {
+/*		if ("".equals(SecurityUtils.getSubject().getPrincipal())) {
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 			return null;
 		} else {
 			response.setStatus(HttpStatus.OK.value()); 
 			return (User)SecurityUtils.getSubject().getPrincipal();
 		}
+*/
+		return null;
 	}
 	
 	@RequestMapping(value = "authCaches", method = RequestMethod.DELETE, produces = "application/json")

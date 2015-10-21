@@ -38,7 +38,6 @@ import se.leafcoders.rosette.model.upload.UploadFolder
 import se.leafcoders.rosette.model.upload.UploadFolderRef
 import se.leafcoders.rosette.model.upload.UploadRequest;
 import se.leafcoders.rosette.model.upload.UploadResponse;
-import se.leafcoders.rosette.security.RosettePasswordService
 import util.QueryId;
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.Mongo

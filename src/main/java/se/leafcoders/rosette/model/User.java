@@ -5,7 +5,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.leafcoders.rosette.security.RosettePasswordService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -36,7 +37,7 @@ public class User extends IdBasedModel {
 			setEmail(userUpdate.getEmail());
 		}
 		if (rawData.has("password") && !"".equals(userUpdate.getPassword().trim())) {
-			String hashedPassword = new RosettePasswordService().encryptPassword(userUpdate.getPassword());
+			String hashedPassword = new BCryptPasswordEncoder().encode(userUpdate.getPassword());
 			setHashedPassword(hashedPassword);
 		}
 		if (rawData.has("firstName")) {

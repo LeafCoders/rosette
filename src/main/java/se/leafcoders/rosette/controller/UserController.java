@@ -3,13 +3,13 @@ package se.leafcoders.rosette.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,6 @@ import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
-import se.leafcoders.rosette.security.RosettePasswordService;
 import se.leafcoders.rosette.service.GroupMembershipService;
 import se.leafcoders.rosette.service.SecurityService;
 import se.leafcoders.rosette.service.UserService;
@@ -63,8 +62,12 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "users", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
-		String hashedPassword = new RosettePasswordService().encryptPassword(user.getPassword());
-		user.setHashedPassword(hashedPassword);
+		if (user.getPassword() != null) {
+			String hashedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+			user.setHashedPassword(hashedPassword);
+		} else {
+			user.setHashedPassword(null);
+		}
 		user.setPassword(null);
 		return userService.create(user, response);
 	}

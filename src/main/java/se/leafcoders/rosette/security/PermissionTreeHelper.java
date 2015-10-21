@@ -119,4 +119,25 @@ public class PermissionTreeHelper {
         
         return false;
     }
+    
+    public static boolean hasValidPermissionFormat(final String permission) {
+        if (permission != null) {
+        	boolean lastCharIsDivider = false;
+        	boolean lastCharIsAny = false;
+        	for (int i = 0; i < permission.length(); ++i) {
+        		boolean currentCharIsDivider = permission.charAt(i) == ':' || permission.charAt(i) == ',';
+        		boolean currentCharIsAny = permission.charAt(i) == '*';
+        		if (permission.charAt(i) == ' ' ||
+        				(currentCharIsDivider && lastCharIsDivider) ||
+        				(currentCharIsAny && lastCharIsAny)) {
+        			return false;
+        		}
+        		lastCharIsDivider = currentCharIsDivider;
+        		lastCharIsAny = currentCharIsAny;
+        	}
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
