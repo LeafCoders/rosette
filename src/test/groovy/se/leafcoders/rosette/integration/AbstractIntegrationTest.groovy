@@ -23,6 +23,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import se.leafcoders.rosette.integration.util.TestUtil
@@ -162,12 +163,14 @@ abstract class AbstractIntegrationTest {
 	 *  Data objects
 	 */
 
+	private final hashedPassword = new BCryptPasswordEncoder().encode("password")
     private final String userTestUploadId = getObjectId()
 	private final User userTestUpload = new User(
 		id : userTestUploadId,
 		email : "user@testupload.com",
 		firstName : "User",
-		lastName : "Test Upload"
+		lastName : "Test Upload",
+		hashedPassword : "${hashedPassword}"
 	)
 
     private final String user1Id = getObjectId()
@@ -175,7 +178,8 @@ abstract class AbstractIntegrationTest {
 		id : user1Id,
 		email : "u1@ser.se",
 		firstName : "User",
-		lastName : "One"
+		lastName : "One",
+		hashedPassword : "${hashedPassword}"
 	)
 	protected final UserRef userRef1 = new UserRef(user1)
 
@@ -184,7 +188,8 @@ abstract class AbstractIntegrationTest {
 		id : user2Id,
 		email : "u2@ser.se",
 		firstName : "User",
-		lastName : "Two"
+		lastName : "Two",
+		hashedPassword : "${hashedPassword}"
 	)
 	protected final UserRef userRef2 = new UserRef(user2)
 
@@ -194,7 +199,8 @@ abstract class AbstractIntegrationTest {
 		email : "u1@sign.se",
 		firstName : "User",
 		lastName : "One",
-		permissions : "Perms for u1"
+		permissions : "Perms for u1",
+		hashedPassword : "${hashedPassword}"
 	)
     
 	protected final Group group1 = new Group(

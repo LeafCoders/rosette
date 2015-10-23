@@ -8,18 +8,26 @@ import org.springframework.security.core.userdetails.User;
 public class CurrentUser extends User {
     private static final long serialVersionUID = -8830680310252157879L;
 
-    private String id;
+    private final String id;
+    private final String fullName;
 
-    public CurrentUser(String id, String username, String password) {
+    public CurrentUser() {
+        super("anonymous", "anonymous", new ArrayList<GrantedAuthority>());
+        this.id = null;
+        this.fullName = null;
+    }
+
+    public CurrentUser(String id, String fullName, String username, String password) {
         super(username, password, new ArrayList<GrantedAuthority>());
         this.id = id;
+        this.fullName = fullName;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getFullName() {
+        return fullName;
     }
 }

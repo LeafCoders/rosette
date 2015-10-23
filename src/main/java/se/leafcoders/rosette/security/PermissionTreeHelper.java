@@ -38,7 +38,7 @@ public class PermissionTreeHelper {
     }
 
     private String trimEndOfPermissionString(String permission) {
-        while (permission.endsWith(ANY_VALUE) || permission.endsWith(LEVEL_DIVIDER)) {
+        while (permission.length() > 1 && permission.endsWith(ANY_VALUE) || permission.endsWith(LEVEL_DIVIDER)) {
             permission = permission.substring(0, permission.length() - 2);
         }
         return permission;

@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             throws IOException, ServletException {
 
         CurrentUserAuthentication authentication = jwtAuthenticationService
-                .getAuthentication((HttpServletRequest) request);
+                .createAuthentication((HttpServletRequest) request);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);

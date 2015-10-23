@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -27,7 +28,11 @@ public class SecurityService {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
-    @Autowired
+
+	@Autowired
+	private PermissionService permissionService;
+
+	@Autowired
     private Validator validator;
 
     public boolean isPermitted(PermissionValue... permissionValues) {
@@ -46,8 +51,18 @@ public class SecurityService {
 	}
 
 	private boolean isPermitted(String permission) {
-	    CurrentUserAuthentication currentUserAuth = (CurrentUserAuthentication) SecurityContextHolder.getContext().getAuthentication();
-	    return PermissionTreeHelper.checkPermission(currentUserAuth.getPermissionTree().getTree(), permission);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication instanceof CurrentUserAuthentication) {
+	        PermissionTreeHelper ph = new PermissionTreeHelper();
+	        if (authentication.getPrincipal() != null) {
+	        	ph.create(permissionService.getForUser((String)authentication.getPrincipal()));
+	        } else {
+	        	ph.create(permissionService.getForEveryone());
+	        }
+		    return PermissionTreeHelper.checkPermission(ph.getTree(), permission);
+		} else {
+			return false;
+		}
 	}
 	
 	public void throwPermissionMissing(PermissionValue... permissionValues) {
@@ -62,9 +77,9 @@ public class SecurityService {
     }
 
 	public String requestUserId() {
-        CurrentUserAuthentication currentUserAuth = (CurrentUserAuthentication) SecurityContextHolder.getContext().getAuthentication();
-		if (currentUserAuth != null) {
-			return (String) currentUserAuth.getPrincipal();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			return (String) auth.getPrincipal();
 		} else {
 			return null;
 		}

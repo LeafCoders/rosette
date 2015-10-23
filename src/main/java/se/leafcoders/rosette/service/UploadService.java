@@ -12,7 +12,6 @@ import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -46,8 +45,6 @@ public class UploadService {
 	@Value("${rosette.apiVersion}")
 	private String apiVersion;
 	
-	@Autowired
-	private MongoTemplate mongoTemplate;
 	@Autowired
 	private GridFsTemplate gridFsTemplate;
 	@Autowired

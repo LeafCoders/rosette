@@ -13,17 +13,26 @@ public class CurrentUserAuthentication implements Authentication {
     private static final long serialVersionUID = -5506484510955451195L;
 
     private final CurrentUser user;
-    private final PermissionTree permissionTree;
+    private PermissionTree permissionTree = null;
     private boolean authenticated = true;
 
-    public CurrentUserAuthentication(CurrentUser user, PermissionTree permissionTree) {
+    /**
+     * Anonymous user authentication
+     */
+    public CurrentUserAuthentication() {
+    	this.user = new CurrentUser();
+    }
+
+    /**
+     * Existing user authentication
+     */
+    public CurrentUserAuthentication(CurrentUser user) {
         this.user = user;
-        this.permissionTree = permissionTree;
     }
 
     @Override
     public String getName() {
-        return user.getUsername();
+		return user.getUsername();
     }
 
     @Override
@@ -58,5 +67,9 @@ public class CurrentUserAuthentication implements Authentication {
     
     public PermissionTree getPermissionTree() {
         return permissionTree;
+    }
+
+    public void setPermissionTree(PermissionTree permissionTree) {
+        this.permissionTree = permissionTree;
     }
 }

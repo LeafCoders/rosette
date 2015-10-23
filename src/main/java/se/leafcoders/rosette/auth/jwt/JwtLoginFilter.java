@@ -2,6 +2,7 @@ package se.leafcoders.rosette.auth.jwt;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,30 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
-import se.leafcoders.rosette.model.PermissionTree;
-
-/*
-
-Login
-=====
-
-> echo -n 'password' | base64
-cGFzc3dvcmQ=
-
-> curl -X POST -i http://localhost:8080/auth/login --form username=u1@ser.se --form password='cGFzc3dvcmQ='
-...
-X-AUTH-TOKEN: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NWQ5ZmJjYTMwMDQ5N2E1ZTY2NWFiMWEifQ.JeQCDONYTe_Kdf0bv70F2y20AaSDHQWgtrU0JFpMRvKExCv72__-w8Ww4u1Y3GCR43zjXgNvArWqqdYePSEQkg
-...
-
-
-GET with authentication
-=======================
-
-curl -H "X-AUTH-TOKEN: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NWQ5ZmJjYTMwMDQ5N2E1ZTY2NWFiMWEifQ.JeQCDONYTe_Kdf0bv70F2y20AaSDHQWgtrU0JFpMRvKExCv72__-w8Ww4u1Y3GCR43zjXgNvArWqqdYePSEQkg" -i http://localhost:8080/v1/users
-
- */
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -80,14 +61,21 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             Authentication authentication) throws IOException, ServletException {
 
         final CurrentUser authenticatedUser = (CurrentUser) authentication.getPrincipal();
-        final CurrentUserAuthentication userAuthentication =
-                new CurrentUserAuthentication(authenticatedUser, new PermissionTree());
+        final CurrentUserAuthentication userAuthentication = new CurrentUserAuthentication(authenticatedUser);
 
         // Add the custom token as HTTP header to the response
-        jwtAuthenticationService.addAuthentication(response, userAuthentication);
-
+        jwtAuthenticationService.addAuthenticationHeader(response, userAuthentication);
+        
         // Add the authentication to the Security context
         // TODO: Maybe we don't need to do this. Login will only return an empty document so we need no authentication...
-        SecurityContextHolder.getContext().setAuthentication(userAuthentication);        
+        SecurityContextHolder.getContext().setAuthentication(userAuthentication);
+
+        HashMap<String, String> userData = new HashMap<String, String>();
+        CurrentUser currentUser = (CurrentUser) userAuthentication.getDetails();
+        userData.put("id", currentUser.getId());
+        userData.put("fullName", currentUser.getFullName());
+        userData.put("email", currentUser.getUsername());
+        response.getOutputStream().print(new ObjectMapper().writeValueAsString(userData));
+        response.flushBuffer();
     }
 }

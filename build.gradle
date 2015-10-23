@@ -63,7 +63,10 @@ dependencies {
 
 	// Google common libraries
 	compile("com.google.guava:guava:18.0")
-	
+
+	// iCalendar support
+	compile("net.sf.biweekly:biweekly:0.4.2")
+
 	// org.apache.http.*
 	testCompile("org.apache.httpcomponents:httpclient:4.3.1")
 }

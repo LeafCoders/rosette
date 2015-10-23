@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import se.leafcoders.rosette.auth.CurrentUserService;
+import se.leafcoders.rosette.auth.RosetteAnonymousAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 import se.leafcoders.rosette.auth.jwt.JwtLoginFilter;
@@ -65,12 +66,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     // All other request need to be authenticated
                     .anyRequest().authenticated().and()
 
-                 // Custom authentication which sets the token header upon authentication
+                // Custom authentication which sets the token header upon authentication
                 .addFilterBefore(new JwtLoginFilter("/auth/login", tokenAuthenticationService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+
+                // Anonymous authentication will be added to requests without valid JWT token
+                .addFilterBefore(new RosetteAnonymousAuthenticationFilter(), AnonymousAuthenticationFilter.class)
                     
-                // Custom Token based authentication with header value
-                // previously given to the client
-                .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService), AnonymousAuthenticationFilter.class);
+                // Existing user authentication will be added to requests with valid JWT token
+                .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService), RosetteAnonymousAuthenticationFilter.class);
     }
 
     @Override
@@ -95,5 +98,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationService tokenAuthenticationService() {
         return tokenAuthenticationService;
     }
+    
+    @Bean
+    public AnonymousAuthenticationFilter anonymousAuthenticationFilter() {
+    	AnonymousAuthenticationFilter filter = new AnonymousAuthenticationFilter("anon");
+    	return filter;
+    }    
 
 }
