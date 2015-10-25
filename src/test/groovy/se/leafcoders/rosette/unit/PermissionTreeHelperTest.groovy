@@ -20,6 +20,21 @@ public class PermissionTreeHelperTest {
     ObjectMapper mapper = new ObjectMapper()
 
     @Test
+    public void checkPermissionFormat() throws JsonProcessingException, IOException {
+		assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events"))
+		assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:*"))
+		assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:*:resourceTypes"))
+		assertTrue(PermissionTreeHelper.hasValidPermissionFormat("*:update:*"))
+
+		assertFalse(PermissionTreeHelper.hasValidPermissionFormat("**"))
+		assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events:"))
+		assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events::"))
+		assertFalse(PermissionTreeHelper.hasValidPermissionFormat(":events"))
+		assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events*"))
+		assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events: read:*"))
+    }
+
+    @Test
     public void createPermissionDbObjectTest() throws JsonProcessingException, IOException {
         List<String> permissions = new ArrayList<String>()
         permissions.add("*:read:*")
@@ -42,28 +57,42 @@ public class PermissionTreeHelperTest {
     }
 
     @Test
-    public void checkPermissionTest() throws JsonProcessingException, IOException {
-        List<String> permissions = new ArrayList<String>()
-        permissions.add("*:read:*")
-        permissions.add("events:read:12")
-        permissions.add("events:update,delete")
-        permissions.add("events:update:*")
-        permissions.add("events:create:12")
-        permissions.add("events:create:*")
+    public void checkPermittedPermissions() throws JsonProcessingException, IOException {
+		isPermitted("bookings:read:19", when("*:read"))
+		isPermitted("bookings:read:19", when("*:read:*"))
+		isPermitted("bookings:read:19", when("bookings:read"))
+		isPermitted("bookings:read:19", when("*:update", "bookings:read"))
 
-        PermissionTreeHelper permissionObject = new PermissionTreeHelper()
-        permissionObject.create(permissions)
+		isPermitted("events:update:resourceTypes:posters", when("events:update"))
+		isPermitted("events:update:resourceTypes:posters", when("events:update:resourceTypes"))
+		isPermitted("events:update:resourceTypes:posters", when("events:update:resourceTypes:posters"))
+		isPermitted("events:update:resourceTypes:posters", when("events:update:resourceTypes:posters:*"))
+		isPermitted("events:update:resourceTypes:posters", when("events:*:*:*"))
 
-        assertTrue(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "events:read:19")) 
-        assertTrue(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "events:update:19")) 
-        assertTrue(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "events:delete")) 
-        assertTrue(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "posters:read:19")) 
+		isPermitted("events:update:12", when("*:read", "*:delete:12", "events:*:19", "events:delete", "events:read:12", "events:update:*"))
+	}    
 
-        assertFalse(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "posters:update:19")) 
-        assertFalse(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "posters:update")) 
-        assertFalse(PermissionTreeHelper.checkPermission(permissionObject.permissionTree, "events:assign")) 
-    }    
-    
+    @Test
+    public void checkDeniedPermissions() throws JsonProcessingException, IOException {
+		isNotPermitted("bookings:read", when("bookings:read:12"))
+		isNotPermitted("bookings:read", when("bookings:read:12", "*:update", "posters:read"))
+		isNotPermitted("bookings:read", when("bookings:*:13"))
+    }
+
+	private void isPermitted(String permission, HashMap<String, Object> permissionTree) {
+		assertTrue(PermissionTreeHelper.checkPermission(permissionTree, permission))
+	}
+	
+	private void isNotPermitted(String permission, HashMap<String, Object> permissionTree) {
+		assertFalse(PermissionTreeHelper.checkPermission(permissionTree, permission))
+	}
+	
+	private HashMap<String, Object> when(String... permissions) {
+		PermissionTreeHelper permissionObject = new PermissionTreeHelper()
+		permissionObject.create(Arrays.asList(permissions))
+		return permissionObject.permissionTree
+	}
+	
     private String toJSON(Object data) {
         try {
             return mapper.writeValueAsString(data)

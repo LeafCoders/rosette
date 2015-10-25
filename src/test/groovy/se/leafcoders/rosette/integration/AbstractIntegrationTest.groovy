@@ -85,6 +85,7 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("events")
         mongoTemplate.dropCollection("eventTypes")
 		mongoTemplate.dropCollection("permissions")
+        mongoTemplate.dropCollection("permissionTrees")
         mongoTemplate.dropCollection("posters")
         mongoTemplate.dropCollection("resourceTypes")
         mongoTemplate.dropCollection("userResourceTypes")
@@ -139,7 +140,7 @@ abstract class AbstractIntegrationTest {
 	}
 
 	void resetAuthCaches() {
-		HttpDelete httpDelete = new HttpDelete(baseUrl + "/authCaches")
+		HttpDelete httpDelete = new HttpDelete(baseUrl + "/groupMemberships/notIValidId")
 		httpClient.execute(httpDelete)
 		httpDelete.releaseConnection()
 	}

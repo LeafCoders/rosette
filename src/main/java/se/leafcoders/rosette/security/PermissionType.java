@@ -2,6 +2,7 @@ package se.leafcoders.rosette.security;
 
 public enum PermissionType {
 	
+	ADMIN_DB("admin:db"),
 	ASSETS("assets"),
 	BOOKINGS("bookings"),
 	EVENTS("events"),

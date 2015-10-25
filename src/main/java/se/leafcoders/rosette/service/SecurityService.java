@@ -1,8 +1,10 @@
 package se.leafcoders.rosette.service;
 
+import java.util.HashMap;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -16,6 +18,7 @@ import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.Booking;
+import se.leafcoders.rosette.model.PermissionTree;
 import se.leafcoders.rosette.model.Poster;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.security.PermissionTreeHelper;
@@ -53,13 +56,8 @@ public class SecurityService {
 	private boolean isPermitted(String permission) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication instanceof CurrentUserAuthentication) {
-	        PermissionTreeHelper ph = new PermissionTreeHelper();
-	        if (authentication.getPrincipal() != null) {
-	        	ph.create(permissionService.getForUser((String)authentication.getPrincipal()));
-	        } else {
-	        	ph.create(permissionService.getForEveryone());
-	        }
-		    return PermissionTreeHelper.checkPermission(ph.getTree(), permission);
+			HashMap<String, Object> permissionTree = getPermissionTree((CurrentUserAuthentication) authentication);
+		    return PermissionTreeHelper.checkPermission(permissionTree, permission);
 		} else {
 			return false;
 		}
@@ -85,8 +83,34 @@ public class SecurityService {
 		}
 	}
 
+	private HashMap<String, Object> getPermissionTree(CurrentUserAuthentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		if (userId == null) {
+			userId = "000aaa000000a000aaa00000";
+		}
+
+		PermissionTree permissionTree = mongoTemplate.findById(userId, PermissionTree.class);		
+		if (permissionTree != null) {
+			return permissionTree.getTree();
+		}
+
+        PermissionTreeHelper pth = new PermissionTreeHelper();
+        if (authentication.getPrincipal() != null) {
+        	pth.create(permissionService.getForUser(userId));
+        } else {
+        	pth.create(permissionService.getForEveryone());
+        }
+
+        permissionTree = new PermissionTree();
+        permissionTree.setId(userId);
+        permissionTree.setTree(pth.getTree());
+        mongoTemplate.insert(permissionTree);
+
+        return pth.getTree();
+	}
+	
 	public void resetPermissionCache() {
-	    // TODO: Clean permissionTree collection in MongoDb
+		mongoTemplate.dropCollection("permissionTrees");
 	}
 	
 	// TODO: I very ugly method. Fix with annotations? http://stackoverflow.com/a/4454783
