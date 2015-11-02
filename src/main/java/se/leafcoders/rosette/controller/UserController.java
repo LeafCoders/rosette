@@ -27,7 +27,7 @@ import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.service.GroupMembershipService;
 import se.leafcoders.rosette.service.SecurityService;
 import se.leafcoders.rosette.service.UserService;
-import util.QueryId;
+import se.leafcoders.rosette.util.QueryId;
 
 @Controller
 public class UserController extends AbstractController {

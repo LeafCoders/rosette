@@ -25,7 +25,7 @@ import se.leafcoders.rosette.model.resource.ResourceType;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionValue;
-import util.QueryId;
+import se.leafcoders.rosette.util.QueryId;
 
 @Service
 public class EventService extends MongoTemplateCRUD<Event> {

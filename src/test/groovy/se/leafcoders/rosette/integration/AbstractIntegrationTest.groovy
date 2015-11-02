@@ -38,8 +38,9 @@ import se.leafcoders.rosette.model.resource.*
 import se.leafcoders.rosette.model.upload.UploadFolder
 import se.leafcoders.rosette.model.upload.UploadFolderRef
 import se.leafcoders.rosette.model.upload.UploadRequest;
-import se.leafcoders.rosette.model.upload.UploadResponse;
-import util.QueryId;
+import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.util.QueryId;
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.Mongo
 import com.mongodb.MongoException

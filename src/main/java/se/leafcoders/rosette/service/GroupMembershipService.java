@@ -12,7 +12,7 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.PermissionType;
-import util.QueryId;
+import se.leafcoders.rosette.util.QueryId;
 
 @Service
 public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {

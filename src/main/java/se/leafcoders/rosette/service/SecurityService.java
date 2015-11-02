@@ -24,7 +24,7 @@ import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.security.PermissionTreeHelper;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
-import util.QueryId;
+import se.leafcoders.rosette.util.QueryId;
 
 @Service
 public class SecurityService {

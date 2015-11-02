@@ -16,7 +16,7 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.security.PermissionValue;
-import util.QueryId;
+import se.leafcoders.rosette.util.QueryId;
 
 @Service
 public class PermissionService extends MongoTemplateCRUD<Permission> {

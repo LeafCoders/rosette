@@ -7,7 +7,10 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,9 @@ import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
-import util.QueryId;
+import se.leafcoders.rosette.util.MongoDbFileByteRangeSupport;
+import se.leafcoders.rosette.util.QueryId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -140,7 +145,7 @@ public class UploadService {
 		return uploadIds;
 	}
 
-	public void streamAsset(final String folderId, final String fileName, HttpServletResponse response) {
+	public void streamAsset(final String folderId, final String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		validateFolderExist(folderId);
 		if (uploadFolderService.isPublic(folderId) == false) {
 			security.checkPermission(
@@ -159,14 +164,9 @@ public class UploadService {
 		        if (applicationSettings.useUploadCacheMaxAge()) {
 		        	response.addHeader("Cache-Control", "max-age=604800"); // One week 
 		        }
-		        response.addHeader("Content-disposition", "attachment; filename=\"" + file.getFilename() + "\"");
-		        response.setContentType(file.getContentType());
-		        response.setContentLength((int)file.getLength());
-
-	            response.getOutputStream().write(IOUtils.toByteArray(file.getInputStream()));
-	            response.getOutputStream().flush();
-			} catch (IOException e) {
-				throw new NotFoundException();
+				new MongoDbFileByteRangeSupport().with(request).with(response).serveResource(file, file.getContentType());
+			} catch (ClientAbortException abortException) {
+				return;
 			}
         } else {
 			throw new NotFoundException();

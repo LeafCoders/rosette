@@ -1,4 +1,4 @@
-package util;
+package se.leafcoders.rosette.util;
 
 import org.bson.types.ObjectId;
 
