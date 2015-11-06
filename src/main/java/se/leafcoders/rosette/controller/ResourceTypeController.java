@@ -16,15 +16,15 @@ public class ResourceTypeController extends AbstractController {
     @Autowired
     private ResourceTypeService resourceTypeService;
 
-	@RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "resourceTypes/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ResourceType getResourceType(@PathVariable String key) {
-		return resourceTypeService.read(key);
+	public ResourceType getResourceType(@PathVariable String id) {
+		return resourceTypeService.read(id);
 	}
 
 	@RequestMapping(value = "resourceTypes", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<ResourceType> getResourceTypes(@RequestParam(value = "groupId", required = false) String groupId, HttpServletRequest request, HttpServletResponse response) {
+	public List<ResourceType> getResourceTypes() {
         Query query = new Query().with(new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
 		return resourceTypeService.readMany(query);
 	}
@@ -37,13 +37,13 @@ public class ResourceTypeController extends AbstractController {
 	}
 
 	// ResourceType must contain the attribute 'type' that equals any string specified in ResourceType  
-    @RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public void putResourceType(@PathVariable String key, HttpServletRequest request, HttpServletResponse response) {
-		resourceTypeService.update(key, request, response);
+    @RequestMapping(value = "resourceTypes/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    public void putResourceType(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+		resourceTypeService.update(id, request, response);
     }
 
-	@RequestMapping(value = "resourceTypes/{key}", method = RequestMethod.DELETE, produces = "application/json")
-	public void deleteResourceType(@PathVariable String key, HttpServletResponse response) {
-		resourceTypeService.delete(key, response);
+	@RequestMapping(value = "resourceTypes/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public void deleteResourceType(@PathVariable String id, HttpServletResponse response) {
+		resourceTypeService.delete(id, response);
 	}
 }

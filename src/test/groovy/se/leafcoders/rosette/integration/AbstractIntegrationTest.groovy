@@ -1,34 +1,38 @@
+
 package se.leafcoders.rosette.integration
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
-import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpDelete
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
-import org.apache.http.impl.auth.BasicScheme
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.protocol.HTTP;
+import org.apache.http.impl.client.HttpClientBuilder
 import org.bson.types.ObjectId
 import org.junit.After
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsTemplate
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.*
+import se.leafcoders.rosette.model.education.Education
+import se.leafcoders.rosette.model.education.EducationType
+import se.leafcoders.rosette.model.education.EventEducation
+import se.leafcoders.rosette.model.education.EventEducationType
 import se.leafcoders.rosette.model.event.Event
+import se.leafcoders.rosette.model.reference.EducationTypeRef
+import se.leafcoders.rosette.model.reference.EventRef
 import se.leafcoders.rosette.model.reference.LocationRefOrText
 import se.leafcoders.rosette.model.reference.ObjectReferences
 import se.leafcoders.rosette.model.reference.UploadResponseRefs
@@ -37,18 +41,14 @@ import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
 import se.leafcoders.rosette.model.upload.UploadFolder
 import se.leafcoders.rosette.model.upload.UploadFolderRef
-import se.leafcoders.rosette.model.upload.UploadRequest;
+import se.leafcoders.rosette.model.upload.UploadRequest
 import se.leafcoders.rosette.model.upload.UploadResponse
-import se.leafcoders.rosette.util.QueryId;
-
+import se.leafcoders.rosette.util.QueryId
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.Mongo
 import com.mongodb.MongoException
-import com.mongodb.WriteConcern;
+import com.mongodb.WriteConcern
 import com.mongodb.util.JSON
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 abstract class AbstractIntegrationTest {
 	protected static MongoTemplate mongoTemplate
@@ -83,6 +83,8 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("users")
 		mongoTemplate.dropCollection("groups")
 		mongoTemplate.dropCollection("groupMemberships")
+        mongoTemplate.dropCollection("educations")
+        mongoTemplate.dropCollection("educationTypes")
 		mongoTemplate.dropCollection("events")
         mongoTemplate.dropCollection("eventTypes")
 		mongoTemplate.dropCollection("permissions")
@@ -395,6 +397,47 @@ abstract class AbstractIntegrationTest {
 		isPublic: false,
 		resources : []
 	)
+    protected final EventRef eventRef1 = new EventRef(event1)
+    protected final EventRef eventRef2 = new EventRef(event2)
+    protected final EventRef eventRef3 = new EventRef(event3)
+    
+    protected final EventEducationType eventEducationType1 = new EventEducationType(
+        type : 'event',
+        id : "letters",
+        name : "Letters",
+        description : "Letters about life",
+        authorResourceType : userResourceTypeSingle,
+        eventType : eventType1
+    )
+    protected final EventEducationType eventEducationType2 = new EventEducationType(
+        type : 'event',
+        id : "letters2",
+        name : "Letters2",
+        description : "Letters (2) about life",
+        authorResourceType : userResourceTypeSingle,
+        eventType : eventType1
+    )
+    protected final EducationTypeRef eventEducationTypeRef1 = new EducationTypeRef(eventEducationType1)
+    protected final EducationTypeRef eventEducationTypeRef2 = new EducationTypeRef(eventEducationType2)
+    
+    protected final EventEducation eventEducation1 = new EventEducation(
+        type : 'event',
+        educationType : eventEducationTypeRef1,
+        id : getObjectId(),
+        title : "Education1",
+        content : "Education1 content",
+        questions : "Education1 questions",
+        event : eventRef1
+    )
+    protected final EventEducation eventEducation2 = new EventEducation(
+        type : 'event',
+        educationType : eventEducationTypeRef2,
+        id : getObjectId(),
+        title : "Education2",
+        content : "Education2 content",
+        questions : "Education2 questions",
+        event : eventRef2
+    )
 
 	/*
 	 *  Given
@@ -448,6 +491,14 @@ abstract class AbstractIntegrationTest {
 		))
 		return groupMembershipId
 	}
+
+    protected void givenEducationType(EducationType educationType) {
+        mongoTemplate.insert(educationType)
+    }
+
+    protected void givenEducation(Education education) {
+        mongoTemplate.insert(education)
+    }
 
 	protected void givenResourceType(ResourceType resourceType) {
 		mongoTemplate.insert(resourceType)

@@ -21,7 +21,7 @@ public class EventType extends TypeBasedModel {
     		setResourceTypes(eventTypeUpdate.getResourceTypes());
     	}
     	if (rawData.has("hasPublicEvents")) {
-    		sethasPublicEvents(eventTypeUpdate.getHasPublicEvents());
+    		setHasPublicEvents(eventTypeUpdate.getHasPublicEvents());
     	}
     	super.update(rawData, updateFrom);
     }
@@ -40,7 +40,7 @@ public class EventType extends TypeBasedModel {
 		return hasPublicEvents;
 	}
 
-	public void sethasPublicEvents(DefaultSetting<Boolean> hasPublicEvents) {
+	public void setHasPublicEvents(DefaultSetting<Boolean> hasPublicEvents) {
 		this.hasPublicEvents = hasPublicEvents;
 	}
 }

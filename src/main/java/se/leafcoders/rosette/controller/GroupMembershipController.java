@@ -25,7 +25,7 @@ public class GroupMembershipController extends AbstractController {
 
 	@RequestMapping(value = "groupMemberships", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<GroupMembership> getGroupMemberships(@RequestParam(value = "groupId", required = false) String groupId, HttpServletRequest request, HttpServletResponse response) {
+	public List<GroupMembership> getGroupMemberships(@RequestParam(value = "groupId", required = false) String groupId) {
         Query query = new Query();
         query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "group.id")));
         if (groupId != null && !groupId.isEmpty()) {

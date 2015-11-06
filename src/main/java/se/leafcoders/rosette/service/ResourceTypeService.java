@@ -3,6 +3,8 @@ package se.leafcoders.rosette.service;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.resource.*;
 import se.leafcoders.rosette.model.upload.UploadFolderRef;
 import se.leafcoders.rosette.security.PermissionType;
@@ -24,6 +26,22 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
 		validateUniqueId(data);
 		return super.create(data, response);
 	}
+
+	public UserResourceType readUserResourceType(String resourceTypeId) {
+	    ResourceType resourceType = super.read(resourceTypeId);
+	    if (resourceType != null && resourceType.getType().equals("user")) {
+	        return (UserResourceType) resourceType;
+	    }
+	    throw new NotFoundException();
+	}
+
+    public UploadResourceType readUploadResourceType(String resourceTypeId) {
+        ResourceType resourceType = super.read(resourceTypeId);
+        if (resourceType != null && resourceType.getType().equals("upload")) {
+            return (UploadResourceType) resourceType;
+        }
+        throw new NotFoundException();
+    }
 
 	@Override
 	public void insertDependencies(ResourceType data) {

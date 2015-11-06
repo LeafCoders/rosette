@@ -5,6 +5,8 @@ public enum PermissionType {
 	ADMIN_DB("admin:db"),
 	ASSETS("assets"),
 	BOOKINGS("bookings"),
+    EDUCATIONS("educations"),
+    EDUCATION_TYPES("educationTypes"),
 	EVENTS("events"),
 	EVENTS_EVENTTYPES("events:eventTypes"),
 	EVENTS_RESOURCETYPES("events:resourceTypes"),

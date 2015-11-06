@@ -6,7 +6,7 @@ import se.leafcoders.rosette.validator.HasRef;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class UserResourceType extends ResourceType {
-	@HasRef
+	@HasRef(message = "userResourceType.group.mustBeSet")
     private Group group;
 
 	private Boolean multiSelect;

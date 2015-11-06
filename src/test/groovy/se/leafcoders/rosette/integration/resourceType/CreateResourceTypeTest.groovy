@@ -78,14 +78,15 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 	public void failsWhenCreateWithoutUniqueKey() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
+        givenResourceType(userResourceTypeSingle)
 		givenPermissionForUser(user1, ["resourceTypes:create", "groups:read"])
 		givenGroup(group1)
 		
 		// When
 		String postUrl = "/resourceTypes"
 		HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"id" : "speaker",
 			"type" : "user",
+            "id" : "${ userResourceTypeSingle.id }",
 			"name" : "Talare",
 			"description" : "Den som talar",
 			"section" : "Personer",
@@ -95,22 +96,6 @@ public class CreateResourceTypeTest extends AbstractIntegrationTest {
 		}""")
 	
 		// Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
-		releasePostRequest()
-		
-		// When
-		HttpResponse postResponse2 = whenPost(postUrl, user1, """{
-			"id" : "speaker",
-			"type" : "user",
-			"name" : "Talare",
-			"description" : "Den som talar",
-			"section" : "Personer",
-			"multiSelect" : false,
-			"allowText" : false,
-			"group": ${ toJSON(group1) }
-		}""")
-
-		// Then
-		thenResponseCodeIs(postResponse2, HttpServletResponse.SC_BAD_REQUEST)
+        thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
 	}
 }
