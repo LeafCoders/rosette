@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.integration.educationType
+package se.leafcoders.rosette.integration.educationTheme
 
 import static org.junit.Assert.assertEquals
 import javax.servlet.http.HttpServletResponse
@@ -9,20 +9,18 @@ import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.resource.ResourceType
 import se.leafcoders.rosette.model.resource.UserResourceType
 
-public class ReadEducationTypesTest extends AbstractIntegrationTest {
+public class ReadEducationThemesTest extends AbstractIntegrationTest {
 
     @Test
     public void successReadAll() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationType(educationType1)
-        givenEducationType(educationType2)
-        givenResourceType(userResourceTypeSingle)
-        givenEventType(eventType1)
-        givenPermissionForUser(user1, ["educationTypes:read"])
+        givenEducationTheme(educationTheme1)
+        givenEducationTheme(educationTheme2)
+        givenPermissionForUser(user1, ["educationThemes:read"])
 
         // When
-        String getUrl = "/educationTypes"
+        String getUrl = "/educationThemes"
         HttpResponse getResponse = whenGet(getUrl, user1)
 
         // Then
@@ -30,8 +28,8 @@ public class ReadEducationTypesTest extends AbstractIntegrationTest {
         thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
         String expectedData = """[
-            ${ toJSON(educationType1) },
-            ${ toJSON(educationType2) }
+            ${ toJSON(educationTheme1) },
+            ${ toJSON(educationTheme2) }
 		]"""
         thenResponseDataIs(responseBody, expectedData)
     }
@@ -40,12 +38,10 @@ public class ReadEducationTypesTest extends AbstractIntegrationTest {
     public void successReadAllWithoutPermissionButResultIsEmpty() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationType(educationType1)
-        givenResourceType(userResourceTypeSingle)
-        givenEventType(eventType1)
-
+        givenEducationTheme(educationTheme1)
+        
         // When
-        String getUrl = "/educationTypes"
+        String getUrl = "/educationThemes"
         HttpResponse getResponse = whenGet(getUrl, user1)
 
         // Then

@@ -29,7 +29,8 @@ public class ReadEducationTest extends AbstractIntegrationTest {
 
         String expectedData = """{
             "type" : "event",
-            "educationType" : ${ toJSON(eventEducationTypeRef1) },
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "educationTheme" : ${ toJSON(educationThemeRef1) },
             "id" : "${ JSON.parse(responseBody)['id'] }",
             "title" : "Education1",
             "content" : "Education1 content",

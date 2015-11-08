@@ -27,11 +27,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.*
 import se.leafcoders.rosette.model.education.Education
+import se.leafcoders.rosette.model.education.EducationTheme
+import se.leafcoders.rosette.model.education.EducationThemeRef
 import se.leafcoders.rosette.model.education.EducationType
+import se.leafcoders.rosette.model.education.EducationTypeRef
 import se.leafcoders.rosette.model.education.EventEducation
-import se.leafcoders.rosette.model.education.EventEducationType
 import se.leafcoders.rosette.model.event.Event
-import se.leafcoders.rosette.model.reference.EducationTypeRef
 import se.leafcoders.rosette.model.reference.EventRef
 import se.leafcoders.rosette.model.reference.LocationRefOrText
 import se.leafcoders.rosette.model.reference.ObjectReferences
@@ -84,6 +85,7 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("groups")
 		mongoTemplate.dropCollection("groupMemberships")
         mongoTemplate.dropCollection("educations")
+        mongoTemplate.dropCollection("educationThemes")
         mongoTemplate.dropCollection("educationTypes")
 		mongoTemplate.dropCollection("events")
         mongoTemplate.dropCollection("eventTypes")
@@ -401,28 +403,42 @@ abstract class AbstractIntegrationTest {
     protected final EventRef eventRef2 = new EventRef(event2)
     protected final EventRef eventRef3 = new EventRef(event3)
     
-    protected final EventEducationType eventEducationType1 = new EventEducationType(
-        type : 'event',
+    protected final EducationType educationType1 = new EducationType(
         id : "letters",
         name : "Letters",
         description : "Letters about life",
         authorResourceType : userResourceTypeSingle,
         eventType : eventType1
     )
-    protected final EventEducationType eventEducationType2 = new EventEducationType(
-        type : 'event',
+    protected final EducationType educationType2 = new EducationType(
         id : "letters2",
         name : "Letters2",
         description : "Letters (2) about life",
         authorResourceType : userResourceTypeSingle,
         eventType : eventType1
     )
-    protected final EducationTypeRef eventEducationTypeRef1 = new EducationTypeRef(eventEducationType1)
-    protected final EducationTypeRef eventEducationTypeRef2 = new EducationTypeRef(eventEducationType2)
+    protected final EducationTypeRef educationTypeRef1 = new EducationTypeRef(educationType1)
+    protected final EducationTypeRef educationTypeRef2 = new EducationTypeRef(educationType2)
+    
+    protected final EducationTheme educationTheme1 = new EducationTheme(
+        id : getObjectId(),
+        educationType : educationTypeRef1,
+        title : "Theme1",
+        content : "The theme 1 content"
+    )
+    protected final EducationTheme educationTheme2 = new EducationTheme(
+        id : getObjectId(),
+        educationType : educationTypeRef1,
+        title : "Theme1",
+        content : "The theme 1 content"
+    )
+    protected final EducationThemeRef educationThemeRef1 = new EducationThemeRef(educationTheme1)
+    protected final EducationThemeRef educationThemeRef2 = new EducationThemeRef(educationTheme2)
     
     protected final EventEducation eventEducation1 = new EventEducation(
         type : 'event',
-        educationType : eventEducationTypeRef1,
+        educationType : educationTypeRef1,
+        educationTheme : educationThemeRef1,
         id : getObjectId(),
         title : "Education1",
         content : "Education1 content",
@@ -431,7 +447,8 @@ abstract class AbstractIntegrationTest {
     )
     protected final EventEducation eventEducation2 = new EventEducation(
         type : 'event',
-        educationType : eventEducationTypeRef2,
+        educationType : educationTypeRef2,
+        educationTheme : educationThemeRef1,
         id : getObjectId(),
         title : "Education2",
         content : "Education2 content",
@@ -494,6 +511,10 @@ abstract class AbstractIntegrationTest {
 
     protected void givenEducationType(EducationType educationType) {
         mongoTemplate.insert(educationType)
+    }
+
+    protected void givenEducationTheme(EducationTheme educationTheme) {
+        mongoTemplate.insert(educationTheme)
     }
 
     protected void givenEducation(Education education) {

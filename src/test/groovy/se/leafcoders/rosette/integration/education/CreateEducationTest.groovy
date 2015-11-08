@@ -16,15 +16,17 @@ public class CreateEducationTest extends AbstractIntegrationTest {
     public void createEventEducationWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationType(eventEducationType1)
+        givenEducationType(educationType1)
+        givenEducationTheme(educationTheme1)
         givenEvent(event1)
-        givenPermissionForUser(user1, ["educations:create", "educationTypes:read", "events:read"])
+        givenPermissionForUser(user1, ["educations:create", "educationTypes:read", "educationThemes:read", "events:read"])
 
         // When
         String postUrl = "/educations"
         HttpResponse postResponse = whenPost(postUrl, user1, """{
 			"type" : "event",
-            "educationType" : ${ toJSON(eventEducationTypeRef1) },
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "educationTheme" : ${ toJSON(educationThemeRef1) },
 			"title" : "Education",
 			"content" : "This is the content",
             "questions" : "Some questions",
@@ -39,9 +41,12 @@ public class CreateEducationTest extends AbstractIntegrationTest {
             "type" : "event",
             "id" : "${ JSON.parse(responseBody)['id'] }",
             "educationType" : {
-                "id" : "${ eventEducationTypeRef1.id }",
-                "type" : "${ eventEducationTypeRef1.type }",
-                "name" : "${ eventEducationTypeRef1.name }"
+                "id" : "${ educationTypeRef1.id }",
+                "name" : "${ educationTypeRef1.name }"
+            },
+            "educationTheme" : {
+                "id" : "${ educationThemeRef1.id }",
+                "title" : "${ educationThemeRef1.title }"
             },
             "title" : "Education",
             "content" : "This is the content",
@@ -62,14 +67,16 @@ public class CreateEducationTest extends AbstractIntegrationTest {
     public void failsWhenCreateWithoutType() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationType(eventEducationType1)
+        givenEducationType(educationType1)
+        givenEducationTheme(educationTheme1)
         givenEvent(event1)
-        givenPermissionForUser(user1, ["educations:create", "educationTypes:read", "events:read"])
+        givenPermissionForUser(user1, ["educations:create", "educationTypes:read", "educationThemes:read", "events:read"])
 
         // When
         String postUrl = "/educations"
         HttpResponse postResponse = whenPost(postUrl, user1, """{
-            "educationType" : ${ toJSON(eventEducationTypeRef1) },
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "educationTheme" : ${ toJSON(educationThemeRef1) },
             "title" : "Education",
             "content" : "This is the content",
             "questions" : "Some questions",

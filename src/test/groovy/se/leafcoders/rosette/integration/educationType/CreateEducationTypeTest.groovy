@@ -12,7 +12,7 @@ import se.leafcoders.rosette.model.education.EducationType
 public class CreateEducationTypeTest extends AbstractIntegrationTest {
 
     @Test
-    public void createEventEducationTypeWithSuccess() throws ClientProtocolException, IOException {
+    public void createEducationTypeWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
         givenResourceType(userResourceTypeSingle)
@@ -22,7 +22,6 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
         // When
         String postUrl = "/educationTypes"
         HttpResponse postResponse = whenPost(postUrl, user1, """{
-			"type" : "event",
 			"id" : "bibleStudy",
 			"name" : "Bibelstudium",
 			"description" : "Undervisning om bibeln",
@@ -35,7 +34,6 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
         thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
         String expectedData = """{
-			"type" : "event",
 			"id" : "bibleStudy",
             "name" : "Bibelstudium",
             "description" : "Undervisning om bibeln",
@@ -49,9 +47,10 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void failsWhenCreateWithoutType() throws ClientProtocolException, IOException {
+    public void failsWhenCreateWithoutUniqueId() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
+        givenEducationType(educationType1)
         givenResourceType(userResourceTypeSingle)
         givenEventType(eventType1)
         givenPermissionForUser(user1, ["educationTypes:create", "resourceTypes:read", "eventTypes:read"])
@@ -59,31 +58,7 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
         // When
         String postUrl = "/educationTypes"
         HttpResponse postResponse = whenPost(postUrl, user1, """{
-            "id" : "bibleStudy",
-            "name" : "Bibelstudium",
-            "description" : "Undervisning om bibeln",
-            "authorResourceType" : ${ toJSON(userResourceTypeSingle) },
-            "eventType" : ${ toJSON(eventType1) }
-		}""")
-
-        // Then
-        thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
-    }
-
-    @Test
-    public void failsWhenCreateWithoutUniqueKey() throws ClientProtocolException, IOException {
-        // Given
-        givenUser(user1)
-        givenEducationType(eventEducationType1)
-        givenResourceType(userResourceTypeSingle)
-        givenEventType(eventType1)
-        givenPermissionForUser(user1, ["educationTypes:create", "resourceTypes:read", "eventTypes:read"])
-
-        // When
-        String postUrl = "/educationTypes"
-        HttpResponse postResponse = whenPost(postUrl, user1, """{
-            "type" : "event",
-			"id" : "${ eventEducationType1.id }",
+			"id" : "${ educationType1.id }",
             "name" : "Bibelstudium",
             "description" : "Undervisning om bibeln",
             "authorResourceType" : ${ toJSON(userResourceTypeSingle) },

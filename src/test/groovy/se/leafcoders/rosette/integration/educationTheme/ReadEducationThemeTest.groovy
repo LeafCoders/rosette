@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.integration.educationType
+package se.leafcoders.rosette.integration.educationTheme
 
 import static org.junit.Assert.assertEquals
 import javax.servlet.http.HttpServletResponse
@@ -9,19 +9,17 @@ import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.resource.ResourceType
 import se.leafcoders.rosette.model.resource.UserResourceType
 
-public class ReadEducationTypeTest extends AbstractIntegrationTest {
+public class ReadEducationThemeTest extends AbstractIntegrationTest {
 
     @Test
     public void successReadOne() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationType(educationType1)
-        givenResourceType(userResourceTypeSingle)
-        givenEventType(eventType1)
-        givenPermissionForUser(user1, ["educationTypes:read:${ educationType1.id }"])
+        givenEducationTheme(educationTheme1)
+        givenPermissionForUser(user1, ["educationThemes:read:${ educationTheme1.id }"])
 
         // When
-        String getUrl = "/educationTypes/${ educationType1.id }"
+        String getUrl = "/educationThemes/${ educationTheme1.id }"
         HttpResponse getResponse = whenGet(getUrl, user1)
 
         // Then
@@ -29,11 +27,10 @@ public class ReadEducationTypeTest extends AbstractIntegrationTest {
         thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
         String expectedData = """{
-            "id" : "letters",
-            "name" : "Letters",
-            "description" : "Letters about life",
-            "authorResourceType" : ${ toJSON(userResourceTypeSingle) },
-            "eventType" : ${ toJSON(eventType1) }
+            "id" : "${ educationTheme1.id }",
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "title" : "Theme1",
+            "content" : "The theme 1 content"
 		}"""
         thenResponseDataIs(responseBody, expectedData)
     }
@@ -42,10 +39,10 @@ public class ReadEducationTypeTest extends AbstractIntegrationTest {
     public void failReadNotFound() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenPermissionForUser(user1, ["educationTypes:read"])
+        givenPermissionForUser(user1, ["educationThemes:read"])
 
         // When
-        String getUrl = "/educationTypes/nonExistingKey"
+        String getUrl = "/educationThemes/nonExistingKey"
         HttpResponse getResponse = whenGet(getUrl, user1)
 
         // Then
@@ -56,12 +53,10 @@ public class ReadEducationTypeTest extends AbstractIntegrationTest {
     public void failReadWithoutPermission() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationType(educationType1)
-        givenResourceType(userResourceTypeSingle)
-        givenEventType(eventType1)
+        givenEducationTheme(educationTheme1)
 
         // When
-        String getUrl = "/educationTypes/${ educationType1.id }"
+        String getUrl = "/educationThemes/${ educationTheme1.id }"
         HttpResponse getResponse = whenGet(getUrl, user1)
 
         // Then

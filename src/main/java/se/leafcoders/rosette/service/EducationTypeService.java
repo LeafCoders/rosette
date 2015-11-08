@@ -3,9 +3,7 @@ package se.leafcoders.rosette.service;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.leafcoders.rosette.model.education.EducationType;
-import se.leafcoders.rosette.model.education.EventEducationType;
 import se.leafcoders.rosette.security.PermissionType;
 
 @Service
@@ -27,15 +25,12 @@ public class EducationTypeService extends MongoTemplateCRUD<EducationType> {
 	}
 
 	@Override
-	public void insertDependencies(EducationType data) {
-	    if (data instanceof EventEducationType) {
-			EventEducationType educationType = (EventEducationType) data;
-            if (educationType.getEventType() != null) {
-                educationType.setEventType(eventTypeService.read(educationType.getEventType().getId()));
-            }
-			if (educationType.getAuthorResourceType() != null) {
-				educationType.setAuthorResourceType(resourceTypeService.readUserResourceType(educationType.getAuthorResourceType().getId()));
-			}
+	public void insertDependencies(EducationType educationType) {
+        if (educationType.getEventType() != null) {
+            educationType.setEventType(eventTypeService.read(educationType.getEventType().getId()));
+        }
+		if (educationType.getAuthorResourceType() != null) {
+			educationType.setAuthorResourceType(resourceTypeService.readUserResourceType(educationType.getAuthorResourceType().getId()));
 		}
 	}
 }

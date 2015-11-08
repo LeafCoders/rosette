@@ -164,6 +164,10 @@ public class UploadService {
 		        if (applicationSettings.useUploadCacheMaxAge()) {
 		        	response.addHeader("Cache-Control", "max-age=604800"); // One week 
 		        }
+		        
+		        // Indicate the browser to view the file
+		        response.addHeader("Content-Disposition", "inline; " + file.getFilename());
+		        
 				new MongoDbFileByteRangeSupport().with(request).with(response).serveResource(file, file.getContentType());
 			} catch (ClientAbortException abortException) {
 				return;

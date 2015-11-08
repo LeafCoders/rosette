@@ -6,6 +6,7 @@ public enum PermissionType {
 	ASSETS("assets"),
 	BOOKINGS("bookings"),
     EDUCATIONS("educations"),
+    EDUCATION_THEMES("educationThemes"),
     EDUCATION_TYPES("educationTypes"),
 	EVENTS("events"),
 	EVENTS_EVENTTYPES("events:eventTypes"),

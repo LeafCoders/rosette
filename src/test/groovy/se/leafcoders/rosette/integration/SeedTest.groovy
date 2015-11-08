@@ -39,8 +39,11 @@ class SeedTest extends AbstractIntegrationTest {
 		givenEventType(eventType1)
 		givenEventType(eventType2)
 
-        givenEducationType(eventEducationType1)
-        givenEducationType(eventEducationType2)
+        givenEducationType(educationType1)
+        givenEducationType(educationType2)
+
+        givenEducationTheme(educationTheme1)
+        givenEducationTheme(educationTheme2)
 
         givenEducation(eventEducation1)
         givenEducation(eventEducation2)

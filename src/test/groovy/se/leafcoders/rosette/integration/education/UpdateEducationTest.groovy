@@ -15,17 +15,20 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenEducation(eventEducation1)
-        givenEducationType(eventEducationType1)
-        givenEducationType(eventEducationType2)
+        givenEducationType(educationType1)
+        givenEducationType(educationType2)
+        givenEducationTheme(educationTheme1)
+        givenEducationTheme(educationTheme2)
         givenEvent(event1)
         givenEvent(event2)
-        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "events:read"])
+        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "educationThemes:read", "events:read"])
 
         // When
         String putUrl = "/educations/${ eventEducation1.id }"
         HttpResponse putResponse = whenPut(putUrl, user1, """{
 			"type": "event",
-            "educationType" : ${ toJSON(eventEducationTypeRef1) },
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "educationTheme" : ${ toJSON(educationThemeRef2) },
             "title" : "Education1 new",
             "content" : "Education1 content new",
             "questions" : "Education1 questions new",
@@ -37,7 +40,8 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         String expectedData = """[{
             "type": "event",
             "id" : "${ eventEducation1.id }",
-            "educationType" : ${ toJSON(eventEducationTypeRef1) },
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "educationTheme" : ${ toJSON(educationThemeRef2) },
             "title" : "Education1 new",
             "content" : "Education1 content new",
             "questions" : "Education1 questions new",
@@ -53,17 +57,19 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenEducation(eventEducation1)
-        givenEducationType(eventEducationType1)
-        givenEducationType(eventEducationType2)
+        givenEducationType(educationType1)
+        givenEducationType(educationType2)
+        givenEducationTheme(educationTheme1)
+        givenEducationTheme(educationTheme2)
         givenEvent(event1)
         givenEvent(event2)
-        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "events:read"])
+        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "educationThemes:read", "events:read"])
 
         // When
         String putUrl = "/educations/${ eventEducation1.id }"
         HttpResponse putResponse = whenPut(putUrl, user1, """{
             "type": "event",
-            "educationType" : ${ toJSON(eventEducationTypeRef2) }
+            "educationType" : ${ toJSON(educationTypeRef2) }
         }""")
 
         // Then

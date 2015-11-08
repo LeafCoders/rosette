@@ -10,7 +10,6 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import se.leafcoders.rosette.model.error.ValidationError;
-import se.leafcoders.rosette.model.reference.EducationTypeRef;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educations")
@@ -26,16 +25,18 @@ public abstract class Education extends IdBasedModel {
     @HasRef(message = "education.educationType.mustBeSet")
     private EducationTypeRef educationType;
 
+    @HasRef(message = "education.educationTheme.mustBeSet")
+    private EducationThemeRef educationTheme;
+    
     @NotEmpty(message = "education.title.notEmpty")
     private String title;
 
-    @Length(max = 10000, message = "error.content.max10000Chars")
+    @Length(max = 10000, message = "education.content.max10000Chars")
     private String content;
 
-    @Length(max = 10000, message = "error.questions.max10000Chars")
+    @Length(max = 10000, message = "education.questions.max10000Chars")
     private String questions;
 
-    
     // Constructors
 
     public Education(String type) {
@@ -50,6 +51,9 @@ public abstract class Education extends IdBasedModel {
             throw new SimpleValidationException(new ValidationError("education", "education.educationType.notAllowedToChange"));
         }
 
+        if (rawData.has("educationTheme")) {
+            setEducationTheme(educationUpdate.getEducationTheme());
+        }
         if (rawData.has("title")) {
             setTitle(educationUpdate.getTitle());
         }
@@ -77,6 +81,14 @@ public abstract class Education extends IdBasedModel {
 
     public void setEducationType(EducationTypeRef educationType) {
         this.educationType = educationType;
+    }
+
+    public EducationThemeRef getEducationTheme() {
+        return educationTheme;
+    }
+
+    public void setEducationTheme(EducationThemeRef educationTheme) {
+        this.educationTheme = educationTheme;
     }
 
     public String getTitle() {
