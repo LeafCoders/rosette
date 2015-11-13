@@ -42,8 +42,10 @@ class SeedTest extends AbstractIntegrationTest {
         givenEducationType(educationType1)
         givenEducationType(educationType2)
 
-        givenEducationTheme(educationTheme1)
-        givenEducationTheme(educationTheme2)
+        givenUploadFolder(uploadFolderEducationThemes)
+        def educationThemeImage = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, educationThemeImage)
+        givenEducationTheme(educationTheme2, educationThemeImage)
 
         givenEducation(eventEducation1)
         givenEducation(eventEducation2)

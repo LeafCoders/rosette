@@ -6,8 +6,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
-import se.leafcoders.rosette.model.resource.ResourceType
-import se.leafcoders.rosette.model.resource.UserResourceType
+import se.leafcoders.rosette.model.upload.UploadResponse
 
 public class ReadEducationThemesTest extends AbstractIntegrationTest {
 
@@ -15,8 +14,10 @@ public class ReadEducationThemesTest extends AbstractIntegrationTest {
     public void successReadAll() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
-        givenEducationTheme(educationTheme2)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenEducationTheme(educationTheme2, image)
         givenPermissionForUser(user1, ["educationThemes:read"])
 
         // When
@@ -38,7 +39,9 @@ public class ReadEducationThemesTest extends AbstractIntegrationTest {
     public void successReadAllWithoutPermissionButResultIsEmpty() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
         
         // When
         String getUrl = "/educationThemes"

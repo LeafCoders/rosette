@@ -6,6 +6,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.EventEducation
+import se.leafcoders.rosette.model.upload.UploadResponse
 
 
 public class UpdateEducationTest extends AbstractIntegrationTest {
@@ -17,8 +18,12 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         givenEducation(eventEducation1)
         givenEducationType(educationType1)
         givenEducationType(educationType2)
-        givenEducationTheme(educationTheme1)
-        givenEducationTheme(educationTheme2)
+        
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenEducationTheme(educationTheme2, image)
+
         givenEvent(event1)
         givenEvent(event2)
         givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "educationThemes:read", "events:read"])
@@ -59,8 +64,12 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         givenEducation(eventEducation1)
         givenEducationType(educationType1)
         givenEducationType(educationType2)
-        givenEducationTheme(educationTheme1)
-        givenEducationTheme(educationTheme2)
+        
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenEducationTheme(educationTheme2, image)
+
         givenEvent(event1)
         givenEvent(event2)
         givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "educationThemes:read", "events:read"])

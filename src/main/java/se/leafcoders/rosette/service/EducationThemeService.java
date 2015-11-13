@@ -11,6 +11,8 @@ public class EducationThemeService extends MongoTemplateCRUD<EducationTheme> {
 
     @Autowired
     private EducationTypeService educationTypeService;
+    @Autowired
+    private UploadService uploadService;
 
 	public EducationThemeService() {
 		super(EducationTheme.class, PermissionType.EDUCATION_THEMES);
@@ -20,6 +22,9 @@ public class EducationThemeService extends MongoTemplateCRUD<EducationTheme> {
 	public void insertDependencies(EducationTheme educationTheme) {
         if (educationTheme.getEducationType() != null) {
             educationTheme.setEducationType(new EducationTypeRef(educationTypeService.read(educationTheme.getEducationType().getId())));
+        }
+        if (educationTheme.getImage() != null) {
+            educationTheme.setImage(uploadService.read(educationTheme.getImage().getId()));
         }
 	}
 }

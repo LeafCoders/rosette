@@ -11,7 +11,7 @@ public abstract class TypeBasedModel implements BaseModel {
 	@Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = "error.id.notValidFormat")
 	protected String id;
 
-    @NotEmpty(message = "type.name.notEmpty")
+    @NotEmpty(message = "error.name.notEmpty")
     protected String name;
 
     @Length(max = 200, message = "error.description.max200Chars")

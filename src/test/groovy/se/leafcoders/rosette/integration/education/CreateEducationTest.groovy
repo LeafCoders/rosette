@@ -7,6 +7,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.Education
+import se.leafcoders.rosette.model.upload.UploadResponse
 import com.mongodb.util.JSON
 
 
@@ -17,7 +18,11 @@ public class CreateEducationTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenEducationType(educationType1)
-        givenEducationTheme(educationTheme1)
+
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+
         givenEvent(event1)
         givenPermissionForUser(user1, ["educations:create", "educationTypes:read", "educationThemes:read", "events:read"])
 
@@ -68,7 +73,11 @@ public class CreateEducationTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenEducationType(educationType1)
-        givenEducationTheme(educationTheme1)
+
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+
         givenEvent(event1)
         givenPermissionForUser(user1, ["educations:create", "educationTypes:read", "educationThemes:read", "events:read"])
 

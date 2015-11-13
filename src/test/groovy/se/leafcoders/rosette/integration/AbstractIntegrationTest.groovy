@@ -279,6 +279,14 @@ abstract class AbstractIntegrationTest {
 	)
 	protected final UploadFolderRef uploadFolderLocationsRef = new UploadFolderRef(uploadFolderLocations)
 
+    protected final UploadFolder uploadFolderEducationThemes = new UploadFolder(
+        id: "educationThemes",
+        name: "EducationThemes",
+        isPublic: true,
+        mimeTypes: ["image/"]
+    )
+    protected final UploadFolderRef uploadFolderEducationThemesRef = new UploadFolderRef(uploadFolderEducationThemes)
+
 	protected final UploadRequest validPNGImage = new UploadRequest(
         fileName : "image.png",
         mimeType : "image/png",
@@ -513,7 +521,8 @@ abstract class AbstractIntegrationTest {
         mongoTemplate.insert(educationType)
     }
 
-    protected void givenEducationTheme(EducationTheme educationTheme) {
+    protected void givenEducationTheme(EducationTheme educationTheme, UploadResponse image) {
+        educationTheme.image = image
         mongoTemplate.insert(educationTheme)
     }
 
@@ -541,8 +550,8 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(booking)
 	}
 
-	protected void givenPoster(Poster poster, UploadResponse upload) {
-		poster.image = upload
+	protected void givenPoster(Poster poster, UploadResponse image) {
+		poster.image = image
 		mongoTemplate.insert(poster)
 	}
 	

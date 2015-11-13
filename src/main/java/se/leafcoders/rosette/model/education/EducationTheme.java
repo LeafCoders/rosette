@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
+import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educationThemes")
@@ -18,6 +19,9 @@ public class EducationTheme extends IdBasedModel {
 
     @Length(max = 10000, message = "educationTheme.content.max10000Chars")
     private String content;
+
+    @HasRef(message = "educationTheme.image.mustBeSet")
+    private UploadResponse image;
     
     // Constructors
 
@@ -35,6 +39,9 @@ public class EducationTheme extends IdBasedModel {
         }
         if (rawData.has("educationType")) {
             setEducationType(educationThemeUpdate.getEducationType());
+        }
+        if (rawData.has("image")) {
+            setImage(educationThemeUpdate.getImage());
         }
     }
 
@@ -62,5 +69,13 @@ public class EducationTheme extends IdBasedModel {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public UploadResponse getImage() {
+        return image;
+    }
+
+    public void setImage(UploadResponse image) {
+        this.image = image;
     }
 }

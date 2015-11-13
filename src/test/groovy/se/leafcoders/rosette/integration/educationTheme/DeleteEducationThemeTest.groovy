@@ -7,7 +7,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.EducationTheme
-import se.leafcoders.rosette.model.education.EducationType
+import se.leafcoders.rosette.model.upload.UploadResponse
 
 public class DeleteEducationThemeTest extends AbstractIntegrationTest {
 
@@ -15,7 +15,9 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
     public void deleteEducationThemeWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
         givenPermissionForUser(user1, ["educationThemes:delete:${ educationTheme1.id }"])
 
         // When
@@ -32,8 +34,10 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
     public void failsWhenNothingToDelete() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
-        givenEducationTheme(educationTheme2)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenEducationTheme(educationTheme2, image)
         givenPermissionForUser(user1, ["educationThemes:delete"])
 
         // When
@@ -50,7 +54,9 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
     public void failsWhenMissingPermission() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
 
         // When
         String deleteUrl = "/educationThemes/${ educationTheme1.id }"

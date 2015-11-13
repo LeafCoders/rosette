@@ -8,6 +8,7 @@ import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.EducationTheme
 import se.leafcoders.rosette.model.education.EducationType
+import se.leafcoders.rosette.model.upload.UploadResponse
 
 
 public class UpdateEducationThemeTest extends AbstractIntegrationTest {
@@ -16,12 +17,15 @@ public class UpdateEducationThemeTest extends AbstractIntegrationTest {
     public void updateEducationTypeWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image1 = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadResponse image2 = givenUploadInFolder("educationThemes", validJPEGImage)
+        givenEducationTheme(educationTheme1, image1)
         givenEducationType(educationType1)
         givenEducationType(educationType2)
         givenResourceType(userResourceTypeSingle)
         givenEventType(eventType1)
-        givenPermissionForUser(user1, ["educationThemes:read,update:${ educationTheme1.id }", "educationTypes:read"])
+        givenPermissionForUser(user1, ["educationThemes:read,update:${ educationTheme1.id }", "educationTypes:read", "uploads:read"])
 
         // When
         String putUrl = "/educationThemes/${ educationTheme1.id }"
@@ -29,7 +33,8 @@ public class UpdateEducationThemeTest extends AbstractIntegrationTest {
 			"id" : "willNotBeChanged",
             "educationType" : ${ toJSON(educationTypeRef2) },
 			"title": "Theme1 new",
-			"content": "New content"
+			"content": "New content",
+            "image" : ${ toJSON(image2) }
 		}""")
 
         // Then
@@ -38,7 +43,8 @@ public class UpdateEducationThemeTest extends AbstractIntegrationTest {
 			"id" : "${ educationTheme1.id }",
             "educationType" : ${ toJSON(educationTypeRef2) },
             "title": "Theme1 new",
-            "content": "New content"
+            "content": "New content",
+            "image" : ${ toJSON(image2) }
 		}]"""
         releasePutRequest()
         thenDataInDatabaseIs(EducationTheme.class, expectedData)

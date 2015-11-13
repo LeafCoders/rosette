@@ -6,8 +6,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
-import se.leafcoders.rosette.model.resource.ResourceType
-import se.leafcoders.rosette.model.resource.UserResourceType
+import se.leafcoders.rosette.model.upload.UploadResponse
 
 public class ReadEducationThemeTest extends AbstractIntegrationTest {
 
@@ -15,7 +14,9 @@ public class ReadEducationThemeTest extends AbstractIntegrationTest {
     public void successReadOne() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
         givenPermissionForUser(user1, ["educationThemes:read:${ educationTheme1.id }"])
 
         // When
@@ -30,7 +31,8 @@ public class ReadEducationThemeTest extends AbstractIntegrationTest {
             "id" : "${ educationTheme1.id }",
             "educationType" : ${ toJSON(educationTypeRef1) },
             "title" : "Theme1",
-            "content" : "The theme 1 content"
+            "content" : "The theme 1 content",
+            "image" : ${ toJSON(image) }
 		}"""
         thenResponseDataIs(responseBody, expectedData)
     }
@@ -53,7 +55,9 @@ public class ReadEducationThemeTest extends AbstractIntegrationTest {
     public void failReadWithoutPermission() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducationTheme(educationTheme1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
 
         // When
         String getUrl = "/educationThemes/${ educationTheme1.id }"
