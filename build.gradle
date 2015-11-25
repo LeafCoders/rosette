@@ -66,6 +66,7 @@ dependencies {
 
 	// org.apache.http.*
 	testCompile("org.apache.httpcomponents:httpclient:4.3.1")
+    testCompile("org.apache.httpcomponents:httpmime:4.3.1")
 }
 
 

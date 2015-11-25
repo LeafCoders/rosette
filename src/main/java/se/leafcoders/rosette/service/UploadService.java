@@ -69,7 +69,7 @@ public class UploadService {
 		if (getFileByName(folderId, upload.getFileName()) != null) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.alreadyExists"));
 		}
-		byte[] fileData = upload.getFileDataAsBytes(); 
+        byte[] fileData = upload.getFileData();
 
 		// Set meta data
 		DBObject metaData = new BasicDBObject();
@@ -257,12 +257,16 @@ public class UploadService {
 		upload.setId(file.getId().toString());
 		upload.setFileName(file.getFilename());
 		upload.setFolderId(folderId);
+		
+		String fileUrl = "";
 		if (uploadFolderService.isPublic(folderId)) {
-			upload.setFileUrl(baseUrl + "/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename());
+		    fileUrl = baseUrl + "/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename();
 		} else {
 			// Need to stream content through cordate server when folder isn't public
-			upload.setFileUrl(baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename());
+	        fileUrl = baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename();
 		}
+		upload.setFileUrl(fileUrl.replace("//", "/").replace(":80", ""));
+		
         upload.setMimeType(file.getContentType());
 		upload.setFileSize(file.getLength());
 		Long width = getMetadataWidth(file);

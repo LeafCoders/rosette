@@ -1,13 +1,11 @@
 package se.leafcoders.rosette.model.upload;
 
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.DatatypeConverter;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.leafcoders.rosette.model.BaseModel;
-import se.leafcoders.rosette.model.IdBasedModel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.IdBasedModel;
 
 @Document
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,7 +16,7 @@ public class UploadRequest extends IdBasedModel {
     @NotNull(message = "upload.mimeType.notNull")
 	private String mimeType;
     @NotNull(message = "upload.fileData.notNull")
-	private String fileData;
+	private byte[] fileData;
     
 	@Override
 	public void update(JsonNode rawData, BaseModel updateFrom) {
@@ -52,19 +50,11 @@ public class UploadRequest extends IdBasedModel {
 		this.mimeType = mimeType;
 	}
 
-	public String getFileData() {
+	public byte[] getFileData() {
 		return fileData;
 	}
 
-	public void setFileData(String fileData) {
+	public void setFileData(byte[] fileData) {
 		this.fileData = fileData;
-	}
-
-	// Helper methods
-
-	@JsonIgnore
-	public byte[] getFileDataAsBytes() {
-		int index = fileData.indexOf(",");
-		return DatatypeConverter.parseBase64Binary(fileData.substring(index + 1));
 	}
 }

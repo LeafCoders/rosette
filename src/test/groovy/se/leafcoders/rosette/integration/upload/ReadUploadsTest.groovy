@@ -37,9 +37,9 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 	            "folderId": "posters",
 				"fileUrl" : "${ baseUrl }/assets/posters/image.png",
 	            "mimeType" : "image/png",
-				"fileSize" : 1047,
-	            "width" : 16,
-	            "height" : 16
+				"fileSize" : 638,
+	            "width" : 300,
+	            "height" : 200
 			},
 			{
 				"id" : "${ uploadItem2['id'] }",
@@ -47,9 +47,9 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 	            "folderId": "posters",
 				"fileUrl" : "${ baseUrl }/assets/posters/image.jpg",
 	            "mimeType" : "image/jpg",
-				"fileSize" : 1476,
-	            "width" : 16,
-	            "height" : 16
+				"fileSize" : 1617,
+	            "width" : 300,
+	            "height" : 200
 			}
 		]"""
 		thenResponseDataIs(responseBody, expectedData)

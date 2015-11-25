@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,7 @@ import se.leafcoders.rosette.model.error.ExceptionError;
 import se.leafcoders.rosette.model.error.ValidationError;
 
 @RequestMapping("api/v1")
+@CrossOrigin
 public class AbstractController {
     static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 

@@ -1,14 +1,12 @@
 package se.leafcoders.rosette.integration.upload
 
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost
-import org.junit.Test;
-import com.mongodb.util.JSON;
-import se.leafcoders.rosette.integration.AbstractIntegrationTest;
-import se.leafcoders.rosette.integration.util.TestUtil;
+import org.apache.http.client.ClientProtocolException
+import org.junit.Test
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.model.upload.UploadRequest
+import com.mongodb.util.JSON
 
 public class CreateUploadTest extends AbstractIntegrationTest {
 
@@ -21,11 +19,10 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 
         // When
 		String postUrl = "/uploads/posters"
-		HttpResponse postResponse = whenPost(postUrl, user1, """{
-	        "fileName" : "image.png",
-	        "mimeType" : "image/png",
-	        "fileData" : "${validPNGImage.fileData}"
-		}""")
+        HttpResponse postResponse = whenPostUpload(postUrl, user1, new UploadRequest(
+            fileName: "image.png",
+            mimeType: "image/png"
+        ))
 
         // Then
 		String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
@@ -37,9 +34,9 @@ public class CreateUploadTest extends AbstractIntegrationTest {
             "folderId": "posters",
 			"fileUrl" : "${baseUrl}/assets/posters/image.png",
             "mimeType" : "image/png",
-			"fileSize" : 1047,
-            "width" : 16,
-            "height" : 16
+            "fileSize" : 638,
+            "width" : 300,
+            "height" : 200
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		releasePostRequest();
@@ -55,13 +52,17 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 
 		// When
 		String postUrl = "/uploads/posters"
-		HttpResponse postResponse = whenPost(postUrl, user1, """{
-	        "fileName" : "image.png",
-	        "mimeType" : "image/png",
-	        "fileData" : ${validPNGImage.fileData}
-		}""")
+		HttpResponse postResponse = whenPostUpload(postUrl, user1, new UploadRequest(
+	        fileName: "image.png",
+	        mimeType: "image/png"
+		))
 
 		// Then
-		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
+        String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_FORBIDDEN)
+        thenResponseDataIs(responseBody, """{
+            "error" : "error.forbidden",
+            "reason" : "error.missingPermission",
+            "reasonParams" : ["uploads:create:posters"]
+        }""")
 	}
 }
