@@ -14,7 +14,8 @@ public class DeleteEducationTest extends AbstractIntegrationTest {
     public void deleteEventEducationWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
         givenPermissionForUser(user1, ["educations:delete:${ eventEducation1.id }"])
 
         // When
@@ -31,7 +32,8 @@ public class DeleteEducationTest extends AbstractIntegrationTest {
     public void failsWhenNothingToDelete() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
         givenPermissionForUser(user1, ["educations:delete"])
 
         // When
@@ -48,7 +50,8 @@ public class DeleteEducationTest extends AbstractIntegrationTest {
     public void failsWhenMissingPermission() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
 
         // When
         String deleteUrl = "/educations/${ educationType1.id }"

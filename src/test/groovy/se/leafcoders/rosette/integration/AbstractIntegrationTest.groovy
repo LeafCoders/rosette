@@ -36,6 +36,7 @@ import se.leafcoders.rosette.model.education.EducationType
 import se.leafcoders.rosette.model.education.EducationTypeRef
 import se.leafcoders.rosette.model.education.EventEducation
 import se.leafcoders.rosette.model.event.Event
+import se.leafcoders.rosette.model.podcast.Podcast
 import se.leafcoders.rosette.model.reference.EventRef
 import se.leafcoders.rosette.model.reference.LocationRefOrText
 import se.leafcoders.rosette.model.reference.ObjectReferences
@@ -83,22 +84,23 @@ abstract class AbstractIntegrationTest {
 		httpClient.getConnectionManager().shutdown()
 		httpClient = HttpClientBuilder.create().build()
 
-		mongoTemplate.dropCollection("signupUsers")
-		mongoTemplate.dropCollection("users")
+		mongoTemplate.dropCollection("bookings")
+		mongoTemplate.dropCollection("educations")
+		mongoTemplate.dropCollection("educationThemes")
+		mongoTemplate.dropCollection("educationTypes")
+		mongoTemplate.dropCollection("events")
+		mongoTemplate.dropCollection("eventTypes")
 		mongoTemplate.dropCollection("groups")
 		mongoTemplate.dropCollection("groupMemberships")
-        mongoTemplate.dropCollection("educations")
-        mongoTemplate.dropCollection("educationThemes")
-        mongoTemplate.dropCollection("educationTypes")
-		mongoTemplate.dropCollection("events")
-        mongoTemplate.dropCollection("eventTypes")
+		mongoTemplate.dropCollection("locations")
 		mongoTemplate.dropCollection("permissions")
-        mongoTemplate.dropCollection("permissionTrees")
-        mongoTemplate.dropCollection("posters")
-        mongoTemplate.dropCollection("resourceTypes")
-        mongoTemplate.dropCollection("userResourceTypes")
-        mongoTemplate.dropCollection("locations")
-        mongoTemplate.dropCollection("bookings")
+		mongoTemplate.dropCollection("permissionTrees")
+		mongoTemplate.dropCollection("podcasts")
+		mongoTemplate.dropCollection("posters")
+		mongoTemplate.dropCollection("resourceTypes")
+		mongoTemplate.dropCollection("signupUsers")
+		mongoTemplate.dropCollection("userResourceTypes")
+		mongoTemplate.dropCollection("users")
         mongoTemplate.dropCollection("uploadFolders")
         gridFsTemplate.delete(null)
 	}
@@ -290,6 +292,22 @@ abstract class AbstractIntegrationTest {
     )
     protected final UploadFolderRef uploadFolderEducationThemesRef = new UploadFolderRef(uploadFolderEducationThemes)
 
+    protected final UploadFolder uploadFolderPodcastArtworks = new UploadFolder(
+        id: "podcastArtworks",
+        name: "Podcast artworks",
+        isPublic: true,
+        mimeTypes: ["image/"]
+    )
+    protected final UploadFolderRef uploadFolderPodcastArtworksRef = new UploadFolderRef(uploadFolderPodcastArtworks)
+
+    protected final UploadFolder uploadFolderEducations = new UploadFolder(
+        id: "educations",
+        name: "Educations",
+        isPublic: true,
+        mimeTypes: ["audio/"]
+    )
+    protected final UploadFolderRef uploadFolderEducationsRef = new UploadFolderRef(uploadFolderEducations)
+
 	protected final UploadRequest validPNGImage = new UploadRequest(
         fileName : "image.png",
         mimeType : "image/png"
@@ -297,6 +315,10 @@ abstract class AbstractIntegrationTest {
 	protected final UploadRequest validJPEGImage = new UploadRequest(
         fileName : "image.jpg",
         mimeType : "image/jpg"
+    )
+    protected final UploadRequest audioRecording1 = new UploadRequest(
+        fileName: "audio.mp3",
+        mimeType: "audio/mp3"
     )
 
 	protected final UserResourceType userResourceTypeSingle = new UserResourceType(
@@ -417,14 +439,16 @@ abstract class AbstractIntegrationTest {
         name : "Letters",
         description : "Letters about life",
         authorResourceType : userResourceTypeSingle,
-        eventType : eventType1
+        eventType : eventType1,
+        uploadFolder: uploadFolderEducations
     )
     protected final EducationType educationType2 = new EducationType(
         id : "letters2",
         name : "Letters2",
         description : "Letters (2) about life",
         authorResourceType : userResourceTypeSingle,
-        eventType : eventType1
+        eventType : eventType1,
+        uploadFolder: uploadFolderEducations
     )
     protected final EducationTypeRef educationTypeRef1 = new EducationTypeRef(educationType1)
     protected final EducationTypeRef educationTypeRef2 = new EducationTypeRef(educationType2)
@@ -438,8 +462,8 @@ abstract class AbstractIntegrationTest {
     protected final EducationTheme educationTheme2 = new EducationTheme(
         id : getObjectId(),
         educationType : educationTypeRef1,
-        title : "Theme1",
-        content : "The theme 1 content"
+        title : "Theme2",
+        content : "The theme 2 content"
     )
     protected final EducationThemeRef educationThemeRef1 = new EducationThemeRef(educationTheme1)
     protected final EducationThemeRef educationThemeRef2 = new EducationThemeRef(educationTheme2)
@@ -450,9 +474,11 @@ abstract class AbstractIntegrationTest {
         educationTheme : educationThemeRef1,
         id : getObjectId(),
         title : "Education1",
-        content : "Education1 content",
+        content : "Education1 content öäåè.",
         questions : "Education1 questions",
-        event : eventRef1
+        recording : null,
+        event : eventRef1,
+        authorName : user1.fullName
     )
     protected final EventEducation eventEducation2 = new EventEducation(
         type : 'event',
@@ -462,7 +488,24 @@ abstract class AbstractIntegrationTest {
         title : "Education2",
         content : "Education2 content",
         questions : "Education2 questions",
-        event : eventRef2
+        recording : null,
+        event : eventRef2,
+        authorName : null
+    )
+
+    protected final Podcast podcast1 = new Podcast(
+        id : getObjectId(),
+        educationType : educationTypeRef1,
+        title : "Podcast1 title",
+        subTitle : "Podcast1 sub title",
+        description : "Podcast1 description",
+        authorName : "Kalle Karlsson",
+        copyright : "Kalle & Co",
+        mainCategory : "Religion & Spirituality",
+        subCategory : "Christianity",
+        language : "sv-se",
+        link : "http://google.se",
+        changedDate : TestUtil.modelDate("2015-11-14 08:00 Europe/Stockholm"),
     )
 
 	/*
@@ -527,8 +570,14 @@ abstract class AbstractIntegrationTest {
         mongoTemplate.insert(educationTheme)
     }
 
-    protected void givenEducation(Education education) {
+    protected void givenEducation(Education education, UploadResponse recording) {
+        education.recording = recording
         mongoTemplate.insert(education)
+    }
+
+    protected void givenPodcast(Podcast podcast, UploadResponse image) {
+        podcast.image = image
+        mongoTemplate.insert(podcast)
     }
 
 	protected void givenResourceType(ResourceType resourceType) {
@@ -692,4 +741,9 @@ abstract class AbstractIntegrationTest {
 	protected String toJSON(Object data) {
 		return mapper.writeValueAsString(data);
 	}
+    
+    protected def readDb(Class entityClass, String itemId) {
+        Query findOneQuery = Query.query(Criteria.where("id").is(QueryId.get(itemId)))
+        return mongoTemplate.findOne(findOneQuery, entityClass)
+    }
 }

@@ -15,9 +15,10 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
     public void createEducationTypeWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
+        givenUploadFolder(uploadFolderEducations)
         givenResourceType(userResourceTypeSingle)
         givenEventType(eventType1)
-        givenPermissionForUser(user1, ["educationTypes:create", "resourceTypes:read", "eventTypes:read"])
+        givenPermissionForUser(user1, ["educationTypes:create", "resourceTypes:read", "eventTypes:read", "uploadFolders:read:educations"])
 
         // When
         String postUrl = "/educationTypes"
@@ -26,7 +27,8 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
 			"name" : "Bibelstudium",
 			"description" : "Undervisning om bibeln",
 			"authorResourceType" : ${ toJSON(userResourceTypeSingle) },
-            "eventType" : ${ toJSON(eventType1) }
+            "eventType" : ${ toJSON(eventType1) },
+            "uploadFolder" : ${ toJSON(uploadFolderEducations) }
 		}""")
 
         // Then
@@ -38,7 +40,8 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
             "name" : "Bibelstudium",
             "description" : "Undervisning om bibeln",
             "authorResourceType" : ${ toJSON(userResourceTypeSingle) },
-            "eventType" : ${ toJSON(eventType1) }
+            "eventType" : ${ toJSON(eventType1) },
+            "uploadFolder" : ${ toJSON(uploadFolderEducations) }
 		}"""
         thenResponseDataIs(responseBody, expectedData)
         releasePostRequest()
@@ -50,10 +53,11 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
     public void failsWhenCreateWithoutUniqueId() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
+        givenUploadFolder(uploadFolderEducations)
         givenEducationType(educationType1)
         givenResourceType(userResourceTypeSingle)
         givenEventType(eventType1)
-        givenPermissionForUser(user1, ["educationTypes:create", "resourceTypes:read", "eventTypes:read"])
+        givenPermissionForUser(user1, ["educationTypes:create", "resourceTypes:read", "eventTypes:read", "uploadFolders:read:educations"])
 
         // When
         String postUrl = "/educationTypes"
@@ -62,7 +66,8 @@ public class CreateEducationTypeTest extends AbstractIntegrationTest {
             "name" : "Bibelstudium",
             "description" : "Undervisning om bibeln",
             "authorResourceType" : ${ toJSON(userResourceTypeSingle) },
-            "eventType" : ${ toJSON(eventType1) }
+            "eventType" : ${ toJSON(eventType1) },
+            "uploadFolder" : ${ toJSON(uploadFolderEducations) }
 		}""")
 
         // Then

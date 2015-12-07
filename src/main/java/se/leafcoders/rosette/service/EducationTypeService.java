@@ -13,6 +13,8 @@ public class EducationTypeService extends MongoTemplateCRUD<EducationType> {
     private EventTypeService eventTypeService;
 	@Autowired
 	private ResourceTypeService resourceTypeService;
+    @Autowired
+    private UploadFolderService uploadFolderService;
 
 	public EducationTypeService() {
 		super(EducationType.class, PermissionType.EDUCATION_TYPES);
@@ -32,5 +34,8 @@ public class EducationTypeService extends MongoTemplateCRUD<EducationType> {
 		if (educationType.getAuthorResourceType() != null) {
 			educationType.setAuthorResourceType(resourceTypeService.readUserResourceType(educationType.getAuthorResourceType().getId()));
 		}
+        if (educationType.getUploadFolder() != null) {
+            educationType.setUploadFolder(uploadFolderService.read(educationType.getUploadFolder().getId()));
+        }
 	}
 }

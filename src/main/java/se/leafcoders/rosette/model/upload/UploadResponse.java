@@ -15,8 +15,9 @@ public class UploadResponse extends IdBasedModel {
 	private String fileUrl; // Absolute url to downloadable file
 	private String mimeType;
 	private long fileSize; // Bytes
-	private Long width;
-	private Long height;
+	private Long width; // Image
+	private Long height; // Image
+    private Long duration; // Audio
 
 	@Override
 	public void update(JsonNode rawData, BaseModel updateFrom) {
@@ -79,4 +80,12 @@ public class UploadResponse extends IdBasedModel {
 	public void setHeight(Long height) {
 		this.height = height;
 	}
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long length) {
+        this.duration = length;
+    }
 }

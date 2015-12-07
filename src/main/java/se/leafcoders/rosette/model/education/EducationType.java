@@ -6,6 +6,7 @@ import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.TypeBasedModel;
 import se.leafcoders.rosette.model.resource.UserResourceType;
+import se.leafcoders.rosette.model.upload.UploadFolder;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educationTypes")
@@ -14,8 +15,11 @@ public class EducationType extends TypeBasedModel {
     private EventType eventType;
 
     @HasRef(message = "educationType.authorResourceType.mustBeSet")
-    private UserResourceType authorResourceType;    
-	
+    private UserResourceType authorResourceType;
+
+    @HasRef(message = "educationType.uploadFolder.mustBeSet")
+    private UploadFolder uploadFolder;
+
     // Constructors
 
     public EducationType() {
@@ -29,6 +33,9 @@ public class EducationType extends TypeBasedModel {
         }
         if (rawData.has("authorResourceType")) {
             setAuthorResourceType(educationTypeUpdate.getAuthorResourceType());
+        }
+        if (rawData.has("uploadFolder")) {
+            setUploadFolder(educationTypeUpdate.getUploadFolder());
         }
         super.update(rawData, updateFrom);
     }
@@ -49,5 +56,13 @@ public class EducationType extends TypeBasedModel {
 
     public void setAuthorResourceType(UserResourceType authorResourceType) {
         this.authorResourceType = authorResourceType;
+    }
+
+    public UploadFolder getUploadFolder() {
+        return uploadFolder;
+    }
+
+    public void setUploadFolder(UploadFolder uploadFolder) {
+        this.uploadFolder = uploadFolder;
     }
 }

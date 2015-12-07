@@ -6,7 +6,9 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.education.Education
+import se.leafcoders.rosette.model.education.EventEducation
 import se.leafcoders.rosette.model.upload.UploadResponse
 import com.mongodb.util.JSON
 
@@ -42,9 +44,10 @@ public class CreateEducationTest extends AbstractIntegrationTest {
         String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
         thenResponseHeaderHas(postResponse, "Content-Type", "application/json;charset=UTF-8")
 
+        String createdId = JSON.parse(responseBody)['id'];
         String expectedData = """{
             "type" : "event",
-            "id" : "${ JSON.parse(responseBody)['id'] }",
+            "id" : "${ createdId }",
             "educationType" : {
                 "id" : "${ educationTypeRef1.id }",
                 "name" : "${ educationTypeRef1.name }"
@@ -56,11 +59,14 @@ public class CreateEducationTest extends AbstractIntegrationTest {
             "title" : "Education",
             "content" : "This is the content",
             "questions" : "Some questions",
+            "recording" : null,
             "event" : {
                 "id" : "${ eventRef1.id }",
                 "title" : "${ eventRef1.title }",
                 "startTime" : "2012-03-26 11:00 Europe/Stockholm"
-            }
+            },
+            "authorName" : "${ user1.fullName }",
+            "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, createdId).updatedTime) }"
 		}"""
         thenResponseDataIs(responseBody, expectedData)
         releasePostRequest()

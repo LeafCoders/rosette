@@ -63,6 +63,9 @@ dependencies {
 
 	// iCalendar support
 	compile("net.sf.biweekly:biweekly:0.4.2")
+    
+    // MP3 audio support
+    compile("com.googlecode.soundlibs:mp3spi:1.9.5-1")
 
 	// org.apache.http.*
 	testCompile("org.apache.httpcomponents:httpclient:4.3.1")

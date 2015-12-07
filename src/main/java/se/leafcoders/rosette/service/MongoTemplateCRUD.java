@@ -116,6 +116,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 		beforeUpdate(id, updateData, dataInDbToUpdate);
 		insertDependencies(updateData);
+		updateAfterInsertDependencies(id, updateData, dataInDbToUpdate);
 		dataInDbToUpdate.update(rawData, updateData);
 		security.validate(dataInDbToUpdate);
 		mongoTemplate.save(dataInDbToUpdate);
@@ -125,6 +126,9 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	protected void beforeUpdate(String id, T updateData, T dataInDbToUpdate) {
 	}
 	
+    protected void updateAfterInsertDependencies(String id, T updateData, T dataInDbToUpdate) {
+    }
+    
 	@Override
 	public void delete(String id, HttpServletResponse response) {
 		if (permissionFilter.shallCheck(PermissionAction.DELETE)) {

@@ -6,8 +6,11 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.integration.util.TestUtil
+import se.leafcoders.rosette.model.education.EventEducation
 import se.leafcoders.rosette.model.reference.EventRef
 import se.leafcoders.rosette.model.resource.ResourceType
+import se.leafcoders.rosette.model.upload.UploadResponse
 import com.mongodb.util.JSON
 
 public class ReadEducationTest extends AbstractIntegrationTest {
@@ -16,7 +19,9 @@ public class ReadEducationTest extends AbstractIntegrationTest {
     public void successReadOne() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        UploadResponse educationRecording1 = givenUploadInFolder("educations", audioRecording1)
+        givenEducation(eventEducation1, educationRecording1)
         givenPermissionForUser(user1, ["educations:read:${ eventEducation1.id }"])
 
         // When
@@ -33,9 +38,12 @@ public class ReadEducationTest extends AbstractIntegrationTest {
             "educationTheme" : ${ toJSON(educationThemeRef1) },
             "id" : "${ JSON.parse(responseBody)['id'] }",
             "title" : "Education1",
-            "content" : "Education1 content",
+            "content" : "Education1 content öäåè.",
             "questions" : "Education1 questions",
-            "event" : ${ toJSON(eventRef1) }
+            "recording" : ${ toJSON(educationRecording1) },
+            "event" : ${ toJSON(eventRef1) },
+            "authorName" : "${ user1.fullName }",
+            "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, eventEducation1.id).updatedTime) }"
 		}"""
         thenResponseDataIs(responseBody, expectedData)
     }
@@ -44,7 +52,8 @@ public class ReadEducationTest extends AbstractIntegrationTest {
     public void failReadNotFound() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
         givenPermissionForUser(user1, ["educations:read"])
 
         // When
@@ -59,7 +68,8 @@ public class ReadEducationTest extends AbstractIntegrationTest {
     public void failReadWithoutPermission() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
 
         // When
         String getUrl = "/educations/${ eventEducation1.id }"

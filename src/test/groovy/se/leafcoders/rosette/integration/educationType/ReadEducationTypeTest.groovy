@@ -15,6 +15,7 @@ public class ReadEducationTypeTest extends AbstractIntegrationTest {
     public void successReadOne() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
+        givenUploadFolder(uploadFolderEducations)
         givenEducationType(educationType1)
         givenResourceType(userResourceTypeSingle)
         givenEventType(eventType1)
@@ -33,7 +34,8 @@ public class ReadEducationTypeTest extends AbstractIntegrationTest {
             "name" : "Letters",
             "description" : "Letters about life",
             "authorResourceType" : ${ toJSON(userResourceTypeSingle) },
-            "eventType" : ${ toJSON(eventType1) }
+            "eventType" : ${ toJSON(eventType1) },
+            "uploadFolder" : ${ toJSON(uploadFolderEducations) }
 		}"""
         thenResponseDataIs(responseBody, expectedData)
     }

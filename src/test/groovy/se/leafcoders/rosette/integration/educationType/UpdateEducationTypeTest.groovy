@@ -15,12 +15,13 @@ public class UpdateEducationTypeTest extends AbstractIntegrationTest {
     public void updateEducationTypeWithSuccess() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
+        givenUploadFolder(uploadFolderEducations)
         givenEducationType(educationType1)
         givenResourceType(userResourceTypeSingle)
         givenResourceType(userResourceTypeMultiAndText)
         givenEventType(eventType1)
         givenEventType(eventType2)
-        givenPermissionForUser(user1, ["educationTypes:read,update:${ educationType1.id }", "resourceTypes:read", "eventTypes:read"])
+        givenPermissionForUser(user1, ["educationTypes:read,update:${ educationType1.id }", "resourceTypes:read", "eventTypes:read", "uploadFolders:read:educations"])
 
         // When
         String putUrl = "/educationTypes/${ educationType1.id }"
@@ -29,7 +30,8 @@ public class UpdateEducationTypeTest extends AbstractIntegrationTest {
 			"name": "New name",
 			"description": "New description",
             "authorResourceType" : ${ toJSON(userResourceTypeMultiAndText) },
-            "eventType" : ${ toJSON(eventType2) }
+            "eventType" : ${ toJSON(eventType2) },
+            "uploadFolder" : ${ toJSON(uploadFolderEducations) }
 		}""")
 
         // Then
@@ -39,7 +41,8 @@ public class UpdateEducationTypeTest extends AbstractIntegrationTest {
             "name": "New name",
             "description": "New description",
             "authorResourceType" : ${ toJSON(userResourceTypeMultiAndText) },
-            "eventType" : ${ toJSON(eventType2) }
+            "eventType" : ${ toJSON(eventType2) },
+            "uploadFolder" : ${ toJSON(uploadFolderEducations) }
 		}]"""
         releasePutRequest()
         thenDataInDatabaseIs(EducationType.class, expectedData)

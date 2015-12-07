@@ -1,9 +1,11 @@
 package se.leafcoders.rosette.model.education;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EducationTypeRef extends IdBasedModel {
     private String name;
 

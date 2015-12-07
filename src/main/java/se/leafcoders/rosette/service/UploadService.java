@@ -4,12 +4,17 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
@@ -20,6 +25,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSFile;
 import se.leafcoders.rosette.application.ApplicationSettings;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
@@ -32,17 +41,14 @@ import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.MongoDbFileByteRangeSupport;
 import se.leafcoders.rosette.util.QueryId;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
+import se.leafcoders.rosette.util.RosetteMpegAudioFileReader;
 
 @Service
 public class UploadService {
 	public static final String METADATA_FOLDER_ID = "folderId";
 	public static final String METADATA_WIDTH = "width";
 	public static final String METADATA_HEIGHT = "height";
+    public static final String METADATA_DURATION = "duration";
 
 	@Value("${rosette.baseUrl}")
 	private String baseUrl;
@@ -77,6 +83,9 @@ public class UploadService {
 		if (upload.getMimeType().startsWith("image") && !setImageSizeMetadata(metaData, fileData)) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.image.invalidSize"));
 		}
+        if (upload.getMimeType().startsWith("audio")) {
+            setAudioDurationMetadata(metaData, fileData, upload.getMimeType());
+        }
 
 		// Store file in gridFs
 		GridFSFile file = storeFile(fileData, upload.getFileName(), upload.getMimeType(), metaData);
@@ -251,6 +260,14 @@ public class UploadService {
 		return null;
 	}
 
+    private Long getMetadataDuration(GridFSFile file) {
+        Object duration = file.getMetaData().get(METADATA_DURATION);
+        if (duration != null) {
+            return Long.parseLong(duration.toString());   
+        }
+        return null;
+    }
+
 	private UploadResponse fileToUpload(GridFSFile file) {
 		final String folderId = getMetadataFolderId(file);
 		UploadResponse upload = new UploadResponse();
@@ -265,7 +282,7 @@ public class UploadService {
 			// Need to stream content through cordate server when folder isn't public
 	        fileUrl = baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename();
 		}
-		upload.setFileUrl(fileUrl.replace("//", "/").replace(":80", ""));
+		upload.setFileUrl(fileUrl);
 		
         upload.setMimeType(file.getContentType());
 		upload.setFileSize(file.getLength());
@@ -277,6 +294,10 @@ public class UploadService {
 		if (height != null) {
 			upload.setHeight(height);	
 		}
+        Long duration = getMetadataDuration(file);
+        if (duration != null) {
+            upload.setDuration(duration);   
+        }
         return upload;
 	}
 
@@ -297,4 +318,34 @@ public class UploadService {
 		}
 		return true;
 	}
+
+    private boolean setAudioDurationMetadata(DBObject metaData, byte [] fileData, String mimeType) {
+        InputStream inputStream = new ByteArrayInputStream(fileData);
+        try {
+            long duration = -1;
+            if (mimeType.equals("audio/mpeg") || mimeType.equals("audio/mp3")) {
+                AudioFileFormat baseFileFormat = new RosetteMpegAudioFileReader().getAudioFileFormat(inputStream, inputStream.available());
+                duration = ((long) baseFileFormat.properties().get("duration"))/1000000;
+            } else {
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
+                AudioFormat format = audioInputStream.getFormat();
+                long frames = audioInputStream.getFrameLength();
+                IOUtils.closeQuietly(audioInputStream);
+                duration = Math.round(0.5 + frames/format.getFrameRate());
+            }
+            if (duration <= 0) {
+                return false;
+            }
+            metaData.put(UploadService.METADATA_DURATION, String.valueOf(duration));
+        } catch (MalformedURLException ignore) {
+            return false;
+        } catch (UnsupportedAudioFileException ignore) {
+            return false;
+        } catch (IOException ignore) {
+            return false;
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return true;
+    }
 }

@@ -13,8 +13,10 @@ public class ReadEducationsTest extends AbstractIntegrationTest {
     public void successReadAll() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
-        givenEducation(eventEducation2)
+        givenUploadFolder(uploadFolderEducations)
+        def educationRecording = givenUploadInFolder("educations", audioRecording1)
+        givenEducation(eventEducation1, educationRecording)
+        givenEducation(eventEducation2, educationRecording)
         givenPermissionForUser(user1, ["educations:read"])
 
         // When
@@ -36,7 +38,8 @@ public class ReadEducationsTest extends AbstractIntegrationTest {
     public void successReadAllWithoutPermissionButResultIsEmpty() throws ClientProtocolException, IOException {
         // Given
         givenUser(user1)
-        givenEducation(eventEducation1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
 
         // When
         String getUrl = "/educations"

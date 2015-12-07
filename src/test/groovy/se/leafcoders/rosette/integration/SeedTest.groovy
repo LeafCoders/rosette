@@ -39,15 +39,28 @@ class SeedTest extends AbstractIntegrationTest {
 		givenEventType(eventType1)
 		givenEventType(eventType2)
 
+        givenEvent(event1)
+        givenEvent(event2)
+        givenEvent(event3)
+
+        // Education
+        givenUploadFolder(uploadFolderEducations)
+        givenUploadFolder(uploadFolderEducationThemes)
+
         givenEducationType(educationType1)
         givenEducationType(educationType2)
 
-        givenUploadFolder(uploadFolderEducationThemes)
         def educationThemeImage = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, educationThemeImage)
         givenEducationTheme(educationTheme2, educationThemeImage)
 
-        givenEducation(eventEducation1)
-        givenEducation(eventEducation2)
+        def educationsRecording = givenUploadInFolder("educations", audioRecording1)
+        givenEducation(eventEducation1, educationsRecording)
+        givenEducation(eventEducation2, educationsRecording)
+
+        // Podcast
+        givenUploadFolder(uploadFolderPodcastArtworks)
+        def podcastArtworkImage = givenUploadInFolder("podcastArtworks", validPNGImage)
+        givenPodcast(podcast1, podcastArtworkImage)
     }
 }
