@@ -292,13 +292,13 @@ abstract class AbstractIntegrationTest {
     )
     protected final UploadFolderRef uploadFolderEducationThemesRef = new UploadFolderRef(uploadFolderEducationThemes)
 
-    protected final UploadFolder uploadFolderPodcastArtworks = new UploadFolder(
-        id: "podcastArtworks",
-        name: "Podcast artworks",
+    protected final UploadFolder uploadFolderPodcastImages = new UploadFolder(
+        id: "podcastImages",
+        name: "Podcast images",
         isPublic: true,
         mimeTypes: ["image/"]
     )
-    protected final UploadFolderRef uploadFolderPodcastArtworksRef = new UploadFolderRef(uploadFolderPodcastArtworks)
+    protected final UploadFolderRef uploadFolderPodcastImagesRef = new UploadFolderRef(uploadFolderPodcastImages)
 
     protected final UploadFolder uploadFolderEducations = new UploadFolder(
         id: "educations",

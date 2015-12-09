@@ -59,8 +59,8 @@ class SeedTest extends AbstractIntegrationTest {
         givenEducation(eventEducation2, educationsRecording)
 
         // Podcast
-        givenUploadFolder(uploadFolderPodcastArtworks)
-        def podcastArtworkImage = givenUploadInFolder("podcastArtworks", validPNGImage)
-        givenPodcast(podcast1, podcastArtworkImage)
+        givenUploadFolder(uploadFolderPodcastImages)
+        def podcastImage = givenUploadInFolder("podcastImages", validPNGImage)
+        givenPodcast(podcast1, podcastImage)
     }
 }

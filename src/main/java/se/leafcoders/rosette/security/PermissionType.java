@@ -17,6 +17,7 @@ public enum PermissionType {
 	GROUPS("groups"),
 	LOCATIONS("locations"),
 	PERMISSIONS("permissions"),
+    PODCASTS("podcasts"),
 	POSTERS("posters"),
 	RESOURCE_TYPES("resourceTypes"),
 	SIGNUP_USERS("signupUsers"),

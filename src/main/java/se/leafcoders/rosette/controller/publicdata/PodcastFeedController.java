@@ -22,7 +22,7 @@ import se.leafcoders.rosette.service.PublicEducationThemeService;
 import se.leafcoders.rosette.util.QueryId;
 
 @Controller
-public class PodcastController extends PublicDataController {
+public class PodcastFeedController extends PublicDataController {
     @Autowired
     protected MongoTemplate mongoTemplate;
     @Autowired
@@ -45,7 +45,7 @@ public class PodcastController extends PublicDataController {
 
         // XML header and <rss>
         podcastData.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        podcastData.add("<rss xmlns:itunes=\"http://www.itunes.com/dtds/podcast-1.0.dtd\" version=\"2.0\">");
+        podcastData.add("<rss xmlns:itunes=\"http://www.itunes.com/dtds/podcast-1.0.dtd\" version=\"2.0\" xml:lang='" + podcast.getLanguage() + "'>");
         
         // Start <channel>
         podcastData.add("<channel>");
@@ -79,6 +79,7 @@ public class PodcastController extends PublicDataController {
             tag("link", podcast.getLink()),
             tag("language", podcast.getLanguage()),
             tag("copyright", noAmp(podcast.getCopyright())),
+            tag("itunes:explicit", "clean"),
             tag("generator", "LeafCoders/Rosette"),
             
             tag("itunes:image", "",
@@ -100,6 +101,7 @@ public class PodcastController extends PublicDataController {
             tag("itunes:summary", toCDATA(education.getContent())),
 
             tag("itunes:author", noAmp(education.getAuthorName())),
+            tag("itunes:explicit", "clean"),
             tag("guid", educationTheme.getImage().getFileUrl()),
             tag("pubDate", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(education.getUpdatedTime())),
 

@@ -35,7 +35,7 @@ public class Podcast extends IdBasedModel {
     @NotEmpty(message = "podcast.copyright.notEmpty")
     private String copyright;
 
-    @Length(max = 200, message = "podcast.description.max1000Chars")
+    @Length(max = 200, message = "podcast.description.max4000Chars")
     protected String description;
 
     @NotEmpty(message = "podcast.mainCategory.notEmpty")
