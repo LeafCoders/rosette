@@ -26,7 +26,7 @@ public class UploadController extends AbstractController {
 	@RequestMapping(value = "uploads/{folder}/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public UploadResponse getUpload(@PathVariable String folder, @PathVariable String id) {
-		return uploadService.read(id);
+		return uploadService.read(id, true);
 	}
 
 	@RequestMapping(value = "uploads/{folder}", method = RequestMethod.GET, produces = "application/json")

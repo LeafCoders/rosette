@@ -28,14 +28,8 @@ public class UserService extends MongoTemplateCRUD<User> {
 		}
 	}
 
-	@Override
-	public User read(String id) {
-        User user = super.read(id);
-		return user;
-	}
-
-	public UserRef readAsRef(String id) {
-        return new UserRef(super.read(id));
+	public UserRef readAsRef(String id, boolean checkPermissions) {
+        return new UserRef(super.read(id, checkPermissions));
 	}
 
 	@Override
@@ -55,6 +49,11 @@ public class UserService extends MongoTemplateCRUD<User> {
 	}
 
 	@Override
-	public void insertDependencies(User data) {
+	public void setReferences(User data, boolean checkPermissions) {
 	}
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { };
+    }
 }

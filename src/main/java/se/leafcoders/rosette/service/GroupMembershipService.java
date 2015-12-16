@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.Group;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
@@ -52,14 +53,19 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 	}
 
 	@Override
-	public void insertDependencies(GroupMembership data) {
+	public void setReferences(GroupMembership data, boolean checkPermissions) {
 		if (data.getUser() != null) {
-			data.setUser(userService.readAsRef(data.getUser().getId()));
+			data.setUser(userService.readAsRef(data.getUser().getId(), checkPermissions));
 		}
 		if (data.getGroup() != null) {
-			data.setGroup(groupService.read(data.getGroup().getId()));
+			data.setGroup(groupService.read(data.getGroup().getId(), checkPermissions));
 		}
 	}
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { Group.class, User.class };
+    }
 
 	private boolean membershipExist(GroupMembership groupMembership) {
         long count = mongoTemplate.count(Query.query(Criteria

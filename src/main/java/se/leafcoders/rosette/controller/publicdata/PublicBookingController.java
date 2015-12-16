@@ -26,7 +26,7 @@ public class PublicBookingController extends PublicDataController {
 
 		Query query = new Query().with(new Sort(Sort.Direction.ASC, "startTime"));
 		query.addCriteria(activeOrFutureBookingsTodayCriteria());
-		return bookingService.readManyNoPermissionCheck(query);
+		return bookingService.readMany(query, false);
 	}	
 
 	private Criteria activeOrFutureBookingsTodayCriteria() {

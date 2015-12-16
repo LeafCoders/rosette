@@ -24,9 +24,14 @@ public class SignupUserService extends MongoTemplateCRUD<SignupUser> {
 	}
 
 	@Override
-	public void insertDependencies(SignupUser data) {
+	public void setReferences(SignupUser data, boolean checkPermissions) {
 	}
-	
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { };
+    }
+
 	public SignupUser getLatestSignupUser() {
 		Query queryLastCreated = new Query().with(new Sort(new Sort.Order(Sort.Direction.DESC, "createdTime")));
 		return mongoTemplate.findOne(queryLastCreated, SignupUser.class);

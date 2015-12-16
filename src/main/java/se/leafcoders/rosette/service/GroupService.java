@@ -27,9 +27,14 @@ public class GroupService extends MongoTemplateCRUD<Group> {
 	}
 
 	@Override
-	public void insertDependencies(Group data) {
+	public void setReferences(Group data, boolean checkPermissions) {
 	}
-	
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { };
+    }
+
 	public boolean containsUsers(String groupId, List<UserRef> users) {
 		List<String> userIdsInGroup = groupMembershipService.getUserIdsInGroup(groupId);
 		for (UserRef user : users) {

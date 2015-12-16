@@ -2,6 +2,7 @@ package se.leafcoders.rosette.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
@@ -28,6 +29,8 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	protected MongoTemplate mongoTemplate;
 	@Autowired
 	protected SecurityService security;
+    @Autowired
+    protected RefreshService refreshService;
 
 	protected ObjectMapper objectMapper = new ObjectMapper();
 
@@ -70,29 +73,41 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		if (permissionFilter.shallCheck(PermissionAction.CREATE)) {
 			checkPermission(PermissionAction.CREATE);
 		}
-		insertDependencies(data);
+		setReferences(data, true);
+        afterSetReferences(data, null, true);
 		security.validate(data);
 		mongoTemplate.insert(data);
 		response.setStatus(HttpStatus.CREATED.value());
 		return data;
 	}
 
+    @Override
+    public T read(String id) {
+        return this.read(id, true);
+    }
+
 	@Override
-	public T read(String id) {
-		if (permissionFilter.shallCheck(PermissionAction.READ)) {
+	public T read(String id, boolean checkPermissions) {
+		if (checkPermissions && permissionFilter.shallCheck(PermissionAction.READ)) {
 			checkPermission(PermissionAction.READ, id);
 		}
-		return readWithoutPermission(id);
+
+		T data = mongoTemplate.findById(id, entityClass);
+        if (data == null) {
+            throw notFoundException(id);
+        }
+        return data;
 	}
 
-	public List<T> readManyNoPermissionCheck(final Query query) {
-		return mongoTemplate.find(query, entityClass);
-	}
-	
+    @Override
+    public List<T> readMany(final Query query) {
+        return this.readMany(query, true);
+    }
+
 	@Override
-	public List<T> readMany(final Query query) {
+	public List<T> readMany(final Query query, boolean checkPermissions) {
 		List<T> items = mongoTemplate.find(query, entityClass);
-		return filterPermittedItems(items);
+		return checkPermissions ? filterPermittedItems(items) : items;
 	}
 
 	@Override
@@ -102,7 +117,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		}
 		T dataInDbToUpdate = read(id);
 		if (dataInDbToUpdate == null) {
-			throw new NotFoundException();
+			throw notFoundException(id);
 		}
 
 		JsonNode rawData = null;
@@ -111,24 +126,25 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 			rawData = objectMapper.readTree(request.getReader());
 			updateData = objectMapper.treeToValue(rawData, entityClass);
 		} catch (Exception ignore) {
-			throw new NotFoundException();
+			throw notFoundException(id);
 		}
 
 		beforeUpdate(id, updateData, dataInDbToUpdate);
-		insertDependencies(updateData);
-		updateAfterInsertDependencies(id, updateData, dataInDbToUpdate);
+		setReferences(updateData, true);
+		afterSetReferences(updateData, dataInDbToUpdate, true);
 		dataInDbToUpdate.update(rawData, updateData);
 		security.validate(dataInDbToUpdate);
 		mongoTemplate.save(dataInDbToUpdate);
 		response.setStatus(HttpStatus.OK.value());
+		refreshService.setNeedRefresh(entityClass.getSimpleName());
 	}
 
 	protected void beforeUpdate(String id, T updateData, T dataInDbToUpdate) {
 	}
 	
-    protected void updateAfterInsertDependencies(String id, T updateData, T dataInDbToUpdate) {
+    protected void afterSetReferences(T updateData, T dataInDbToUpdate, boolean checkPermissions) {
     }
-    
+
 	@Override
 	public void delete(String id, HttpServletResponse response) {
 		if (permissionFilter.shallCheck(PermissionAction.DELETE)) {
@@ -136,11 +152,27 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		}
 		security.checkNotReferenced(id, permissionType);
         if (mongoTemplate.findAndRemove(getIdQuery(id), entityClass) == null) {
-			throw new NotFoundException();
+			throw notFoundException(id);
 		}
 		response.setStatus(HttpStatus.OK.value());
 	}
 	
+    @Override
+    public void refresh(Set<String> changedCollections) {
+        for (Class<?> refClass : references()) {
+            if (changedCollections.contains(refClass.getSimpleName())) {
+                List<T> items = readMany(new Query(), false);
+                items.forEach((T data) -> {
+                    beforeUpdate(data.getId(), data, null);
+                    setReferences(data, false);
+                    afterSetReferences(data, null, true);
+                    mongoTemplate.save(data);
+                });
+                return;
+            }
+        }
+    }
+    
 	public void validateUnique(String property, Object value, String message) {
 		if (value != null && value != "") {
 			Object valueQuery = value;
@@ -175,12 +207,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		return isPermitted(PermissionAction.READ, item.getId());
 	}
 	
-	protected T readWithoutPermission(String id) {
-        T data = mongoTemplate.findById(id, entityClass);
-		if (data == null) {
-			throw new NotFoundException();
-		}
-		return data;
+	public NotFoundException notFoundException(String id) {
+	    return new NotFoundException(entityClass.getSimpleName(), id);
 	}
-
 }

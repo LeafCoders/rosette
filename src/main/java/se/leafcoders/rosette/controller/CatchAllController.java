@@ -14,6 +14,6 @@ public class CatchAllController extends AbstractController {
 
 	@RequestMapping(produces = "application/json;charset=UTF-8")
 	public void catchAll() {
-		throw new NotFoundException();
+		throw new NotFoundException("Unknown resource");
 	}
 }

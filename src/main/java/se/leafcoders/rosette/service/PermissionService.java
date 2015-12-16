@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import se.leafcoders.rosette.model.Group;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
@@ -51,15 +52,20 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	}
 
 	@Override
-	public void insertDependencies(Permission data) {
+	public void setReferences(Permission data, boolean checkPermissions) {
 		if (data.getUser() != null) {
-			data.setUser(userService.readAsRef(data.getUser().getId()));
+			data.setUser(userService.readAsRef(data.getUser().getId(), checkPermissions));
 		}
 		if (data.getGroup() != null) {
-			data.setGroup(groupService.read(data.getGroup().getId()));
+			data.setGroup(groupService.read(data.getGroup().getId(), checkPermissions));
 		}
 	}
-	
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { Group.class, User.class };
+    }
+
 	public List<String> getForUser(String userId) {
 		List<String> permissions = new LinkedList<String>();
 		

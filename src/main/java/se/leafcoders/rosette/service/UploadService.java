@@ -96,13 +96,15 @@ public class UploadService {
 		return fileToUpload(file);
 	}
 
-	public UploadResponse read(final String uploadId) {
+	public UploadResponse read(final String uploadId, boolean checkPermissions) {
 		GridFSDBFile file = getFileById(uploadId);
 		if (file != null) {
-			security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, getMetadataFolderId(file), uploadId));
+		    if (checkPermissions) {
+		        security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, getMetadataFolderId(file), uploadId));
+		    }
 	        return fileToUpload(file);
         } else {
-			throw new NotFoundException();
+			throw new NotFoundException("Upload", uploadId);
 		}
 	}
 	
@@ -129,7 +131,7 @@ public class UploadService {
 		if (deleteFileById(folderId, uploadId)) {
 			response.setStatus(HttpStatus.OK.value());
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException("Upload", uploadId);
 		}
 	}
 
@@ -182,7 +184,7 @@ public class UploadService {
 				return;
 			}
         } else {
-			throw new NotFoundException();
+			throw new NotFoundException("Upload", fileName);
 		}
 	}
 

@@ -35,15 +35,20 @@ public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 	}
 
 	@Override
-	public void insertDependencies(UploadFolder data) {
+	public void setReferences(UploadFolder data, boolean checkPermissions) {
 	}
 
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { };
+    }
+
 	public boolean folderExist(final String folderId) {
-		return readWithoutPermission(folderId) != null;
+		return read(folderId, false) != null;
 	}
 	
 	public boolean isPermittedMimeType(final String folderId, final String mimeType) {
-		UploadFolder folder = readWithoutPermission(folderId);
+		UploadFolder folder = read(folderId, false);
 		if (folder != null) {
 			for (String match : folder.getMimeTypes()) {
 				if (mimeType.startsWith(match)) {
@@ -55,7 +60,7 @@ public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 	}
 
 	public boolean isPublic(final String folderId) {
-		UploadFolder folder = readWithoutPermission(folderId);
+		UploadFolder folder = read(folderId, false);
 		return (folder != null) && folder.getIsPublic();
 	}
 

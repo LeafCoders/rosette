@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 public interface ResourceMethods {
 	
-	Update createAssignUpdate(ResourceType resourceType);
+	Update createAssignUpdate(ResourceType resourceType, boolean checkPermissions);
 
-	void insertDependencies();
+	void setReferences(boolean checkPermissions);
 }

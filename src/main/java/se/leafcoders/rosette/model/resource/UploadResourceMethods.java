@@ -16,16 +16,16 @@ public class UploadResourceMethods implements ResourceMethods {
 		this.uploadService = uploadService;
 	}
 
-	public Update createAssignUpdate(ResourceType resourceTypeIn) {
-		validateAndUpdate(resourceTypeIn);
+	public Update createAssignUpdate(ResourceType resourceTypeIn, boolean checkPermissions) {
+		validateAndUpdate(resourceTypeIn, checkPermissions);
 		return new Update().set("resources.$.uploads", resource.getUploads());
 	}
 
-	public void insertDependencies() {
-		validateAndUpdate(resource.getResourceType());
+	public void setReferences(boolean checkPermissions) {
+		validateAndUpdate(resource.getResourceType(), checkPermissions);
 	}
 
-	private void validateAndUpdate(ResourceType resourceType) {
+	private void validateAndUpdate(ResourceType resourceType, boolean checkPermissions) {
 		if (!(resource.getResourceType() instanceof UploadResourceType)) {
 			throw new SimpleValidationException(new ValidationError("resource", "uploadResource.wrongResourceType"));
 		}
@@ -43,7 +43,7 @@ public class UploadResourceMethods implements ResourceMethods {
 			}
 			
 			for (UploadResponse upload : resource.getUploads()) {
-				resource.getUploads().updateRef(uploadService.read(upload.getId()));
+				resource.getUploads().updateRef(uploadService.read(upload.getId(), checkPermissions));
 			}
 		}
 	}

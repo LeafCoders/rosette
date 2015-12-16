@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.model.User;
@@ -83,7 +82,7 @@ public class UserController extends AbstractController {
 
 		User user = mongoTemplate.findById(id, User.class);
 		if (user == null) {
-			throw new NotFoundException();
+			throw userService.notFoundException(id);
 		} else {
 			// Removing permissions for the user
 			mongoTemplate.findAndRemove(Query.query(Criteria.where("user.id").is(QueryId.get(id))), Permission.class);
@@ -94,7 +93,7 @@ public class UserController extends AbstractController {
 			// Deleting the user
 			User deletedUser = mongoTemplate.findAndRemove(Query.query(Criteria.where("id").is(QueryId.get(id))), User.class);
 			if (deletedUser == null) {
-				throw new NotFoundException();
+				throw userService.notFoundException(id);
 			} else {
 				response.setStatus(HttpStatus.OK.value());
 			}

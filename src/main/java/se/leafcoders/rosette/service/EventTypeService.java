@@ -24,11 +24,16 @@ public class EventTypeService extends MongoTemplateCRUD<EventType> {
 	}
 
 	@Override
-	public void insertDependencies(EventType data) {
+	public void setReferences(EventType data, boolean checkPermissions) {
 		if (data.getResourceTypes() != null) {
 			for (ResourceType resourceType : data.getResourceTypes()) {
-				resourceType = resourceTypeService.read(resourceType.getId());
+				resourceType = resourceTypeService.read(resourceType.getId(), checkPermissions);
 			}
 		}
 	}
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { ResourceType.class };
+    }
 }

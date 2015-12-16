@@ -18,7 +18,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import se.leafcoders.rosette.exception.NotFoundException;
+import se.leafcoders.rosette.model.EventType;
+import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.ResourceType;
@@ -93,53 +95,60 @@ public class EventService extends MongoTemplateCRUD<Event> {
 
 	@Override
 	public void update(String eventId, HttpServletRequest request, HttpServletResponse response) {
-		checkEventTypesPermission(UPDATE, readWithoutPermission(eventId));
+		checkEventTypesPermission(UPDATE, read(eventId, false));
 		super.update(eventId, request, response);
 	}
 
 	@Override
 	protected void beforeUpdate(String id, Event updateData, Event dataInDatabase) {
-		dataInDatabase.setVersion(dataInDatabase.getVersion() + 1);
+	    if (dataInDatabase != null) {
+	        dataInDatabase.setVersion(dataInDatabase.getVersion() + 1);
+	    }
 	}
 
 	@Override
 	public void delete(String eventId, HttpServletResponse response) {
-		checkEventTypesPermission(DELETE, readWithoutPermission(eventId));
+		checkEventTypesPermission(DELETE, read(eventId, false));
 		super.delete(eventId, response);
 	}
 
 	public void assignResource(String eventId, String resourceTypeId, Resource resource, HttpServletResponse response) {
-		checkAnyEventPermission(UPDATE, readWithoutPermission(eventId), resourceTypeId);
+		checkAnyEventPermission(UPDATE, read(eventId, false), resourceTypeId);
 		security.validate(resource);
 
 		Query query = new Query(new Criteria().andOperator(
 		        Criteria.where("id").is(QueryId.get(eventId)),
 		        Criteria.where("resources.resourceType.id").is(resourceTypeId)));		
 
-		ResourceType resourceTypeIn = resourceTypeService.readWithoutPermission(resource.getResourceType().getId());
-		Update update = methodsService.of(resource).createAssignUpdate(resourceTypeIn);
+		ResourceType resourceTypeIn = resourceTypeService.read(resource.getResourceType().getId(), false);
+		Update update = methodsService.of(resource).createAssignUpdate(resourceTypeIn, true);
 
 		if (mongoTemplate.updateFirst(query, update, Event.class).getN() == 0) {
-			throw new NotFoundException();
+			throw notFoundException(eventId);
 		}
 		response.setStatus(HttpStatus.OK.value());
 	}
 
 	@Override
-	public void insertDependencies(Event data) {
+	public void setReferences(Event data, boolean checkPermissions) {
 		if (data.getEventType() != null) {
-			data.setEventType(eventTypeService.read(data.getEventType().getId()));
+			data.setEventType(eventTypeService.read(data.getEventType().getId(), checkPermissions));
 		}
 		if (data.getLocation() != null && data.getLocation().hasRef()) {
-			data.getLocation().setRef(locationService.read(data.getLocation().refId()));
+			data.getLocation().setRef(locationService.read(data.getLocation().refId(), checkPermissions));
 		}
 		final List<Resource> resources = data.getResources();
 		if (resources != null) {
 			for (Resource resource : resources) {
-				resource.setResourceType(resourceTypeService.read(resource.getResourceType().getId()));
-				methodsService.of(resource).insertDependencies();
+				resource.setResourceType(resourceTypeService.read(resource.getResourceType().getId(), checkPermissions));
+				methodsService.of(resource).setReferences(checkPermissions);
 			}
 		}
+	}
+	
+    @Override
+	public Class<?>[] references() {
+	    return new Class<?>[] { EventType.class, Location.class, ResourceType.class, User.class };
 	}
 
 	protected void checkEventTypesPermission(PermissionAction actionType, Event event) {

@@ -16,9 +16,14 @@ public class LocationService extends MongoTemplateCRUD<Location> {
 	}
 
 	@Override
-	public void insertDependencies(Location data) {
+	public void setReferences(Location data, boolean checkPermissions) {
 		if (data.getDirectionImage() != null) {
-			data.setDirectionImage(uploadService.read(data.getDirectionImage().getId()));
+			data.setDirectionImage(uploadService.read(data.getDirectionImage().getId(), checkPermissions));
 		}
 	}
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { };
+    }
 }

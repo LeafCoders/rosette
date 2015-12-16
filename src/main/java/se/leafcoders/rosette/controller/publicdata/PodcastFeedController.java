@@ -35,7 +35,7 @@ public class PodcastFeedController extends PublicDataController {
 
 	    Podcast podcast = mongoTemplate.findById(id, Podcast.class);
         if (podcast == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("Podcast", id);
         }
 
         Query query = new Query(Criteria.where("educationType.id").is(QueryId.get(podcast.getEducationType().getId())));

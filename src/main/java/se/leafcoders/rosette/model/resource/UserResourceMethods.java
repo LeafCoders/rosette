@@ -18,16 +18,16 @@ public class UserResourceMethods implements ResourceMethods {
 		this.groupService = groupService;
 	}
 
-	public Update createAssignUpdate(ResourceType resourceTypeIn) {
-		validateAndUpdate(resourceTypeIn);
+	public Update createAssignUpdate(ResourceType resourceTypeIn, boolean checkPermissions) {
+		validateAndUpdate(resourceTypeIn, checkPermissions);
 		return new Update().set("resources.$.users", resource.getUsers());
 	}
 
-	public void insertDependencies() {
-		validateAndUpdate(resource.getResourceType());
+	public void setReferences(boolean checkPermissions) {
+		validateAndUpdate(resource.getResourceType(), checkPermissions);
 	}
 
-	private void validateAndUpdate(ResourceType resourceType) {
+	private void validateAndUpdate(ResourceType resourceType, boolean checkPermissions) {
 		if (!(resource.getResourceType() instanceof UserResourceType)) {
 			throw new SimpleValidationException(new ValidationError("resource", "userResource.wrongResourceType"));
 		}
@@ -50,7 +50,7 @@ public class UserResourceMethods implements ResourceMethods {
 			}
 
 			for (UserRef user : resource.getUsers().getRefs()) {
-				resource.getUsers().updateRef(userService.readAsRef(user.getId()));
+				resource.getUsers().updateRef(userService.readAsRef(user.getId(), checkPermissions));
 			}
 		}
 	}

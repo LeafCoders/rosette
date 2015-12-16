@@ -16,9 +16,14 @@ public class PosterService extends MongoTemplateCRUD<Poster> {
 	}
 
 	@Override
-	public void insertDependencies(Poster data) {
+	public void setReferences(Poster data, boolean checkPermissions) {
 		if (data.getImage() != null) {
-			data.setImage(uploadService.read(data.getImage().getId()));
+			data.setImage(uploadService.read(data.getImage().getId(), checkPermissions));
 		}
 	}
+
+    @Override
+    public Class<?>[] references() {
+        return new Class<?>[] { };
+    }
 }

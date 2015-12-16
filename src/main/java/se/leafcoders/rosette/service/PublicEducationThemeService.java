@@ -14,7 +14,7 @@ public class PublicEducationThemeService {
     public EducationTheme read(String id) {
         EducationTheme educationTheme = mongoTemplate.findById(id, EducationTheme.class);
         if (educationTheme == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("Education", id);
         }
         return educationTheme;
     }

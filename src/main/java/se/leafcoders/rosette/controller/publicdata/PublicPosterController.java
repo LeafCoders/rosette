@@ -25,7 +25,7 @@ public class PublicPosterController extends PublicDataController {
 	public List<Poster> getPosters() {
 		checkPermission();
 
-		List<Poster> posters = posterService.readManyNoPermissionCheck(new Query(activePostersCriteria()));
+		List<Poster> posters = posterService.readMany(new Query(activePostersCriteria()), false);
         Collections.sort(posters, new PosterComparator());
 		return posters;
 	}	
