@@ -63,8 +63,5 @@ Here are instructions of how to run Rosette in production mode
 ## Running server
 
 1. Start MongodDB
-2. Start rosette server in folder where `rosette-x.x.x.jar` and `application.yaml` is
-  ```
-  java -jar rosette-x.x.x.jar
-  ```
+2. Start rosette server with `java -jar rosette-x.x.x.jar`. Important! Run the command in the folder where `rosette-x.x.x.jar` and `application.yaml` are.
 
