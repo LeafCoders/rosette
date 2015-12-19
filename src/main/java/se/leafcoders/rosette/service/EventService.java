@@ -101,7 +101,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 
 	@Override
 	protected void beforeUpdate(String id, Event updateData, Event dataInDatabase) {
-	    if (dataInDatabase != null) {
+	    if (updateData != null && dataInDatabase != null) {
 	        dataInDatabase.setVersion(dataInDatabase.getVersion() + 1);
 	    }
 	}

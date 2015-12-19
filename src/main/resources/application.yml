@@ -1,0 +1,60 @@
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+
+spring:
+  profiles.active: development
+
+
+---
+spring:
+  profiles: development
+
+server:
+  port: 9000
+
+multipart:
+  max-file-size: 200MB
+  max-request-size: 200MB
+
+security:
+  basic.enabled: false
+
+spring.data.mongodb:
+  database: rosette-test
+  # grid-fs-database:
+  host: 127.0.0.1
+  port: 27017
+  # password:
+  # username:
+
+spring.mail:
+  protocol: smtp
+  host: localhost
+  port: 1234
+  # username: 
+  # password: 
+  properties:
+    mail.smtp.auth: false
+    mail.smtp.starttls.enable: false
+    # mail.smtp.socketFactory.port:
+
+rosette:
+  baseUrl: http://localhost:9000
+  apiVersion: v1
+  jwtSecretToken: developmentSimpleJwtSecretToken
+  defaultMailFrom: no-reply@localhost
+  uploadCacheMaxAge: 0
+
+
+---
+spring:
+  profiles: production
+
+server:
+  port: 80
+
+spring.data.mongodb:
+  database: rosette
+
+rosette:
+  jwtSecretToken: tooShort # Don't change this. Override this property in production with environment variable
+  uploadCacheMaxAge: 604800 # One week  

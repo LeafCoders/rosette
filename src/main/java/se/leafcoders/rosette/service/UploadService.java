@@ -19,7 +19,6 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -29,7 +28,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
-import se.leafcoders.rosette.application.ApplicationSettings;
+import se.leafcoders.rosette.config.RosetteSettings;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.error.ValidationError;
@@ -50,12 +49,8 @@ public class UploadService {
 	public static final String METADATA_HEIGHT = "height";
     public static final String METADATA_DURATION = "duration";
 
-	@Value("${rosette.baseUrl}")
-	private String baseUrl;
-	
-	@Value("${rosette.apiVersion}")
-	private String apiVersion;
-	
+    @Autowired
+    private RosetteSettings rosetteSettings;
 	@Autowired
 	private GridFsTemplate gridFsTemplate;
 	@Autowired
@@ -63,7 +58,7 @@ public class UploadService {
 	@Autowired
 	private UploadFolderService uploadFolderService;
 	@Autowired
-	ApplicationSettings applicationSettings;
+	RosetteSettings applicationSettings;
 
 	public UploadResponse create(final String folderId, UploadRequest upload, HttpServletResponse response) {
 		response.setStatus(HttpStatus.CREATED.value());
@@ -172,8 +167,8 @@ public class UploadService {
 		if (file != null) {
 			try {
 		        response.addHeader("Cache-Control", "public");
-		        if (applicationSettings.useUploadCacheMaxAge()) {
-		        	response.addHeader("Cache-Control", "max-age=604800"); // One week 
+		        if (rosetteSettings.getUploadCacheMaxAge() > 0) {
+		        	response.addHeader("Cache-Control", "max-age=" + rosetteSettings.getUploadCacheMaxAge()); 
 		        }
 		        
 		        // Indicate the browser to view the file
@@ -279,10 +274,10 @@ public class UploadService {
 		
 		String fileUrl = "";
 		if (uploadFolderService.isPublic(folderId)) {
-		    fileUrl = baseUrl + "/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename();
+		    fileUrl = rosetteSettings.getBaseUrl() + "/api/" + rosetteSettings.getApiVersion() + "/assets/" + folderId + "/" + file.getFilename();
 		} else {
 			// Need to stream content through cordate server when folder isn't public
-	        fileUrl = baseUrl + "/cordate/api/" + apiVersion + "/assets/" + folderId + "/" + file.getFilename();
+	        fileUrl = rosetteSettings.getBaseUrl() + "/cordate/api/" + rosetteSettings.getApiVersion() + "/assets/" + folderId + "/" + file.getFilename();
 		}
 		upload.setFileUrl(fileUrl);
 		

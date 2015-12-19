@@ -11,6 +11,7 @@ public class SimpleValidationException extends RuntimeException {
     }
 
     public SimpleValidationException(ValidationError validationError) {
+        super(validationError.getMessage());
         this.validationError = validationError;
     }
 

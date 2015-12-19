@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.3.0.RC1'
+        springBootVersion = '1.3.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -19,13 +19,38 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot' 
 apply plugin: 'war'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def rosetteVersion = '1.1.0-SNAPSHOT'
+
+springBoot {
+    mainClass = 'se.leafcoders.rosette.RosetteApplication'
+}
+
+bootRepackage {
+    dependsOn jar
+    mainClass = 'se.leafcoders.rosette.RosetteApplication'
+}
+
+jar {
+    baseName = 'rosette'
+    version =  rosetteVersion
+}
 
 war {
     baseName = 'rosette'
-    version = '1.0.1-SNAPSHOT'
+    version = rosetteVersion
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+
+configurations {
+    providedRuntime
+}
+
+// Ignore 'test' task when running 'build' task
+test.onlyIf {
+    !gradle.taskGraph.hasTask(build)
+}
 
 repositories {
     mavenCentral()
@@ -33,16 +58,13 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
-configurations {
-    providedRuntime
-}
-
 dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
-//    compile("org.springframework.boot:spring-boot-starter-mail")
+    compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-starter-web")
 	compile('org.springframework.boot:spring-boot-starter-security')
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+    compile("org.springframework.boot:spring-boot-configuration-processor")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testCompile("org.springframework.boot:spring-boot-starter-test")
 
@@ -78,6 +100,12 @@ eclipse {
          containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
          containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
     }
+}
+
+task buildWarAndJar {
+    description = 'Builds Rosette war and jar packages for production'
+    group = 'build'
+    dependsOn bootRepackage
 }
 
 task wrapper(type: Wrapper) {

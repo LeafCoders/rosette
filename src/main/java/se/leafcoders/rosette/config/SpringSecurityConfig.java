@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import se.leafcoders.rosette.auth.CurrentUserService;
 import se.leafcoders.rosette.auth.RosetteAnonymousAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationFilter;
@@ -26,15 +26,17 @@ import se.leafcoders.rosette.auth.jwt.JwtLoginFilter;
 @Order(2)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private RosetteSettings rosetteSettings;
+    
     private final CurrentUserService userDetailsService;
-    private final JwtAuthenticationService tokenAuthenticationService;
+    private JwtAuthenticationService tokenAuthenticationService = null;
 
     public SpringSecurityConfig() {
         // Disable default Spring security configuration
         super(true);
 
         this.userDetailsService = new CurrentUserService();
-        tokenAuthenticationService = new JwtAuthenticationService("tooManySecrets", userDetailsService);
     }
 
     @Override
@@ -67,13 +69,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated().and()
 
                 // Custom authentication which sets the token header upon authentication
-                .addFilterBefore(new JwtLoginFilter("/auth/login", tokenAuthenticationService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtLoginFilter("/auth/login", tokenAuthenticationService(), authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 
                 // Anonymous authentication will be added to requests without valid JWT token
                 .addFilterBefore(new RosetteAnonymousAuthenticationFilter(), AnonymousAuthenticationFilter.class)
                     
                 // Existing user authentication will be added to requests with valid JWT token
-                .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService), RosetteAnonymousAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService()), RosetteAnonymousAuthenticationFilter.class);
     }
 
     @Override
@@ -96,6 +98,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationService tokenAuthenticationService() {
+        if (tokenAuthenticationService == null) {
+            try {
+                tokenAuthenticationService = new JwtAuthenticationService(rosetteSettings.getJwtSecretToken(), userDetailsService);
+            } catch (Exception exception) {
+                System.err.println(exception.getMessage());
+                System.exit(0);
+            }
+        }
         return tokenAuthenticationService;
     }
     

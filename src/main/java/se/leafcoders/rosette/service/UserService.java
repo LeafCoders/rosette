@@ -34,7 +34,7 @@ public class UserService extends MongoTemplateCRUD<User> {
 
 	@Override
 	public void beforeUpdate(String id, User updateData, User dataInDatabase) {
-		if (updateData.getPassword() != null) {
+		if (updateData != null && updateData.getPassword() != null) {
 	        security.resetPermissionCache();
 		}
 	}	

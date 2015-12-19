@@ -28,6 +28,7 @@ import javazoom.spi.mpeg.sampled.file.MpegFileFormatType;
 import javazoom.spi.mpeg.sampled.file.tag.IcyInputStream;
 import javazoom.spi.mpeg.sampled.file.tag.MP3Tag;
 
+@SuppressWarnings("all")
 public class RosetteMpegAudioFileReader extends TAudioFileReader {
 
     public static final String VERSION = "MP3SPI 1.9.5";

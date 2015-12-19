@@ -35,8 +35,9 @@ public class AbstractController {
         response.setContentType("application/json;charset=UTF-8");
 
         if (exception instanceof ForbiddenException) {
+            ForbiddenException fe = (ForbiddenException) exception;
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return new ExceptionError("error.forbidden", exception.getMessage(), ((ForbiddenException) exception).getReasonParams());
+            return new ExceptionError("error.forbidden", fe.getReason(), fe.getReasonParams());
         } else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return new ExceptionError("error.notFound", exception.getMessage(), null);

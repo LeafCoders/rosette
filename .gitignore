@@ -10,3 +10,4 @@ Test.iml
 .gradle
 /build
 /bin
+/.apt_generated/

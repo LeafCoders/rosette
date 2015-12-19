@@ -12,8 +12,8 @@ public final class JwtHandler {
     private final String jwtSecret;
     private final CurrentUserService userService;
 
-    public JwtHandler(String jwtSecret, CurrentUserService userService) {
-        Preconditions.checkArgument(jwtSecret != null && !jwtSecret.trim().isEmpty());
+    public JwtHandler(String jwtSecret, CurrentUserService userService) throws IllegalArgumentException {
+        Preconditions.checkArgument(jwtSecret != null && jwtSecret.trim().length() > 10, "JwtToken: Invalid or too short token");
         this.jwtSecret = jwtSecret;
         this.userService = Preconditions.checkNotNull(userService);
     }

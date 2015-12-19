@@ -6,11 +6,15 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
@@ -21,11 +25,10 @@ import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.QueryId;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
-	@Autowired
+    static final Logger logger = LoggerFactory.getLogger(MongoTemplateCRUD.class);
+
+    @Autowired
 	protected MongoTemplate mongoTemplate;
 	@Autowired
 	protected SecurityService security;
@@ -139,6 +142,11 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		refreshService.setNeedRefresh(entityClass.getSimpleName());
 	}
 
+	/**
+	 * @param id Id of object to update
+	 * @param updateData Data to update existing object with. Will be null when refreshing database
+	 * @param dataInDbToUpdate Existing object from database
+	 */
 	protected void beforeUpdate(String id, T updateData, T dataInDbToUpdate) {
 	}
 	
@@ -163,10 +171,14 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
             if (changedCollections.contains(refClass.getSimpleName())) {
                 List<T> items = readMany(new Query(), false);
                 items.forEach((T data) -> {
-                    beforeUpdate(data.getId(), data, null);
-                    setReferences(data, false);
-                    afterSetReferences(data, null, true);
-                    mongoTemplate.save(data);
+                    try {
+                        beforeUpdate(data.getId(), null, data);
+                        setReferences(data, false);
+                        afterSetReferences(data, data, false);
+                        mongoTemplate.save(data);
+                    } catch (Exception exception) {
+                        logger.warn("Failed to refresh (" + entityClass.getSimpleName() + ") with id (" + data.getId() + "). Exception: " + exception.getMessage());
+                    }
                 });
                 return;
             }

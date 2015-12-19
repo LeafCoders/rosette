@@ -150,7 +150,7 @@ abstract class AbstractIntegrationTest {
 	}
 
 	void resetAuthCaches() {
-		HttpDelete httpDelete = new HttpDelete(baseUrl + "/groupMemberships/notIValidId")
+		HttpDelete httpDelete = new HttpDelete(baseUrl + "/groupMemberships/notValidId")
 		httpClient.execute(httpDelete)
 		httpDelete.releaseConnection()
 	}
@@ -686,7 +686,7 @@ abstract class AbstractIntegrationTest {
 	}
 
     private String xAuthToken(String userId) {
-        final String jwtSecret = "tooManySecrets"
+        final String jwtSecret = "developmentSimpleJwtSecretToken"
         return Jwts.builder().setSubject(userId).signWith(SignatureAlgorithm.HS512, jwtSecret).compact()
     }
 

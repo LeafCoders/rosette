@@ -1,45 +1,30 @@
 package se.leafcoders.rosette;
 
-import javax.servlet.Filter;
-import javax.servlet.MultipartConfigElement;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
+@EnableWebMvc
+@EnableMongoAuditing
 @EnableScheduling
 public class RosetteApplication extends SpringBootServletInitializer {
 
+    /**
+     * Enable JSR-303 validation
+     */
     @Bean
-    public MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize("200MB");
-        factory.setMaxRequestSize("200MB");
-        return factory.createMultipartConfig();
+    public LocalValidatorFactoryBean validator() {
+        return new LocalValidatorFactoryBean();
     }
 
-    /**
-     * All requests must have URF-8 encoding 
-     */
-    @Bean
-    public Filter characterEncodingFilter() {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-        return characterEncodingFilter;
-    }    
-
-    /*
-     * 
-     * - Turn of CSRF?
-     * 
-     */
     
     public static void main(String[] args) {
         SpringApplication.run(RosetteApplication.class, args);

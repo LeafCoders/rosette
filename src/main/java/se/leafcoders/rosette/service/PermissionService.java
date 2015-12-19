@@ -41,8 +41,10 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 	}
 
 	@Override
-	public void beforeUpdate(String id, Permission data, Permission dataInDatabase) {
-        security.resetPermissionCache();
+	public void beforeUpdate(String id, Permission updateData, Permission dataInDatabase) {
+        if (updateData != null) {
+            security.resetPermissionCache();
+        }
 	}
 
 	@Override
