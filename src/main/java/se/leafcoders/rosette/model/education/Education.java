@@ -49,12 +49,17 @@ public abstract class Education extends IdBasedModel {
 
     @JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
     @JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
+    private Date educationTime;
+
+    @JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+    @JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
     private Date updatedTime;
     
     // Constructors
 
     public Education(String type) {
         this.type = type;
+        this.educationTime = new Date();
         this.updatedTime = new Date();
     }
 
@@ -83,6 +88,7 @@ public abstract class Education extends IdBasedModel {
         }
         
         setAuthorName(educationUpdate.getAuthorName());
+        setEducationTime(educationUpdate.getEducationTime());
         setUpdatedTime(new Date());
     }
     
@@ -150,6 +156,14 @@ public abstract class Education extends IdBasedModel {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public Date getEducationTime() {
+        return educationTime;
+    }
+
+    public void setEducationTime(Date educationTime) {
+        this.educationTime = educationTime;
     }
 
     public Date getUpdatedTime() {

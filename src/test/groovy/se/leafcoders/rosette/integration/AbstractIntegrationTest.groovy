@@ -478,7 +478,8 @@ abstract class AbstractIntegrationTest {
         questions : "Education1 questions",
         recording : null,
         event : eventRef1,
-        authorName : user1.fullName
+        authorName : user1.fullName,
+        educationTime: event1.startTime
     )
     protected final EventEducation eventEducation2 = new EventEducation(
         type : 'event',
@@ -490,7 +491,8 @@ abstract class AbstractIntegrationTest {
         questions : "Education2 questions",
         recording : null,
         event : eventRef2,
-        authorName : null
+        authorName : null,
+        educationTime: event2.startTime
     )
 
     protected final Podcast podcast1 = new Podcast(

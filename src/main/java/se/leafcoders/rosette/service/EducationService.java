@@ -77,9 +77,9 @@ public class EducationService extends MongoTemplateCRUD<Education> {
                         education.setAuthorName(null);
                     }
                 }
+                education.setEducationTime(event.getStartTime());
             }
         }
-
 	}
 	
 	private boolean setAuthorName(Event event, EventEducation educationToUpdate, EventEducation education) {

@@ -28,7 +28,7 @@ public class EducationController extends AbstractController {
 	@RequestMapping(value = "educations", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Education> getEducations(HttpServletRequest request) {
-		return educationService.readMany(new ManyQuery(request, "title"));
+		return educationService.readMany(new ManyQuery(request, "-displayTime"));
 	}
 
 	// Education must contain the attribute 'type' that equals any string specified in Education  

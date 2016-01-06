@@ -43,6 +43,7 @@ public class ReadEducationTest extends AbstractIntegrationTest {
             "recording" : ${ toJSON(educationRecording1) },
             "event" : ${ toJSON(eventRef1) },
             "authorName" : "${ user1.fullName }",
+            "educationTime" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, eventEducation1.id).updatedTime) }"
 		}"""
         thenResponseDataIs(responseBody, expectedData)
