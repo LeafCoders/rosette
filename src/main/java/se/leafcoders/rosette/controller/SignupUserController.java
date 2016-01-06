@@ -17,6 +17,7 @@ import se.leafcoders.rosette.model.SignupUser;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.service.SignupUserService;
 import se.leafcoders.rosette.service.UserService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class SignupUserController extends AbstractController {
@@ -33,8 +34,8 @@ public class SignupUserController extends AbstractController {
 
 	@RequestMapping(value = "signupUsers", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<SignupUser> getSignupUsers(HttpServletResponse response) {
-		return signupUserService.readMany(null);
+	public List<SignupUser> getSignupUsers(HttpServletRequest request) {
+		return signupUserService.readMany(new ManyQuery(request));
 	}
 
 	@RequestMapping(value = "signupUsers", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

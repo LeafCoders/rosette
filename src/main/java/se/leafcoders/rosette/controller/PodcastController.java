@@ -4,8 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.podcast.Podcast;
 import se.leafcoders.rosette.service.PodcastService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class PodcastController extends AbstractController {
@@ -28,9 +27,8 @@ public class PodcastController extends AbstractController {
 
 	@RequestMapping(value = "podcasts", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Podcast> getPodcasts() {
-        Query query = new Query().with(new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
-		return podcastService.readMany(query);
+	public List<Podcast> getPodcasts(HttpServletRequest request) {
+		return podcastService.readMany(new ManyQuery(request, "name"));
 	}
 
 	@RequestMapping(value = "podcasts", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

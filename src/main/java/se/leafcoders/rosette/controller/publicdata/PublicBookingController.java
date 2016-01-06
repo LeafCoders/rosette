@@ -2,16 +2,16 @@ package se.leafcoders.rosette.controller.publicdata;
 
 import java.util.Calendar;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.Booking;
 import se.leafcoders.rosette.service.BookingService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class PublicBookingController extends PublicDataController {
@@ -21,12 +21,12 @@ public class PublicBookingController extends PublicDataController {
 
 	@RequestMapping(value = "bookings", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Booking> getBookings() {
+	public List<Booking> getBookings(HttpServletRequest request) {
 		checkPermission();
 
-		Query query = new Query().with(new Sort(Sort.Direction.ASC, "startTime"));
-		query.addCriteria(activeOrFutureBookingsTodayCriteria());
-		return bookingService.readMany(query, false);
+		ManyQuery manyQuery = new ManyQuery(request, "startTime");
+		manyQuery.addCriteria(activeOrFutureBookingsTodayCriteria());
+		return bookingService.readMany(manyQuery, false);
 	}	
 
 	private Criteria activeOrFutureBookingsTodayCriteria() {

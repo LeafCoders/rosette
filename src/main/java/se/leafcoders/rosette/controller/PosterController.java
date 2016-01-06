@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.comparator.PosterComparator;
 import se.leafcoders.rosette.model.Poster;
 import se.leafcoders.rosette.service.PosterService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class PosterController extends AbstractController {
@@ -29,8 +29,8 @@ public class PosterController extends AbstractController {
 
 	@RequestMapping(value = "posters", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Poster> getPosters(HttpServletResponse response) {
-		List<Poster> posters = posterService.readMany(new Query());
+	public List<Poster> getPosters(HttpServletRequest request) {
+		List<Poster> posters = posterService.readMany(new ManyQuery(request));
         Collections.sort(posters, new PosterComparator());
 		return posters;
 	}

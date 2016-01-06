@@ -4,7 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -26,6 +25,7 @@ import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.service.GroupMembershipService;
 import se.leafcoders.rosette.service.SecurityService;
 import se.leafcoders.rosette.service.UserService;
+import se.leafcoders.rosette.util.ManyQuery;
 import se.leafcoders.rosette.util.QueryId;
 
 @Controller
@@ -47,15 +47,13 @@ public class UserController extends AbstractController {
 
 	@RequestMapping(value = "users", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<User> getUsers(HttpServletResponse response, @RequestParam(required = false) String groupId) {
-		Query query = new Query();
-        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "firstName"), new Sort.Order(Sort.Direction.ASC, "lastName")));
-
+	public List<User> getUsers(HttpServletRequest request, @RequestParam(required = false) String groupId) {
+	    ManyQuery manyQuery = new ManyQuery(request, "firstName,lastName");
         if (groupId != null) {
         	List<String> userIds = groupMembershipService.getUserIdsInGroup(groupId);
-        	query.addCriteria(Criteria.where("id").in(userIds));
+        	manyQuery.addCriteria(Criteria.where("id").in(userIds));
         }
-        return userService.readMany(query);
+        return userService.readMany(manyQuery);
 	}
 
 	@RequestMapping(value = "users", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

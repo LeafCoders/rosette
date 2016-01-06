@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.data.mongodb.core.query.Query;
+import se.leafcoders.rosette.util.ManyQuery;
 
 public interface StandardCRUD<T> {
 
@@ -12,8 +12,8 @@ public interface StandardCRUD<T> {
 	T read(final String id);
     T read(final String id, boolean checkPermissions);
 
-	List<T> readMany(final Query query);
-    List<T> readMany(final Query query, boolean checkPermissions);
+	List<T> readMany(final ManyQuery manuQuery);
+    List<T> readMany(final ManyQuery manuQuery, boolean checkPermissions);
 	boolean readManyItemFilter(T item);
 	
 	void update(final String id, HttpServletRequest request, HttpServletResponse response);

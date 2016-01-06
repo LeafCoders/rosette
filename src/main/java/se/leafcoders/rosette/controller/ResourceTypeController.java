@@ -4,9 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.resource.ResourceType;
 import se.leafcoders.rosette.service.ResourceTypeService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class ResourceTypeController extends AbstractController {
@@ -30,12 +29,12 @@ public class ResourceTypeController extends AbstractController {
 
 	@RequestMapping(value = "resourceTypes", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<ResourceType> getResourceTypes(@RequestParam(required = false) String type) {
-        Query query = new Query().with(new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
+	public List<ResourceType> getResourceTypes(HttpServletRequest request, @RequestParam(required = false) String type) {
+	    ManyQuery manyQuery = new ManyQuery(request, "name");
         if (type != null) {
-            query.addCriteria(Criteria.where("type").is(type));
+            manyQuery.addCriteria(Criteria.where("type").is(type));
         }
-		return resourceTypeService.readMany(query);
+		return resourceTypeService.readMany(manyQuery);
 	}
 
 	// ResourceType must contain the attribute 'type' that equals any string specified in ResourceType  

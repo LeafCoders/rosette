@@ -1,15 +1,18 @@
 package se.leafcoders.rosette.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import se.leafcoders.rosette.model.Location;
-import se.leafcoders.rosette.service.LocationService;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.service.LocationService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class LocationController extends AbstractController {
@@ -24,8 +27,8 @@ public class LocationController extends AbstractController {
 
 	@RequestMapping(value = "locations", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Location> getLocations(HttpServletResponse response) {
-		return locationService.readMany(new Query().with(new Sort(Sort.Direction.ASC, "name")));
+	public List<Location> getLocations(HttpServletRequest request) {
+        return locationService.readMany(new ManyQuery(request, "name"));
 	}
 
 	@RequestMapping(value = "locations", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

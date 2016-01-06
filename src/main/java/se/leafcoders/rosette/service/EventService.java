@@ -12,7 +12,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -27,6 +26,7 @@ import se.leafcoders.rosette.model.resource.ResourceType;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionValue;
+import se.leafcoders.rosette.util.ManyQuery;
 import se.leafcoders.rosette.util.QueryId;
 
 @Service
@@ -74,13 +74,11 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		return event;
 	}
 	
-	public List<Event> readMany(Date from, Date to) {
-		Query query = new Query();
+	public List<Event> readMany(final ManyQuery manyQuery, Date from, Date to) {
 		if (from != null && to != null) {
-			query.addCriteria(Criteria.where("startTime").gte(from).lt(to));
+			manyQuery.addCriteria(Criteria.where("startTime").gte(from).lt(to));
 		}
-
-		return super.readMany(query.with(new Sort(Sort.Direction.ASC, "startTime")));
+		return super.readMany(manyQuery);
 	}
 
 	@Override

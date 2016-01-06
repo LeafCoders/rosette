@@ -4,13 +4,17 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import se.leafcoders.rosette.model.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.service.GroupMembershipService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class GroupMembershipController extends AbstractController {
@@ -25,13 +29,12 @@ public class GroupMembershipController extends AbstractController {
 
 	@RequestMapping(value = "groupMemberships", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<GroupMembership> getGroupMemberships(@RequestParam(value = "groupId", required = false) String groupId) {
-        Query query = new Query();
-        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "group.id")));
+	public List<GroupMembership> getGroupMemberships(HttpServletRequest request, @RequestParam(value = "groupId", required = false) String groupId) {
+	    ManyQuery manyQuery = new ManyQuery(request, "group.id");
         if (groupId != null && !groupId.isEmpty()) {
-            query.addCriteria(Criteria.where("group.id").is(groupId));
+            manyQuery.addCriteria(Criteria.where("group.id").is(groupId));
         }
-		return groupMembershipService.readMany(query);
+		return groupMembershipService.readMany(manyQuery);
 	}
 
 	@RequestMapping(value = "groupMemberships", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

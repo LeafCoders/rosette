@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.service.EventService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class EventController extends AbstractController {
@@ -33,8 +34,8 @@ public class EventController extends AbstractController {
 	public List<Event> getEvents(
 			@RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date from, 
 			@RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date before, 
-			HttpServletResponse response) {
-		return eventService.readMany(from, before);
+			HttpServletRequest request) {
+		return eventService.readMany(new ManyQuery(request, "startTime"), from, before);
 	}
 
 	@RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

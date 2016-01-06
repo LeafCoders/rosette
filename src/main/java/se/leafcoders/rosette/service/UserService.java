@@ -10,6 +10,7 @@ import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.security.PermissionType;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Service
 public class UserService extends MongoTemplateCRUD<User> {
@@ -40,8 +41,8 @@ public class UserService extends MongoTemplateCRUD<User> {
 	}	
 	
 	@Override
-	public List<User> readMany(final Query query) {
-		List<User> users = super.readMany(query);
+	public List<User> readMany(final ManyQuery manyQuery) {
+		List<User> users = super.readMany(manyQuery);
 		for (User user : users) {
 	        user.setHashedPassword(null);
 		}

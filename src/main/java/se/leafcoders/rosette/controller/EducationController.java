@@ -4,8 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.education.Education;
 import se.leafcoders.rosette.service.EducationService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class EducationController extends AbstractController {
@@ -28,9 +27,8 @@ public class EducationController extends AbstractController {
 
 	@RequestMapping(value = "educations", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Education> getEducations() {
-        Query query = new Query().with(new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
-		return educationService.readMany(query);
+	public List<Education> getEducations(HttpServletRequest request) {
+		return educationService.readMany(new ManyQuery(request, "title"));
 	}
 
 	// Education must contain the attribute 'type' that equals any string specified in Education  

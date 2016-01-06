@@ -4,7 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,6 +18,7 @@ import se.leafcoders.rosette.model.GroupMembership;
 import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.service.GroupService;
 import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class GroupController extends AbstractController {
@@ -37,8 +37,8 @@ public class GroupController extends AbstractController {
 
 	@RequestMapping(value = "groups", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Group> getGroups(HttpServletResponse response) {
-		return groupService.readMany(new Query().with(new Sort(Sort.Direction.ASC, "name")));
+	public List<Group> getGroups(HttpServletRequest request) {
+		return groupService.readMany(new ManyQuery(request, "name"));
 	}
 
 	@RequestMapping(value = "groups", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

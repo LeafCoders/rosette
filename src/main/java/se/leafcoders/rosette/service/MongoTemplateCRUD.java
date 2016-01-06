@@ -23,6 +23,7 @@ import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
+import se.leafcoders.rosette.util.ManyQuery;
 import se.leafcoders.rosette.util.QueryId;
 
 abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T> {
@@ -103,17 +104,21 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	}
 
     @Override
-    public List<T> readMany(final Query query) {
-        return this.readMany(query, true);
+    public List<T> readMany(final ManyQuery manyQuery) {
+        return this.readMany(manyQuery, true);
     }
 
-	@Override
-	public List<T> readMany(final Query query, boolean checkPermissions) {
-		List<T> items = mongoTemplate.find(query, entityClass);
-		return checkPermissions ? filterPermittedItems(items) : items;
-	}
+    @Override
+    public List<T> readMany(final ManyQuery manyQuery, boolean checkPermissions) {
+        List<T> items = mongoTemplate.find(manyQuery.getQuery(), entityClass);
+        if (checkPermissions) {
+            return filterPermittedItems(items, manyQuery);
+        } else {
+            return manyQuery.filter(items);
+        }
+    }
 
-	@Override
+    @Override
 	public void update(String id, HttpServletRequest request, HttpServletResponse response) {
 		if (permissionFilter.shallCheck(PermissionAction.UPDATE)) {
 			checkPermission(PermissionAction.UPDATE, id);
@@ -169,7 +174,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
     public void refresh(Set<String> changedCollections) {
         for (Class<?> refClass : references()) {
             if (changedCollections.contains(refClass.getSimpleName())) {
-                List<T> items = readMany(new Query(), false);
+                List<T> items = readMany(new ManyQuery(), false);
                 items.forEach((T data) -> {
                     try {
                         beforeUpdate(data.getId(), null, data);
@@ -202,12 +207,20 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		validateUnique("id", data.getId(), "error.id.mustBeUnique");
 	}
 	
-	protected List<T> filterPermittedItems(List<T> items) {
+	protected List<T> filterPermittedItems(List<T> items, ManyQuery manyQuery) {
 		List<T> result = new LinkedList<T>();
 		if (items != null) {
+		    int skippedItems = 0;
 			for (T data : items) {
 				if (readManyItemFilter(data)) {
-					result.add(data);
+				    if (skippedItems >= manyQuery.getStartIndex()) {
+				        result.add(data);
+				    } else {
+				        skippedItems++;
+				    }
+				}
+				if (result.size() >= manyQuery.getMaxItems()) {
+				    return result;
 				}
 			}
 		}
