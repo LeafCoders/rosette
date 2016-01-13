@@ -56,6 +56,7 @@ public class CreateEducationTest extends AbstractIntegrationTest {
                 "id" : "${ educationThemeRef1.id }",
                 "title" : "${ educationThemeRef1.title }"
             },
+            "time" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "title" : "Education",
             "content" : "This is the content",
             "questions" : "Some questions",
@@ -66,7 +67,6 @@ public class CreateEducationTest extends AbstractIntegrationTest {
                 "startTime" : "2012-03-26 11:00 Europe/Stockholm"
             },
             "authorName" : "${ user1.fullName }",
-            "educationTime" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, createdId).updatedTime) }"
 		}"""
         thenResponseDataIs(responseBody, expectedData)

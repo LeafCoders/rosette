@@ -25,7 +25,7 @@ public class PublicEducationController extends PublicDataController {
 	@ResponseBody
 	public List<Education> getEducations(HttpServletRequest request) {
 		checkPermission();
-		return educationService.readMany(new ManyQuery(request, "-displayTime"), false);
+		return educationService.readMany(new ManyQuery(request, "-time"), false);
 	}	
 
     @RequestMapping(value = "educationThemes", method = RequestMethod.GET, produces = "application/json")

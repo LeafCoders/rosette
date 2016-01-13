@@ -1,7 +1,5 @@
 package se.leafcoders.rosette.service;
 
-import static se.leafcoders.rosette.security.PermissionAction.CREATE;
-import static se.leafcoders.rosette.security.PermissionAction.DELETE;
 import static se.leafcoders.rosette.security.PermissionAction.READ;
 import static se.leafcoders.rosette.security.PermissionAction.UPDATE;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS;
@@ -9,7 +7,6 @@ import static se.leafcoders.rosette.security.PermissionType.EVENTS_EVENTTYPES;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS_RESOURCETYPES;
 import java.util.Date;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -45,15 +42,22 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	}
 
 	@Override
+	protected void checkPermission(PermissionAction actionType, Event event) {
+	    if (actionType.equals(READ)) {
+	        checkAnyEventPermission(READ, event, null); 
+	    } else {
+            if (event.getEventType() != null) {
+                security.checkPermission(
+                        new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()),
+                        new PermissionValue(EVENTS, actionType, event.getId()));
+            } else {
+                super.checkPermission(actionType, event);
+            }
+	    }
+	}
+	
+	@Override
 	public Event create(Event event, HttpServletResponse response) {
-		if (event.getEventType() != null) {
-			security.checkPermission(
-					new PermissionValue(EVENTS_EVENTTYPES, CREATE, event.getEventType().getId()),
-					new PermissionValue(EVENTS, CREATE));
-		} else {
-			checkPermission(CREATE);
-		}
-
 		// Validate 'isPublic'
 		if (event.getEventType() != null && event.getEventType().getHasPublicEvents() != null) {
 			if (event.getIsPublic() == null || event.getEventType().getHasPublicEvents().getAllowChange() == false) {
@@ -67,13 +71,6 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		return super.create(event, response);
 	}
 
-	@Override
-	public Event read(String id) {
-		Event event = super.read(id);
-		checkAnyEventPermission(READ, event, null);
-		return event;
-	}
-	
 	public List<Event> readMany(final ManyQuery manyQuery, Date from, Date to) {
 		if (from != null && to != null) {
 			manyQuery.addCriteria(Criteria.where("startTime").gte(from).lt(to));
@@ -82,32 +79,10 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	}
 
 	@Override
-	public boolean readManyItemFilter(Event event) {
-		try {
-			checkAnyEventPermission(READ, event, null);
-		} catch (Exception ignore) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public void update(String eventId, HttpServletRequest request, HttpServletResponse response) {
-		checkEventTypesPermission(UPDATE, read(eventId, false));
-		super.update(eventId, request, response);
-	}
-
-	@Override
 	protected void beforeUpdate(String id, Event updateData, Event dataInDatabase) {
 	    if (updateData != null && dataInDatabase != null) {
 	        dataInDatabase.setVersion(dataInDatabase.getVersion() + 1);
 	    }
-	}
-
-	@Override
-	public void delete(String eventId, HttpServletResponse response) {
-		checkEventTypesPermission(DELETE, read(eventId, false));
-		super.delete(eventId, response);
 	}
 
 	public void assignResource(String eventId, String resourceTypeId, Resource resource, HttpServletResponse response) {
@@ -147,12 +122,6 @@ public class EventService extends MongoTemplateCRUD<Event> {
     @Override
 	public Class<?>[] references() {
 	    return new Class<?>[] { EventType.class, Location.class, ResourceType.class, User.class };
-	}
-
-	protected void checkEventTypesPermission(PermissionAction actionType, Event event) {
-		security.checkPermission(
-				new PermissionValue(EVENTS, actionType, event.getId()),
-				new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()));
 	}
 
 	protected void checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {

@@ -35,6 +35,7 @@ import se.leafcoders.rosette.model.education.EducationThemeRef
 import se.leafcoders.rosette.model.education.EducationType
 import se.leafcoders.rosette.model.education.EducationTypeRef
 import se.leafcoders.rosette.model.education.EventEducation
+import se.leafcoders.rosette.model.education.SimpleEducation
 import se.leafcoders.rosette.model.event.Event
 import se.leafcoders.rosette.model.podcast.Podcast
 import se.leafcoders.rosette.model.reference.EventRef
@@ -473,26 +474,38 @@ abstract class AbstractIntegrationTest {
         educationType : educationTypeRef1,
         educationTheme : educationThemeRef1,
         id : getObjectId(),
+        time: event1.startTime,
         title : "Education1",
         content : "Education1 content öäåè.",
         questions : "Education1 questions",
         recording : null,
         event : eventRef1,
-        authorName : user1.fullName,
-        educationTime: event1.startTime
+        authorName : user1.fullName
     )
     protected final EventEducation eventEducation2 = new EventEducation(
         type : 'event',
         educationType : educationTypeRef2,
         educationTheme : educationThemeRef1,
         id : getObjectId(),
+        time: event2.startTime,
         title : "Education2",
         content : "Education2 content",
         questions : "Education2 questions",
         recording : null,
         event : eventRef2,
-        authorName : null,
-        educationTime: event2.startTime
+        authorName : null
+    )
+    protected final SimpleEducation simpleEducation1 = new SimpleEducation(
+        type : 'simple',
+        educationType : educationTypeRef1,
+        educationTheme : educationThemeRef1,
+        id : getObjectId(),
+        time: TestUtil.modelDate("2014-10-06 12:00 Europe/Stockholm"),
+        title : "Education Simple 1",
+        content : "Education Simple 1 content",
+        questions : "Education Simple 1 questions",
+        recording : null,
+        authorName : "Kalle Boll"
     )
 
     protected final Podcast podcast1 = new Podcast(

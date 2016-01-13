@@ -37,13 +37,13 @@ public class ReadEducationTest extends AbstractIntegrationTest {
             "educationType" : ${ toJSON(educationTypeRef1) },
             "educationTheme" : ${ toJSON(educationThemeRef1) },
             "id" : "${ JSON.parse(responseBody)['id'] }",
+            "time" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "title" : "Education1",
             "content" : "Education1 content öäåè.",
             "questions" : "Education1 questions",
             "recording" : ${ toJSON(educationRecording1) },
             "event" : ${ toJSON(eventRef1) },
             "authorName" : "${ user1.fullName }",
-            "educationTime" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, eventEducation1.id).updatedTime) }"
 		}"""
         thenResponseDataIs(responseBody, expectedData)

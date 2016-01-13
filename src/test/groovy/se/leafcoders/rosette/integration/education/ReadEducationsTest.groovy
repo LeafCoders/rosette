@@ -28,8 +28,8 @@ public class ReadEducationsTest extends AbstractIntegrationTest {
         thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
         String expectedData = """[
-            ${ toJSON(eventEducation1) },
-            ${ toJSON(eventEducation2) }
+            ${ toJSON(eventEducation2) },
+            ${ toJSON(eventEducation1) }
 		]"""
         thenResponseDataIs(responseBody, expectedData)
     }

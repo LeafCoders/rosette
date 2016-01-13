@@ -54,7 +54,7 @@ public class DeleteEducationTest extends AbstractIntegrationTest {
         givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
 
         // When
-        String deleteUrl = "/educations/${ educationType1.id }"
+        String deleteUrl = "/educations/${ eventEducation1.id }"
         HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
 
         // Then

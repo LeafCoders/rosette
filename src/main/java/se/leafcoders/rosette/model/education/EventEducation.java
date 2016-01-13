@@ -11,6 +11,9 @@ public class EventEducation extends Education {
     @Valid
     private EventRef event;
 
+    // Is updated from "event"
+    private String authorName;
+
     // Constructors
 
     public EventEducation() {
@@ -23,6 +26,9 @@ public class EventEducation extends Education {
         if (rawData.has("event")) {
             setEvent(eventEducationUpdate.getEvent());
         }
+
+        setTime(eventEducationUpdate.getTime());
+        setAuthorName(eventEducationUpdate.getAuthorName());
         super.update(rawData, updateFrom);
     }
 
@@ -34,5 +40,15 @@ public class EventEducation extends Education {
 
     public void setEvent(EventRef event) {
         this.event = event;
+    }
+
+    @Override
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    @Override
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 }

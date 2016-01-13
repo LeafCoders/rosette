@@ -51,13 +51,13 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
             "id" : "${ eventEducation1.id }",
             "educationType" : ${ toJSON(educationTypeRef1) },
             "educationTheme" : ${ toJSON(educationThemeRef2) },
+            "time" : "${ TestUtil.dateToModelTime(event2.startTime) }",
             "title" : "Education1 new",
             "content" : "Education1 content new",
             "questions" : "Education1 questions new",
             "recording" : ${ toJSON(educationRecording1) },
             "event" : ${ toJSON(eventRef2) },
             "authorName" : null,
-            "educationTime" : "${ TestUtil.dateToModelTime(event2.startTime) }",
             "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, eventEducation1.id).updatedTime) }"
 		}]"""
         releasePutRequest()
@@ -97,13 +97,13 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
             "id" : "${ eventEducation2.id }",
             "educationType" : ${ toJSON(educationTypeRef2) },
             "educationTheme" : ${ toJSON(educationThemeRef1) },
+            "time" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "title" : "${ eventEducation2.title }",
             "content" : "${ eventEducation2.content }",
             "questions" : "${ eventEducation2.questions }",
             "recording" : null,
             "event" : ${ toJSON(eventRef1) },
             "authorName" : "${ user1.fullName }",
-            "educationTime" : "${ TestUtil.dateToModelTime(event1.startTime) }",
             "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, eventEducation2.id).updatedTime) }"
         }]"""
         releasePutRequest()

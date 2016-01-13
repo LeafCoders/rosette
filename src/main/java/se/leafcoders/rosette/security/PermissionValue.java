@@ -1,7 +1,5 @@
 package se.leafcoders.rosette.security;
 
-import org.springframework.util.StringUtils;
-
 public class PermissionValue {
 	private final PermissionType type;
 	private final PermissionAction action;
@@ -15,10 +13,14 @@ public class PermissionValue {
 
 	@Override
 	public String toString() {
-		if (params != null && params.length > 0) {
-			return type.withAction(action) + ":" + StringUtils.arrayToDelimitedString(params, ":");
-		} else {
-			return type.withAction(action);
+        String permission = type.withAction(action);
+		if (params != null) {
+		    for (String param : params) {
+		        if (param != null) {
+		            permission += ":" + param;
+		        }
+		    }
 		}
+		return permission;
 	}
 }

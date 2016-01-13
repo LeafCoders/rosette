@@ -4,11 +4,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.education.Education;
 import se.leafcoders.rosette.service.EducationService;
@@ -27,8 +29,15 @@ public class EducationController extends AbstractController {
 
 	@RequestMapping(value = "educations", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Education> getEducations(HttpServletRequest request) {
-		return educationService.readMany(new ManyQuery(request, "-displayTime"));
+	public List<Education> getEducations(
+            @RequestParam(required = false) String educationTypeId,
+            HttpServletRequest request
+    ) {
+        ManyQuery manyQuery = new ManyQuery(request, "-time");
+        if (educationTypeId != null) {
+            manyQuery.addCriteria(Criteria.where("educationType.id").is(educationTypeId));
+        }
+		return educationService.readMany(manyQuery);
 	}
 
 	// Education must contain the attribute 'type' that equals any string specified in Education  

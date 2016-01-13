@@ -29,8 +29,8 @@ public class ReadEducationThemesTest extends AbstractIntegrationTest {
         thenResponseHeaderHas(getResponse, "Content-Type", "application/json;charset=UTF-8")
 
         String expectedData = """[
-            ${ toJSON(educationTheme1) },
-            ${ toJSON(educationTheme2) }
+            ${ toJSON(educationTheme2) },
+            ${ toJSON(educationTheme1) }
 		]"""
         thenResponseDataIs(responseBody, expectedData)
     }

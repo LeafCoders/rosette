@@ -52,12 +52,8 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		this.permissionFilter = permissionFilter;
 	}
 
-	protected void checkPermission(PermissionAction actionType) {
-		security.checkPermission(new PermissionValue(permissionType, actionType));
-	}
-
-	protected void checkPermission(PermissionAction actionType, String id) {
-		security.checkPermission(new PermissionValue(permissionType, actionType, id));
+	protected void checkPermission(PermissionAction actionType, T data) {
+        security.checkPermission(new PermissionValue(permissionType, actionType, data.getId()));
 	}
 
 	protected boolean isPermitted(PermissionAction accessType) {
@@ -74,9 +70,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public T create(T data, HttpServletResponse response) {
-		if (permissionFilter.shallCheck(PermissionAction.CREATE)) {
-			checkPermission(PermissionAction.CREATE);
-		}
+		checkPermission(PermissionAction.CREATE, data);
 		setReferences(data, true);
         afterSetReferences(data, null, true);
 		security.validate(data);
@@ -92,13 +86,12 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public T read(String id, boolean checkPermissions) {
-		if (checkPermissions && permissionFilter.shallCheck(PermissionAction.READ)) {
-			checkPermission(PermissionAction.READ, id);
-		}
-
-		T data = mongoTemplate.findById(id, entityClass);
+        T data = mongoTemplate.findById(id, entityClass);
         if (data == null) {
             throw notFoundException(id);
+        }
+        if (checkPermissions) {
+            checkPermission(PermissionAction.READ, data);
         }
         return data;
 	}
@@ -120,13 +113,11 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
     @Override
 	public void update(String id, HttpServletRequest request, HttpServletResponse response) {
-		if (permissionFilter.shallCheck(PermissionAction.UPDATE)) {
-			checkPermission(PermissionAction.UPDATE, id);
-		}
-		T dataInDbToUpdate = read(id);
-		if (dataInDbToUpdate == null) {
-			throw notFoundException(id);
-		}
+        T dataInDbToUpdate = read(id);
+        if (dataInDbToUpdate == null) {
+            throw notFoundException(id);
+        }
+		checkPermission(PermissionAction.UPDATE, dataInDbToUpdate);
 
 		JsonNode rawData = null;
 		T updateData = null;
@@ -160,9 +151,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-		if (permissionFilter.shallCheck(PermissionAction.DELETE)) {
-			checkPermission(PermissionAction.DELETE, id);
-		}
+		checkPermission(PermissionAction.DELETE, read(id, false));
 		security.checkNotReferenced(id, permissionType);
         if (mongoTemplate.findAndRemove(getIdQuery(id), entityClass) == null) {
 			throw notFoundException(id);

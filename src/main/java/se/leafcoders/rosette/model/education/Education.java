@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.model.education;
 
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,6 +24,7 @@ import se.leafcoders.rosette.validator.HasRef;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = EventEducation.class, name = "event"),
+    @JsonSubTypes.Type(value = SimpleEducation.class, name = "simple")
 })
 public abstract class Education extends IdBasedModel {
     @NotEmpty(message = "education.type.notEmpty")
@@ -33,7 +35,12 @@ public abstract class Education extends IdBasedModel {
 
     @HasRef(message = "education.educationTheme.mustBeSet")
     private EducationThemeRef educationTheme;
-    
+
+    @NotNull(message = "education.time.notEmpty")
+    @JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
+    @JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
+    private Date time;
+
     @NotEmpty(message = "education.title.notEmpty")
     private String title;
 
@@ -45,21 +52,16 @@ public abstract class Education extends IdBasedModel {
 
     private UploadResponse recording;
 
-    private String authorName;
-
-    @JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
-    @JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
-    private Date educationTime;
-
+    @NotNull
     @JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
     @JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
     private Date updatedTime;
-    
+
     // Constructors
 
     public Education(String type) {
         this.type = type;
-        this.educationTime = new Date();
+        this.setTime(new Date());
         this.updatedTime = new Date();
     }
 
@@ -87,8 +89,6 @@ public abstract class Education extends IdBasedModel {
             setRecording(educationUpdate.getRecording());
         }
         
-        setAuthorName(educationUpdate.getAuthorName());
-        setEducationTime(educationUpdate.getEducationTime());
         setUpdatedTime(new Date());
     }
     
@@ -116,6 +116,14 @@ public abstract class Education extends IdBasedModel {
 
     public void setEducationTheme(EducationThemeRef educationTheme) {
         this.educationTheme = educationTheme;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public String getTitle() {
@@ -150,21 +158,9 @@ public abstract class Education extends IdBasedModel {
         this.recording = recording;
     }
 
-    public String getAuthorName() {
-        return authorName;
-    }
+    public abstract String getAuthorName();
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
-    public Date getEducationTime() {
-        return educationTime;
-    }
-
-    public void setEducationTime(Date educationTime) {
-        this.educationTime = educationTime;
-    }
+    public abstract void setAuthorName(String authorName);
 
     public Date getUpdatedTime() {
         return updatedTime;
