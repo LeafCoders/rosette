@@ -7,17 +7,21 @@ import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.TypeBasedModel;
 import se.leafcoders.rosette.model.resource.UserResourceType;
 import se.leafcoders.rosette.model.upload.UploadFolder;
+import se.leafcoders.rosette.validator.CheckReference;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educationTypes")
 public class EducationType extends TypeBasedModel {
     @HasRef(message = "educationType.eventType.mustBeSet")
+    @CheckReference
     private EventType eventType;
 
     @HasRef(message = "educationType.authorResourceType.mustBeSet")
+    @CheckReference
     private UserResourceType authorResourceType;
 
     @HasRef(message = "educationType.uploadFolder.mustBeSet")
+    @CheckReference
     private UploadFolder uploadFolder;
 
     // Constructors

@@ -10,6 +10,7 @@ import se.leafcoders.rosette.security.PermissionTreeHelper;
  * Validates that each permission in list is valid
  */
 public class ValidPermissionsValidator implements ConstraintValidator<ValidPermissions, List<String> > {
+    
     @Override
     public void initialize(ValidPermissions constraintAnnotation) {
     }

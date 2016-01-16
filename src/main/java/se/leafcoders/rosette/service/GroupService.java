@@ -15,6 +15,8 @@ public class GroupService extends MongoTemplateCRUD<Group> {
 	ResourceTypeService resourceTypeService;
 	@Autowired
 	GroupMembershipService groupMembershipService;
+    @Autowired
+    private SecurityService securityService;
 	
 	public GroupService() {
 		super(Group.class, PermissionType.GROUPS);
@@ -25,6 +27,14 @@ public class GroupService extends MongoTemplateCRUD<Group> {
 		validateUniqueId(data);
 		return super.create(data, response);
 	}
+
+    @Override
+    public void delete(String id, HttpServletResponse response) {
+        super.delete(id, response);
+        
+        // Clearing auth cache
+        securityService.resetPermissionCache();
+    }
 
 	@Override
 	public void setReferences(Group data, boolean checkPermissions) {

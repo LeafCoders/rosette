@@ -3,12 +3,15 @@ package se.leafcoders.rosette.model.education;
 import javax.validation.Valid;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.reference.EventRef;
 import se.leafcoders.rosette.validator.HasRef;
+import se.leafcoders.rosette.validator.CheckReference;
 
 public class EventEducation extends Education {
     @HasRef(message = "eventEducation.event.mustBeSet")
     @Valid
+    @CheckReference(model = Event.class)
     private EventRef event;
 
     // Is updated from "event"

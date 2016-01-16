@@ -121,7 +121,7 @@ public class UploadService {
 	public void delete(final String folderId, final String uploadId, HttpServletResponse response) {
 		validateFolderExist(folderId);
 		security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.DELETE, folderId, uploadId));
-		security.checkNotReferenced(uploadId, PermissionType.UPLOADS);
+		security.checkNotReferenced(uploadId, UploadResponse.class);
 
 		if (deleteFileById(folderId, uploadId)) {
 			response.setStatus(HttpStatus.OK.value());

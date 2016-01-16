@@ -1,12 +1,14 @@
 package se.leafcoders.rosette.model.resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.Group;
 import se.leafcoders.rosette.validator.HasRef;
-import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.validator.CheckReference;
 
 public class UserResourceType extends ResourceType {
 	@HasRef(message = "userResourceType.group.mustBeSet")
+    @CheckReference
     private Group group;
 
 	private Boolean multiSelect;

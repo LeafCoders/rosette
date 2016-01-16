@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.validator.CheckReference;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educationThemes")
 public class EducationTheme extends IdBasedModel {
     @HasRef(message = "educationTheme.educationType.mustBeSet")
+    @CheckReference(model = EducationType.class)
     private EducationTypeRef educationType;
 
     @NotEmpty(message = "educationTheme.title.notEmpty")
@@ -21,6 +23,7 @@ public class EducationTheme extends IdBasedModel {
     private String content;
 
     @HasRef(message = "educationTheme.image.mustBeSet")
+    @CheckReference
     private UploadResponse image;
     
     // Constructors

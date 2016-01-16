@@ -152,7 +152,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	@Override
 	public void delete(String id, HttpServletResponse response) {
 		checkPermission(PermissionAction.DELETE, read(id, false));
-		security.checkNotReferenced(id, permissionType);
+		security.checkNotReferenced(id, entityClass);
         if (mongoTemplate.findAndRemove(getIdQuery(id), entityClass) == null) {
 			throw notFoundException(id);
 		}

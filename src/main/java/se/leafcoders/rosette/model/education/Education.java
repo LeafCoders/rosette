@@ -17,6 +17,7 @@ import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.validator.CheckReference;
 import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educations")
@@ -31,9 +32,11 @@ public abstract class Education extends IdBasedModel {
     private String type;
 
     @HasRef(message = "education.educationType.mustBeSet")
+    @CheckReference(model = EducationType.class)
     private EducationTypeRef educationType;
 
     @HasRef(message = "education.educationTheme.mustBeSet")
+    @CheckReference(model = EducationTheme.class)
     private EducationThemeRef educationTheme;
 
     @NotNull(message = "education.time.notEmpty")
@@ -50,6 +53,7 @@ public abstract class Education extends IdBasedModel {
     @Length(max = 10000, message = "education.questions.max10000Chars")
     private String questions;
 
+    @CheckReference
     private UploadResponse recording;
 
     @NotNull

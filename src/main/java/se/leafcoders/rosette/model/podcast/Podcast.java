@@ -11,14 +11,17 @@ import se.leafcoders.rosette.converter.RosetteDateJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateJsonSerializer;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
+import se.leafcoders.rosette.model.education.EducationType;
 import se.leafcoders.rosette.model.education.EducationTypeRef;
 import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.validator.HasRef;
+import se.leafcoders.rosette.validator.CheckReference;
 
 @Document(collection = "podcasts")
 public class Podcast extends IdBasedModel {
 
     @HasRef(message = "podcast.educationType.mustBeSet")
+    @CheckReference(model = EducationType.class)
     private EducationTypeRef educationType;
 
     // Attributes from http://www.apple.com/itunes/podcasts/specs.html
@@ -51,6 +54,7 @@ public class Podcast extends IdBasedModel {
     protected String link;
 
     @HasRef(message = "podcast.image.mustBeSet")
+    @CheckReference
     private UploadResponse image;
     
 	@JsonSerialize(using = RosetteDateJsonSerializer.class)

@@ -2,6 +2,7 @@ package se.leafcoders.rosette.service;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,10 @@ import se.leafcoders.rosette.util.ManyQuery;
 @Service
 public class UserService extends MongoTemplateCRUD<User> {
 
-	public UserService() {
+    @Autowired
+    private SecurityService securityService;
+
+    public UserService() {
 		super(User.class, PermissionType.USERS);
 	}
 
@@ -48,6 +52,14 @@ public class UserService extends MongoTemplateCRUD<User> {
 		}
 		return users;
 	}
+
+    @Override
+    public void delete(String id, HttpServletResponse response) {
+        super.delete(id, response);
+        
+        // Clearing auth cache
+        securityService.resetPermissionCache();
+    }
 
 	@Override
 	public void setReferences(User data, boolean checkPermissions) {

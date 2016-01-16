@@ -2,6 +2,7 @@ package se.leafcoders.rosette.model.resource;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import se.leafcoders.rosette.validator.HasRef;
+import se.leafcoders.rosette.validator.CheckReference;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -16,6 +17,7 @@ public abstract class Resource {
 	private String type;
 
 	@HasRef(message = "error.resourceType.mustBeSet")
+    @CheckReference
     private ResourceType resourceType;
 	
     // Constructors

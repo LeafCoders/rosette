@@ -11,6 +11,7 @@ import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.validator.HasRef;
+import se.leafcoders.rosette.validator.CheckReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -41,6 +42,7 @@ public class Poster extends IdBasedModel {
 	private Integer duration;
 
 	@HasRef(message = "poster.image.mustBeSet")
+    @CheckReference
 	private UploadResponse image;
 
 	@Override

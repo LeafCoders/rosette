@@ -9,19 +9,22 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
 import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.IdBasedModel;
+import se.leafcoders.rosette.model.Location;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.validator.HasRef;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import se.leafcoders.rosette.validator.CheckReferenceArray;
+import se.leafcoders.rosette.validator.CheckReference;
 
 @Document(collection = "events")
 @ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")
@@ -29,6 +32,7 @@ public class Event extends IdBasedModel {
 
 	@Indexed
 	@HasRef(message = "event.eventType.notNull")
+    @CheckReference
     private EventType eventType;
 
 	@NotEmpty(message = "event.title.notEmpty")
@@ -47,11 +51,13 @@ public class Event extends IdBasedModel {
     @Length(max = 200, message = "error.description.max200Chars")
 	private String description;
 
+    @CheckReference(model = Location.class, dbKey = "location.ref.id")
     private LocationRefOrText location;
 
     private Boolean isPublic;
 
     @Valid
+    @CheckReferenceArray(model = Resource.class)
     private List<Resource> resources;
 
     private Integer version = 1;

@@ -6,13 +6,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
-import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.leafcoders.rosette.model.reference.LocationRefOrText;
-import se.leafcoders.rosette.validator.HasRefOrText;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.leafcoders.rosette.model.reference.LocationRefOrText;
+import se.leafcoders.rosette.validator.CheckReference;
+import se.leafcoders.rosette.validator.HasRefOrText;
 
 @Document(collection = "bookings")
 @ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "booking.startBeforeEndTime")
@@ -36,6 +37,7 @@ public class Booking extends IdBasedModel {
 	private Date endTime;
 
 	@HasRefOrText(message = "booking.location.oneMustBeSet")
+	@CheckReference(model = Location.class, dbKey = "location.ref.id")
 	private LocationRefOrText location;
 	
 	@Override

@@ -9,8 +9,8 @@ import se.leafcoders.rosette.service.UserService;
 
 public class UserResourceMethods implements ResourceMethods {
 	protected final UserResource resource;
-	UserService userService;
-	GroupService groupService;
+	protected UserService userService;
+	protected GroupService groupService;
 
 	public UserResourceMethods(UserResource resource, UserService userService, GroupService groupService) {
 		this.resource = resource;

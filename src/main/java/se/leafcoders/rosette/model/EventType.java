@@ -3,13 +3,15 @@ package se.leafcoders.rosette.model;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.leafcoders.rosette.model.resource.ResourceType;
 import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.model.resource.ResourceType;
+import se.leafcoders.rosette.validator.CheckReferenceArray;
 
 @Document(collection = "eventTypes")
 public class EventType extends TypeBasedModel {
 
 	@NotNull(message = "eventType.resourceTypes.notNull")
+	@CheckReferenceArray(model = ResourceType.class)
     private List<ResourceType> resourceTypes;
 
     private DefaultSetting<Boolean> hasPublicEvents;

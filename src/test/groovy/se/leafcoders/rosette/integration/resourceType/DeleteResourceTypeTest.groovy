@@ -48,7 +48,6 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		thenItemsInDatabaseIs(ResourceType.class, 1)
     }
 
-
 	@Test
 	public void failsWhenMissingPermission() throws ClientProtocolException, IOException {
 		// Given
@@ -64,5 +63,31 @@ public class DeleteResourceTypeTest extends AbstractIntegrationTest {
 		thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_FORBIDDEN)
 		releaseDeleteRequest()
 		thenItemsInDatabaseIs(ResourceType.class, 1)
+    }
+
+    @Test
+    public void failsWhenReferencesByEvent() throws ClientProtocolException, IOException {
+        // Given
+        givenUser(user1)
+        givenLocation(location1)
+        givenEventType(eventType1)
+        givenResourceType(userResourceTypeSingle)
+        givenResourceType(uploadResourceTypeSingle)
+        givenEvent(event1)
+        givenPermissionForUser(user1, ["resourceTypes:delete:${ userResourceTypeSingle.id }"])
+        
+        // When
+        String deleteUrl = "/resourceTypes/${userResourceTypeSingle.id}"
+        HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
+
+        // Then
+        String responseBody = thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_FORBIDDEN)
+        thenResponseDataIs(responseBody, """{
+            "error": "error.forbidden",
+            "reason": "error.referencedBy",
+            "reasonParams": ["Event"]
+        }""")
+
+        thenItemsInDatabaseIs(ResourceType.class, 2)
     }
 }

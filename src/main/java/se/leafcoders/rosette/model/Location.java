@@ -3,8 +3,9 @@ package se.leafcoders.rosette.model;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.leafcoders.rosette.model.upload.UploadResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.validator.CheckReference;
 
 @Document(collection = "locations")
 public class Location extends IdBasedModel {
@@ -15,6 +16,7 @@ public class Location extends IdBasedModel {
 	private String description;
 
 	// Image that shows the direction to the location
+	@CheckReference
 	private UploadResponse directionImage;
 	
 	@Override

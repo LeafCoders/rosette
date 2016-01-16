@@ -1,13 +1,16 @@
 package se.leafcoders.rosette.model.resource;
 
 import javax.validation.constraints.NotNull;
-import se.leafcoders.rosette.model.BaseModel;
-import se.leafcoders.rosette.model.upload.UploadFolderRef;
 import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.upload.UploadFolder;
+import se.leafcoders.rosette.model.upload.UploadFolderRef;
+import se.leafcoders.rosette.validator.CheckReference;
 
 public class UploadResourceType extends ResourceType {
 
 	@NotNull(message = "uploadResourceType.uploadFolder.notEmpty")
+    @CheckReference(model = UploadFolder.class)
     private UploadFolderRef uploadFolder;
 
 	private Boolean multiSelect;

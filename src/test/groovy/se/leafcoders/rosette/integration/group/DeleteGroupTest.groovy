@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.integration.group
 
+import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -59,4 +60,29 @@ public class DeleteGroupTest extends AbstractIntegrationTest {
 		thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_NOT_FOUND)
 		thenItemsInDatabaseIs(Group.class, 2)
 	}
+
+    @Test
+    public void failsWhenReferencesByEventType() throws ClientProtocolException, IOException {
+        // Given
+        givenUser(user1)
+        givenGroup(group1)
+        givenResourceType(userResourceTypeSingle)
+        givenResourceType(uploadResourceTypeSingle)
+        givenEventType(eventType1)
+        givenPermissionForUser(user1, ["groups:delete:${ group1.id }"])
+        
+        // When
+        String deleteUrl = "/groups/${ group1.id }"
+        HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
+
+        // Then
+        String responseBody = thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_FORBIDDEN)
+        thenResponseDataIs(responseBody, """{
+            "error": "error.forbidden",
+            "reason": "error.referencedBy",
+            "reasonParams": ["EventType"]
+        }""")
+
+        thenItemsInDatabaseIs(Group.class, 1)
+    }
 }

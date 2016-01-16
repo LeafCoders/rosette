@@ -9,7 +9,7 @@ import se.leafcoders.rosette.service.UploadService;
 
 public class UploadResourceMethods implements ResourceMethods {
 	protected final UploadResource resource;
-	UploadService uploadService;
+	protected UploadService uploadService;
 
 	public UploadResourceMethods(UploadResource resource, UploadService uploadService) {
 		this.resource = resource;

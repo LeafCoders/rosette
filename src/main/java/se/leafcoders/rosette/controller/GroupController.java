@@ -4,9 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,20 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.model.Group;
-import se.leafcoders.rosette.model.GroupMembership;
-import se.leafcoders.rosette.model.Permission;
 import se.leafcoders.rosette.service.GroupService;
-import se.leafcoders.rosette.service.SecurityService;
 import se.leafcoders.rosette.util.ManyQuery;
 
 @Controller
 public class GroupController extends AbstractController {
     @Autowired
     private GroupService groupService;
-	@Autowired
-	private MongoTemplate mongoTemplate;
-	@Autowired
-	private SecurityService security;
 
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -55,14 +45,5 @@ public class GroupController extends AbstractController {
 	@RequestMapping(value = "groups/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public void deleteGroup(@PathVariable String id, HttpServletResponse response) {
 		groupService.delete(id, response);
-
-		// Removing permissions for the group
-		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.id").is(id)), Permission.class);
-		
-		// Removing group memberships with the group that is about to be deleted
-		mongoTemplate.findAndRemove(Query.query(Criteria.where("group.id").is(id)), GroupMembership.class);
-		
-		// Clearing auth cache
-		security.resetPermissionCache();
 	}
 }

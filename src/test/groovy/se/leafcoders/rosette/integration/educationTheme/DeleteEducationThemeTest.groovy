@@ -67,4 +67,31 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
         releaseDeleteRequest()
         thenItemsInDatabaseIs(EducationTheme.class, 1)
     }
+
+    @Test
+    public void failsWhenReferencedByEducation() throws ClientProtocolException, IOException {
+        // Given
+        givenUser(user1)
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder(uploadFolderEducationThemes.id, validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder(uploadFolderEducations.id, audioRecording1))
+        givenPermissionForUser(user1, ["educationThemes:delete:${ educationTheme1.id }"])
+
+        // When
+        String deleteUrl = "/educationThemes/${ educationTheme1.id }"
+        HttpResponse deleteResponse = whenDelete(deleteUrl, user1)
+
+        // Then
+        String responseBody = thenResponseCodeIs(deleteResponse, HttpServletResponse.SC_FORBIDDEN)
+        thenResponseDataIs(responseBody, """{
+            "error": "error.forbidden",
+            "reason": "error.referencedBy",
+            "reasonParams": ["EventEducation"]
+        }""")
+
+        releaseDeleteRequest()
+        thenItemsInDatabaseIs(EducationTheme.class, 1)
+    }
 }
