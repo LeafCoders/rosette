@@ -50,8 +50,8 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-        security.resetPermissionCache();
 		super.delete(id, response);
+        security.resetPermissionCache();
 	}
 
 	@Override

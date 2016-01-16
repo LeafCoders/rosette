@@ -56,8 +56,6 @@ public class UserService extends MongoTemplateCRUD<User> {
     @Override
     public void delete(String id, HttpServletResponse response) {
         super.delete(id, response);
-        
-        // Clearing auth cache
         securityService.resetPermissionCache();
     }
 

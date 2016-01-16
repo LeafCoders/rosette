@@ -31,8 +31,6 @@ public class GroupService extends MongoTemplateCRUD<Group> {
     @Override
     public void delete(String id, HttpServletResponse response) {
         super.delete(id, response);
-        
-        // Clearing auth cache
         securityService.resetPermissionCache();
     }
 

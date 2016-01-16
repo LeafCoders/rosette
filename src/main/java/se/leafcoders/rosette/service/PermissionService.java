@@ -49,8 +49,8 @@ public class PermissionService extends MongoTemplateCRUD<Permission> {
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-        security.resetPermissionCache();
 		super.delete(id, response);
+        security.resetPermissionCache();
 	}
 
 	@Override

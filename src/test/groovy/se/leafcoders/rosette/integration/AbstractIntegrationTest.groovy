@@ -151,7 +151,7 @@ abstract class AbstractIntegrationTest {
 	}
 
 	void resetAuthCaches() {
-		HttpDelete httpDelete = new HttpDelete(baseUrl + "/groupMemberships/notValidId")
+		HttpDelete httpDelete = new HttpDelete(baseUrl + "/development/resetPermissionCache")
 		httpClient.execute(httpDelete)
 		httpDelete.releaseConnection()
 	}
