@@ -21,7 +21,6 @@ import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.ResourceType;
 import se.leafcoders.rosette.security.PermissionAction;
-import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.ManyQuery;
 import se.leafcoders.rosette.util.QueryId;
@@ -38,7 +37,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	MethodsService methodsService;
 
 	public EventService() {
-		super(Event.class, EVENTS, PermissionCheckFilter.NONE);
+		super(Event.class, EVENTS);
 	}
 
 	@Override

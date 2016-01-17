@@ -20,7 +20,6 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.PermissionAction;
-import se.leafcoders.rosette.security.PermissionCheckFilter;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.ManyQuery;
@@ -39,17 +38,11 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	protected ObjectMapper objectMapper = new ObjectMapper();
 
 	protected final PermissionType permissionType;
-	protected final PermissionCheckFilter permissionFilter;
 	private final Class<T> entityClass;
 
 	public MongoTemplateCRUD(Class<T> entityClass, PermissionType permissionType) {
-		this(entityClass, permissionType, PermissionCheckFilter.ALL);
-	}
-
-	public MongoTemplateCRUD(Class<T> entityClass, PermissionType permissionType, PermissionCheckFilter permissionFilter) {
 		this.permissionType = permissionType;
 		this.entityClass = entityClass;
-		this.permissionFilter = permissionFilter;
 	}
 
 	protected void checkPermission(PermissionAction actionType, T data) {
