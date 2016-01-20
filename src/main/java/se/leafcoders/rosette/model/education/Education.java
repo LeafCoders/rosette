@@ -44,6 +44,8 @@ public abstract class Education extends IdBasedModel {
     @JsonDeserialize(using = RosetteDateTimeTimezoneJsonDeserializer.class)
     private Date time;
 
+    private String authorName;
+    
     @NotEmpty(message = "education.title.notEmpty")
     private String title;
 
@@ -130,6 +132,14 @@ public abstract class Education extends IdBasedModel {
         this.time = time;
     }
 
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -161,10 +171,6 @@ public abstract class Education extends IdBasedModel {
     public void setRecording(UploadResponse recording) {
         this.recording = recording;
     }
-
-    public abstract String getAuthorName();
-
-    public abstract void setAuthorName(String authorName);
 
     public Date getUpdatedTime() {
         return updatedTime;

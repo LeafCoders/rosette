@@ -10,8 +10,10 @@ import se.leafcoders.rosette.model.education.EducationThemeRef;
 import se.leafcoders.rosette.model.education.EducationType;
 import se.leafcoders.rosette.model.education.EducationTypeRef;
 import se.leafcoders.rosette.model.education.EventEducation;
+import se.leafcoders.rosette.model.education.SimpleEducation;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.reference.EventRef;
+import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.UserResource;
 import se.leafcoders.rosette.security.PermissionAction;
@@ -29,6 +31,8 @@ public class EducationService extends MongoTemplateCRUD<Education> {
     private EventService eventService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private UserService userService;
 
 	public EducationService() {
 		super(Education.class, PermissionType.EDUCATIONS);
@@ -43,14 +47,6 @@ public class EducationService extends MongoTemplateCRUD<Education> {
         } else {
             super.checkPermission(actionType, education);
         }
-    }
-
-    @Override
-    public Education create(Education education, HttpServletResponse response) {
-        if (education.getType() == "event") {
-            setDataFromEvent((EventEducation) education, null, true);
-        }
-        return super.create(education, response);
     }
 
 	@Override
@@ -70,13 +66,20 @@ public class EducationService extends MongoTemplateCRUD<Education> {
             if (education.getEvent() != null) {
                 education.setEvent(new EventRef(eventService.read(education.getEvent().getId(), checkPermissions)));
             }
-		}
+		} else if (data instanceof SimpleEducation) {
+            SimpleEducation education = (SimpleEducation) data;
+            if (education.getAuthor() != null && education.getAuthor().hasRef()) {
+                education.getAuthor().setRef(new UserRef(userService.read(education.getAuthor().refId(), checkPermissions)));
+            }
+        }
 	}
 
     @Override
     protected void afterSetReferences(Education updateData, Education dataInDatabase, boolean checkPermissions) {
-        if (updateData.getType() == "event") {
-            setDataFromEvent((EventEducation) updateData, (EventEducation) dataInDatabase, checkPermissions);
+        if (updateData.getType() == "simple") {
+            setDataFromSimpleEducation((SimpleEducation) updateData, (SimpleEducation) dataInDatabase, checkPermissions);
+        } else if (updateData.getType() == "event") {
+            setDataFromEventEducation((EventEducation) updateData, (EventEducation) dataInDatabase, checkPermissions);
         }
     }
 
@@ -85,7 +88,19 @@ public class EducationService extends MongoTemplateCRUD<Education> {
         return new Class<?>[] { EducationType.class, EducationTheme.class, Event.class };
     }
 
-	private void setDataFromEvent(EventEducation eventEducation, EventEducation educationInDatabase, boolean checkPermissions) {
+    private void setDataFromSimpleEducation(SimpleEducation simpleEducation, SimpleEducation educationInDatabase, boolean checkPermissions) {
+        String authorName = "";
+        if (simpleEducation.getAuthor() != null) {
+            if (simpleEducation.getAuthor().hasRef()) {
+                authorName = simpleEducation.getAuthor().getRef().getFullName();
+            } else {
+                authorName = simpleEducation.getAuthor().getText();
+            }
+        }
+        simpleEducation.setAuthorName(authorName);
+    }
+    
+	private void setDataFromEventEducation(EventEducation eventEducation, EventEducation educationInDatabase, boolean checkPermissions) {
         if (eventEducation.getEvent() != null) {
             Event event = eventService.read(eventEducation.getEvent().getId(), checkPermissions);
             eventEducation.setAuthorName(getAuthorName(event, eventEducation, educationInDatabase));

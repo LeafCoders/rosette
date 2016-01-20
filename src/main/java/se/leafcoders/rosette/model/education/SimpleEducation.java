@@ -1,14 +1,18 @@
 package se.leafcoders.rosette.model.education;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
+import se.leafcoders.rosette.model.Location;
+import se.leafcoders.rosette.model.reference.UserRefOrText;
+import se.leafcoders.rosette.validator.CheckReference;
+import se.leafcoders.rosette.validator.HasRefOrText;
 
 public class SimpleEducation extends Education {
 
-    @NotEmpty(message = "education.authorName.notEmpty")
-    private String authorName;
-
+    @HasRefOrText(message = "simpleEducation.author.oneMustBeSet")
+    @CheckReference(model = Location.class, dbKey = "author.ref.id")
+    private UserRefOrText author;
+    
     // Constructors
 
     public SimpleEducation() {
@@ -18,24 +22,24 @@ public class SimpleEducation extends Education {
     @Override
     public void update(JsonNode rawData, BaseModel updateFrom) {
         SimpleEducation simpleEducationUpdate = (SimpleEducation) updateFrom;
-        if (rawData.has("authorName")) {
-            setAuthorName(simpleEducationUpdate.getAuthorName());
+        if (rawData.has("author")) {
+            setAuthor(simpleEducationUpdate.getAuthor());
         }
         if (rawData.has("time")) {
             setTime(simpleEducationUpdate.getTime());
         }
+        
+        setAuthorName(simpleEducationUpdate.getAuthorName());
         super.update(rawData, updateFrom);
     }
 
     // Getters and setters
 
-    @Override
-    public String getAuthorName() {
-        return authorName;
+    public UserRefOrText getAuthor() {
+        return author;
     }
 
-    @Override
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthor(UserRefOrText author) {
+        this.author = author;
     }
 }

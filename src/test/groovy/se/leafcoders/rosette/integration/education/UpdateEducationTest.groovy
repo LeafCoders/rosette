@@ -7,6 +7,8 @@ import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.education.EventEducation
+import se.leafcoders.rosette.model.education.SimpleEducation
+import se.leafcoders.rosette.model.reference.UserRefOrText
 import se.leafcoders.rosette.model.upload.UploadResponse
 
 
@@ -81,7 +83,7 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
 
         givenEvent(event1)
         givenEvent(event2)
-        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation2.id }", "educationTypes:read", "educationThemes:read", "events:read", "uploads:read:educations"])
+        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation2.id }", "educationTypes:read", "educationThemes:read", "events:read"])
 
         // When
         String putUrl = "/educations/${ eventEducation2.id }"
@@ -109,6 +111,51 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         releasePutRequest()
         thenDataInDatabaseIs(EventEducation.class, expectedData)
         thenItemsInDatabaseIs(EventEducation.class, 1)
+    }
+
+    @Test
+    public void updateSimpleEducationWillSetAuthorName() throws ClientProtocolException, IOException {
+        // Given
+        givenUser(user1)
+        givenUser(user2)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(simpleEducation1, null)
+        givenEducationType(educationType1)
+        givenEducationType(educationType2)
+
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenEducationTheme(educationTheme2, image)
+
+        givenPermissionForUser(user1, ["educations:read,update:${ simpleEducation1.id }", "users:read"])
+
+        // When
+        String putUrl = "/educations/${ simpleEducation1.id }"
+        HttpResponse putResponse = whenPut(putUrl, user1, """{
+            "type": "simple",
+            "author" : ${ toJSON(new UserRefOrText(ref: userRef2)) }
+        }""")
+
+        // Then
+        thenResponseCodeIs(putResponse, HttpServletResponse.SC_OK)
+        String expectedData = """[{
+            "type": "simple",
+            "id" : "${ simpleEducation1.id }",
+            "educationType" : ${ toJSON(educationTypeRef1) },
+            "educationTheme" : ${ toJSON(educationThemeRef1) },
+            "time" : "${ TestUtil.dateToModelTime(simpleEducation1.time) }",
+            "title" : "${ simpleEducation1.title }",
+            "content" : "${ simpleEducation1.content }",
+            "questions" : "${ simpleEducation1.questions }",
+            "recording" : null,
+            "author" : ${ toJSON(new UserRefOrText(ref: userRef2)) },
+            "authorName" : "${ userRef2.fullName }",
+            "updatedTime" : "${ TestUtil.dateToModelTime(readDb(EventEducation.class, simpleEducation1.id).updatedTime) }"
+        }]"""
+        releasePutRequest()
+        thenDataInDatabaseIs(SimpleEducation.class, expectedData)
+        thenItemsInDatabaseIs(SimpleEducation.class, 1)
     }
 
     @Test

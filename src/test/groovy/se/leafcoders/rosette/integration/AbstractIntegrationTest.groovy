@@ -43,6 +43,7 @@ import se.leafcoders.rosette.model.reference.LocationRefOrText
 import se.leafcoders.rosette.model.reference.ObjectReferences
 import se.leafcoders.rosette.model.reference.UploadResponseRefs
 import se.leafcoders.rosette.model.reference.UserRef
+import se.leafcoders.rosette.model.reference.UserRefOrText
 import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
 import se.leafcoders.rosette.model.upload.UploadFolder
@@ -475,12 +476,12 @@ abstract class AbstractIntegrationTest {
         educationTheme : educationThemeRef1,
         id : getObjectId(),
         time: event1.startTime,
+        authorName : user1.fullName,
         title : "Education1",
         content : "Education1 content öäåè.",
         questions : "Education1 questions",
         recording : null,
-        event : eventRef1,
-        authorName : user1.fullName
+        event : eventRef1
     )
     protected final EventEducation eventEducation2 = new EventEducation(
         type : 'event',
@@ -488,12 +489,12 @@ abstract class AbstractIntegrationTest {
         educationTheme : educationThemeRef1,
         id : getObjectId(),
         time: event2.startTime,
+        authorName : null,
         title : "Education2",
         content : "Education2 content",
         questions : "Education2 questions",
         recording : null,
-        event : eventRef2,
-        authorName : null
+        event : eventRef2
     )
     protected final SimpleEducation simpleEducation1 = new SimpleEducation(
         type : 'simple',
@@ -501,11 +502,12 @@ abstract class AbstractIntegrationTest {
         educationTheme : educationThemeRef1,
         id : getObjectId(),
         time: TestUtil.modelDate("2014-10-06 12:00 Europe/Stockholm"),
+        authorName : "Kalle Boll",
         title : "Education Simple 1",
         content : "Education Simple 1 content",
         questions : "Education Simple 1 questions",
         recording : null,
-        authorName : "Kalle Boll"
+        author : new UserRefOrText(ref: userRef1)
     )
 
     protected final Podcast podcast1 = new Podcast(
