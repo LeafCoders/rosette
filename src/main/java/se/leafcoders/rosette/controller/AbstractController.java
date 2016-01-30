@@ -28,21 +28,27 @@ public class AbstractController {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Object handleApplicationExceptions(Throwable exception,
-                                              HttpServletResponse response) throws IOException {
-
-        logger.error("Error", exception);
+    public Object handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
 
         if (exception instanceof ForbiddenException) {
-            ForbiddenException fe = (ForbiddenException) exception;
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            logger.debug("Controller exception", exception);
+            
+            ForbiddenException fe = (ForbiddenException) exception;
             return new ExceptionError("error.forbidden", fe.getReason(), fe.getReasonParams());
-        } else if (exception instanceof NotFoundException) {
+        }
+        
+        else if (exception instanceof NotFoundException) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.debug("Controller exception", exception);
+
             return new ExceptionError("error.notFound", exception.getMessage(), null);
-        } else if (exception instanceof ValidationException) {
+        }
+        
+        else if (exception instanceof ValidationException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.debug("Controller exception", exception);
 
             ValidationException validationException = (ValidationException) exception;
             List<ValidationError> errors = new ArrayList<ValidationError>();
@@ -52,19 +58,29 @@ public class AbstractController {
             // Sort all errors by message text
             Collections.sort(errors, new ValidationErrorComparator());
             return errors;
-        } else if (exception instanceof SimpleValidationException) {
-            SimpleValidationException simpleValidationException = (SimpleValidationException) exception;
+        }
+        
+        else if (exception instanceof SimpleValidationException) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.debug("Controller exception", exception);
 
+            SimpleValidationException simpleValidationException = (SimpleValidationException) exception;
             List<ValidationError> errors = new ArrayList<ValidationError>();
             errors.add(simpleValidationException.getValidationError());
-
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return errors;
-        } else if (exception instanceof HttpMessageNotReadableException) {
+        }
+        
+        else if (exception instanceof HttpMessageNotReadableException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.debug("Controller exception", exception);
+
             return new ExceptionError("error.badRequest", exception.getMessage(), null);
-        } else {
+        }
+        
+        else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("Controller exception", exception);
+
             return new ExceptionError("error.unknownError", null, null);
         }
     }

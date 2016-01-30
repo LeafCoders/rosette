@@ -110,8 +110,6 @@ public class ReferenceUsageFinder {
             handleFieldSuperClass(documentClass, fieldClass.getSuperclass(), buildKey(dbKeyPath, dbKey));
         }
         
-//        System.out.println("Query key: " + buildKey(dbKeyPath, dbKey) + ", Id: " + referenceId + ", ModelClass: " + documentClass.getSimpleName());
-
         String key = buildKey(dbKeyPath, dbKey).replaceAll(".id", "._id");
         if (mongoTemplate.exists(Query.query(Criteria.where(key).is(QueryId.get(referenceId))), documentClass)) {
             throw new ForbiddenException("error.referencedBy", documentClass.getSimpleName());

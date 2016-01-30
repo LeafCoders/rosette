@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.service;
 
 import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.education.Education;

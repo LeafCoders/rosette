@@ -2,12 +2,16 @@ package se.leafcoders.rosette.auth.jwt;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
 
 public class JwtAuthenticationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationService.class);
+    
     private static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 
     private final JwtHandler tokenHandler;
@@ -30,6 +34,8 @@ public class JwtAuthenticationService {
             if (user != null) {
                 return new CurrentUserAuthentication(user);
             }
+
+            logger.info("Requst had an invalid token '{}'. Request handled as anonymous.", token);
         }
         return null;
     }

@@ -3,12 +3,12 @@ package se.leafcoders.rosette.auth.jwt;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,14 +17,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtLoginFilter.class);
+    
     private final JwtAuthenticationService jwtAuthenticationService;
 
     public JwtLoginFilter(String urlMapping, JwtAuthenticationService tokenAuthenticationService,
@@ -77,5 +77,15 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         userData.put("email", currentUser.getUsername());
         response.getOutputStream().print(new ObjectMapper().writeValueAsString(userData));
         response.flushBuffer();
+
+        logger.debug("Login succeeded for username '{}'", currentUser.getUsername());
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+        String username = request.getParameter("username");
+        logger.info("Login failed for username '{}'", username);
+        super.unsuccessfulAuthentication(request, response, failed);
     }
 }

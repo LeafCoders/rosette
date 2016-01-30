@@ -9,9 +9,14 @@ Here are instructions of how to run Rosette in production mode
 1. Install `Java 8` from http://www.oracle.com/technetwork/java/javase/index.html
 
 
-### Gradle
+### Gradle (only for build)
 
 1. Install `Gradle 2.x` from https://gradle.org/gradle-download
+
+
+### Tomcat 8
+
+1. Install `Tomcat 8.x` from http://tomcat.apache.org/download-80.cgi
 
 
 ### MongoDB
@@ -26,42 +31,49 @@ Here are instructions of how to run Rosette in production mode
 1. Checkout https://github.com/LeafCoders/rosette.git
 2. Run `gradle buildWarAndJar`
 3. Executable jar (including Tomcat 8) will be created at `build/libs/rosette-x.x.x.jar`
+4. War will be created at `build/libs/rosette-x.x.x.war`
 
 
 ## Configuration
 
-1. Create the file `application.yml` in same folder as the jar file
-  ```yaml
-  spring:
-    profiles.active: production
+The application can be configured in different ways. Application properties can be set from a
+Tomcat Context file or/and from a application.yml file. 
 
-  ---
-  spring:
-    profiles: production
+### Tomcat Context
 
-  server:
-    port: 80
+The Tomcat Context file is used for configuring the applications. The file `conf/context.xml`
+is applied to all applications but there is also a way to specify a context file for each
+application.  
+The tags `Engine` and `Host` are specified in Tomcat's `conf/server.xml`. The names of them will specify
+the path where the application specific Context file should be placed. If `Engine = Catalina`, `Host = localhost`
+and the application's name is `rosette`, the path will be `conf/Catalina/localhost/rosette.xml`.  
+  
+The file `setup/tomcat-context-rosette.xml` in Rosette's source code can be used as a starter.  
 
-  spring.data.mongodb:
-    database: rosette
+### Property file
 
-  spring.mail:
-    protocol: smtp
-    host: 
-    port: 
-    username: 
-    password: 
+The environment variable `spring.config.location` can override properties inside the application war.
+Setting it to `file:/some/path/rosette/application-production.yml` will override properties in
+application war (properties in application war will be used as defaults).
 
-  rosette:
-    baseUrl: http://public-accessible-host:80
-    jwtSecretToken: ...
-    defaultMailFrom: no-reply@localhost
-  ```
-2. Read more about the configuration options in https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html
+Rosette specific properties are descried here:
+
+- `baseUrl` - Must be a public accessible url to the Rosette application
+- `jwtSecretToken` - A secret token for JWT authentication. Must be at least 10 characters long
+- `defaultMailFrom` - Mail sent from Rosette will have this address in the from field 
+
+Read more about the configuration properties in https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html
 
 
 ## Running server
 
 1. Start MongodDB
-2. Start rosette server with `java -jar rosette-x.x.x.jar`. Important! Run the command in the folder where `rosette-x.x.x.jar` and `application.yaml` are.
+2. Start Tomcat with `bin/startup.sh`
+
+## Logging
+
+Tomcat creates log files in the `logs` folder. The log files contains different kind of information:
+
+- `catalina.out` - Information from the application
+- `localhost_access_log` - Logs each request to the application
 
