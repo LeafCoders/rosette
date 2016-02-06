@@ -74,7 +74,7 @@ public class ICalendarController extends PublicDataController {
 		summary.setLanguage("sv-SE");
 
 		if (event.getDescription() != null) {
-			Description description = vEvent.setDescription(event.getDescription());
+			Description description = vEvent.setDescription(event.expandedDescription());
 			description.setLanguage("sv-SE");
 		}
 

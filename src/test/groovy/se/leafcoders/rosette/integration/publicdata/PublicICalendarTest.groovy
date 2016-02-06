@@ -47,7 +47,7 @@ public class PublicICalendarTest extends AbstractIntegrationTest {
 
 		assertTrue(responseBody.count("BEGIN:VEVENT") == 1);
 		assertTrue(responseBody.count("SUMMARY;LANGUAGE=sv-SE:An event") == 1);
-		assertTrue(responseBody.count("DESCRIPTION;LANGUAGE=sv-SE:Description...") == 1);
+		assertTrue(responseBody.count("DESCRIPTION;LANGUAGE=sv-SE:Event description.\\nSingleUser: User One") == 1);
 	}
 
 	protected HttpResponse whenGetICalendar(String getUrl) {
@@ -55,7 +55,6 @@ public class PublicICalendarTest extends AbstractIntegrationTest {
 		getRequest.addHeader("Accept", "text/calendar; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "text/calendar; charset=UTF-8")
 		HttpResponse resp = httpClient.execute(getRequest)
-		getRequest.releaseConnection()
 		return resp
 	}
 

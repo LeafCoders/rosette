@@ -80,7 +80,7 @@ public class CalendarController extends PublicDataController {
 				if (currentEvent.getIsPublic()) {
 					CalendarEvent event = new CalendarEvent();
 					event.setTitle(currentEvent.getTitle());
-					event.setDescription(currentEvent.getDescription());
+					event.setDescription(currentEvent.expandedDescription());
 					event.setStartTime(currentEvent.getStartTime());
 					event.setEndTime(currentEvent.getEndTime());
 					day.addEvent(event);

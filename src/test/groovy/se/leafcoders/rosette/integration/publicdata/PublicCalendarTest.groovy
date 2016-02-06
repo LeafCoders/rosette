@@ -63,7 +63,7 @@ public class PublicCalendarTest extends AbstractIntegrationTest {
 					"events": [
 						{
 							"title": "${ event1.title }",
-							"description": "${ event1.description }",
+							"description": "Event description.\\nSingleUser: User One",
 							"startTime": "${ TestUtil.dateToModelTime(event1.startTime) }",
 							"endTime": "${ TestUtil.dateToModelTime(event1.endTime) }"
 						}

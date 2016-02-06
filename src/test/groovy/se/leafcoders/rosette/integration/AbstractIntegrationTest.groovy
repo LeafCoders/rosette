@@ -63,7 +63,7 @@ abstract class AbstractIntegrationTest {
 	protected static HttpClient httpClient
 	protected static ObjectMapper mapper
 
-	protected static String baseUrl = "http://localhost:9000/api/v1"
+    protected static String baseUrl = System.getProperty("rosette.baseUrl", "http://localhost:9000/api/v1");
 
 	private HttpPost postRequest = null;
 	private HttpGet getRequest = null;
@@ -383,7 +383,7 @@ abstract class AbstractIntegrationTest {
 		title : "An event",
 		startTime : TestUtil.modelDate("2012-03-26 11:00 Europe/Stockholm"),
 		endTime : TestUtil.modelDate("2012-03-26 12:00 Europe/Stockholm"),
-		description : "Description...",
+		description : "Event description.\n{SingleUser: #speaker}",
 		location : new LocationRefOrText(ref: location1),
 		isPublic : true,
 		resources : [

@@ -1,7 +1,10 @@
 package se.leafcoders.rosette.model.event;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -22,6 +25,7 @@ import se.leafcoders.rosette.model.Location;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.model.resource.Resource;
+import se.leafcoders.rosette.model.resource.UserResource;
 import se.leafcoders.rosette.validator.HasRef;
 import se.leafcoders.rosette.validator.CheckReferenceArray;
 import se.leafcoders.rosette.validator.CheckReference;
@@ -92,6 +96,38 @@ public class Event extends IdBasedModel {
 		if (rawData.has("resources")) {
 			setResources(eventUpdate.getResources());
 		}
+	}
+
+	public String expandedDescription() {
+        if (description == null || description.isEmpty()) {
+            return description;
+        }
+        
+        HashMap<String,String> replacements = new HashMap<String,String>();
+        resources.forEach((Resource resource) -> {
+            if (resource.getType().equals("user")) {
+                UserResource userResource = (UserResource) resource;
+                replacements.put(userResource.getResourceType().getId(), userResource.getUsers().namesString());
+            }
+        });
+        
+        Pattern pattern = Pattern.compile("\\{(.+?)\\}");
+        Matcher matcher = pattern.matcher(description);
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        while (matcher.find()) {
+            builder.append(description.substring(i, matcher.start()));
+            String[] parts = matcher.group().substring(1, matcher.group().length() - 1).split("#");
+            if (parts.length >= 2) {
+                String replacement = replacements.get(parts[1]);
+                if (replacement != null && !replacement.isEmpty()) {
+                    builder.append(parts[0] + replacement);
+                }
+            }
+            i = matcher.end();
+        }
+        builder.append(description.substring(i, description.length()));
+        return builder.toString().replaceAll("\n+", "\n");
 	}
 
 	// Getters and setters
