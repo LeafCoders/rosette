@@ -22,7 +22,7 @@ import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "educations")
 // The following annotations uses the property 'type' to decide which class to create
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = EventEducation.class, name = "event"),
     @JsonSubTypes.Type(value = SimpleEducation.class, name = "simple")
