@@ -47,6 +47,14 @@ configurations {
     providedRuntime
 }
 
+test {
+    if (System.getProperty('rosette.baseUrl')) {
+        systemProperties = [
+            'rosette.baseUrl': System.getProperty('rosette.baseUrl')
+        ]
+    }
+}
+
 // Ignore 'test' task when running 'build' task
 test.onlyIf {
     !gradle.taskGraph.hasTask(build)
