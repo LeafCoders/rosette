@@ -1,21 +1,18 @@
 package se.leafcoders.rosette.model;
 
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.reference.UserRef;
-import se.leafcoders.rosette.validator.HasRef;
 import se.leafcoders.rosette.validator.CheckReference;
+import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "groupMemberships")
 public class GroupMembership extends IdBasedModel {
 
-	@Indexed
     @HasRef(message = "groupMembership.group.mustBeSet")
 	@CheckReference
 	private Group group;
 
-	@Indexed
     @HasRef(message = "groupMembership.user.mustBeSet")
     @CheckReference(model = User.class)
 	private UserRef user;

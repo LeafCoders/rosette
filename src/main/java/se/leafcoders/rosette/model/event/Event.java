@@ -34,7 +34,6 @@ import se.leafcoders.rosette.validator.CheckReference;
 @ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")
 public class Event extends IdBasedModel {
 
-	@Indexed
 	@HasRef(message = "event.eventType.notNull")
     @CheckReference
     private EventType eventType;
