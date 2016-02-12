@@ -21,6 +21,7 @@ import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.ResourceType;
 import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.ManyQuery;
 import se.leafcoders.rosette.util.QueryId;
@@ -41,20 +42,19 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	}
 
 	@Override
-	protected void checkPermission(PermissionAction actionType, Event event) {
-	    if (actionType.equals(READ)) {
-	        checkAnyEventPermission(READ, event, null); 
-	    } else {
-            if (event.getEventType() != null) {
-                security.checkPermission(
+	protected PermissionResult permissionResultFor(PermissionAction actionType, Event event) {
+	    if (event != null) {
+    	    if (actionType.equals(READ)) {
+    	        return checkAnyEventPermission(READ, event, null); 
+    	    } else if (event.getEventType() != null) {
+                return security.permissionResultFor(
                         new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()),
                         new PermissionValue(EVENTS, actionType, event.getId()));
-            } else {
-                super.checkPermission(actionType, event);
             }
 	    }
+        return super.permissionResultFor(actionType, event);
 	}
-	
+
 	@Override
 	public Event create(Event event, HttpServletResponse response) {
 		// Validate 'isPublic'
@@ -123,23 +123,23 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	    return new Class<?>[] { EventType.class, Location.class, ResourceType.class, User.class };
 	}
 
-	protected void checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {
+	protected PermissionResult checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {
 		PermissionValue eventsPermission = new PermissionValue(EVENTS, actionType, event.getId());
 		PermissionValue eventsEventTypesPermission = new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId());
 		
 		if (!security.isPermitted(eventsPermission, eventsEventTypesPermission)) {
 			if (resourceTypeId != null) {
-				security.checkPermission(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resourceTypeId));
-				return;
+				return security.permissionResultFor(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resourceTypeId));
 			} else {
 				for (Resource resource : event.getResources()) {
 					if (security.isPermitted(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resource.getResourceType().getId()))) {
-						return;
+				        return new PermissionResult();
 					}
 				}
 			}
-			security.throwPermissionMissing(eventsPermission, eventsEventTypesPermission);
+			return new PermissionResult(eventsPermission, eventsEventTypesPermission);
 		}
+		return new PermissionResult();
 	}
 
 }

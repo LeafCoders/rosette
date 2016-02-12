@@ -16,6 +16,7 @@ import se.leafcoders.rosette.model.reference.UserRef;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.UserResource;
 import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 
@@ -38,14 +39,13 @@ public class EducationService extends MongoTemplateCRUD<Education> {
 	}
 
     @Override
-    protected void checkPermission(PermissionAction actionType, Education education) {
-        if (education.getEducationType() != null) {
-            security.checkPermission(
+    protected PermissionResult permissionResultFor(PermissionAction actionType, Education education) {
+        if (education != null && education.getEducationType() != null) {
+            return security.permissionResultFor(
                     new PermissionValue(PermissionType.EDUCATIONS_EDUCATION_TYPES, actionType, education.getEducationType().getId()),
                     new PermissionValue(PermissionType.EDUCATIONS, actionType, education.getId()));
-        } else {
-            super.checkPermission(actionType, education);
         }
+        return super.permissionResultFor(actionType, education);
     }
 
 	@Override

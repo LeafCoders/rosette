@@ -176,7 +176,7 @@ abstract class AbstractIntegrationTest {
 	 *  Data objects
 	 */
 
-	private final hashedPassword = new BCryptPasswordEncoder().encode("password")
+	public final hashedPassword = new BCryptPasswordEncoder().encode("password")
     private final String userTestUploadId = getObjectId()
 	private final User userTestUpload = new User(
 		id : userTestUploadId,

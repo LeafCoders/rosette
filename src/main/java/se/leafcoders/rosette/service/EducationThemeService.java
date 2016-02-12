@@ -6,6 +6,7 @@ import se.leafcoders.rosette.model.education.EducationTheme;
 import se.leafcoders.rosette.model.education.EducationType;
 import se.leafcoders.rosette.model.education.EducationTypeRef;
 import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 
@@ -22,14 +23,13 @@ public class EducationThemeService extends MongoTemplateCRUD<EducationTheme> {
 	}
 
     @Override
-    protected void checkPermission(PermissionAction actionType, EducationTheme educationTheme) {
-        if (educationTheme.getEducationType() != null) {
-            security.checkPermission(
+    protected PermissionResult permissionResultFor(PermissionAction actionType, EducationTheme educationTheme) {
+        if (educationTheme != null && educationTheme.getEducationType() != null) {
+            return security.permissionResultFor(
                     new PermissionValue(PermissionType.EDUCATION_THEMES_EDUCATION_TYPES, actionType, educationTheme.getEducationType().getId()),
                     new PermissionValue(PermissionType.EDUCATION_THEMES, actionType, educationTheme.getId()));
-        } else {
-            super.checkPermission(actionType, educationTheme);
         }
+        return super.permissionResultFor(actionType, educationTheme);
     }
 	
 	@Override

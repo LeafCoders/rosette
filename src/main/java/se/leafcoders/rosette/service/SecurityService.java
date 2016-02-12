@@ -9,12 +9,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
-import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.PermissionTree;
+import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionTreeHelper;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.ReferenceUsageFinder;
@@ -31,19 +30,21 @@ public class SecurityService {
 	@Autowired
     private Validator validator;
 
-    public boolean isPermitted(PermissionValue... permissionValues) {
-		for (PermissionValue value : permissionValues) {
-		    if (isPermitted(value.toString())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public void checkPermission(PermissionValue... permissionValues) {
+        permissionResultFor(permissionValues).checkAndThrow();
+    }
 
-	public void checkPermission(PermissionValue... permissionValues) {
-		if (!isPermitted(permissionValues)) {
-			throwPermissionMissing(permissionValues);
-		}
+    public boolean isPermitted(PermissionValue... permissionValues) {
+        return permissionResultFor(permissionValues).isPermitted();
+    }
+
+	public PermissionResult permissionResultFor(PermissionValue... permissionValues) {
+        for (PermissionValue value : permissionValues) {
+            if (isPermitted(value.toString())) {
+                return new PermissionResult();
+            }
+        }
+        return new PermissionResult(permissionValues);
 	}
 
 	private boolean isPermitted(String permission) {
@@ -54,10 +55,6 @@ public class SecurityService {
 		} else {
 			return false;
 		}
-	}
-	
-	public void throwPermissionMissing(PermissionValue... permissionValues) {
-		throw new ForbiddenException("error.missingPermission", StringUtils.arrayToCommaDelimitedString(permissionValues));
 	}
 
 	public void validate(Object object) {

@@ -39,6 +39,9 @@ public class TestUtil {
         }
 
         if (expectedNode.isArray()) {
+            if (expectedNode.size() != actualNode.size()) {
+                return [path: path, expected: expectedNode?.toString(), actual: actualNode?.toString()]
+            }
             Iterator<JsonNode> expectedIter = expectedNode.iterator()
             Iterator<JsonNode> actualIter = actualNode.iterator()
             int i = 0

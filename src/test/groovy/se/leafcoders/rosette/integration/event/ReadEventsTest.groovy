@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.integration.event
 
+import java.io.IOException;
 import java.text.SimpleDateFormat
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
@@ -63,4 +64,31 @@ public class ReadEventsTest extends AbstractIntegrationTest {
 		thenResponseDataIs(responseBody, """[${ toJSON(event1) }]""")
 	}
 
+    @Test
+    public void readEventsWithResourceTypePermission() throws ClientProtocolException, IOException {
+        // Given
+        givenUser(user1)
+        givenLocation(location1)
+        givenEventType(eventType1)
+        givenResourceType(userResourceTypeSingle)
+        givenResourceType(uploadResourceTypeSingle)
+        givenEvent(event1)
+
+        // When
+        String getUrl = "/events"
+        HttpResponse getResponseEmpty = whenGet(getUrl, user1)
+
+        // Then
+        String responseEmptyBody = thenResponseCodeIs(getResponseEmpty, HttpServletResponse.SC_OK)
+        thenResponseDataIs(responseEmptyBody, "[]")
+
+        // When
+        givenPermissionForUser(user1, ["events:read:resourceTypes:${ userResourceTypeSingle.id }"])
+        resetAuthCaches()
+        HttpResponse getResponseOne = whenGet(getUrl, user1)
+
+        // Then
+        String responseOneBody = thenResponseCodeIs(getResponseOne, HttpServletResponse.SC_OK)
+        thenResponseDataIs(responseOneBody, "[${ toJSON(event1) }]")
+    }
 }

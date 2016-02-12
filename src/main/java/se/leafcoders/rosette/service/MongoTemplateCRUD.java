@@ -20,6 +20,7 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.security.PermissionAction;
+import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.ManyQuery;
@@ -45,18 +46,27 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		this.entityClass = entityClass;
 	}
 
-	protected void checkPermission(PermissionAction actionType, T data) {
-        security.checkPermission(new PermissionValue(permissionType, actionType, data.getId()));
+    // Override this in your service if you want special permission checks
+    protected PermissionResult permissionResultFor(PermissionAction actionType, T data) {
+        if (data != null) {
+            return security.permissionResultFor(new PermissionValue(permissionType, actionType, data.getId()));
+        } else {
+            return security.permissionResultFor(new PermissionValue(permissionType, actionType));
+        }
+    }
+
+    protected void checkPermission(PermissionAction actionType, T data) {
+        permissionResultFor(actionType, data).checkAndThrow();
+    }
+
+	protected boolean isPermitted(PermissionAction actionType) {
+		return permissionResultFor(actionType, null).isPermitted();
 	}
 
-	protected boolean isPermitted(PermissionAction accessType) {
-		return security.isPermitted(new PermissionValue(permissionType, accessType));
+	protected boolean isPermitted(PermissionAction actionType, T data) {
+		return permissionResultFor(actionType, data).isPermitted();
 	}
-
-	protected boolean isPermitted(PermissionAction accessType, String id) {
-		return security.isPermitted(new PermissionValue(permissionType, accessType, id));
-	}
-
+	
 	protected Query getIdQuery(String id) {
 		return Query.query(Criteria.where("id").is(QueryId.get(id)));
 	}
@@ -144,7 +154,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public void delete(String id, HttpServletResponse response) {
-		checkPermission(PermissionAction.DELETE, read(id, false));
+	    checkPermission(PermissionAction.DELETE, read(id, false));
 		security.checkNotReferenced(id, entityClass);
         if (mongoTemplate.findAndRemove(getIdQuery(id), entityClass) == null) {
 			throw notFoundException(id);
@@ -211,7 +221,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 
 	@Override
 	public boolean readManyItemFilter(T item) {
-		return isPermitted(PermissionAction.READ, item.getId());
+		return isPermitted(PermissionAction.READ, item);
 	}
 	
 	public NotFoundException notFoundException(String id) {
