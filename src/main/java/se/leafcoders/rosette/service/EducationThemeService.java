@@ -33,7 +33,7 @@ public class EducationThemeService extends MongoTemplateCRUD<EducationTheme> {
     }
 	
 	@Override
-	public void setReferences(EducationTheme educationTheme, boolean checkPermissions) {
+	public void setReferences(EducationTheme educationTheme, EducationTheme dataInDb, boolean checkPermissions) {
         if (educationTheme.getEducationType() != null) {
             educationTheme.setEducationType(new EducationTypeRef(educationTypeService.read(educationTheme.getEducationType().getId(), checkPermissions)));
         }

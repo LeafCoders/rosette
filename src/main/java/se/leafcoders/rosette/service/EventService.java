@@ -102,7 +102,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	}
 
 	@Override
-	public void setReferences(Event data, boolean checkPermissions) {
+	public void setReferences(Event data, Event dataInDb, boolean checkPermissions) {
 		if (data.getEventType() != null) {
 			data.setEventType(eventTypeService.read(data.getEventType().getId(), checkPermissions));
 		}

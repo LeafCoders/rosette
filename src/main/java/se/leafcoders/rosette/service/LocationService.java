@@ -16,7 +16,7 @@ public class LocationService extends MongoTemplateCRUD<Location> {
 	}
 
 	@Override
-	public void setReferences(Location data, boolean checkPermissions) {
+	public void setReferences(Location data, Location dataInDb, boolean checkPermissions) {
 		if (data.getDirectionImage() != null) {
 			data.setDirectionImage(uploadService.read(data.getDirectionImage().getId(), checkPermissions));
 		}

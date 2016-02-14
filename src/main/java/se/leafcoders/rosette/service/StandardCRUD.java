@@ -21,6 +21,6 @@ public interface StandardCRUD<T> {
 
 	void refresh(Set<String> changedCollections);
 	
-	void setReferences(T data, boolean checkPermissions);
+	void setReferences(T data, T dataInDb, boolean checkPermissions);
     public Class<?>[] references();
 }

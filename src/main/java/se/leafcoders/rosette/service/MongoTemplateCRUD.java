@@ -74,8 +74,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	@Override
 	public T create(T data, HttpServletResponse response) {
 		checkPermission(PermissionAction.CREATE, data);
-		setReferences(data, true);
-        afterSetReferences(data, null, true);
+		setReferences(data, null, true);
 		security.validate(data);
 		mongoTemplate.insert(data);
 		response.setStatus(HttpStatus.CREATED.value());
@@ -132,8 +131,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		}
 
 		beforeUpdate(id, updateData, dataInDbToUpdate);
-		setReferences(updateData, true);
-		afterSetReferences(updateData, dataInDbToUpdate, true);
+		setReferences(updateData, dataInDbToUpdate, true);
 		dataInDbToUpdate.update(rawData, updateData);
 		security.validate(dataInDbToUpdate);
 		mongoTemplate.save(dataInDbToUpdate);
@@ -149,9 +147,6 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	protected void beforeUpdate(String id, T updateData, T dataInDbToUpdate) {
 	}
 	
-    protected void afterSetReferences(T updateData, T dataInDbToUpdate, boolean checkPermissions) {
-    }
-
 	@Override
 	public void delete(String id, HttpServletResponse response) {
 	    checkPermission(PermissionAction.DELETE, read(id, false));
@@ -170,8 +165,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
                 items.forEach((T data) -> {
                     try {
                         beforeUpdate(data.getId(), null, data);
-                        setReferences(data, false);
-                        afterSetReferences(data, data, false);
+                        setReferences(data, data, false);
                         mongoTemplate.save(data);
                     } catch (Exception exception) {
                         logger.warn("Failed to refresh (" + entityClass.getSimpleName() + ") with id (" + data.getId() + "). Exception: " + exception.getMessage());

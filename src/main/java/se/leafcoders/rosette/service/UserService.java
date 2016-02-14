@@ -60,7 +60,7 @@ public class UserService extends MongoTemplateCRUD<User> {
     }
 
 	@Override
-	public void setReferences(User data, boolean checkPermissions) {
+	public void setReferences(User data, User dataInDb, boolean checkPermissions) {
 	}
 
     @Override

@@ -35,7 +35,7 @@ public class GroupService extends MongoTemplateCRUD<Group> {
     }
 
 	@Override
-	public void setReferences(Group data, boolean checkPermissions) {
+	public void setReferences(Group data, Group dataInDb, boolean checkPermissions) {
 	}
 
     @Override

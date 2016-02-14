@@ -28,6 +28,10 @@ public abstract class TypeBasedModel implements BaseModel {
     	}
     }
 
+    public <T extends BaseModel> boolean equalsId(T obj) {
+        return id.equals(obj.getId());
+    }
+
     // Getter and setters
 
     public String getId() {

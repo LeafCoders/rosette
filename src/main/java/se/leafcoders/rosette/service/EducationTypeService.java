@@ -29,7 +29,7 @@ public class EducationTypeService extends MongoTemplateCRUD<EducationType> {
 	}
 
 	@Override
-	public void setReferences(EducationType educationType, boolean checkPermissions) {
+	public void setReferences(EducationType educationType, EducationType dataInDb, boolean checkPermissions) {
         if (educationType.getEventType() != null) {
             educationType.setEventType(eventTypeService.read(educationType.getEventType().getId(), checkPermissions));
         }

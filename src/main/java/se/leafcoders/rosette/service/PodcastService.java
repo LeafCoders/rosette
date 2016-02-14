@@ -21,7 +21,7 @@ public class PodcastService extends MongoTemplateCRUD<Podcast> {
 	}
 
 	@Override
-	public void setReferences(Podcast podcast, boolean checkPermissions) {
+	public void setReferences(Podcast podcast, Podcast dataInDb, boolean checkPermissions) {
         if (podcast.getEducationType() != null) {
             podcast.setEducationType(new EducationTypeRef(educationTypeService.read(podcast.getEducationType().getId(), checkPermissions)));
         }

@@ -214,8 +214,8 @@ class SeedTest extends AbstractIntegrationTest {
 
 
         (-4..5).each { int offset ->
-            newEvent(gudstjanstHandelsetyp, Times.TISDAG_18.rangeOffsetWeeks(offset, 45), "Bön 45 minuter", bonBeskrivning, oasenLokal, [])
-            newEvent(gudstjanstHandelsetyp, Times.TORSDAG_10.rangeOffsetWeeks(offset, 60), "Bön 60 minuter", bonBeskrivning, oasenLokal, [])
+            newEvent(bonHandelsetyp, Times.TISDAG_18.rangeOffsetWeeks(offset, 45), "Bön 45 minuter", bonBeskrivning, oasenLokal, [])
+            newEvent(bonHandelsetyp, Times.TORSDAG_10.rangeOffsetWeeks(offset, 60), "Bön 60 minuter", bonBeskrivning, oasenLokal, [])
         }
 
         newEvent(konsertHandelsetyp, Times.LORDAG_19.rangeOffsetWeeks(2, 180), "Konsert med Bandet", "", kyrksalLokal, [
@@ -289,7 +289,7 @@ class SeedTest extends AbstractIntegrationTest {
         EventEducation jakobsbrevet_5 = newEventEducation(
             "Jakobsbrevet kap 5", "content...", "frågor...",
             gudstjanstUtbildningstyp, jakobsbrevetTema, gudstjanstP2Handelse,
-            "Predikant Patrik", inspelning1
+            "Predikant Patrik", null
         )
 
         

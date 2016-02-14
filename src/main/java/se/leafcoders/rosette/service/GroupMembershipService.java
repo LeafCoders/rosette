@@ -55,7 +55,7 @@ public class GroupMembershipService extends MongoTemplateCRUD<GroupMembership> {
 	}
 
 	@Override
-	public void setReferences(GroupMembership data, boolean checkPermissions) {
+	public void setReferences(GroupMembership data, GroupMembership dataInDb, boolean checkPermissions) {
 		if (data.getUser() != null) {
 			data.setUser(userService.readAsRef(data.getUser().getId(), checkPermissions));
 		}

@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.education.Education;
 import se.leafcoders.rosette.model.education.EducationTheme;
 import se.leafcoders.rosette.model.education.EducationThemeRef;
@@ -10,6 +11,7 @@ import se.leafcoders.rosette.model.education.EducationType;
 import se.leafcoders.rosette.model.education.EducationTypeRef;
 import se.leafcoders.rosette.model.education.EventEducation;
 import se.leafcoders.rosette.model.education.SimpleEducation;
+import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.reference.EventRef;
 import se.leafcoders.rosette.model.reference.UserRef;
@@ -49,9 +51,12 @@ public class EducationService extends MongoTemplateCRUD<Education> {
     }
 
 	@Override
-	public void setReferences(Education data, boolean checkPermissions) {
+	public void setReferences(Education data, Education dataInDb, boolean checkPermissions) {
+	    String eventTypeId = null;
         if (data.getEducationType() != null) {
-            data.setEducationType(new EducationTypeRef(educationTypeService.read(data.getEducationType().getId(), checkPermissions)));
+            EducationType educationType = educationTypeService.read(data.getEducationType().getId(), checkPermissions);
+            eventTypeId = educationType.getEventType().getId();
+            data.setEducationType(new EducationTypeRef(educationType));
         }
         if (data.getEducationTheme() != null) {
             data.setEducationTheme(new EducationThemeRef(educationThemeService.read(data.getEducationTheme().getId(), checkPermissions)));
@@ -63,24 +68,26 @@ public class EducationService extends MongoTemplateCRUD<Education> {
 	    if (data instanceof EventEducation) {
             EventEducation education = (EventEducation) data;
             if (education.getEvent() != null) {
-                education.setEvent(new EventRef(eventService.read(education.getEvent().getId(), checkPermissions)));
+                Event event = eventService.read(education.getEvent().getId(), checkPermissions);
+                if (eventTypeId == null) {
+                    EducationType educationType = educationTypeService.read(dataInDb.getEducationType().getId(), checkPermissions);                    
+                    eventTypeId = educationType.getEventType().getId();
+                }
+                if (event.getEventType().getId().equals(eventTypeId)) {
+                    education.setEvent(new EventRef(event));
+                } else {
+                    throw new SimpleValidationException(new ValidationError("education", "education.eventType.notAcceptedType"));
+                }
             }
+            setDataFromEventEducation(education, (EventEducation) dataInDb, checkPermissions);
 		} else if (data instanceof SimpleEducation) {
             SimpleEducation education = (SimpleEducation) data;
             if (education.getAuthor() != null && education.getAuthor().hasRef()) {
                 education.getAuthor().setRef(new UserRef(userService.read(education.getAuthor().refId(), checkPermissions)));
             }
+            setDataFromSimpleEducation(education, (SimpleEducation) dataInDb, checkPermissions);
         }
 	}
-
-    @Override
-    protected void afterSetReferences(Education updateData, Education dataInDatabase, boolean checkPermissions) {
-        if (updateData.getType() == "simple") {
-            setDataFromSimpleEducation((SimpleEducation) updateData, (SimpleEducation) dataInDatabase, checkPermissions);
-        } else if (updateData.getType() == "event") {
-            setDataFromEventEducation((EventEducation) updateData, (EventEducation) dataInDatabase, checkPermissions);
-        }
-    }
 
     @Override
     public Class<?>[] references() {

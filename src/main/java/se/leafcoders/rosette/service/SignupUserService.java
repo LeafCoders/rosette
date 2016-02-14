@@ -24,7 +24,7 @@ public class SignupUserService extends MongoTemplateCRUD<SignupUser> {
 	}
 
 	@Override
-	public void setReferences(SignupUser data, boolean checkPermissions) {
+	public void setReferences(SignupUser data, SignupUser dataInDb, boolean checkPermissions) {
 	}
 
     @Override

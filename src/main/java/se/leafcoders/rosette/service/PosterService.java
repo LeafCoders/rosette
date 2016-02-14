@@ -16,7 +16,7 @@ public class PosterService extends MongoTemplateCRUD<Poster> {
 	}
 
 	@Override
-	public void setReferences(Poster data, boolean checkPermissions) {
+	public void setReferences(Poster data, Poster dataInDb, boolean checkPermissions) {
 		if (data.getImage() != null) {
 			data.setImage(uploadService.read(data.getImage().getId(), checkPermissions));
 		}

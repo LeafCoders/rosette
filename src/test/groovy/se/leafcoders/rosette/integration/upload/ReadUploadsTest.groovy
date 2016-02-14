@@ -31,6 +31,16 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 		thenResponseHeaderHas(uploadResponse, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[
+            {
+                "id" : "${ uploadItem2['id'] }",
+                "fileName" : "image.jpg",
+                "folderId": "posters",
+                "fileUrl" : "${ baseUrl }/assets/posters/image.jpg",
+                "mimeType" : "image/jpg",
+                "fileSize" : 1617,
+                "width" : 300,
+                "height" : 200
+            },
 			{
 				"id" : "${ uploadItem1['id'] }",
 				"fileName" : "image.png",
@@ -38,16 +48,6 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 				"fileUrl" : "${ baseUrl }/assets/posters/image.png",
 	            "mimeType" : "image/png",
 				"fileSize" : 638,
-	            "width" : 300,
-	            "height" : 200
-			},
-			{
-				"id" : "${ uploadItem2['id'] }",
-				"fileName" : "image.jpg",
-	            "folderId": "posters",
-				"fileUrl" : "${ baseUrl }/assets/posters/image.jpg",
-	            "mimeType" : "image/jpg",
-				"fileSize" : 1617,
 	            "width" : 300,
 	            "height" : 200
 			}

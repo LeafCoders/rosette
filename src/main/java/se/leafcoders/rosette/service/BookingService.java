@@ -17,7 +17,7 @@ public class BookingService extends MongoTemplateCRUD<Booking> {
 	}
 
 	@Override
-	public void setReferences(Booking data, boolean checkPermissions) {
+	public void setReferences(Booking data, Booking dataInDb, boolean checkPermissions) {
 		if (data.getLocation() != null && data.getLocation().hasRef()) {
 			data.getLocation().setRef(locationService.read(data.getLocation().refId(), checkPermissions));
 		}

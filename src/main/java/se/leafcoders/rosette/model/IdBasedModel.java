@@ -13,4 +13,8 @@ public abstract class IdBasedModel implements BaseModel {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public <T extends BaseModel> boolean equalsId(T obj) {
+	    return id.equals(obj.getId());
+	}
 }

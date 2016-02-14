@@ -19,6 +19,7 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -225,6 +226,7 @@ public class UploadService {
 
 	private List<GridFSDBFile> getFilesInFolder(String folderId) {
 		Query query = new Query(Criteria.where("metadata." + METADATA_FOLDER_ID).is(folderId));
+		query.with(new Sort(Sort.Direction.DESC, "uploadDate"));
 		return gridFsTemplate.find(query);
 	}
 

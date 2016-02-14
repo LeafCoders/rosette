@@ -189,4 +189,36 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
             { "property" : "education", "message" : "education.educationType.notAllowedToChange" }
         ]""")
     }
+
+    @Test
+    public void changeToEventOfWrongTypeShouldFail() throws ClientProtocolException, IOException {
+        // Given
+        givenUser(user1)
+        givenUploadFolder(uploadFolderEducations)
+        givenEducation(eventEducation1, givenUploadInFolder("educations", audioRecording1))
+        givenEducationType(educationType1)
+        givenEducationType(educationType2)
+        
+        givenUploadFolder(uploadFolderEducationThemes)
+        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        givenEducationTheme(educationTheme1, image)
+        givenEducationTheme(educationTheme2, image)
+
+        givenEvent(event1)
+        givenEvent(event3)
+        givenPermissionForUser(user1, ["educations:read,update:${ eventEducation1.id }", "educationTypes:read", "educationThemes:read", "events:read"])
+
+        // When
+        String putUrl = "/educations/${ eventEducation1.id }"
+        HttpResponse putResponse = whenPut(putUrl, user1, """{
+            "type": "event",
+            "event" : ${ toJSON(eventRef3) }
+        }""")
+
+        // Then
+        String responseBody = thenResponseCodeIs(putResponse, HttpServletResponse.SC_BAD_REQUEST)
+        thenResponseDataIs(responseBody, """[
+            { "property" : "education", "message" : "education.eventType.notAcceptedType" }
+        ]""")
+    }
 }

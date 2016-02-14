@@ -53,9 +53,11 @@ public class PodcastFeedController extends PublicDataController {
         
         // Add all education items
         educations.forEach((Education education) -> {
-            podcastData.add("<item>"); 
-            podcastData.add(getItemData(education));
-            podcastData.add("</item>"); 
+            if (education.getRecording() != null && education.getTime() != null) {
+                podcastData.add("<item>"); 
+                podcastData.add(getItemData(education));
+                podcastData.add("</item>");
+            }
         });
         
         // End <channel>
@@ -72,8 +74,8 @@ public class PodcastFeedController extends PublicDataController {
             tag("title", noAmp(podcast.getTitle())),
             tag("itunes:subtitle", noAmp(podcast.getSubTitle())),
 
-            tag("description", toCDATA(podcast.getDescription())),
-            tag("itunes:summary", toCDATA(podcast.getDescription())),
+            tag("description", toContentData(podcast.getDescription())),
+            tag("itunes:summary", toContentData(podcast.getDescription())),
 
             tag("itunes:author", noAmp(podcast.getAuthorName())),
             tag("link", podcast.getLink()),
@@ -97,13 +99,13 @@ public class PodcastFeedController extends PublicDataController {
         return String.join("\n", new String[] {
             tag("title", noAmp(education.getTitle())),
 
-            tag("description", toCDATA(education.getContent())),
-            tag("itunes:summary", toCDATA(education.getContent())),
+            tag("description", toContentData(education.getContent())),
+            tag("itunes:summary", toContentData(education.getContent())),
 
             tag("itunes:author", noAmp(education.getAuthorName())),
             tag("itunes:explicit", "clean"),
-            tag("guid", educationTheme.getImage().getFileUrl()),
-            tag("pubDate", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(education.getUpdatedTime())),
+            tag("guid", education.getId()),
+            tag("pubDate", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(education.getTime())),
 
             tag("itunes:image", "",
                     "href=\"" + educationTheme.getImage().getFileUrl() + "\""
@@ -126,12 +128,17 @@ public class PodcastFeedController extends PublicDataController {
         return text != null ? text.replace("&", "&amp;") : "";
     }
 	
-	private String toCDATA(String text) {
+	private String toContentData(String text) {
 	    if (text == null) {
 	        return "";
 	    }
-//	    text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("’", "&apos;").replace("\"", "&quot;");	    
-        return "<![CDATA[" + text + "]]>";
+
+	    boolean isHtmlContent = text.startsWith("<");
+	    if (isHtmlContent) {
+	        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("’", "&apos;").replace("\"", "&quot;");
+	    } else {
+            return "<![CDATA[" + text + "]]>";
+	    }
 	}
 	
 	private String toDuration(Long totalSeconds) {

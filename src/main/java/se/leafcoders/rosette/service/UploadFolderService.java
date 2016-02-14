@@ -35,7 +35,7 @@ public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 	}
 
 	@Override
-	public void setReferences(UploadFolder data, boolean checkPermissions) {
+	public void setReferences(UploadFolder data, UploadFolder dataInDb, boolean checkPermissions) {
 	}
 
     @Override

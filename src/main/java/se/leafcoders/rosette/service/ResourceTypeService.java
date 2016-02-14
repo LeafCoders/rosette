@@ -46,7 +46,7 @@ public class ResourceTypeService extends MongoTemplateCRUD<ResourceType> {
     }
 
 	@Override
-	public void setReferences(ResourceType data, boolean checkPermissions) {
+	public void setReferences(ResourceType data, ResourceType dataInDb, boolean checkPermissions) {
 		// TODO: Use methodService here
 		if (data instanceof UserResourceType) {
 			UserResourceType resourceType = (UserResourceType) data;
