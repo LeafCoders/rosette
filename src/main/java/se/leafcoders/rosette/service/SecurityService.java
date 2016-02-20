@@ -94,7 +94,7 @@ public class SecurityService {
         permissionTree = new PermissionTree();
         permissionTree.setId(userId);
         permissionTree.setTree(pth.getTree());
-        mongoTemplate.insert(permissionTree);
+        mongoTemplate.save(permissionTree);
 
         return pth.getTree();
 	}

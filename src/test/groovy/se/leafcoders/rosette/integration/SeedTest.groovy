@@ -15,6 +15,7 @@ import se.leafcoders.rosette.model.education.EducationThemeRef
 import se.leafcoders.rosette.model.education.EducationType
 import se.leafcoders.rosette.model.education.EducationTypeRef
 import se.leafcoders.rosette.model.education.EventEducation
+import se.leafcoders.rosette.model.education.SimpleEducation
 import se.leafcoders.rosette.model.event.Event
 import se.leafcoders.rosette.model.podcast.Podcast
 import se.leafcoders.rosette.model.reference.EventRef
@@ -237,57 +238,86 @@ class SeedTest extends AbstractIntegrationTest {
         /**
          * Undervisningstema
          */
-        UploadFolder temaFilkatalog = newUploadFolder("temabilder", "Temabilder", true, ["image/"])
+        UploadFolder temaFilkatalog = newUploadFolder("educationThemes", "Temabilder", true, ["image/"])
         UploadResponse standardTemaBild = givenUploadInFolder(temaFilkatalog.id, validPNGImage)
         UploadResponse jakobsbrevetBild = givenUploadInFolder(temaFilkatalog.id, validJPEGImage)
-        
-        EducationTheme weAreFamilyTema = newEducationTheme("We are family 2.0", "content....", gudstjanstUtbildningstyp, standardTemaBild)
-        EducationTheme jakobsbrevetTema = newEducationTheme("Jakobsbrevet", "content....", gudstjanstUtbildningstyp, jakobsbrevetBild)
-        EducationTheme profeterTema = newEducationTheme("Profeter", "content....", gudstjanstUtbildningstyp, standardTemaBild)
+
+        String temaContent = "Detta tema handlar om det här..."
+
+        EducationTheme ovrigtTema = newEducationTheme("Övrigt", temaContent, gudstjanstUtbildningstyp, standardTemaBild)
+        EducationTheme weAreFamilyTema = newEducationTheme("We are family 2.0", temaContent, gudstjanstUtbildningstyp, standardTemaBild)
+        EducationTheme jakobsbrevetTema = newEducationTheme("Jakobsbrevet", temaContent, gudstjanstUtbildningstyp, jakobsbrevetBild)
+        EducationTheme profeterTema = newEducationTheme("Profeter", temaContent, gudstjanstUtbildningstyp, standardTemaBild)
 
 
         /**
          * Undervisning
          */
+
         UploadResponse inspelning1 = givenUploadInFolder(predikningarFilkatalog.id, audioRecording1)
-        
+
+        (-50..-7).each { int offset ->
+            newSimpleEducation(
+                "Undervisning ${ offset + 51 }", "Innehåll", "Frågor",
+                gudstjanstUtbildningstyp, ovrigtTema, Times.SONDAG_11.rangeOffsetWeeks(offset, 0).start,
+                "Författare Fia", inspelning1
+            )
+        }
+
+
+        String weAreFamilyContent = """Här är en liten kort beskrivning av predikan.
+Den är uppdelad i tre delar:
+- Del 1
+- Del 2
+- Del 3
+
+Lite mer text här. Och sen lite till."""
+
+        String weAreFamilyQuestions = """1) Första frågan
+2) Andra frågan. En massa text här för att det ska bli radbryning på mobiltelefon. Lite mer text för att vara säker.
+3) Tredje frågan."""
+
         EventEducation weAreFamily_1 = newEventEducation(
-            "Familjen hemma", "content...", "frågor...",
+            "Familjen hemma", weAreFamilyContent, weAreFamilyQuestions,
             gudstjanstUtbildningstyp, weAreFamilyTema, gudstjanstM6Handelse,
             "Predikant Patrik", inspelning1
         )
         EventEducation weAreFamily_2 = newEventEducation(
-            "Familjen här", "content...", "frågor...",
+            "Familjen här", weAreFamilyContent, weAreFamilyQuestions,
             gudstjanstUtbildningstyp, weAreFamilyTema, gudstjanstM5Handelse,
             "Predikant Patrik", inspelning1
         )
         EventEducation weAreFamily_3 = newEventEducation(
-            "Familjen borta", "content...", "frågor...",
+            "Familjen borta", weAreFamilyContent, null,
             gudstjanstUtbildningstyp, weAreFamilyTema, gudstjanstM4Handelse,
             "Predikant Patrik", inspelning1
         )
+
+        String jakobsbrevetContent = "Här är en liten kort beskrivning av predikan."
+        String jakobsbrevetQuestions = "Frågor här..."
+
         EventEducation jakobsbrevet_1 = newEventEducation(
-            "Jakobsbrevet kap 1", "content...", "frågor...",
+            "Jakobsbrevet kap 1", jakobsbrevetContent, jakobsbrevetQuestions,
             gudstjanstUtbildningstyp, jakobsbrevetTema, gudstjanstM3Handelse,
             "Predikant Patrik", inspelning1
         )
         EventEducation jakobsbrevet_2 = newEventEducation(
-            "Jakobsbrevet kap 2", "content...", "frågor...",
+            "Jakobsbrevet kap 2", null, null,
             gudstjanstUtbildningstyp, jakobsbrevetTema, gudstjanstM2Handelse,
             "Predikant Patrik", inspelning1
         )
         EventEducation jakobsbrevet_3 = newEventEducation(
-            "Jakobsbrevet kap 3", "content...", "frågor...",
+            "Jakobsbrevet kap 3", jakobsbrevetContent, null,
             gudstjanstUtbildningstyp, jakobsbrevetTema, gudstjanstM1Handelse,
             "Predikant Patrik", inspelning1
         )
         EventEducation jakobsbrevet_4 = newEventEducation(
-            "Jakobsbrevet kap 4", "content...", "frågor...",
+            "Jakobsbrevet kap 4", null, jakobsbrevetQuestions,
             gudstjanstUtbildningstyp, jakobsbrevetTema, gudstjanstP1Handelse,
             "Predikant Patrik", inspelning1
         )
         EventEducation jakobsbrevet_5 = newEventEducation(
-            "Jakobsbrevet kap 5", "content...", "frågor...",
+            "Jakobsbrevet kap 5", jakobsbrevetContent, jakobsbrevetQuestions,
             gudstjanstUtbildningstyp, jakobsbrevetTema, gudstjanstP2Handelse,
             "Predikant Patrik", null
         )
@@ -493,6 +523,22 @@ class SeedTest extends AbstractIntegrationTest {
         )
         givenEducation(eventEducation, recording)
         return eventEducation
+    }
+
+    private SimpleEducation newSimpleEducation(String title, String content, String questions, EducationType educationType, EducationTheme educationTheme, Date time, String author, UploadResponse recording) {
+        SimpleEducation simpleEducation = new SimpleEducation(
+            type : 'simple',
+            id : getObjectId(),
+            educationType : new EducationTypeRef(educationType),
+            educationTheme : new EducationThemeRef(educationTheme),
+            title : title,
+            content : content,
+            questions : questions,
+            time: time,
+            authorName : author
+        )
+        givenEducation(simpleEducation, recording)
+        return simpleEducation
     }
 
     private Podcast newPodcast(String title, EducationType educationType, UploadResponse image) {
