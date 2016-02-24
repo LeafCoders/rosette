@@ -48,11 +48,11 @@ configurations {
 }
 
 test {
-    if (System.getProperty('rosette.baseUrl')) {
-        systemProperties = [
-            'rosette.baseUrl': System.getProperty('rosette.baseUrl')
-        ]
-    }
+    System.getProperties().stringPropertyNames().forEach { String key ->
+        if (key.startsWith('rosette')) {
+            systemProperties[key] = System.getProperty(key)
+        }
+    } 
 }
 
 // Ignore 'test' task when running 'build' task
