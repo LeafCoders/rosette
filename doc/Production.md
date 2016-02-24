@@ -65,6 +65,11 @@ Rosette specific properties are descried here:
 Read more about the configuration properties in https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html
 
 
+## Migrate data
+
+There are some tools that are usefull when migrating data from other sources into Rosette. Read about them at [Tools](/src/test/groovy/se/leafcoders/rosette/tool/Tools.md)
+
+
 ## Running server
 
 1. Start MongodDB
