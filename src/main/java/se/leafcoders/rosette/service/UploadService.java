@@ -2,6 +2,7 @@ package se.leafcoders.rosette.service;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -29,6 +30,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import se.leafcoders.rosette.config.RosetteSettings;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
@@ -46,10 +49,14 @@ import se.leafcoders.rosette.util.RosetteMpegAudioFileReader;
 @Service
 public class UploadService {
 	public static final String METADATA_FOLDER_ID = "folderId";
+    public static final String METADATA_THUMB_SIZE = "thumbSize";
 	public static final String METADATA_WIDTH = "width";
 	public static final String METADATA_HEIGHT = "height";
     public static final String METADATA_DURATION = "duration";
 
+    private final int THUMB_WIDTH_ICON = 300;
+    private final int THUMB_HEIGHT_ICON = 300;
+    
     @Autowired
     private RosetteSettings rosetteSettings;
 	@Autowired
@@ -68,7 +75,7 @@ public class UploadService {
 		security.checkPermission(new PermissionValue(PermissionType.UPLOADS, PermissionAction.CREATE, folderId));
 		checkMimeTypePermission(folderId, upload.getMimeType());
 
-		if (getFileByName(folderId, upload.getFileName()) != null) {
+		if (getFileByName(folderId, upload.getFileName(), null) != null) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.alreadyExists"));
 		}
         byte[] fileData = upload.getFileData();
@@ -152,51 +159,84 @@ public class UploadService {
 		return uploadIds;
 	}
 
-	public void streamAsset(final String folderId, final String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		validateFolderExist(folderId);
-		if (uploadFolderService.isPublic(folderId) == false) {
-			security.checkPermission(
-					new PermissionValue(PermissionType.ASSETS, PermissionAction.READ, folderId),
-					new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, folderId));
-		}
+    public void streamAsset(final String folderId, final String fileName,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        checkFolderPermission(folderId);
+        streamFile(getFile(folderId, fileName, null), fileName, request, response);
+    }
 
-		GridFSDBFile file = getFileByName(folderId, fileName);
-		if (file == null) {
-			// Find file by id if not found by file name
-			file = getFileById(folderId, fileName);
-		}
-		if (file != null) {
-			try {
-		        response.addHeader("Cache-Control", "public");
-		        if (rosetteSettings.getUploadCacheMaxAge() > 0) {
-		        	response.addHeader("Cache-Control", "max-age=" + rosetteSettings.getUploadCacheMaxAge()); 
-		        }
-		        
-		        // Indicate the browser to view the file
-		        response.addHeader("Content-Disposition", "inline; " + file.getFilename());
-		        
-				new MongoDbFileByteRangeSupport().with(request).with(response).serveResource(file, file.getContentType());
-			} catch (ClientAbortException abortException) {
-				return;
-			}
-        } else {
-			throw new NotFoundException("Upload", fileName);
-		}
-	}
+    public void streamAssetThumbnail(final String folderId, final String fileName, final String thumbSize,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        checkFolderPermission(folderId);
+        GridFSDBFile file = getFile(folderId, fileName, thumbSize);
+        if (file == null) {
+            file = createThumbSize(folderId, fileName, thumbSize);
+        }
+        streamFile(file, fileName, request, response);
+    }
+    
+    private void checkFolderPermission(final String folderId) throws Exception {
+        validateFolderExist(folderId);
+        if (uploadFolderService.isPublic(folderId) == false) {
+            security.checkPermission(
+                    new PermissionValue(PermissionType.ASSETS, PermissionAction.READ, folderId),
+                    new PermissionValue(PermissionType.UPLOADS, PermissionAction.READ, folderId));
+        }
+    }
 
 	private void validateFolderExist(String folderId) {
 		if (uploadFolderService.folderExist(folderId) == false) {
 			throw new SimpleValidationException(new ValidationError("upload", "uploadFolder.dontExist"));
 		}
 	}
-
+	
 	private void checkMimeTypePermission(final String folderId, final String mimeType) {
 		if (!uploadFolderService.isPermittedMimeType(folderId, mimeType)) {
 			throw new SimpleValidationException(new ValidationError("upload", "upload.mimeType.notAllowed"));
 		}
 	}
 
-	private GridFSFile storeFile(byte [] fileData, String fileName, String mimeType, DBObject metaData) {
+    private void streamFile(GridFSDBFile file, final String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // Indicate the browser to view the file
+        response.addHeader("Content-Disposition", "inline; " + fileName);
+
+        if (file != null) {
+            try {
+                response.addHeader("Cache-Control", "public");
+                if (rosetteSettings.getUploadCacheMaxAge() > 0) {
+                    response.addHeader("Cache-Control", "max-age=" + rosetteSettings.getUploadCacheMaxAge()); 
+                }
+                new MongoDbFileByteRangeSupport().with(request).with(response).serveResource(file, file.getContentType());
+            } catch (ClientAbortException abortException) {
+                return;
+            }
+        } else {
+            throw new NotFoundException("Upload", fileName);
+        }
+    }
+
+    private GridFSDBFile createThumbSize(final String folderId, final String fileName, final String thumbSize) throws IOException {
+        GridFSDBFile file = getFile(folderId, fileName, null);
+        if (file != null && file.getContentType().startsWith("image")) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            Thumbnails.of(file.getInputStream())
+                .crop(Positions.CENTER)
+                .size(THUMB_WIDTH_ICON, THUMB_HEIGHT_ICON)
+                .toOutputStream(bos);
+            byte[] fileData = bos.toByteArray();
+
+            DBObject metaData = new BasicDBObject();
+            metaData.put(UploadService.METADATA_FOLDER_ID, folderId);
+            metaData.put(UploadService.METADATA_THUMB_SIZE, thumbSize);
+            setImageSizeMetadata(metaData, fileData);
+            
+            storeFile(fileData, fileName, file.getContentType(), metaData);
+            return getFile(folderId, fileName, thumbSize);
+        }
+        return null;
+    }
+
+    private GridFSFile storeFile(byte [] fileData, String fileName, String mimeType, DBObject metaData) {
 		InputStream inputStream = new ByteArrayInputStream(fileData);
 		try {
 			return gridFsTemplate.store(inputStream, fileName, mimeType, metaData);
@@ -205,6 +245,14 @@ public class UploadService {
 		}
 	}
 
+    private GridFSDBFile getFile(final String folderId, final String fileNameOrId, final String thumbSize) {
+        GridFSDBFile file = getFileByName(folderId, fileNameOrId, thumbSize);
+        if (file == null) {
+            file = getFileById(folderId, fileNameOrId, thumbSize);
+        }
+        return file;
+    }
+
 	private GridFSDBFile getFileById(String uploadId) {
 		if (ObjectId.isValid(uploadId)) {
 			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(QueryId.get(uploadId))));
@@ -212,27 +260,40 @@ public class UploadService {
 		return null;
 	}
 
-	private GridFSDBFile getFileById(String folderId, String uploadId) {
+	private GridFSDBFile getFileById(final String folderId, final String uploadId, final String thumbSize) {
 		if (ObjectId.isValid(uploadId)) {
-			return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(QueryId.get(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId)));
+		    Query query = new Query(Criteria.where("_id").is(QueryId.get(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId));
+	        if (thumbSize != null) {
+	            query.addCriteria(Criteria.where("metadata." + METADATA_THUMB_SIZE).is(thumbSize));
+	        } else {
+                query.addCriteria(Criteria.where("metadata." + METADATA_THUMB_SIZE).exists(false));
+	        }
+			return gridFsTemplate.findOne(query);
 		}
 		return null;
 	}
 
-	private GridFSDBFile getFileByName(String folderId, String fileName) {
+	private GridFSDBFile getFileByName(final String folderId, final String fileName, final String thumbSize) {
 		Query query = new Query(Criteria.where("filename").is(fileName).and("metadata." + METADATA_FOLDER_ID).is(folderId));
+		if (thumbSize != null) {
+		    query.addCriteria(Criteria.where("metadata." + METADATA_THUMB_SIZE).is(thumbSize));
+        } else {
+            query.addCriteria(Criteria.where("metadata." + METADATA_THUMB_SIZE).exists(false));
+		}
 		return gridFsTemplate.findOne(query);
 	}
 
 	private List<GridFSDBFile> getFilesInFolder(String folderId) {
 		Query query = new Query(Criteria.where("metadata." + METADATA_FOLDER_ID).is(folderId));
+        query.addCriteria(Criteria.where("metadata." + METADATA_THUMB_SIZE).exists(false));
 		query.with(new Sort(Sort.Direction.DESC, "uploadDate"));
 		return gridFsTemplate.find(query);
 	}
 
 	private boolean deleteFileById(String folderId, String uploadId) {
-		if (getFileById(folderId, uploadId) != null) {
-			Query query = new Query(Criteria.where("_id").is(QueryId.get(uploadId)).and("metadata." + METADATA_FOLDER_ID).is(folderId));
+	    GridFSDBFile file = getFileById(folderId, uploadId, null);
+		if (file != null) {
+			Query query = new Query(Criteria.where("filename").is(file.getFilename()).and("metadata." + METADATA_FOLDER_ID).is(folderId));
 			gridFsTemplate.delete(query);
 			return true;
 		}

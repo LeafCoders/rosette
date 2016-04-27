@@ -31,29 +31,36 @@ public class ManyQuery {
         this.startIndex = parseInt(request.getParameter(START_INDEX), 0);
         this.maxItems = parseInt(request.getParameter(MAX_ITEMS), Integer.MAX_VALUE);
 
-        Query q = new Query();
+        this.query = new Query();
         String sortBy = request.getParameter(SORT_BY);
         if (sortBy == null) {
             sortBy = defaultSortBy;
         }
         if (sortBy != null) {
-            List<Sort.Order> orders = new LinkedList<Sort.Order>(); 
-            for (String part : sortBy.split(",")) {
-                part = part.trim();
-                switch (part.charAt(0)) {
-                    case '+': orders.add(new Sort.Order(Sort.Direction.ASC, part.substring(1))); break;
-                    case '-': orders.add(new Sort.Order(Sort.Direction.DESC, part.substring(1))); break;
-                    default:  orders.add(new Sort.Order(Sort.Direction.ASC, part)); break;
-                }
-            }
-            q.with(new Sort(orders));
+            addSort(sortBy);
         }
-        this.query = q;
     }
 
     public Query addCriteria(Criteria criteria) {
         query.addCriteria(criteria);
         return query;
+    }
+
+    public Query addSort(String sortBy) {
+        if (this.query == null) {
+            this.query = new Query();
+        }
+        List<Sort.Order> orders = new LinkedList<Sort.Order>(); 
+        for (String part : sortBy.split(",")) {
+            part = part.trim();
+            switch (part.charAt(0)) {
+                case '+': orders.add(new Sort.Order(Sort.Direction.ASC, part.substring(1))); break;
+                case '-': orders.add(new Sort.Order(Sort.Direction.DESC, part.substring(1))); break;
+                default:  orders.add(new Sort.Order(Sort.Direction.ASC, part)); break;
+            }
+        }
+        this.query.with(new Sort(orders));
+        return this.query; 
     }
     
     public <T> List<T> filter(final List<T> items) {

@@ -94,7 +94,10 @@ dependencies {
 
 	// iCalendar support
 	compile("net.sf.biweekly:biweekly:0.4.2")
-    
+
+    // Thumbnailator
+    compile("net.coobird:thumbnailator:0.4.8")
+  
     // MP3 audio support
     compile("com.googlecode.soundlibs:mp3spi:1.9.5-1")
 

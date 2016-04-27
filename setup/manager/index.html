@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="sv-SE">
+<head>
+	<meta charset="utf-8">
+	<title>Rosette Manager</title>
+	
+	<link rel="stylesheet" href="./vendor/bootstrap-3.3.6.min.css" type="text/css">
+	<script src="./vendor/angular-1.5.5.min.js" type="text/javascript"></script>
+	<script src="./vendor/angular-resource-1.5.5.min.js" type="text/javascript"></script>
+	
+	<style>
+	[draggable] {
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+		/* Required to make elements draggable in old WebKit */
+		-khtml-user-drag: element;
+		-webkit-user-drag: element;
+	}
+	</style>
+</head>
+<body ng-app="managerApp" class="container-fluid">
+	<div class="row">
+
+		<div class="col-sm-2">
+			<div class="radio"><label><input type="radio" ng-model="tool" ng-init="tool = 'login'" value="login">Login</label></div>
+			<div class="radio"><label><input type="radio" ng-model="tool" value="uploads">Uploads</label></div>
+			<div class="radio"><label><input type="radio" ng-model="tool" value="educations">Educations</label></div>
+		</div>
+		
+		<div class="col-sm-10" ng-switch="tool">
+
+			<div ng-switch-when="login" ng-controller="LoginCtrl as ctrl">
+				<form class="bg-info" style="padding: 12px;">
+					<div class="form-group">
+						<label>Rosette url</label>
+						<input class="form-control" type="text" ng-model="rosetteUrl" ng-change="ctrl.setRosetteUrl(rosetteUrl);">
+					</div>
+					<div class="form-group">
+						<label>Username</label>
+						<input class="form-control" type="text" ng-model="username">
+					</div>
+					<div class="form-group">
+						<label>Password</label>
+						<input class="form-control" type="password" ng-model="password">
+					</div>
+					<button type="button" class="btn btn-primary" ng-click="ctrl.login()">Login</button>
+				</form>
+				<br>
+				<div>Authenticated = {{ ctrl.isAuthenticated() ? 'YES' : 'NO' }}</div>
+			</div>
+			
+			<div ng-switch-when="uploads" ng-controller="ImportUploadsCtrl as ctrl">
+				<form class="bg-info" style="padding: 12px;">
+					<div class="form-group">
+						<label>Upload to folder Id</label>
+						<input class="form-control" type="text" ng-model="uploadToFolderId">
+					</div>
+					<div class="form-group">
+						<label>Files to upload</label>
+						<input class="form-control" type="file" multiple id="filesToUpload" onchange="angular.element(this).scope().selectedFilesChanged()">
+					</div>
+					<button type="button" class="btn btn-primary" ng-click="ctrl.importUploads()">Import</button>
+				</form>
+				<br>
+				<table class="table table-striped">
+					<tbody>
+						<tr><th>Filename</th><th>Imported</th></tr>
+						<tr ng-repeat="item in ctrl.uploads">
+							<td>{{ item.fileName }}</td>
+							<td>{{ item.imported }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div ng-switch-when="educations" ng-controller="ImportEducationsCtrl as ctrl">
+				<form class="bg-info" style="padding: 12px;">
+					<div class="form-group">
+						<label>Educations import file</label>
+						<input class="form-control" type="file" id="educationsFile" onchange="angular.element(this).scope().selectedEducationsFileChanged()">
+						<span class="help-block">Format: <pre>educationTypeId|educationThemeId|time|authorName|authorUserId|title|recordingId</pre></span>
+					</div>
+					<div class="form-group">
+						<label>Recordings folder Id</label>
+						<input class="form-control" type="text" ng-model="recordingsFolderId">
+					</div>
+					<button type="button" class="btn btn-primary" ng-click="ctrl.importEducations()">Import</button>
+				</form>
+				<br>
+				<table class="table table-striped">
+					<tbody>
+						<tr><th>Time</th><th>Title</th><th>Imported</th></tr>
+						<tr ng-repeat="item in ctrl.educations">
+							<td>{{ item.time }}</td>
+							<td>{{ item.title }}</td>
+							<td>{{ item.imported }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+		</div>
+	</div>
+
+	<script src="./app/app.js" type="text/javascript"></script>
+	<script src="./app/ServerAPI.js" type="text/javascript"></script>
+	<script src="./app/Login.js" type="text/javascript"></script>
+	<script src="./app/ImportEducations.js" type="text/javascript"></script>
+	<script src="./app/ImportUploads.js" type="text/javascript"></script>
+</body>
+</html>

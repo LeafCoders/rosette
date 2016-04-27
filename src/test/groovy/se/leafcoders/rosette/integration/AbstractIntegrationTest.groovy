@@ -645,7 +645,7 @@ abstract class AbstractIntegrationTest {
 	 */
 	protected HttpResponse whenPost(String postUrl, User user, String requestBody) {
         postRequest = new HttpPost(baseUrl + postUrl)
-		postRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
+		postRequest.setEntity(new StringEntity(requestBody, ContentType.APPLICATION_JSON))
 		if (user != null) {
             postRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
@@ -684,7 +684,7 @@ abstract class AbstractIntegrationTest {
 
 	protected HttpResponse whenPut(String putUrl, User user, String requestBody) {
         putRequest = new HttpPut(baseUrl + putUrl)
-		putRequest.setEntity(new StringEntity(requestBody, "application/json", "UTF-8"))
+		putRequest.setEntity(new StringEntity(requestBody, ContentType.APPLICATION_JSON))
 		if (user != null) {
             putRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}

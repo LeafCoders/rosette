@@ -67,7 +67,7 @@ Read more about the configuration properties in https://docs.spring.io/spring-bo
 
 ## Migrate data
 
-There are some tools that are usefull when migrating data from other sources into Rosette. Read about them at [Tools](/src/test/groovy/se/leafcoders/rosette/tool/Tools.md)
+Rosette Manager is a static web application that can be used to import data from other system. It's located in `setup/manager`
 
 
 ## Running server

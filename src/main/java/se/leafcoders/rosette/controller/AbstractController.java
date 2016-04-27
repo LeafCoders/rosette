@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class AbstractController {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Object handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public Object handleApplicationExceptions(Throwable exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
 
         if (exception instanceof ForbiddenException) {

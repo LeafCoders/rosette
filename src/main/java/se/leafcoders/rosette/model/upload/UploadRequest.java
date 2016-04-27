@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.model.upload;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
@@ -10,6 +11,7 @@ import se.leafcoders.rosette.model.IdBasedModel;
 public class UploadRequest extends IdBasedModel {
 
     @NotNull(message = "upload.fileName.notNull")
+    @Pattern(regexp = "[a-zA-Z0-9_.]+", message = "error.fileName.notValidFormat")
 	private String fileName;
     @NotNull(message = "upload.mimeType.notNull")
 	private String mimeType;

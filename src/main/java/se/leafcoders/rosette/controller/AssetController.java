@@ -16,9 +16,18 @@ public class AssetController extends AbstractController {
 	@Autowired
 	private UploadService uploadService;
 
+    @RequestMapping(value = "assets/{folder}/{thumbSize}/{fileName:.+}", method = RequestMethod.GET)
+    public void getAssetThumbnail(@PathVariable String folder, @PathVariable String thumbSize, @PathVariable String fileName,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
+        // Only support one thumbnail size for now
+        thumbSize = "icon";
+        uploadService.streamAssetThumbnail(folder, fileName, thumbSize, request, response);
+    }
+
 	@RequestMapping(value = "assets/{folder}/{fileName:.+}", method = RequestMethod.GET)
 	public void getAsset(@PathVariable String folder, @PathVariable String fileName,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		uploadService.streamAsset(folder, fileName, request, response);
+        uploadService.streamAsset(folder, fileName, request, response);
 	}
 }
