@@ -23,7 +23,6 @@ import se.leafcoders.rosette.model.error.ExceptionError;
 import se.leafcoders.rosette.model.error.ValidationError;
 
 @RequestMapping("api/v1")
-@CrossOrigin
 public class AbstractController {
     static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
