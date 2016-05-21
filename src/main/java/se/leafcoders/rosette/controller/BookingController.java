@@ -6,12 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.Booking;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
@@ -20,8 +19,8 @@ import se.leafcoders.rosette.service.BookingService;
 import se.leafcoders.rosette.service.SecurityService;
 import se.leafcoders.rosette.util.ManyQuery;
 
-@Controller
-public class BookingController extends AbstractController {
+@RestController
+public class BookingController extends ApiV1Controller {
     @Autowired
     private BookingService bookingService;
 	@Autowired
@@ -30,19 +29,16 @@ public class BookingController extends AbstractController {
 	private SecurityService security;
 
 	@RequestMapping(value = "bookings/{id}", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public Booking getBooking(@PathVariable String id) {
 		return bookingService.read(id);
 	}
 
 	@RequestMapping(value = "bookings", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public List<Booking> getBookings(HttpServletRequest request) {
 		return bookingService.readMany(new ManyQuery(request, "startTime"));
 	}
 
 	@RequestMapping(value = "bookings", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
 	public Booking postBooking(@RequestBody Booking booking, HttpServletResponse response) {
 		return bookingService.create(booking, response);
 	}

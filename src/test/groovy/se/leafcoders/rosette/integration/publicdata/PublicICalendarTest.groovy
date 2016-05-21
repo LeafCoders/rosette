@@ -51,7 +51,7 @@ public class PublicICalendarTest extends AbstractIntegrationTest {
 	}
 
 	protected HttpResponse whenGetICalendar(String getUrl) {
-		HttpGet getRequest = new HttpGet(baseUrl + getUrl)
+		HttpGet getRequest = new HttpGet(baseApiUrl + getUrl)
 		getRequest.addHeader("Accept", "text/calendar; charset=UTF-8")
 		getRequest.addHeader("Content-Type", "text/calendar; charset=UTF-8")
 		HttpResponse resp = httpClient.execute(getRequest)

@@ -8,13 +8,10 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import se.leafcoders.rosette.model.event.Event;
-import se.leafcoders.rosette.service.PublicEventService;
+import org.springframework.web.bind.annotation.RestController;
 import biweekly.ICalVersion;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -25,15 +22,16 @@ import biweekly.property.DateStart;
 import biweekly.property.Description;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
+import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.service.PublicEventService;
 
-@Controller
+@RestController
 public class ICalendarController extends PublicDataController {
 	@Autowired
 	private PublicEventService publicEventService;
 
 	@SuppressWarnings("resource")
 	@RequestMapping(value = "icalendar", method = RequestMethod.GET, produces = "text/calendar")
-	@ResponseBody
 	public String getICalendar(
 			@RequestParam(required = true) String[] eventType,
 			HttpServletResponse response) {

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
+import se.leafcoders.rosette.model.User;
 
 public class JwtAuthenticationService {
 
@@ -38,5 +39,9 @@ public class JwtAuthenticationService {
             logger.info("Requst had an invalid token '{}'. Request handled as anonymous.", token);
         }
         return null;
+    }
+    
+    public String createTokenForUser(User user) {
+        return tokenHandler.createTokenForUserId(user.getId());
     }
 }

@@ -32,7 +32,7 @@ public class CreateUploadTest extends AbstractIntegrationTest {
 			"id" : "${ JSON.parse(responseBody)['id'] }",
 			"fileName" : "image.png",
             "folderId": "posters",
-			"fileUrl" : "${baseUrl}/assets/posters/image.png",
+			"fileUrl" : "${baseApiUrl}/assets/posters/image.png",
             "mimeType" : "image/png",
             "fileSize" : 638,
             "width" : 300,

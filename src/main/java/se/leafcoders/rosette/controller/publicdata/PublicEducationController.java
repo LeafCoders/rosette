@@ -5,17 +5,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.education.Education;
 import se.leafcoders.rosette.model.education.EducationTheme;
 import se.leafcoders.rosette.service.EducationService;
 import se.leafcoders.rosette.service.EducationThemeService;
 import se.leafcoders.rosette.util.ManyQuery;
 
-@Controller
+@RestController
 public class PublicEducationController extends PublicDataController {
 
 	@Autowired
@@ -24,7 +23,6 @@ public class PublicEducationController extends PublicDataController {
     private EducationThemeService educationThemeService;
 
 	@RequestMapping(value = "educations/past", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public List<Education> getPastEducations(HttpServletRequest request) {
 		checkPermission();
         ManyQuery manyQuery = new ManyQuery(request, "-time");
@@ -33,7 +31,6 @@ public class PublicEducationController extends PublicDataController {
 	}	
 
 	@RequestMapping(value = "educations/future", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public List<Education> getFutureEducations(HttpServletRequest request) {
 	    checkPermission();
         ManyQuery manyQuery = new ManyQuery(request, "-time");
@@ -42,7 +39,6 @@ public class PublicEducationController extends PublicDataController {
 	}	
 	
     @RequestMapping(value = "educationThemes", method = RequestMethod.GET, produces = "application/json")
-    @ResponseBody
     public List<EducationTheme> getEducationThemes(HttpServletRequest request) {
         checkPermission();
         return educationThemeService.readMany(new ManyQuery(request, "-id"), false);

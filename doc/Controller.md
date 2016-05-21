@@ -30,7 +30,6 @@ The controller shall handle Create, Read, Update and Delete requests. The reques
 ### Create one
 ```java
 @RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-@ResponseBody
 public Booking postEvent(@RequestBody Event event, HttpServletResponse response) {
   checkPermission("events:create");
   ...
@@ -40,7 +39,6 @@ public Booking postEvent(@RequestBody Event event, HttpServletResponse response)
 ### Get one
 ```java
 @RequestMapping(value = "events/{id}", method = RequestMethod.GET, produces = "application/json")
-@ResponseBody
 public Booking getEvent(@PathVariable String id) {
   checkPermissions("events:create:" + id);
   ...
@@ -50,7 +48,6 @@ public Booking getEvent(@PathVariable String id) {
 ### Get all
 ```java
 @RequestMapping(value = "events", method = RequestMethod.GET, produces = "application/json")
-@ResponseBody
 public List<Booking> getEvents(HttpServletResponse response) {
   ...
   for (Event event : eventsInDatabase) {

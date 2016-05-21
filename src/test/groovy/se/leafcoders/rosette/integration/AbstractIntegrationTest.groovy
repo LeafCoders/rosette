@@ -63,7 +63,9 @@ abstract class AbstractIntegrationTest {
 	protected static HttpClient httpClient
 	protected static ObjectMapper mapper
 
-    protected static String baseUrl = System.getProperty("rosette.baseUrl", "http://localhost:9000") + "/api/v1";
+    protected static String baseUrl = System.getProperty("rosette.baseUrl", "http://localhost:9000");
+    protected static String baseAuthUrl = baseUrl + "/auth";
+    protected static String baseApiUrl = baseUrl + "/api/v1";
 
 	private HttpPost postRequest = null;
 	private HttpGet getRequest = null;
@@ -92,6 +94,7 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("educationTypes")
 		mongoTemplate.dropCollection("events")
 		mongoTemplate.dropCollection("eventTypes")
+        mongoTemplate.dropCollection("forgottenPasswords")
 		mongoTemplate.dropCollection("groups")
 		mongoTemplate.dropCollection("groupMemberships")
 		mongoTemplate.dropCollection("locations")
@@ -152,7 +155,7 @@ abstract class AbstractIntegrationTest {
 	}
 
 	void resetAuthCaches() {
-		HttpDelete httpDelete = new HttpDelete(baseUrl + "/development/resetPermissionCache")
+		HttpDelete httpDelete = new HttpDelete(baseApiUrl + "/development/resetPermissionCache")
 		httpClient.execute(httpDelete)
 		httpDelete.releaseConnection()
 	}
@@ -638,14 +641,35 @@ abstract class AbstractIntegrationTest {
         return responseObj
 	}
 
-
+    protected ForgottenPassword givenForgottenPassword(User user) {
+        ForgottenPassword fp = new ForgottenPassword(
+            id: getObjectId(),
+            token: xAuthToken(user.id),
+            userId: user.id
+        )
+        mongoTemplate.insert(fp);
+        return fp;
+    }
 
 	/*
 	 *  When
 	 */
-	protected HttpResponse whenPost(String postUrl, User user, String requestBody) {
-        postRequest = new HttpPost(baseUrl + postUrl)
-		postRequest.setEntity(new StringEntity(requestBody, ContentType.APPLICATION_JSON))
+    
+    protected HttpResponse whenPost(String postUrl, User user, String requestBody) {
+        return whenPostBase(baseApiUrl + postUrl, user, requestBody);
+    }
+        
+    protected HttpResponse whenPostAuth(String postUrl, User user, String requestBody) {
+        return whenPostBase(baseAuthUrl + postUrl, user, requestBody);
+    }
+        
+	private HttpResponse whenPostBase(String postUrl, User user, String requestBody) {
+        postRequest = new HttpPost(postUrl)
+        postRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
+        postRequest.addHeader("Accept", "application/json; charset=UTF-8")
+        if (requestBody != null) {
+            postRequest.setEntity(new StringEntity(requestBody, ContentType.APPLICATION_JSON))
+        }
 		if (user != null) {
             postRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
@@ -660,7 +684,7 @@ abstract class AbstractIntegrationTest {
             .addBinaryBody("file", new File("src/test/resources/" + upload.getFileName()), ContentType.create(upload.getMimeType()), upload.getFileName())
             .build();
     
-        postRequest = new HttpPost(baseUrl + postUrl);
+        postRequest = new HttpPost(baseApiUrl + postUrl);
         postRequest.setEntity(entity);
         if (user != null) {
             postRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
@@ -672,9 +696,8 @@ abstract class AbstractIntegrationTest {
 
 
 	protected HttpResponse whenGet(String getUrl, User user = null, boolean relativeUrl = true) {
-        getRequest = new HttpGet(relativeUrl ? (baseUrl + getUrl) : getUrl)
+        getRequest = new HttpGet(relativeUrl ? (baseApiUrl + getUrl) : getUrl)
 		getRequest.addHeader("Accept", "application/json; charset=UTF-8")
-		getRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
 		if (user != null) {
             getRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
@@ -682,9 +705,21 @@ abstract class AbstractIntegrationTest {
 		return resp
 	}
 
-	protected HttpResponse whenPut(String putUrl, User user, String requestBody) {
-        putRequest = new HttpPut(baseUrl + putUrl)
-		putRequest.setEntity(new StringEntity(requestBody, ContentType.APPLICATION_JSON))
+    protected HttpResponse whenPut(String putUrl, User user, String requestBody) {
+        return whenPutBase(baseApiUrl + putUrl, user, requestBody);
+    }
+        
+    protected HttpResponse whenPutAuth(String putUrl, User user, String requestBody) {
+        return whenPutBase(baseAuthUrl + putUrl, user, requestBody);
+    }
+        
+	private HttpResponse whenPutBase(String putUrl, User user, String requestBody) {
+        putRequest = new HttpPut(putUrl)
+        putRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
+        putRequest.addHeader("Accept", "application/json; charset=UTF-8")
+        if (requestBody != null) {
+            putRequest.setEntity(new StringEntity(requestBody, ContentType.APPLICATION_JSON))
+        }
 		if (user != null) {
             putRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
 		}
@@ -693,7 +728,7 @@ abstract class AbstractIntegrationTest {
 	}
 
 	protected HttpResponse whenDelete(String deleteUrl, User user) {
-        deleteRequest = new HttpDelete(baseUrl + deleteUrl)
+        deleteRequest = new HttpDelete(baseApiUrl + deleteUrl)
 		deleteRequest.addHeader("Accept", "application/json; charset=UTF-8")
 		if (user != null) {
             deleteRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
@@ -701,6 +736,18 @@ abstract class AbstractIntegrationTest {
 		HttpResponse resp = httpClient.execute(deleteRequest)
 		return resp
 	}
+
+    protected HttpResponse whenLogin(String email, String password) {
+        String encodedPassword = encodePassword(password)
+        postRequest = new HttpPost(baseUrl + "/auth/login?username=" + email + "&password=" + encodedPassword)
+        postRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
+        postRequest.addHeader("Accept", "application/json; charset=UTF-8")
+        return httpClient.execute(postRequest)
+    }
+
+    protected String encodePassword(String password) {
+        return new String(Base64.getUrlEncoder().encodeToString(password.getBytes("UTF-8")))
+    }
 
     private String xAuthToken(String userId) {
         final String jwtSecret = "developmentSimpleJwtSecretToken"

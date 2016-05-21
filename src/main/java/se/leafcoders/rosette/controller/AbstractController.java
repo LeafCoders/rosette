@@ -10,9 +10,7 @@ import javax.validation.ConstraintViolation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.leafcoders.rosette.comparator.ValidationErrorComparator;
 import se.leafcoders.rosette.exception.ForbiddenException;
@@ -22,8 +20,7 @@ import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.error.ExceptionError;
 import se.leafcoders.rosette.model.error.ValidationError;
 
-@RequestMapping("api/v1")
-public class AbstractController {
+public abstract class AbstractController {
     static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
     @ExceptionHandler(Exception.class)
@@ -83,5 +80,9 @@ public class AbstractController {
 
             return new ExceptionError("error.unknownError", null, null);
         }
+    }
+    
+    protected void throwValidationError(String property, String value) {
+        throw new SimpleValidationException(new ValidationError(property, value));
     }
 }

@@ -70,11 +70,11 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
     compile("org.springframework.boot:spring-boot-starter-logging")
     compile("org.springframework.boot:spring-boot-starter-mail")
-    compile("org.springframework.boot:spring-boot-starter-web")
 	compile('org.springframework.boot:spring-boot-starter-security')
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compile("org.springframework.boot:spring-boot-configuration-processor")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    testCompile("org.springframework.boot:spring-boot-starter-web")
 	testCompile("org.springframework.boot:spring-boot-starter-test")
 
 	compile("org.codehaus.groovy:groovy-all:2.3.10")

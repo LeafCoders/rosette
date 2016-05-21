@@ -7,39 +7,35 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.SignupUser;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.service.SignupUserService;
 import se.leafcoders.rosette.service.UserService;
 import se.leafcoders.rosette.util.ManyQuery;
 
-@Controller
-public class SignupUserController extends AbstractController {
+@RestController
+public class SignupUserController extends ApiV1Controller {
 	@Autowired
 	private SignupUserService signupUserService;
 	@Autowired
 	private UserService userService;
 
 	@RequestMapping(value = "signupUsers/{id}", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public SignupUser getSignupUser(@PathVariable String id) {
 		return signupUserService.read(id);
 	}
 
 	@RequestMapping(value = "signupUsers", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public List<SignupUser> getSignupUsers(HttpServletRequest request) {
 		return signupUserService.readMany(new ManyQuery(request));
 	}
 
 	@RequestMapping(value = "signupUsers", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
 	public SignupUser postSignupUser(@RequestBody SignupUser signupUser, HttpServletResponse response) {
 		// Only allow one signup each minute
 		SignupUser latestSignup = signupUserService.getLatestSignupUser();

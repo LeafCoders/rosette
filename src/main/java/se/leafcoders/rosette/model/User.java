@@ -30,6 +30,11 @@ public class User extends IdBasedModel {
 	@NotEmpty(message = "user.lastName.notEmpty")
 	private String lastName;
 
+	public void setAllPasswords(String password) {
+	    setPassword(password);
+        setHashedPassword(new BCryptPasswordEncoder().encode(password));
+	}
+	
 	@Override
 	public void update(JsonNode rawData, BaseModel updateFrom) {
 		User userUpdate = (User) updateFrom;
@@ -37,8 +42,7 @@ public class User extends IdBasedModel {
 			setEmail(userUpdate.getEmail());
 		}
 		if (rawData.has("password") && !"".equals(userUpdate.getPassword().trim())) {
-			String hashedPassword = new BCryptPasswordEncoder().encode(userUpdate.getPassword());
-			setHashedPassword(hashedPassword);
+		    setAllPasswords(userUpdate.getPassword());
 		}
 		if (rawData.has("firstName")) {
 			setFirstName(userUpdate.getFirstName());

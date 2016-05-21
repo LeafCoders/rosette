@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.model.education.Education;
 import se.leafcoders.rosette.model.education.EducationTheme;
@@ -21,7 +20,7 @@ import se.leafcoders.rosette.model.podcast.Podcast;
 import se.leafcoders.rosette.service.PublicEducationThemeService;
 import se.leafcoders.rosette.util.QueryId;
 
-@Controller
+@RestController
 public class PodcastFeedController extends PublicDataController {
     @Autowired
     protected MongoTemplate mongoTemplate;
@@ -29,7 +28,6 @@ public class PodcastFeedController extends PublicDataController {
     private PublicEducationThemeService publicEducationThemeService;
 
 	@RequestMapping(value = "podcasts/{id}", method = RequestMethod.GET, produces = "application/rss+xml; charset=UTF-8")
-	@ResponseBody
 	public String getPodcast(@PathVariable String id, HttpServletResponse response) {
 	    checkPermission();
 

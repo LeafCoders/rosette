@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.controller.publicdata;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import se.leafcoders.rosette.controller.AbstractController;
 import se.leafcoders.rosette.security.PermissionAction;

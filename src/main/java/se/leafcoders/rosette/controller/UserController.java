@@ -6,33 +6,30 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.service.GroupMembershipService;
 import se.leafcoders.rosette.service.UserService;
 import se.leafcoders.rosette.util.ManyQuery;
 
-@Controller
-public class UserController extends AbstractController {
+@RestController
+public class UserController extends ApiV1Controller {
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private GroupMembershipService groupMembershipService;
 
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public User getUser(@PathVariable String id) {
 		return userService.read(id);
 	}
 
 	@RequestMapping(value = "users", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public List<User> getUsers(HttpServletRequest request, @RequestParam(required = false) String groupId) {
 	    ManyQuery manyQuery = new ManyQuery(request, "firstName,lastName");
         if (groupId != null) {
@@ -43,7 +40,6 @@ public class UserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "users", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
 	public User postUser(@RequestBody User user, HttpServletResponse response) {
 		if (user.getPassword() != null) {
 			String hashedPassword = new BCryptPasswordEncoder().encode(user.getPassword());

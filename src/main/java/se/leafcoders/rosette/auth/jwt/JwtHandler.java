@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.auth.jwt;
 
+import java.util.Date;
 import com.google.common.base.Preconditions;
 
 import io.jsonwebtoken.Jwts;
@@ -9,6 +10,8 @@ import se.leafcoders.rosette.auth.CurrentUserService;
 
 public final class JwtHandler {
 
+    private static long VALID_LENGTH = 14 * 24 * 60 * 60 * 1000;
+    
     private final String jwtSecret;
     private final CurrentUserService userService;
 
@@ -28,6 +31,14 @@ public final class JwtHandler {
     }
 
     public String createTokenForUser(CurrentUser user) {
-        return Jwts.builder().setSubject(user.getId()).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+        return createTokenForUserId(user.getId());
+    }
+
+    public String createTokenForUserId(String userId) {
+        return Jwts.builder()
+                .setSubject(userId)
+                .setExpiration(new Date(System.currentTimeMillis() + VALID_LENGTH))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 }

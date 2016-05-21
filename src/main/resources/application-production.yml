@@ -26,6 +26,7 @@ spring.data.mongodb:
   # username:
 
 spring.mail:
+  testConnection: true
   protocol: smtp
   host: localhost
   port: 1234

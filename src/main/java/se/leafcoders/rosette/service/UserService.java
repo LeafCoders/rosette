@@ -67,4 +67,12 @@ public class UserService extends MongoTemplateCRUD<User> {
     public Class<?>[] references() {
         return new Class<?>[] { };
     }
+    
+    public boolean changePassword(String id, String password) {
+        User user = read(id, false);
+        user.setAllPasswords(password);
+        security.validate(user);
+        mongoTemplate.save(user);
+        return true;
+    }
 }

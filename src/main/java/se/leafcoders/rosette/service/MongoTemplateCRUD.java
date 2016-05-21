@@ -39,7 +39,7 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 	protected ObjectMapper objectMapper = new ObjectMapper();
 
 	protected final PermissionType permissionType;
-	private final Class<T> entityClass;
+	protected final Class<T> entityClass;
 
 	public MongoTemplateCRUD(Class<T> entityClass, PermissionType permissionType) {
 		this.permissionType = permissionType;

@@ -10,11 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.model.event.EventDay;
 import se.leafcoders.rosette.model.event.EventWeek;
@@ -23,15 +22,14 @@ import se.leafcoders.rosette.security.PermissionType;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.service.SecurityService;
 
-@Controller
-public class EventWeekController extends AbstractController {
+@RestController
+public class EventWeekController extends ApiV1Controller {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private SecurityService security;
 	
 	@RequestMapping(value = "eventWeeks/current", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public EventWeek getCurrentEventWeek(HttpServletResponse response) {
 		security.checkPermission(new PermissionValue(PermissionType.EVENT_WEEKS, PermissionAction.READ));
 		DateTime now = DateTime.now();
@@ -43,7 +41,6 @@ public class EventWeekController extends AbstractController {
 	}
 
 	@RequestMapping(value = "eventWeeks/{id}", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public EventWeek getEventWeek(@PathVariable String id, HttpServletResponse response) {
 		security.checkPermission(new PermissionValue(PermissionType.EVENT_WEEKS, PermissionAction.READ));
 		int weekyear = Integer.parseInt(id.substring(0, 4));

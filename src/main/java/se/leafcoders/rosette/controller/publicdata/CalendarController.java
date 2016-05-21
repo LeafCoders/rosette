@@ -8,18 +8,17 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.calendar.Calendar;
 import se.leafcoders.rosette.model.calendar.CalendarDay;
 import se.leafcoders.rosette.model.calendar.CalendarEvent;
 import se.leafcoders.rosette.model.event.Event;
 import se.leafcoders.rosette.service.PublicEventService;
 
-@Controller
+@RestController
 public class CalendarController extends PublicDataController {
 	@Autowired
 	private PublicEventService publicEventService;
@@ -28,7 +27,6 @@ public class CalendarController extends PublicDataController {
 	private static final String MONTH = "month";
 
 	@RequestMapping(value = "calendar", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public Calendar getCalendar(
 			@RequestParam(defaultValue = WEEK) String rangeMode, 
 			@RequestParam(defaultValue = "0") Integer rangeOffset, 

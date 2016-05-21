@@ -14,12 +14,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import se.leafcoders.rosette.auth.CurrentUserService;
 import se.leafcoders.rosette.auth.RosetteAnonymousAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
-import se.leafcoders.rosette.auth.jwt.JwtLoginFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -67,9 +65,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET, "/api/v1/public/**").permitAll()
                     // All other request need to be authenticated
                     .anyRequest().authenticated().and()
-
-                // Custom authentication which sets the token header upon authentication
-                .addFilterBefore(new JwtLoginFilter("/auth/login", tokenAuthenticationService(), authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 
                 // Anonymous authentication will be added to requests without valid JWT token
                 .addFilterBefore(new RosetteAnonymousAuthenticationFilter(), AnonymousAuthenticationFilter.class)

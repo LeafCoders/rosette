@@ -5,30 +5,27 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.comparator.PosterComparator;
 import se.leafcoders.rosette.model.Poster;
 import se.leafcoders.rosette.service.PosterService;
 import se.leafcoders.rosette.util.ManyQuery;
 
-@Controller
-public class PosterController extends AbstractController {
+@RestController
+public class PosterController extends ApiV1Controller {
 	@Autowired
 	private PosterService posterService;
 
 	@RequestMapping(value = "posters/{id}", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public Poster getPoster(@PathVariable String id) {
 		return posterService.read(id);
 	}
 
 	@RequestMapping(value = "posters", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
 	public List<Poster> getPosters(HttpServletRequest request) {
 		List<Poster> posters = posterService.readMany(new ManyQuery(request));
         Collections.sort(posters, new PosterComparator());
@@ -36,7 +33,6 @@ public class PosterController extends AbstractController {
 	}
 
 	@RequestMapping(value = "posters", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
 	public Poster postPoster(@RequestBody Poster poster, HttpServletResponse response) {
 		return posterService.create(poster, response);
 	}
