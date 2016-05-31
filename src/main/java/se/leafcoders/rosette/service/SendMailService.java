@@ -31,10 +31,10 @@ public class SendMailService {
             File file = new File(classLoader.getResource("emailtemplates/ForgottenPassword.html").getFile());
             String data = Files.toString(file, Charsets.UTF_8);
             data = data
-                    .replace("###logo-image###", "http://www.ryttargardskyrkan.se/assets/img/header-logo.png")
-                    .replace("###logo-link###", "http://www.ryttargardskyrkan.se")
+                    .replace("###logo-image###", "http://home.page/header-logo.png")
+                    .replace("###logo-link###", "http://home.page")
                     .replace("###header-title###", "Glömt lösenord?")
-                    .replace("###header-image###", "https://irm.acrocorp.com/Assets/images/reset-password.png")
+                    .replace("###header-image###", "http://placehold.it/400x250")
                     .replace("###content-title###", fullName)
                     .replace("###content-body###", "Nu kan du byta ditt lösenord.")
                     .replace("###button-title###", "Byt lösenord")
