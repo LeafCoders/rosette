@@ -26,7 +26,7 @@ public class CurrentUserService implements org.springframework.security.core.use
             throw new UsernameNotFoundException("user not found");
         }
         User user = users.get(0);
-        return new CurrentUser(user.getId(), user.getFirstName(), user.getEmail(), user.getHashedPassword());
+        return new CurrentUser(user.getId(), user.getFullName(), user.getEmail(), user.getHashedPassword());
     }
     
     public CurrentUser loadUserById(String userId) {
