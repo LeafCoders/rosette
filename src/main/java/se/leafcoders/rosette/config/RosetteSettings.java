@@ -18,6 +18,8 @@ public class RosetteSettings {
 
 	private int uploadCacheMaxAge;
 
+    private String cordateUrl;
+
 
     public String getBaseUrl() {
         return baseUrl;
@@ -57,5 +59,13 @@ public class RosetteSettings {
 
     public void setUploadCacheMaxAge(int uploadCacheMaxAge) {
         this.uploadCacheMaxAge = uploadCacheMaxAge;
+    }
+
+    public String getCordateUrl() {
+        return cordateUrl;
+    }
+
+    public void setCordateUrl(String cordateUrl) {
+        this.cordateUrl = cordateUrl;
     }
 }

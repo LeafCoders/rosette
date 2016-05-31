@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.service;
 
 import java.util.Base64;
-import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +39,8 @@ public class ForgottenPasswordService {
             forgottenPassword.setToken(jwtAuthenticationService.createTokenForUser(user));
             forgottenPassword.setUserId(user.getId());
             dbForgotten.create(forgottenPassword);
-
-            final String emailSubject = "Glömt ditt lösenord?";
-            final String emailBody = "Här kommer din kod: " + forgottenPassword.getToken();
-            try {
-                sendMailService.send(user.getEmail(), emailSubject, emailBody);
-                return forgottenPassword;
-            } catch (MessagingException e) {
-                logger.error("Failed to send email to '{}' with subject '{}'. Reason: {}", user.getEmail(), emailSubject, e.getMessage());
-            }
+            sendMailService.forgottenPassword(user.getEmail(), user.getFullName(), forgottenPassword.getToken());
+            return forgottenPassword;
         }
         return null;
     }

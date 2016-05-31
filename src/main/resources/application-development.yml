@@ -38,3 +38,4 @@ rosette:
   jwtSecretToken: developmentSimpleJwtSecretToken
   defaultMailFrom: no-reply@localhost
   uploadCacheMaxAge: 0
+  cordateUrl: http://localhost:3000
