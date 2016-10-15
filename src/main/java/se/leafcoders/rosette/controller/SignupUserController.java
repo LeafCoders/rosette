@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.controller;
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -45,14 +44,7 @@ public class SignupUserController extends ApiV1Controller {
 			return null;
 		}
 
-		String password = null;
-        try {
-            password = new String(Base64.getUrlDecoder().decode(signupUser.getPassword()));
-        } catch (IllegalArgumentException ignore) {
-            throwValidationError("password", "Password must be base64 url encoded");
-        }
-		
-		String hashedPassword = new BCryptPasswordEncoder().encode(password);
+		String hashedPassword = new BCryptPasswordEncoder().encode(signupUser.getPassword());
 		signupUser.setHashedPassword(hashedPassword);
 		signupUser.setPassword(null);
 		return signupUserService.create(signupUser, response);
