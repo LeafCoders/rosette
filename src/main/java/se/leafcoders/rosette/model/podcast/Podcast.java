@@ -13,9 +13,9 @@ import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import se.leafcoders.rosette.model.education.EducationType;
 import se.leafcoders.rosette.model.education.EducationTypeRef;
-import se.leafcoders.rosette.model.upload.UploadResponse;
-import se.leafcoders.rosette.validator.HasRef;
+import se.leafcoders.rosette.model.upload.UploadFile;
 import se.leafcoders.rosette.validator.CheckReference;
+import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "podcasts")
 public class Podcast extends IdBasedModel {
@@ -55,7 +55,7 @@ public class Podcast extends IdBasedModel {
 
     @HasRef(message = "podcast.image.mustBeSet")
     @CheckReference
-    private UploadResponse image;
+    private UploadFile image;
     
 	@JsonSerialize(using = RosetteDateJsonSerializer.class)
 	@JsonDeserialize(using = RosetteDateJsonDeserializer.class)
@@ -185,11 +185,11 @@ public class Podcast extends IdBasedModel {
         this.link = link;
     }
 
-    public UploadResponse getImage() {
+    public UploadFile getImage() {
         return image;
     }
 
-    public void setImage(UploadResponse image) {
+    public void setImage(UploadFile image) {
         this.image = image;
     }
 

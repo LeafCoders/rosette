@@ -6,7 +6,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.event.Event
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 
 public class AssignUploadResourceTest extends AbstractIntegrationTest {
 
@@ -19,8 +19,8 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenLocation(location1)
 		givenEventType(eventType2)
 		givenUploadFolder(uploadFolderPosters)
-		UploadResponse image1 = givenUploadInFolder("posters", validPNGImage)
-		UploadResponse image2 = givenUploadInFolder("posters", validJPEGImage)
+		UploadFile image1 = givenUploadInFolder("posters", validPNGImage)
+		UploadFile image2 = givenUploadInFolder("posters", validJPEGImage)
 		givenResourceType(userResourceTypeMultiAndText)
 		givenResourceType(uploadResourceTypeMulti)
 		givenEvent(event2)
@@ -59,7 +59,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenEvent(event1)
 		givenPermissionForUser(user1, ["events:update:resourceTypes:${ uploadResourceTypeSingle.id }"])
 		
-		UploadResponse image1 = new UploadResponse(
+		UploadFile image1 = new UploadFile(
 			id: getObjectId(),
 			fileName: "anyName",
 			folderId: "someFolder",
@@ -92,8 +92,8 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 		givenResourceType(userResourceTypeSingle)
 		givenResourceType(uploadResourceTypeSingle)
 		givenUploadFolder(uploadFolderPosters)
-		UploadResponse image1 = givenUploadInFolder("posters", validPNGImage)
-		UploadResponse image2 = givenUploadInFolder("posters", validJPEGImage)
+		UploadFile image1 = givenUploadInFolder("posters", validPNGImage)
+		UploadFile image2 = givenUploadInFolder("posters", validJPEGImage)
 		givenEvent(event1)
 		givenPermissionForUser(user1, [
 			"events:update:resourceTypes:${ uploadResourceTypeSingle.id }"

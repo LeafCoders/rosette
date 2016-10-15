@@ -37,5 +37,6 @@ rosette:
   apiVersion: v1
   jwtSecretToken: developmentSimpleJwtSecretToken
   defaultMailFrom: no-reply@localhost
+  uploadsPath: ./rosetteUploads
   uploadCacheMaxAge: 0
   cordateUrl: http://localhost:3000

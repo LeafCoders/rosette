@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.model.upload.UploadFile;
 import se.leafcoders.rosette.validator.CheckReference;
 
 @Document(collection = "locations")
@@ -17,7 +17,7 @@ public class Location extends IdBasedModel {
 
 	// Image that shows the direction to the location
 	@CheckReference
-	private UploadResponse directionImage;
+	private UploadFile directionImage;
 	
 	@Override
 	public void update(JsonNode rawData, BaseModel updateFrom) {
@@ -51,11 +51,11 @@ public class Location extends IdBasedModel {
 		this.description = description;
 	}
 
-    public UploadResponse getDirectionImage() {
+    public UploadFile getDirectionImage() {
         return directionImage;
     }
 
-    public void setDirectionImage(UploadResponse directionImage) {
+    public void setDirectionImage(UploadFile directionImage) {
         this.directionImage = directionImage;
     }
 }

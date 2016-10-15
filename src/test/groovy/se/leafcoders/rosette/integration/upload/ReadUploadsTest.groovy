@@ -24,32 +24,32 @@ public class ReadUploadsTest extends AbstractIntegrationTest {
 
         // When
 		String getUrl = "/uploads/posters"
-		HttpResponse uploadResponse = whenGet(getUrl, user1)
+		HttpResponse uploadFile = whenGet(getUrl, user1)
 
         // Then
-		String responseBody = thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
-		thenResponseHeaderHas(uploadResponse, "Content-Type", "application/json;charset=UTF-8")
+		String responseBody = thenResponseCodeIs(uploadFile, HttpServletResponse.SC_OK)
+		thenResponseHeaderHas(uploadFile, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[
             {
+                "id" : "${ uploadItem1['id'] }",
+                "fileName" : "image.png",
+                "folderId": "posters",
+                "fileUrl" : "${ baseApiUrl }/assets/posters/image.png",
+                "mimeType" : "image/png",
+                "fileSize" : 1741,
+                "width" : 500,
+                "height" : 400
+            },
+			{
                 "id" : "${ uploadItem2['id'] }",
                 "fileName" : "image.jpg",
                 "folderId": "posters",
                 "fileUrl" : "${ baseApiUrl }/assets/posters/image.jpg",
                 "mimeType" : "image/jpg",
-                "fileSize" : 1617,
-                "width" : 300,
-                "height" : 200
-            },
-			{
-				"id" : "${ uploadItem1['id'] }",
-				"fileName" : "image.png",
-	            "folderId": "posters",
-				"fileUrl" : "${ baseApiUrl }/assets/posters/image.png",
-	            "mimeType" : "image/png",
-				"fileSize" : 638,
-	            "width" : 300,
-	            "height" : 200
+                "fileSize" : 7635,
+                "width" : 500,
+                "height" : 400
 			}
 		]"""
 		thenResponseDataIs(responseBody, expectedData)

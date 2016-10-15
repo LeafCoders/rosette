@@ -2,7 +2,7 @@
 
 <Context reloadable="true" privileged="true">
 
-	<!--  ENABLE PRODOCTION  -->
+	<!--  ENABLE PRODUCTION  -->
     <Environment name="spring.profiles.active" value="production" type="java.lang.String" override="false"/>
 
 	<!--  LOGGING  -->
@@ -22,6 +22,7 @@
     <Environment name="rosette.baseUrl" value="http://my-public-url.se" type="java.lang.String" override="false"/>
     <Environment name="rosette.jwtSecretToken" value="" type="java.lang.String" override="false"/>
     <Environment name="rosette.defaultMailFrom" value="no-reply@localhost" type="java.lang.String" override="false"/>
+    <Environment name="rosette.uploadsPath" value="./rosetteUploads" type="java.lang.String" override="false"/>
 
 
 	<!--  OR SPECIFY BY PROPERTIES FILE  -->

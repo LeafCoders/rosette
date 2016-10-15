@@ -7,7 +7,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.EducationTheme
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 
 public class DeleteEducationThemeTest extends AbstractIntegrationTest {
 
@@ -16,7 +16,7 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenPermissionForUser(user1, ["educationThemes:delete:${ educationTheme1.id }"])
 
@@ -35,7 +35,7 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
         givenPermissionForUser(user1, ["educationThemes:delete"])
@@ -55,7 +55,7 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
 
         // When
@@ -73,7 +73,7 @@ public class DeleteEducationThemeTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder(uploadFolderEducationThemes.id, validPNGImage)
+        UploadFile image = givenUploadInFolder(uploadFolderEducationThemes.id, validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenUploadFolder(uploadFolderEducations)
         givenEducation(eventEducation1, givenUploadInFolder(uploadFolderEducations.id, audioRecording1))

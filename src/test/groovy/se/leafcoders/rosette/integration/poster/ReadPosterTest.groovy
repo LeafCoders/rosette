@@ -8,7 +8,7 @@ import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.Poster
-import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.model.upload.UploadFile;
 import com.mongodb.util.JSON
 
 public class ReadPosterTest extends AbstractIntegrationTest {
@@ -19,7 +19,7 @@ public class ReadPosterTest extends AbstractIntegrationTest {
 		givenUser(user1)
 		givenPermissionForUser(user1, ["posters:read"])
 		givenUploadFolder(uploadFolderPosters)
-		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
+		UploadFile uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)
 		

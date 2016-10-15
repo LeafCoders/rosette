@@ -6,7 +6,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 
 public class ReadEducationThemesTest extends AbstractIntegrationTest {
 
@@ -15,7 +15,7 @@ public class ReadEducationThemesTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
         givenPermissionForUser(user1, ["educationThemes:read"])
@@ -40,7 +40,7 @@ public class ReadEducationThemesTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         
         // When

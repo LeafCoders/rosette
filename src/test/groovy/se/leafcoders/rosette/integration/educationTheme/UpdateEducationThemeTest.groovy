@@ -8,7 +8,7 @@ import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.EducationTheme
 import se.leafcoders.rosette.model.education.EducationType
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 
 
 public class UpdateEducationThemeTest extends AbstractIntegrationTest {
@@ -18,8 +18,8 @@ public class UpdateEducationThemeTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image1 = givenUploadInFolder("educationThemes", validPNGImage)
-        UploadResponse image2 = givenUploadInFolder("educationThemes", validJPEGImage)
+        UploadFile image1 = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image2 = givenUploadInFolder("educationThemes", validJPEGImage)
         givenEducationTheme(educationTheme1, image1)
         givenEducationType(educationType1)
         givenEducationType(educationType2)

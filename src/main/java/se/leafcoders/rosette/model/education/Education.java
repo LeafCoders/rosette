@@ -16,7 +16,7 @@ import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
 import se.leafcoders.rosette.model.error.ValidationError;
-import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.model.upload.UploadFile;
 import se.leafcoders.rosette.validator.CheckReference;
 import se.leafcoders.rosette.validator.HasRef;
 
@@ -56,7 +56,7 @@ public abstract class Education extends IdBasedModel {
     private String questions;
 
     @CheckReference
-    private UploadResponse recording;
+    private UploadFile recording;
 
     @NotNull
     @JsonSerialize(using = RosetteDateTimeTimezoneJsonSerializer.class)
@@ -164,11 +164,11 @@ public abstract class Education extends IdBasedModel {
         this.questions = questions;
     }
 
-    public UploadResponse getRecording() {
+    public UploadFile getRecording() {
         return recording;
     }
 
-    public void setRecording(UploadResponse recording) {
+    public void setRecording(UploadFile recording) {
         this.recording = recording;
     }
 

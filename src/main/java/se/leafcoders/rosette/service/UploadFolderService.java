@@ -1,9 +1,13 @@
 package se.leafcoders.rosette.service;
 
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.exception.SimpleValidationException;
+import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.upload.UploadFolder;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionType;
@@ -12,14 +16,26 @@ import se.leafcoders.rosette.security.PermissionValue;
 @Service
 public class UploadFolderService extends MongoTemplateCRUD<UploadFolder> {
 
-	@Autowired
+    static final Logger logger = LoggerFactory.getLogger(UploadFolderService.class);
+
+    @Autowired
 	private SecurityService security;
 	@Autowired
 	private UploadService uploadService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
 	public UploadFolderService() {
 		super(UploadFolder.class, PermissionType.UPLOAD_FOLDERS);
 	}
+
+    @Override
+    public UploadFolder create(UploadFolder uploadFolder, HttpServletResponse response) {
+        if (fileStorageService.createFolder(uploadFolder.getId(), null)) {
+            return super.create(uploadFolder, response);
+        }
+        throw new SimpleValidationException(new ValidationError("uploadFolder", "uploadFolder.failedToCreateFolder"));
+    }
 
 	@Override
 	public boolean readManyItemFilter(UploadFolder uploadFolder) {

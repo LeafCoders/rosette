@@ -13,8 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.error.ValidationError;
+import se.leafcoders.rosette.model.upload.UploadFile;
 import se.leafcoders.rosette.model.upload.UploadRequest;
-import se.leafcoders.rosette.model.upload.UploadResponse;
 import se.leafcoders.rosette.service.UploadService;
 
 @RestController
@@ -23,17 +23,17 @@ public class UploadController extends ApiV1Controller {
 	private UploadService uploadService;
 
 	@RequestMapping(value = "uploads/{folder}/{id}", method = RequestMethod.GET, produces = "application/json")
-	public UploadResponse getUpload(@PathVariable String folder, @PathVariable String id) {
+	public UploadFile getUpload(@PathVariable String folder, @PathVariable String id) {
 		return uploadService.read(id, true);
 	}
 
 	@RequestMapping(value = "uploads/{folder}", method = RequestMethod.GET, produces = "application/json")
-	public List<UploadResponse> getUploads(@PathVariable String folder) {
+	public List<UploadFile> getUploads(@PathVariable String folder) {
 		return uploadService.readAll(folder);
 	}
 
 	@RequestMapping(value = "uploads/{folder}", method = RequestMethod.POST, consumes = "multipart/form-data")
-	public UploadResponse postUpload(@PathVariable String folder,
+	public UploadFile postUpload(@PathVariable String folder,
 	        @RequestParam(value="file", required=true) MultipartFile file,
             @RequestParam(value="fileName", required=true) String fileName,
 	        HttpServletResponse response,

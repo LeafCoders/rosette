@@ -30,11 +30,11 @@ public class DeleteGroupMembershipTest extends AbstractIntegrationTest {
 
 		// Then		
 		String deleteUrl = "/groupMemberships/${groupMemb2}"
-		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+		HttpResponse uploadFile = whenDelete(deleteUrl, user1)
 		releaseDeleteRequest()
 
 		// Then
-		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
+		thenResponseCodeIs(uploadFile, HttpServletResponse.SC_OK)
 		thenItemsInDatabaseIs(GroupMembership.class, 1)
 	}
 }

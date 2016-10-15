@@ -6,7 +6,7 @@ import org.apache.http.client.ClientProtocolException
 import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.education.EducationTheme
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 import com.mongodb.util.JSON
 
 
@@ -18,7 +18,7 @@ public class CreateEducationThemeTest extends AbstractIntegrationTest {
         givenUser(user1)
         givenEducationType(educationType1)
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenPermissionForUser(user1, ["educationThemes:create", "educationTypes:read", "uploads:read"])
 
         // When

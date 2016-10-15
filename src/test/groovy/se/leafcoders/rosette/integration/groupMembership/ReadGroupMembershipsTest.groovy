@@ -28,11 +28,11 @@ public class ReadGroupMembershipsTest extends AbstractIntegrationTest {
 		
         // When
 		String getUrl = "/groupMemberships"
-		HttpResponse uploadResponse = whenGet(getUrl, user1)
+		HttpResponse uploadFile = whenGet(getUrl, user1)
 
 		// Then
-		String responseBody = thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
-		thenResponseHeaderHas(uploadResponse, "Content-Type", "application/json;charset=UTF-8")
+		String responseBody = thenResponseCodeIs(uploadFile, HttpServletResponse.SC_OK)
+		thenResponseHeaderHas(uploadFile, "Content-Type", "application/json;charset=UTF-8")
 
 		String expectedData = """[{
 			"id" : "${groupMembId1}",

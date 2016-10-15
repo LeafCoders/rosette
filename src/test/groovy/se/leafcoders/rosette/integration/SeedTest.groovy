@@ -29,7 +29,7 @@ import se.leafcoders.rosette.model.resource.UploadResource
 import se.leafcoders.rosette.model.resource.UserResource
 import se.leafcoders.rosette.model.resource.UserResourceType
 import se.leafcoders.rosette.model.upload.UploadFolder;
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 import se.leafcoders.rosette.integration.util.TestUtil
 
 class SeedTest extends AbstractIntegrationTest {
@@ -135,8 +135,8 @@ class SeedTest extends AbstractIntegrationTest {
          * Affischer
          */
         UploadFolder affischFilkatalog = newUploadFolder("posters", "Affischer", true, ["image/"])
-        UploadResponse konsertBild = givenUploadInFolder(affischFilkatalog.id, validPNGImage)
-        UploadResponse bibelstudieBild = givenUploadInFolder(affischFilkatalog.id, validJPEGImage)
+        UploadFile konsertBild = givenUploadInFolder(affischFilkatalog.id, validPNGImage)
+        UploadFile bibelstudieBild = givenUploadInFolder(affischFilkatalog.id, validJPEGImage)
 
         Poster konsertAffisch = newPoster("Konsert", konsertBild, Times.FORRA_VECKAN_08, Times.IGAR_10)
         Poster bibelstudieAffisch = newPoster("Bibelstudium", bibelstudieBild, Times.IGAR_10, Times.NASTA_VECKA_17)
@@ -239,8 +239,8 @@ class SeedTest extends AbstractIntegrationTest {
          * Undervisningstema
          */
         UploadFolder temaFilkatalog = newUploadFolder("educationThemes", "Temabilder", true, ["image/"])
-        UploadResponse standardTemaBild = givenUploadInFolder(temaFilkatalog.id, validPNGImage)
-        UploadResponse jakobsbrevetBild = givenUploadInFolder(temaFilkatalog.id, validJPEGImage)
+        UploadFile standardTemaBild = givenUploadInFolder(temaFilkatalog.id, validPNGImage)
+        UploadFile jakobsbrevetBild = givenUploadInFolder(temaFilkatalog.id, validJPEGImage)
 
         String temaContent = "Detta tema handlar om det här..."
 
@@ -254,7 +254,7 @@ class SeedTest extends AbstractIntegrationTest {
          * Undervisning
          */
 
-        UploadResponse inspelning1 = givenUploadInFolder(predikningarFilkatalog.id, audioRecording1)
+        UploadFile inspelning1 = givenUploadInFolder(predikningarFilkatalog.id, audioRecording1)
 
         (-50..-7).each { int offset ->
             newSimpleEducation(
@@ -429,7 +429,7 @@ Lite mer text här. Och sen lite till."""
         return booking
     }
 
-    private Poster newPoster(String title, UploadResponse image, Times start, Times end) {
+    private Poster newPoster(String title, UploadFile image, Times start, Times end) {
         Poster poster = new Poster(
             id : getObjectId(),
             title : title,
@@ -497,7 +497,7 @@ Lite mer text här. Och sen lite till."""
         return educationType
     }
 
-    private EducationTheme newEducationTheme(String title, String content, EducationType educationType, UploadResponse image) {
+    private EducationTheme newEducationTheme(String title, String content, EducationType educationType, UploadFile image) {
         EducationTheme educationTheme = new EducationTheme(
             id : getObjectId(),
             educationType : new EducationTypeRef(educationType),
@@ -508,7 +508,7 @@ Lite mer text här. Och sen lite till."""
         return educationTheme
     }
 
-    private EventEducation newEventEducation(String title, String content, String questions, EducationType educationType, EducationTheme educationTheme, Event event, String author, UploadResponse recording) {
+    private EventEducation newEventEducation(String title, String content, String questions, EducationType educationType, EducationTheme educationTheme, Event event, String author, UploadFile recording) {
         EventEducation eventEducation = new EventEducation(
             type : 'event',
             id : getObjectId(),
@@ -525,7 +525,7 @@ Lite mer text här. Och sen lite till."""
         return eventEducation
     }
 
-    private SimpleEducation newSimpleEducation(String title, String content, String questions, EducationType educationType, EducationTheme educationTheme, Date time, String author, UploadResponse recording) {
+    private SimpleEducation newSimpleEducation(String title, String content, String questions, EducationType educationType, EducationTheme educationTheme, Date time, String author, UploadFile recording) {
         SimpleEducation simpleEducation = new SimpleEducation(
             type : 'simple',
             id : getObjectId(),
@@ -541,7 +541,7 @@ Lite mer text här. Och sen lite till."""
         return simpleEducation
     }
 
-    private Podcast newPodcast(String title, EducationType educationType, UploadResponse image) {
+    private Podcast newPodcast(String title, EducationType educationType, UploadFile image) {
         Podcast podcast = new Podcast(
             id : getObjectId(),
             educationType : new EducationTypeRef(educationType),

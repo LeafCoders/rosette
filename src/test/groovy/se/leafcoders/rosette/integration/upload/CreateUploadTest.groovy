@@ -34,9 +34,9 @@ public class CreateUploadTest extends AbstractIntegrationTest {
             "folderId": "posters",
 			"fileUrl" : "${baseApiUrl}/assets/posters/image.png",
             "mimeType" : "image/png",
-            "fileSize" : 638,
-            "width" : 300,
-            "height" : 200
+            "fileSize" : 1741,
+            "width" : 500,
+            "height" : 400
 		}"""
 		thenResponseDataIs(responseBody, expectedData)
 		releasePostRequest();

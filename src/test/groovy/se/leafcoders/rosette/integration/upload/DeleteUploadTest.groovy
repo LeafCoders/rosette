@@ -21,11 +21,11 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
 
         // When
 		String deleteUrl = "/uploads/posters/${uploadItem['id']}"
-		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+		HttpResponse uploadFile = whenDelete(deleteUrl, user1)
 		releaseDeleteRequest()
 		
         // Then
-		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
+		thenResponseCodeIs(uploadFile, HttpServletResponse.SC_OK)
     }
 
 	@Test
@@ -39,10 +39,10 @@ public class DeleteUploadTest extends AbstractIntegrationTest {
 		
 		// When
 		String deleteUrl = "/uploads/posters/${uploadItem['id']}"
-		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+		HttpResponse uploadFile = whenDelete(deleteUrl, user1)
 
 		// Then
-		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_FORBIDDEN)
+		thenResponseCodeIs(uploadFile, HttpServletResponse.SC_FORBIDDEN)
 		releaseDeleteRequest()
 		thenAssetWithNameExist(uploadItem['fileName'], uploadItem['fileUrl'])
 	}

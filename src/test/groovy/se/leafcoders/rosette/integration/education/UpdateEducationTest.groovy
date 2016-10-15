@@ -9,7 +9,7 @@ import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.education.EventEducation
 import se.leafcoders.rosette.model.education.SimpleEducation
 import se.leafcoders.rosette.model.reference.UserRefOrText
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 
 
 public class UpdateEducationTest extends AbstractIntegrationTest {
@@ -19,13 +19,13 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducations)
-        UploadResponse educationRecording1 = givenUploadInFolder("educations", audioRecording1)
+        UploadFile educationRecording1 = givenUploadInFolder("educations", audioRecording1)
         givenEducation(eventEducation1, educationRecording1)
         givenEducationType(educationType1)
         givenEducationType(educationType2)
         
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
 
@@ -77,7 +77,7 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         givenEducationType(educationType2)
 
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
 
@@ -124,7 +124,7 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         givenEducationType(educationType2)
 
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
 
@@ -168,7 +168,7 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         givenEducationType(educationType2)
         
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
 
@@ -200,7 +200,7 @@ public class UpdateEducationTest extends AbstractIntegrationTest {
         givenEducationType(educationType2)
         
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
         givenEducationTheme(educationTheme2, image)
 

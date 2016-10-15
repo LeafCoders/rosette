@@ -1,51 +1,53 @@
 package se.leafcoders.rosette.util;
 
-import com.mongodb.gridfs.GridFSDBFile;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-public class MongoDbFileByteRangeSupport {
+public class FileByteRangeSupport {
 
     private static final int DEFAULT_BUFFER_SIZE = 20480; // ..bytes = 20KB.
-//    private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
+    // private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1
+    // week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
-    
+
     HttpServletRequest request;
     HttpServletResponse response;
-    
-    public MongoDbFileByteRangeSupport() {
+
+    public FileByteRangeSupport() {
     }
-    
-    public MongoDbFileByteRangeSupport with(HttpServletRequest httpRequest) {
+
+    public FileByteRangeSupport with(HttpServletRequest httpRequest) {
         request = httpRequest;
         return this;
     }
-    
-    public MongoDbFileByteRangeSupport with(HttpServletResponse httpResponse) {
+
+    public FileByteRangeSupport with(HttpServletResponse httpResponse) {
         response = httpResponse;
         return this;
     }
-    
-    public void serveResource(GridFSDBFile file, String contentType) throws Exception {
-        if (response == null || request == null || file == null) {
+
+    public void serveResource(String filePath, String fileName, Long fileSize, String contentType) throws Exception {
+        if (response == null || request == null || fileName == null || fileSize == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        Long length = file.getLength();
-        String fileName = file.getFilename();
+        long lastModified = 0; // LocalDateTime.ofInstant(lastModifiedObj.toInstant(),
+                               // ZoneId.of(ZoneOffset.systemDefault().getId())).toEpochSecond(ZoneOffset.UTC);
 
-        long lastModified = 0; //LocalDateTime.ofInstant(lastModifiedObj.toInstant(), ZoneId.of(ZoneOffset.systemDefault().getId())).toEpochSecond(ZoneOffset.UTC);
+        // Validate request headers for caching
+        // ---------------------------------------------------
 
-        // Validate request headers for caching ---------------------------------------------------
-
-        // If-None-Match header should contain "*" or ETag. If so, then return 304.
+        // If-None-Match header should contain "*" or ETag. If so, then return
+        // 304.
         String ifNoneMatch = request.getHeader("If-None-Match");
         if (ifNoneMatch != null && HttpUtils.matches(ifNoneMatch, fileName)) {
             response.setHeader("ETag", fileName); // Required in 304.
@@ -53,7 +55,8 @@ public class MongoDbFileByteRangeSupport {
             return;
         }
 
-        // If-Modified-Since header should be greater than LastModified. If so, then return 304.
+        // If-Modified-Since header should be greater than LastModified. If so,
+        // then return 304.
         // This header is ignored if any If-None-Match header is specified.
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
         if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
@@ -62,7 +65,8 @@ public class MongoDbFileByteRangeSupport {
             return;
         }
 
-        // Validate request headers for resume ----------------------------------------------------
+        // Validate request headers for resume
+        // ----------------------------------------------------
 
         // If-Match header should contain "*" or ETag. If not, then return 412.
         String ifMatch = request.getHeader("If-Match");
@@ -71,26 +75,30 @@ public class MongoDbFileByteRangeSupport {
             return;
         }
 
-        // If-Unmodified-Since header should be greater than LastModified. If not, then return 412.
+        // If-Unmodified-Since header should be greater than LastModified. If
+        // not, then return 412.
         long ifUnmodifiedSince = request.getDateHeader("If-Unmodified-Since");
         if (ifUnmodifiedSince != -1 && ifUnmodifiedSince + 1000 <= lastModified) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
             return;
         }
 
-        // Validate and process range -------------------------------------------------------------
+        // Validate and process range
+        // -------------------------------------------------------------
 
         // Prepare some variables. The full Range represents the complete file.
-        Range full = new Range(0, length - 1, length);
+        Range full = new Range(0, fileSize - 1, fileSize);
         List<Range> ranges = new ArrayList<>();
 
         // Validate and process Range and If-Range headers.
         String range = request.getHeader("Range");
         if (range != null) {
 
-            // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
+            // Range header should match format "bytes=n-n,n-n,n-n...". If not,
+            // then return 416.
             if (!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$")) {
-                response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
+                // Required in 416
+                response.setHeader("Content-Range", "bytes */" + fileSize);
                 response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                 return;
             }
@@ -98,7 +106,8 @@ public class MongoDbFileByteRangeSupport {
             String ifRange = request.getHeader("If-Range");
             if (ifRange != null && !ifRange.equals(fileName)) {
                 try {
-                    long ifRangeTime = request.getDateHeader("If-Range"); // Throws IAE if invalid.
+                    // Throws if invalid
+                    long ifRangeTime = request.getDateHeader("If-Range");
                     if (ifRangeTime != -1) {
                         ranges.add(full);
                     }
@@ -107,47 +116,56 @@ public class MongoDbFileByteRangeSupport {
                 }
             }
 
-            // If any valid If-Range header, then process each part of byte range.
+            // If any valid If-Range header, then process each part of byte
+            // range.
             if (ranges.isEmpty()) {
                 for (String part : range.substring(6).split(",")) {
-                    // Assuming a file with length of 100, the following examples returns bytes at:
-                    // 50-80 (50 to 80), 40- (40 to length=100), -20 (length-20=80 to length=100).
+                    // Assuming a file with length of 100, the following
+                    // examples returns bytes at:
+                    // 50-80 (50 to 80), 40- (40 to length=100), -20
+                    // (length-20=80 to length=100).
                     long start = Range.sublong(part, 0, part.indexOf("-"));
                     long end = Range.sublong(part, part.indexOf("-") + 1, part.length());
 
                     if (start == -1) {
-                        start = length - end;
-                        end = length - 1;
-                    } else if (end == -1 || end > length - 1) {
-                        end = length - 1;
+                        start = fileSize - end;
+                        end = fileSize - 1;
+                    } else if (end == -1 || end > fileSize - 1) {
+                        end = fileSize - 1;
                     }
 
-                    // Check if Range is syntactically valid. If not, then return 416.
+                    // Check if Range is syntactically valid. If not, then
+                    // return 416.
                     if (start > end) {
-                        response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
+                        // Required in 416
+                        response.setHeader("Content-Range", "bytes */" + fileSize);
                         response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                         return;
                     }
 
-                    // Add range.                    
-                    ranges.add(new Range(start, end, length));
+                    // Add range.
+                    ranges.add(new Range(start, end, fileSize));
                 }
             }
         }
 
-        // Prepare and initialize response --------------------------------------------------------
+        // Prepare and initialize response
+        // --------------------------------------------------------
 
         // Get content type by file name and set content disposition.
         String disposition = "inline";
 
         // If content type is unknown, then set the default value.
-        // For all content types, see: http://www.w3schools.com/media/media_mimeref.asp
+        // For all content types, see:
+        // http://www.w3schools.com/media/media_mimeref.asp
         // To add new content types, add new mime-mapping entry in web.xml.
         if (contentType == null) {
             contentType = "application/octet-stream";
         } else if (!contentType.startsWith("image")) {
-            // Else, expect for images, determine content disposition. If content type is supported by
-            // the browser, then set to inline, else attachment which will pop a 'save as' dialogue.
+            // Else, expect for images, determine content disposition. If
+            // content type is supported by
+            // the browser, then set to inline, else attachment which will pop a
+            // 'save as' dialogue.
             String accept = request.getHeader("Accept");
             disposition = accept != null && HttpUtils.accepts(accept, contentType) ? "inline" : "attachment";
         }
@@ -158,14 +176,17 @@ public class MongoDbFileByteRangeSupport {
         response.setHeader("Content-Disposition", disposition + ";filename=\"" + fileName + "\"");
         response.setHeader("Accept-Ranges", "bytes");
 
-//        response.setHeader("ETag", fileName);
-//        response.setDateHeader("Last-Modified", lastModified);
-//        response.setDateHeader("Expires", System.currentTimeMillis() + DEFAULT_EXPIRE_TIME);
+        // response.setHeader("ETag", fileName);
+        // response.setDateHeader("Last-Modified", lastModified);
+        // response.setDateHeader("Expires", System.currentTimeMillis() +
+        // DEFAULT_EXPIRE_TIME);
 
-        // Send requested file (part(s)) to client ------------------------------------------------
+        // Send requested file (part(s)) to client
+        // ------------------------------------------------
 
         // Prepare streams.
-        try (InputStream input = file.getInputStream(); OutputStream output = response.getOutputStream()) {
+        try (InputStream input = new FileInputStream(filePath);
+                OutputStream output = response.getOutputStream()) {
 
             if (ranges.isEmpty() || ranges.get(0) == full) {
 
@@ -173,7 +194,7 @@ public class MongoDbFileByteRangeSupport {
                 response.setContentType(contentType);
                 response.setHeader("Content-Range", "bytes " + full.start + "-" + full.end + "/" + full.total);
                 response.setHeader("Content-Length", String.valueOf(full.length));
-                Range.copy(input, output, length, full.start, full.length);
+                Range.copy(input, output, fileSize, full.start, full.length);
 
             } else if (ranges.size() == 1) {
 
@@ -185,7 +206,7 @@ public class MongoDbFileByteRangeSupport {
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
                 // Copy single part range.
-                Range.copy(input, output, length, r.start, r.length);
+                Range.copy(input, output, fileSize, r.start, r.length);
 
             } else {
 
@@ -193,7 +214,8 @@ public class MongoDbFileByteRangeSupport {
                 response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
-                // Cast back to ServletOutputStream to get the easy println methods.
+                // Cast back to ServletOutputStream to get the easy println
+                // methods.
                 ServletOutputStream sos = (ServletOutputStream) output;
 
                 // Copy multi part range.
@@ -205,7 +227,7 @@ public class MongoDbFileByteRangeSupport {
                     sos.println("Content-Range: bytes " + r.start + "-" + r.end + "/" + r.total);
 
                     // Copy single part range of multi part range.
-                    Range.copy(input, output, length, r.start, r.length);
+                    Range.copy(input, output, fileSize, r.start, r.length);
                 }
 
                 // End with multipart boundary.
@@ -225,7 +247,8 @@ public class MongoDbFileByteRangeSupport {
 
         /**
          * Construct a byte range.
-         * @param start Start of the byte range.
+         * 
+         * @param start  Start of the byte range.
          * @param end End of the byte range.
          * @param total Total length of the byte source.
          */
@@ -241,7 +264,8 @@ public class MongoDbFileByteRangeSupport {
             return (substring.length() > 0) ? Long.parseLong(substring) : -1;
         }
 
-        private static void copy(InputStream input, OutputStream output, long inputSize, long start, long length) throws IOException {
+        private static void copy(InputStream input, OutputStream output, long inputSize, long start, long length)
+                throws IOException {
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             int read;
 
@@ -273,6 +297,7 @@ public class MongoDbFileByteRangeSupport {
 
         /**
          * Returns true if the given accept header accepts the given value.
+         * 
          * @param acceptHeader The accept header.
          * @param toAccept The value to be accepted.
          * @return True if the given accept header accepts the given value.
@@ -288,6 +313,7 @@ public class MongoDbFileByteRangeSupport {
 
         /**
          * Returns true if the given match header matches the given value.
+         * 
          * @param matchHeader The match header.
          * @param toMatch The value to be matched.
          * @return True if the given match header matches the given value.
@@ -295,8 +321,7 @@ public class MongoDbFileByteRangeSupport {
         public static boolean matches(String matchHeader, String toMatch) {
             String[] matchValues = matchHeader.split("\\s*,\\s*");
             Arrays.sort(matchValues);
-            return Arrays.binarySearch(matchValues, toMatch) > -1
-                    || Arrays.binarySearch(matchValues, "*") > -1;
+            return Arrays.binarySearch(matchValues, toMatch) > -1 || Arrays.binarySearch(matchValues, "*") > -1;
         }
     }
 }

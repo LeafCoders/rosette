@@ -10,7 +10,7 @@ import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.education.EventEducation
 import se.leafcoders.rosette.model.reference.EventRef
 import se.leafcoders.rosette.model.resource.ResourceType
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 import com.mongodb.util.JSON
 
 public class ReadEducationTest extends AbstractIntegrationTest {
@@ -20,7 +20,7 @@ public class ReadEducationTest extends AbstractIntegrationTest {
         // Given
         givenUser(user1)
         givenUploadFolder(uploadFolderEducations)
-        UploadResponse educationRecording1 = givenUploadInFolder("educations", audioRecording1)
+        UploadFile educationRecording1 = givenUploadInFolder("educations", audioRecording1)
         givenEducation(eventEducation1, educationRecording1)
         givenPermissionForUser(user1, ["educations:read:${ eventEducation1.id }"])
 

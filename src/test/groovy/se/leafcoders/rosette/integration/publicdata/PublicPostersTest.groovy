@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.mongodb.util.JSON;
 import se.leafcoders.rosette.integration.AbstractIntegrationTest;
 import se.leafcoders.rosette.integration.util.TestUtil;
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 
 public class PublicPostersTest extends AbstractIntegrationTest {
 
@@ -23,7 +23,7 @@ public class PublicPostersTest extends AbstractIntegrationTest {
 		poster2.endTime = new DateTime(new Date()).plusDays(5).toDate();
 		givenPermissionForEveryone(["public:read"])
 		givenUploadFolder(uploadFolderPosters)
-		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
+		UploadFile uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)
 
@@ -65,7 +65,7 @@ public class PublicPostersTest extends AbstractIntegrationTest {
 		poster2.endTime = new DateTime(new Date()).minusMinutes(5).toDate();
 		givenPermissionForEveryone(["public:read"])
 		givenUploadFolder(uploadFolderPosters)
-		UploadResponse uploadItem = givenUploadInFolder("posters", validPNGImage)
+		UploadFile uploadItem = givenUploadInFolder("posters", validPNGImage)
 		givenPoster(poster1, uploadItem)
 		givenPoster(poster2, uploadItem)
 

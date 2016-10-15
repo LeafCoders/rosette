@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.model.BaseModel;
 import se.leafcoders.rosette.model.IdBasedModel;
-import se.leafcoders.rosette.model.upload.UploadResponse;
+import se.leafcoders.rosette.model.upload.UploadFile;
 import se.leafcoders.rosette.validator.CheckReference;
 import se.leafcoders.rosette.validator.HasRef;
 
@@ -24,7 +24,7 @@ public class EducationTheme extends IdBasedModel {
 
     @HasRef(message = "educationTheme.image.mustBeSet")
     @CheckReference
-    private UploadResponse image;
+    private UploadFile image;
     
     // Constructors
 
@@ -74,11 +74,11 @@ public class EducationTheme extends IdBasedModel {
         this.content = content;
     }
 
-    public UploadResponse getImage() {
+    public UploadFile getImage() {
         return image;
     }
 
-    public void setImage(UploadResponse image) {
+    public void setImage(UploadFile image) {
         this.image = image;
     }
 }

@@ -1,4 +1,3 @@
-
 package se.leafcoders.rosette.integration
 
 import static org.junit.Assert.assertEquals
@@ -41,7 +40,7 @@ import se.leafcoders.rosette.model.podcast.Podcast
 import se.leafcoders.rosette.model.reference.EventRef
 import se.leafcoders.rosette.model.reference.LocationRefOrText
 import se.leafcoders.rosette.model.reference.ObjectReferences
-import se.leafcoders.rosette.model.reference.UploadResponseRefs
+import se.leafcoders.rosette.model.reference.UploadFileRefs
 import se.leafcoders.rosette.model.reference.UserRef
 import se.leafcoders.rosette.model.reference.UserRefOrText
 import se.leafcoders.rosette.model.reference.UserRefsAndText
@@ -49,7 +48,7 @@ import se.leafcoders.rosette.model.resource.*
 import se.leafcoders.rosette.model.upload.UploadFolder
 import se.leafcoders.rosette.model.upload.UploadFolderRef
 import se.leafcoders.rosette.model.upload.UploadRequest
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 import se.leafcoders.rosette.util.QueryId
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.Mongo
@@ -59,7 +58,6 @@ import com.mongodb.util.JSON
 
 abstract class AbstractIntegrationTest {
 	protected static MongoTemplate mongoTemplate
-	protected static GridFsTemplate gridFsTemplate
 	protected static HttpClient httpClient
 	protected static ObjectMapper mapper
 
@@ -76,7 +74,6 @@ abstract class AbstractIntegrationTest {
 	static void beforeClass() throws UnknownHostException, MongoException {
 		mongoTemplate = new MongoTemplate(new Mongo(), "rosette-test")
 		mongoTemplate.setWriteConcern(WriteConcern.ACKNOWLEDGED)
-		gridFsTemplate = new GridFsTemplate(mongoTemplate.mongoDbFactory, mongoTemplate.converter)
 		mapper = new ObjectMapper()
 	}
 	
@@ -85,6 +82,7 @@ abstract class AbstractIntegrationTest {
 		// Clearing auth cache
 		httpClient = HttpClientBuilder.create().build()
 		resetAuthCaches()
+        deleteAllUploads()
 		httpClient.getConnectionManager().shutdown()
 		httpClient = HttpClientBuilder.create().build()
 
@@ -104,10 +102,10 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("posters")
 		mongoTemplate.dropCollection("resourceTypes")
 		mongoTemplate.dropCollection("signupUsers")
+        mongoTemplate.dropCollection("uploadFiles")
+        mongoTemplate.dropCollection("uploadFolders")
 		mongoTemplate.dropCollection("userResourceTypes")
 		mongoTemplate.dropCollection("users")
-        mongoTemplate.dropCollection("uploadFolders")
-        gridFsTemplate.delete(null)
 	}
 
 	@After
@@ -120,13 +118,10 @@ abstract class AbstractIntegrationTest {
 
 	@AfterClass
 	static void afterClass() {
-		gridFsTemplate = null
+        mapper = null       
 		mongoTemplate = null
-		
 		httpClient.getConnectionManager().shutdown()
 		httpClient = null
-		
-		mapper = null		
 	}
 
 	void releasePostRequest() {
@@ -160,6 +155,12 @@ abstract class AbstractIntegrationTest {
 		httpDelete.releaseConnection()
 	}
 
+    private void deleteAllUploads() {
+        HttpDelete httpDelete = new HttpDelete(baseApiUrl + "/development/deleteAllUploads")
+        httpClient.execute(httpDelete)
+        httpDelete.releaseConnection()
+    }
+
 	/*
 	 *  Helper data and methods
 	 */
@@ -170,7 +171,7 @@ abstract class AbstractIntegrationTest {
 		if (!hasAddedUploadUser) {
 			hasAddedUploadUser = true
 			givenUser(userTestUpload)
-			givenPermissionForUser(userTestUpload, ["uploads:*"])
+			givenPermissionForUser(userTestUpload, ["uploads:*", "uploadFolders:*"])
 			System.sleep(100);
 		}
 	}
@@ -398,7 +399,7 @@ abstract class AbstractIntegrationTest {
 			new UploadResource(
 				type : "upload",
 				resourceType : uploadResourceTypeSingle, 
-				uploads : new UploadResponseRefs()
+				uploads : new UploadFileRefs()
 			)
 		]
 	)
@@ -420,7 +421,7 @@ abstract class AbstractIntegrationTest {
 			new UploadResource(
 				type : "upload",
 				resourceType : uploadResourceTypeMulti, 
-				uploads : new UploadResponseRefs()
+				uploads : new UploadFileRefs()
 			)
 		]
 	)
@@ -585,17 +586,17 @@ abstract class AbstractIntegrationTest {
         mongoTemplate.insert(educationType)
     }
 
-    protected void givenEducationTheme(EducationTheme educationTheme, UploadResponse image) {
+    protected void givenEducationTheme(EducationTheme educationTheme, UploadFile image) {
         educationTheme.image = image
         mongoTemplate.insert(educationTheme)
     }
 
-    protected void givenEducation(Education education, UploadResponse recording) {
+    protected void givenEducation(Education education, UploadFile recording) {
         education.recording = recording
         mongoTemplate.insert(education)
     }
 
-    protected void givenPodcast(Podcast podcast, UploadResponse image) {
+    protected void givenPodcast(Podcast podcast, UploadFile image) {
         podcast.image = image
         mongoTemplate.insert(podcast)
     }
@@ -620,16 +621,25 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.insert(booking)
 	}
 
-	protected void givenPoster(Poster poster, UploadResponse image) {
+	protected void givenPoster(Poster poster, UploadFile image) {
 		poster.image = image
 		mongoTemplate.insert(poster)
 	}
 	
 	protected void givenUploadFolder(UploadFolder uploadFolder) {
-		mongoTemplate.insert(uploadFolder)
+        createTestUploadUser()
+        String mimeTypes = uploadFolder.mimeTypes.collect({ "\"${it}\"" }).join(',')
+        String postUrl = "/uploadFolders"
+        whenPost(postUrl, userTestUpload, """{
+            "id": "${ uploadFolder.id }",
+            "name": "${ uploadFolder.name }",
+            "isPublic": ${ uploadFolder.isPublic ? 'true' : 'false' },
+            "mimeTypes": [${ mimeTypes }]
+        }""")
+        releasePostRequest()
 	}
 	
-	protected UploadResponse givenUploadInFolder(String folderId, UploadRequest upload) {
+	protected UploadFile givenUploadInFolder(String folderId, UploadRequest upload) {
 		createTestUploadUser()
         String postUrl = "/uploads/" + folderId
 
@@ -637,7 +647,7 @@ abstract class AbstractIntegrationTest {
         HttpEntity result = postResponse.getEntity();
         
         String responseBody = thenResponseCodeIs(postResponse, HttpServletResponse.SC_CREATED)
-        UploadResponse responseObj = (UploadResponse) JSON.parse(responseBody)
+        UploadFile responseObj = (UploadFile) JSON.parse(responseBody)
         return responseObj
 	}
 
@@ -704,6 +714,15 @@ abstract class AbstractIntegrationTest {
 		HttpResponse resp = httpClient.execute(getRequest)
 		return resp
 	}
+
+    protected HttpResponse whenGetFile(String getUrl, User user = null) {
+        getRequest = new HttpGet(baseApiUrl + getUrl)
+        if (user != null) {
+            getRequest.addHeader("X-AUTH-TOKEN", xAuthToken(user.id))
+        }
+        HttpResponse resp = httpClient.execute(getRequest)
+        return resp
+    }
 
     protected HttpResponse whenPut(String putUrl, User user, String requestBody) {
         return whenPutBase(baseApiUrl + putUrl, user, requestBody);

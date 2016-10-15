@@ -42,4 +42,5 @@ rosette:
   apiVersion: v1
   jwtSecretToken: tooShort # Don't change this. Override this property in production with environment variable
   defaultMailFrom: no-reply@localhost
+  uploadsPath: ./rosetteUploads
   uploadCacheMaxAge: 604800 # One week

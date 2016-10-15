@@ -23,9 +23,9 @@ public class AssetController extends ApiV1Controller {
         uploadService.streamAssetThumbnail(folder, fileName, thumbSize, request, response);
     }
 
-	@RequestMapping(value = "assets/{folder}/{fileName:.+}", method = RequestMethod.GET)
-	public void getAsset(@PathVariable String folder, @PathVariable String fileName,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = "assets/{folder}/{fileName:.+}", method = RequestMethod.GET)
+    public void getAsset(@PathVariable String folder, @PathVariable String fileName,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
         uploadService.streamAsset(folder, fileName, request, response);
-	}
+    }
 }

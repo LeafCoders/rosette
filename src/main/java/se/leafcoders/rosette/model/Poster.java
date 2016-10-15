@@ -7,14 +7,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
-import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
-import se.leafcoders.rosette.model.upload.UploadResponse;
-import se.leafcoders.rosette.validator.HasRef;
-import se.leafcoders.rosette.validator.CheckReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonDeserializer;
+import se.leafcoders.rosette.converter.RosetteDateTimeTimezoneJsonSerializer;
+import se.leafcoders.rosette.model.upload.UploadFile;
+import se.leafcoders.rosette.validator.CheckReference;
+import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "posters")
 @ScriptAssert(lang = "javascript", script = "_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime)", message = "poster.startBeforeEndTime")
@@ -43,7 +43,7 @@ public class Poster extends IdBasedModel {
 
 	@HasRef(message = "poster.image.mustBeSet")
     @CheckReference
-	private UploadResponse image;
+	private UploadFile image;
 
 	@Override
 	public void update(JsonNode rawData, BaseModel updateFrom) {
@@ -99,11 +99,11 @@ public class Poster extends IdBasedModel {
 		this.duration = duration;
 	}
 
-    public UploadResponse getImage() {
+    public UploadFile getImage() {
         return image;
     }
 
-    public void setImage(UploadResponse image) {
+    public void setImage(UploadFile image) {
         this.image = image;
     }
 }

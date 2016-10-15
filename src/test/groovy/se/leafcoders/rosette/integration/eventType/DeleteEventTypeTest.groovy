@@ -23,11 +23,11 @@ public class DeleteEventTypeTest extends AbstractIntegrationTest {
 
 		// Then		
 		String deleteUrl = "/eventTypes/${eventType1.id}"
-		HttpResponse uploadResponse = whenDelete(deleteUrl, user1)
+		HttpResponse uploadFile = whenDelete(deleteUrl, user1)
 		releaseDeleteRequest()
 
 		// Then
-		thenResponseCodeIs(uploadResponse, HttpServletResponse.SC_OK)
+		thenResponseCodeIs(uploadFile, HttpServletResponse.SC_OK)
 		thenItemsInDatabaseIs(EventType.class, 1)
 	}
 }

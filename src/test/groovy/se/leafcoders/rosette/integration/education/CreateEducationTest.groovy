@@ -9,7 +9,7 @@ import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.education.Education
 import se.leafcoders.rosette.model.education.EventEducation
-import se.leafcoders.rosette.model.upload.UploadResponse
+import se.leafcoders.rosette.model.upload.UploadFile
 import com.mongodb.util.JSON
 
 
@@ -22,7 +22,7 @@ public class CreateEducationTest extends AbstractIntegrationTest {
         givenEducationType(educationType1)
 
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
 
         givenEvent(event1)
@@ -82,7 +82,7 @@ public class CreateEducationTest extends AbstractIntegrationTest {
         givenEducationType(educationType1)
 
         givenUploadFolder(uploadFolderEducationThemes)
-        UploadResponse image = givenUploadInFolder("educationThemes", validPNGImage)
+        UploadFile image = givenUploadInFolder("educationThemes", validPNGImage)
         givenEducationTheme(educationTheme1, image)
 
         givenEvent(event1)

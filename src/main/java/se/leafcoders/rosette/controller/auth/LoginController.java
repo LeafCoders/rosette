@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.controller.auth;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -38,12 +37,6 @@ public class LoginController extends AuthController {
         }
         if (password == null) {
             throwValidationError("password", "Must be specified as url parameter");
-        }
-        
-        try {
-            password = new String(Base64.getUrlDecoder().decode(password));
-        } catch (IllegalArgumentException ignore) {
-            throwValidationError("password", "Password must be base64 url encoded");
         }
 
         CurrentUser userToLogin = null;

@@ -16,6 +16,7 @@ public class RosetteSettings {
 
     private String defaultMailFrom;
 
+    private String uploadsPath;
 	private int uploadCacheMaxAge;
 
     private String cordateUrl;
@@ -51,6 +52,14 @@ public class RosetteSettings {
 
     public void setDefaultMailFrom(String defaultMailFrom) {
         this.defaultMailFrom = defaultMailFrom;
+    }
+
+    public String getUploadsPath() {
+        return uploadsPath;
+    }
+
+    public void setUploadsPath(String uploadsPath) {
+        this.uploadsPath = uploadsPath;
     }
 
     public int getUploadCacheMaxAge() {
