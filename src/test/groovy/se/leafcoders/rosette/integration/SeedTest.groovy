@@ -90,6 +90,9 @@ class SeedTest extends AbstractIntegrationTest {
         /**
          * Användare och grupper
          */
+        User admin = newUser("Admin", "Admin")
+        givenPermissionForUser(admin, ["*"])
+
         Group predikantGrupp = newGroup("predikanter", "Predikanter")
         User predikantPatrik = newUser("Predikant", "Patrik")
         User predikantPaula = newUser("Predikant", "Paula")
@@ -334,11 +337,6 @@ Lite mer text här. Och sen lite till."""
         /**
          * Rättigheter
          */
-        User admin = newUser("Admin", "Admin")
-        givenPermissionForUser(admin, ["*"])
-
-
-
         givenPermissionForGroup(predikantGrupp, [
             "events:view",
             "events:read,update:resourceTypes:predikan",
