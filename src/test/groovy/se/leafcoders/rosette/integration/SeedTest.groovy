@@ -92,6 +92,7 @@ class SeedTest extends AbstractIntegrationTest {
          */
         User admin = newUser("Admin", "Admin")
         givenPermissionForUser(admin, ["*"])
+        createTestUploadUser()
 
         Group predikantGrupp = newGroup("predikanter", "Predikanter")
         User predikantPatrik = newUser("Predikant", "Patrik")

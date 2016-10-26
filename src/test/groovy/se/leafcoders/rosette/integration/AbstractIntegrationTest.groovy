@@ -24,7 +24,6 @@ import org.junit.BeforeClass
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.gridfs.GridFsTemplate
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import se.leafcoders.rosette.integration.util.TestUtil
 import se.leafcoders.rosette.model.*
@@ -45,10 +44,10 @@ import se.leafcoders.rosette.model.reference.UserRef
 import se.leafcoders.rosette.model.reference.UserRefOrText
 import se.leafcoders.rosette.model.reference.UserRefsAndText
 import se.leafcoders.rosette.model.resource.*
+import se.leafcoders.rosette.model.upload.UploadFile
 import se.leafcoders.rosette.model.upload.UploadFolder
 import se.leafcoders.rosette.model.upload.UploadFolderRef
 import se.leafcoders.rosette.model.upload.UploadRequest
-import se.leafcoders.rosette.model.upload.UploadFile
 import se.leafcoders.rosette.util.QueryId
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mongodb.Mongo
@@ -167,7 +166,8 @@ abstract class AbstractIntegrationTest {
 	public String getObjectId() { return new ObjectId().toString() }
 
 	private boolean hasAddedUploadUser = false
-	private void createTestUploadUser() {
+
+	public void createTestUploadUser() {
 		if (!hasAddedUploadUser) {
 			hasAddedUploadUser = true
 			givenUser(userTestUpload)
