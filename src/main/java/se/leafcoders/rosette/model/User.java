@@ -59,7 +59,7 @@ public class User extends IdBasedModel {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email != null ? email.toLowerCase() : null;
 	}
 	
 	public String getPassword() {

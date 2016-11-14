@@ -41,10 +41,17 @@ public class EventController extends ApiV1Controller {
 		return eventService.readMany(manyQuery, from, before);
 	}
 
-	@RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
-		return eventService.create(event, response);
+	@RequestMapping(value = "events/generate", method = RequestMethod.POST, produces = "application/json")
+	public Event postEvent(
+            @RequestParam(required = true) String eventTypeId, 
+            @RequestParam(required = true) @DateTimeFormat(pattern="yyyy-MM-dd") Date startDate) {
+		return eventService.generate(eventTypeId, startDate);
 	}
+
+    @RequestMapping(value = "events", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public Event postEvent(@RequestBody Event event, HttpServletResponse response) {
+        return eventService.create(event, response);
+    }
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putEvent(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {

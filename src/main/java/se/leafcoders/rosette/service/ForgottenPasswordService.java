@@ -1,8 +1,6 @@
 package se.leafcoders.rosette.service;
 
 import java.util.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
@@ -14,8 +12,6 @@ import se.leafcoders.rosette.model.error.ValidationError;
 
 @Service
 public class ForgottenPasswordService {
-
-    private static final Logger logger = LoggerFactory.getLogger(ForgottenPasswordService.class);
 
     @Autowired
     private DbService<ForgottenPassword> dbForgotten;

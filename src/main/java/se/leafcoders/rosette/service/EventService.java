@@ -5,6 +5,8 @@ import static se.leafcoders.rosette.security.PermissionAction.UPDATE;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS_EVENTTYPES;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS_RESOURCETYPES;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +20,13 @@ import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.Location;
 import se.leafcoders.rosette.model.User;
 import se.leafcoders.rosette.model.event.Event;
+import se.leafcoders.rosette.model.reference.LocationRefOrText;
+import se.leafcoders.rosette.model.reference.UploadFileRefs;
+import se.leafcoders.rosette.model.reference.UserRefsAndText;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.ResourceType;
+import se.leafcoders.rosette.model.resource.UploadResource;
+import se.leafcoders.rosette.model.resource.UserResource;
 import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionValue;
@@ -70,10 +77,44 @@ public class EventService extends MongoTemplateCRUD<Event> {
 		return super.create(event, response);
 	}
 
-	public List<Event> readMany(final ManyQuery manyQuery, Date from, Date to) {
-		if (from != null && to != null) {
-			manyQuery.addCriteria(Criteria.where("startTime").gte(from).lt(to));
-		}
+    public Event generate(String eventTypeId, Date startDate) {
+        Calendar calStart = Calendar.getInstance();
+        calStart.setTime(startDate);
+        calStart.set(Calendar.HOUR_OF_DAY, 11);
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(startDate);
+        calEnd.set(Calendar.HOUR_OF_DAY, 13);
+
+        EventType eventType = eventTypeService.read(eventTypeId);
+        Event event = new Event();
+        event.setEventType(eventType);
+        event.setTitle(eventType.getName());
+        event.setStartTime(calStart.getTime());
+        event.setEndTime(calEnd.getTime());
+        event.setLocation(new LocationRefOrText());
+        event.setIsPublic(eventType.getHasPublicEvents().getValue());
+
+        List<Resource> resources = new ArrayList<Resource>();
+        eventType.getResourceTypes().forEach((resourceType) -> {
+            Resource resource = null;
+            if (resourceType.getType().equals("user")) {
+                resource = new UserResource();
+                ((UserResource)resource).setUsers(new UserRefsAndText());
+            } else {
+                resource = new UploadResource();
+                ((UploadResource)resource).setUploads(new UploadFileRefs());
+            }
+            resource.setType(resourceType.getType());
+            resource.setResourceType(resourceType);
+            resources.add(resource);
+        });
+        event.setResources(resources);
+
+        return event;
+    }
+
+	public List<Event> readMany(final ManyQuery manyQuery, Date from, Date before) {
+	    manyQuery.addTimeCriteria("startTime", from, before);
 		return super.readMany(manyQuery);
 	}
 

@@ -138,7 +138,7 @@ class SeedTest extends AbstractIntegrationTest {
         /**
          * Affischer
          */
-        UploadFolder affischFilkatalog = newUploadFolder("posters2", "Affischer", true, ["image/"])
+        UploadFolder affischFilkatalog = newUploadFolder("posters", "Affischer", true, ["image/"])
         UploadFile konsertBild = givenUploadInFolder(affischFilkatalog.id, validPNGImage)
         UploadFile bibelstudieBild = givenUploadInFolder(affischFilkatalog.id, validJPEGImage)
 
@@ -375,7 +375,7 @@ Lite mer text här. Och sen lite till."""
         givenPermissionForUser(hanteraAffischer, [
             "posters",
             "uploads:view",
-            "uploads:*:posters2"
+            "uploads:*:posters"
         ])
 
         User hanteraBokningar = newUser("Hantera", "Bokningar")

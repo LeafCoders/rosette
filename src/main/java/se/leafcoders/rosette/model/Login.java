@@ -9,7 +9,7 @@ public class Login {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username != null ? username.toLowerCase() : null;
     }
 
     public String getPassword() {

@@ -49,8 +49,10 @@ public class UserResourceMethods implements ResourceMethods {
 				throw new SimpleValidationException(new ValidationError("resource", "userResource.userDoesNotExistInGroup"));
 			}
 
-			for (UserRef user : resource.getUsers().getRefs()) {
-				resource.getUsers().updateRef(userService.readAsRef(user.getId(), checkPermissions));
+			if (resource.getUsers().getRefs() != null) {
+    			for (UserRef user : resource.getUsers().getRefs()) {
+    				resource.getUsers().updateRef(userService.readAsRef(user.getId(), checkPermissions));
+    			}
 			}
 		}
 	}

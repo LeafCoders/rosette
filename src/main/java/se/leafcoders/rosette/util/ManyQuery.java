@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.util;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,17 @@ public class ManyQuery {
         if (sortBy != null) {
             addSort(sortBy);
         }
+    }
+
+    public Query addTimeCriteria(String key, Date from, Date before) {
+        if (from != null && before != null) {
+            query.addCriteria(Criteria.where(key).gte(from).lt(before));
+        } else if (from != null) {
+            query.addCriteria(Criteria.where(key).gte(from));
+        } else if (before != null) {
+            query.addCriteria(Criteria.where(key).lt(before));
+        }
+        return query;
     }
 
     public Query addCriteria(Criteria criteria) {

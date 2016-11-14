@@ -26,9 +26,9 @@ import se.leafcoders.rosette.model.error.ValidationError;
 import se.leafcoders.rosette.model.reference.LocationRefOrText;
 import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.model.resource.UserResource;
-import se.leafcoders.rosette.validator.HasRef;
-import se.leafcoders.rosette.validator.CheckReferenceArray;
 import se.leafcoders.rosette.validator.CheckReference;
+import se.leafcoders.rosette.validator.CheckReferenceArray;
+import se.leafcoders.rosette.validator.HasRef;
 
 @Document(collection = "events")
 @ScriptAssert(lang = "javascript", script = "_this.endTime == null || (_this.endTime != null && _this.startTime !=null && _this.startTime.before(_this.endTime))", message = "event.startBeforeEndTime")
