@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 public interface ResourceMethods {
 	
-	Update createAssignUpdate(ResourceType resourceType, boolean checkPermissions);
+	Update updateQuery(ResourceType resourceType, boolean checkPermissions);
 
 	void setReferences(boolean checkPermissions);
 }

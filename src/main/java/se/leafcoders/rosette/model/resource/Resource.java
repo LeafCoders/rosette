@@ -45,4 +45,8 @@ public abstract class Resource {
 	public void setResourceType(ResourceType resourceType) {
 		this.resourceType = resourceType;
 	}
+	
+	public String resourceTypeId() {
+	    return resourceType != null ? resourceType.getId() : null;
+	}
 }

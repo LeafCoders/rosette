@@ -38,7 +38,7 @@ public class RosetteApplication extends SpringBootServletInitializer {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addExposedHeader("X-AUTH-TOKEN");
-        config.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT"));
+        config.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "DELETE"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.model.event.Event;
-import se.leafcoders.rosette.model.resource.Resource;
 import se.leafcoders.rosette.service.EventService;
 import se.leafcoders.rosette.util.ManyQuery;
 
@@ -56,11 +55,6 @@ public class EventController extends ApiV1Controller {
 	@RequestMapping(value = "events/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	public void putEvent(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
 		eventService.update(id, request, response);
-	}
-
-	@RequestMapping(value = "events/{eventId}/resources/{resourceTypeId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	public void assignResource(@PathVariable String eventId, @PathVariable String resourceTypeId, @RequestBody Resource resource, HttpServletResponse response) {
-		eventService.assignResource(eventId, resourceTypeId, resource, response);
 	}
 
 	@RequestMapping(value = "events/{id}", method = RequestMethod.DELETE, produces = "application/json")

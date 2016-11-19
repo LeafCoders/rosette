@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.integration.event
+package se.leafcoders.rosette.integration.eventResource
 
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
@@ -7,10 +7,10 @@ import org.junit.Test
 import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.event.Event
 
-public class AssignUserResourceTest extends AbstractIntegrationTest {
+public class UpdateUserResourceTest extends AbstractIntegrationTest {
 
 	@Test
-	public void assignUserResourceWithSuccess() throws ClientProtocolException, IOException {
+	public void updateUserResourceWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
@@ -49,7 +49,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void failToAssignUserWhenNotInGroup() throws ClientProtocolException, IOException {
+	public void failToUpdateUserWhenNotInGroup() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
@@ -79,7 +79,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	public void failToAssignUsersWhenNotAllowingMultiSelect() throws ClientProtocolException, IOException {
+	public void failToUpdateUsersWhenNotAllowingMultiSelect() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
@@ -127,7 +127,7 @@ public class AssignUserResourceTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void failToAssignUserByTextWhenNotAllowed() throws ClientProtocolException, IOException {
+	public void failToUpdateUserByTextWhenNotAllowed() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)

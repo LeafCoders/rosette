@@ -757,10 +757,12 @@ abstract class AbstractIntegrationTest {
 	}
 
     protected HttpResponse whenLogin(String email, String password) {
-        String encodedPassword = encodePassword(password)
-        postRequest = new HttpPost(baseUrl + "/auth/login?username=" + email + "&password=" + encodedPassword)
+        Map data = [username: email, password: password]
+        
+        postRequest = new HttpPost(baseUrl + "/auth/login")
         postRequest.addHeader("Content-Type", "application/json; charset=UTF-8")
         postRequest.addHeader("Accept", "application/json; charset=UTF-8")
+        postRequest.setEntity(new StringEntity(toJSON(data), ContentType.APPLICATION_JSON))
         return httpClient.execute(postRequest)
     }
 

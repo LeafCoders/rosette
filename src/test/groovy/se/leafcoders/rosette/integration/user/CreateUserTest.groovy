@@ -1,14 +1,13 @@
 package se.leafcoders.rosette.integration.user
 
-import static org.junit.Assert.*;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.junit.Test;
-import com.mongodb.util.JSON;
-import se.leafcoders.rosette.integration.AbstractIntegrationTest;
-import se.leafcoders.rosette.integration.util.TestUtil;
-import se.leafcoders.rosette.model.User;
+import static org.junit.Assert.*
+import javax.servlet.http.HttpServletResponse
+import org.apache.http.HttpResponse
+import org.apache.http.client.ClientProtocolException
+import org.junit.Test
+import se.leafcoders.rosette.integration.AbstractIntegrationTest
+import se.leafcoders.rosette.model.User
+import com.mongodb.util.JSON
 
 public class CreateUserTest extends AbstractIntegrationTest {
 
@@ -85,7 +84,6 @@ public class CreateUserTest extends AbstractIntegrationTest {
 
 		// Then
 		thenResponseCodeIs(postResponse, HttpServletResponse.SC_BAD_REQUEST)
-		assertEquals("Bad Request", postResponse.getStatusLine().getReasonPhrase())
 		thenItemsInDatabaseIs(User.class, 1)
 	}
 }

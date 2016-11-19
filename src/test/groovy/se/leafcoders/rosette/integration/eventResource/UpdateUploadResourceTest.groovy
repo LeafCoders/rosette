@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.integration.event
+package se.leafcoders.rosette.integration.eventResource
 
 import javax.servlet.http.HttpServletResponse
 import org.apache.http.HttpResponse
@@ -8,10 +8,10 @@ import se.leafcoders.rosette.integration.AbstractIntegrationTest
 import se.leafcoders.rosette.model.event.Event
 import se.leafcoders.rosette.model.upload.UploadFile
 
-public class AssignUploadResourceTest extends AbstractIntegrationTest {
+public class UpdateUploadResourceTest extends AbstractIntegrationTest {
 
 	@Test
-	public void assignUploadResourceWithSuccess() throws ClientProtocolException, IOException {
+	public void updateUploadResourceWithSuccess() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenUser(user2)
@@ -48,7 +48,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void failToAssignUploadWhenNotInFolder() throws ClientProtocolException, IOException {
+	public void failToUpdateUploadWhenNotInFolder() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)
@@ -83,7 +83,7 @@ public class AssignUploadResourceTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void failToAssignUploadsWhenNotAllowingMultiSelect() throws ClientProtocolException, IOException {
+	public void failToUpdateUploadsWhenNotAllowingMultiSelect() throws ClientProtocolException, IOException {
 		// Given
 		givenUser(user1)
 		givenGroup(group1)

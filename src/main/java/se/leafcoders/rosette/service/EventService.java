@@ -1,7 +1,6 @@
 package se.leafcoders.rosette.service;
 
 import static se.leafcoders.rosette.security.PermissionAction.READ;
-import static se.leafcoders.rosette.security.PermissionAction.UPDATE;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS_EVENTTYPES;
 import static se.leafcoders.rosette.security.PermissionType.EVENTS_RESOURCETYPES;
@@ -11,10 +10,6 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.model.EventType;
 import se.leafcoders.rosette.model.Location;
@@ -31,7 +26,6 @@ import se.leafcoders.rosette.security.PermissionAction;
 import se.leafcoders.rosette.security.PermissionResult;
 import se.leafcoders.rosette.security.PermissionValue;
 import se.leafcoders.rosette.util.ManyQuery;
-import se.leafcoders.rosette.util.QueryId;
 
 @Service
 public class EventService extends MongoTemplateCRUD<Event> {
@@ -52,7 +46,7 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	protected PermissionResult permissionResultFor(PermissionAction actionType, Event event) {
 	    if (event != null) {
     	    if (actionType.equals(READ)) {
-    	        return checkAnyEventPermission(READ, event, null); 
+    	        return checkAnyEventPermission(READ, event); 
     	    } else if (event.getEventType() != null) {
                 return security.permissionResultFor(
                         new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId()),
@@ -125,23 +119,6 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	    }
 	}
 
-	public void assignResource(String eventId, String resourceTypeId, Resource resource, HttpServletResponse response) {
-		checkAnyEventPermission(UPDATE, read(eventId, false), resourceTypeId);
-		security.validate(resource);
-
-		Query query = new Query(new Criteria().andOperator(
-		        Criteria.where("id").is(QueryId.get(eventId)),
-		        Criteria.where("resources.resourceType.id").is(resourceTypeId)));		
-
-		ResourceType resourceTypeIn = resourceTypeService.read(resource.getResourceType().getId(), false);
-		Update update = methodsService.of(resource).createAssignUpdate(resourceTypeIn, true);
-
-		if (mongoTemplate.updateFirst(query, update, Event.class).getN() == 0) {
-			throw notFoundException(eventId);
-		}
-		response.setStatus(HttpStatus.OK.value());
-	}
-
 	@Override
 	public void setReferences(Event data, Event dataInDb, boolean checkPermissions) {
 		if (data.getEventType() != null) {
@@ -164,18 +141,14 @@ public class EventService extends MongoTemplateCRUD<Event> {
 	    return new Class<?>[] { EventType.class, Location.class, ResourceType.class, User.class };
 	}
 
-	protected PermissionResult checkAnyEventPermission(PermissionAction actionType, Event event, String resourceTypeId) {
+	protected PermissionResult checkAnyEventPermission(PermissionAction actionType, Event event) {
 		PermissionValue eventsPermission = new PermissionValue(EVENTS, actionType, event.getId());
 		PermissionValue eventsEventTypesPermission = new PermissionValue(EVENTS_EVENTTYPES, actionType, event.getEventType().getId());
 		
 		if (!security.isPermitted(eventsPermission, eventsEventTypesPermission)) {
-			if (resourceTypeId != null) {
-				return security.permissionResultFor(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resourceTypeId));
-			} else {
-				for (Resource resource : event.getResources()) {
-					if (security.isPermitted(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resource.getResourceType().getId()))) {
-				        return new PermissionResult();
-					}
+			for (Resource resource : event.getResources()) {
+				if (security.isPermitted(new PermissionValue(EVENTS_RESOURCETYPES, actionType, resource.getResourceType().getId()))) {
+			        return new PermissionResult();
 				}
 			}
 			return new PermissionResult(eventsPermission, eventsEventTypesPermission);

@@ -18,7 +18,7 @@ public class UserResourceMethods implements ResourceMethods {
 		this.groupService = groupService;
 	}
 
-	public Update createAssignUpdate(ResourceType resourceTypeIn, boolean checkPermissions) {
+	public Update updateQuery(ResourceType resourceTypeIn, boolean checkPermissions) {
 		validateAndUpdate(resourceTypeIn, checkPermissions);
 		return new Update().set("resources.$.users", resource.getUsers());
 	}
