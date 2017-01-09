@@ -7,11 +7,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase.FileSizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartException;
 import se.leafcoders.rosette.comparator.ValidationErrorComparator;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
@@ -20,6 +23,7 @@ import se.leafcoders.rosette.exception.ValidationException;
 import se.leafcoders.rosette.model.error.ExceptionError;
 import se.leafcoders.rosette.model.error.ValidationError;
 
+@ControllerAdvice
 public abstract class AbstractController {
     static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
@@ -72,6 +76,19 @@ public abstract class AbstractController {
             logger.debug("Controller exception", exception);
 
             return new ExceptionError("error.badRequest", exception.getMessage(), null);
+        }
+
+        else if (exception instanceof MultipartException) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.debug("Controller exception", exception);
+
+            List<ValidationError> errors = new ArrayList<ValidationError>();
+            if (((MultipartException) exception).getRootCause() instanceof FileSizeLimitExceededException) {
+                errors.add(new ValidationError("file", "file.sizeExceeded"));
+            } else {
+                errors.add(new ValidationError("file", "file.unknownError"));
+            }
+            return errors;
         }
         
         else {

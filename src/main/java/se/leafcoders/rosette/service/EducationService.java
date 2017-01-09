@@ -67,12 +67,12 @@ public class EducationService extends MongoTemplateCRUD<Education> {
         
 	    if (data instanceof EventEducation) {
             EventEducation education = (EventEducation) data;
-            if (education.getEvent() != null) {
-                Event event = eventService.read(education.getEvent().getId(), checkPermissions);
+            if (dataInDb != null && dataInDb.getEducationType() != null && education.getEvent() != null) {
                 if (eventTypeId == null) {
                     EducationType educationType = educationTypeService.read(dataInDb.getEducationType().getId(), checkPermissions);                    
                     eventTypeId = educationType.getEventType().getId();
                 }
+                Event event = eventService.read(education.getEvent().getId(), checkPermissions);
                 if (event.getEventType().getId().equals(eventTypeId)) {
                     education.setEvent(new EventRef(event));
                 } else {

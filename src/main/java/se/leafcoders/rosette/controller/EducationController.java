@@ -3,6 +3,7 @@ package se.leafcoders.rosette.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,11 +29,15 @@ public class EducationController extends ApiV1Controller {
 	@RequestMapping(value = "educations", method = RequestMethod.GET, produces = "application/json")
 	public List<Education> getEducations(
             @RequestParam(required = false) String educationTypeId,
+            @RequestParam(required = false) String eventId,
             HttpServletRequest request
     ) {
         ManyQuery manyQuery = new ManyQuery(request, "-time");
         if (educationTypeId != null) {
-            manyQuery.addCriteria(Criteria.where("educationType.id").is(educationTypeId));
+            manyQuery.addCriteria(Criteria.where("educationType._id").is(new ObjectId(educationTypeId)));
+        }
+        if (eventId != null) {
+            manyQuery.addCriteria(Criteria.where("event._id").is(new ObjectId(eventId)));
         }
 		return educationService.readMany(manyQuery);
 	}
