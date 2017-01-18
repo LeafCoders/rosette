@@ -23,6 +23,7 @@ public enum PermissionType {
 	POSTERS("posters"),
 	RESOURCE_TYPES("resourceTypes"),
 	SIGNUP_USERS("signupUsers"),
+    TEXT_VALUES("textValues"),
 	UPLOAD_FOLDERS("uploadFolders"),
 	UPLOADS("uploads"),
 	USERS("users"),

@@ -101,6 +101,7 @@ abstract class AbstractIntegrationTest {
 		mongoTemplate.dropCollection("posters")
 		mongoTemplate.dropCollection("resourceTypes")
 		mongoTemplate.dropCollection("signupUsers")
+		mongoTemplate.dropCollection("textValues")
         mongoTemplate.dropCollection("uploadFiles")
         mongoTemplate.dropCollection("uploadFolders")
 		mongoTemplate.dropCollection("userResourceTypes")

@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SimpleValidationException;
 import se.leafcoders.rosette.model.BaseModel;
@@ -76,7 +77,11 @@ abstract class MongoTemplateCRUD<T extends BaseModel> implements StandardCRUD<T>
 		checkPermission(PermissionAction.CREATE, data);
 		setReferences(data, null, true);
 		security.validate(data);
-		mongoTemplate.insert(data);
+		try {
+		    mongoTemplate.insert(data);
+		} catch (org.springframework.dao.DuplicateKeyException ignore) {
+		    throw new ForbiddenException("error.create.idAlreadyExist", data.getId());
+		}
 		response.setStatus(HttpStatus.CREATED.value());
 		return data;
 	}
