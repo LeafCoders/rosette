@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
-import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.persistence.model.User;
 
 public class JwtAuthenticationService {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationService.class);
-    
+
     private static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 
     private final JwtHandler tokenHandler;
@@ -40,7 +40,7 @@ public class JwtAuthenticationService {
         }
         return null;
     }
-    
+
     public String createTokenForUser(User user) {
         return tokenHandler.createTokenForUserId(user.getId());
     }

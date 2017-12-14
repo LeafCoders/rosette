@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import se.leafcoders.rosette.service.ForgottenPasswordService;
 
 @RestController
 public class ForgottenPasswordController extends AuthController {
-
+/*
     @Autowired
     private ForgottenPasswordService forgottenPasswordService;
 
@@ -32,4 +31,5 @@ public class ForgottenPasswordController extends AuthController {
         forgottenPasswordService.apply(token, password);
         response.setStatus(HttpServletResponse.SC_OK);
     }
+*/
 }

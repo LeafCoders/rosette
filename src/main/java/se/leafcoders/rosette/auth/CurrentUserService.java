@@ -1,40 +1,32 @@
 package se.leafcoders.rosette.auth;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.model.User;
+import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.persistence.repository.UserRepository;
 
 @Service
 public class CurrentUserService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private UserRepository userRepository;
 
     @Override
     public final CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
-        Query query = Query.query(new Criteria().orOperator(Criteria.where("email").is(username),
-                Criteria.where("username").is(username)));
-        List<User> users = mongoTemplate.find(query, User.class);
-        if (users.isEmpty()) {
-            throw new UsernameNotFoundException("user not found");
-        }
-        User user = users.get(0);
-        return new CurrentUser(user.getId(), user.getFullName(), user.getEmail(), user.getHashedPassword());
-    }
-    
-    public CurrentUser loadUserById(String userId) {
-        User user = mongoTemplate.findById(userId, User.class);
+        User user = userRepository.findByEmail(username);
         if (user != null) {
-            return new CurrentUser(userId, user.getFullName(), user.getEmail(), "");
-        } else {
-            return null;
+            return new CurrentUser(user.getId(), user.getFullName(), user.getEmail(), user.getPassword(), user.getIsActive());
         }
+        throw new UsernameNotFoundException("user not found");
+    }
+
+    public CurrentUser loadUserById(Long userId) {
+        User user = userRepository.findOne(userId);
+        if (user != null) {
+            return new CurrentUser(userId, user.getFullName(), user.getEmail(), "", user.getIsActive());
+        }
+        return null;
     }
 }

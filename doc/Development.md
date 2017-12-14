@@ -7,40 +7,16 @@
 1. Install `Java 8` from http://www.oracle.com/technetwork/java/javase/index.html
 
 
-### Gradle
+### Docker
 
-1. Install `Gradle 2.x` from https://gradle.org/gradle-download
-
-
-### MongoDB
-
-1. Install `MongoDB 3.1.x` from http://www.mongodb.org/downloads
-2. Follow instructions in its README file
-3. MongoDB shall be run with its default port number `27017`
-4. Install `MongoHub` from http://mongohub.todayclose.com and use it to inspect the databases
+1. Install `Docker x.x.x` from x
 
 
-### Eclipse
+### Eclipse 
 
-TODO: Rewrite with use of Gradle
-
-1. Install `Spring Tool Suite` from http://spring.io/tools/sts
-2. Inside STS - Install `m2e Configurator for Groovy` from http://dist.springsource.org/release/GRECLIPSE/e4.2
-3. Inside STS - Install `JRebel for Eclipse (3.3+) -> m2e Integration` from http://update.zeroturnaround.com/update-site
-4. Open `Preferences -> Maven -> Installations` and add the directory where `Maven 2.2.1` is. Select it.
-5. Import the Rosette project with `File -> Import... -> Maven -> Existing Maven Projects`
-6. If you get errors that says
-
-  > The declaration package "se.leafcoders..." does not match the expected package "main.se.leafcoders..."
-
-  then do the following:
-  1. Right-click at "src" below "rosette" in `Package Explorer` and select `Build Path -> Remove from Build Path`
-  2. Right-click at "src/main/java" below "rosette" in `Package Explorer` and select `Build Path -> Use as Source Folder`
-7. Open view `Servers` and select `VMware vFabric tc Server Developer Edition v2.9`. Right-click and select `Add and Remove...`. Add `rosette`. Start the server. Rosette is not running at localhost:8080/rosette
-8. Add `cordate` the same way as `rosette`
-9. Double-click at `VMware vFabric tc Server Developer Edition v2.9` in `Servers` view.
-10. Change `bio.http.port` to `9000`
-11. Click at the `Modules` tab and change `rosette` to have path `/`
+1. Install `Spring Tool Suite 3.9.0` from http://spring.io/tools/sts
+2. Install `Buildship Grade Integration` from Eclipse Marketplace
+3. Import the Rosette project with `File -> Import... -> Gradle -> Existing Gradle Project`
 
 
 ### FakeSMTP
@@ -54,12 +30,10 @@ Use FakeSMTP to simulate a local SMTP server. FakeSMTP has a GUI that shows sent
 
 ## Running server
 
-1. Select `RosetteApplication.java` in Eclipse `Package Explorer` view
-2. Right-click and select `Run As -> Spring Boot App`
+1. Open `Boot Dashboard` tool window. `rosette` should be listed here
+2. Select `rosette` and click start button 
 
 
 ## Running tests
 
-1. Start MongodDB at port `27017`
-2. Start rosette server
-3. Run tests with JUnit 4 TestRunner
+1. Run tests with JUnit TestRunner

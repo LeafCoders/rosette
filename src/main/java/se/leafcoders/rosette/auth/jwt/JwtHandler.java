@@ -11,7 +11,7 @@ import se.leafcoders.rosette.auth.CurrentUserService;
 public final class JwtHandler {
 
     private static long VALID_LENGTH = 14 * 24 * 60 * 60 * 1000;
-    
+
     private final String jwtSecret;
     private final CurrentUserService userService;
 
@@ -24,19 +24,21 @@ public final class JwtHandler {
     public CurrentUser parseUserFromToken(String token) {
         try {
             String userId = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
-            return userService.loadUserById(userId);
+            if (userId != null) {
+                return userService.loadUserById(Long.parseLong(userId));
+            }
         } catch (io.jsonwebtoken.SignatureException ignore) {
-            return null;
         }
+        return null;
     }
 
     public String createTokenForUser(CurrentUser user) {
         return createTokenForUserId(user.getId());
     }
 
-    public String createTokenForUserId(String userId) {
+    public String createTokenForUserId(Long userId) {
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(userId.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + VALID_LENGTH))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();

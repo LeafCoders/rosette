@@ -9,12 +9,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.google.common.base.Preconditions;
 
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 
+@Component
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtAuthenticationService jwtAuthenticationService;
@@ -24,11 +26,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
-        CurrentUserAuthentication authentication = jwtAuthenticationService
-                .createAuthentication((HttpServletRequest) request);
+        CurrentUserAuthentication authentication = jwtAuthenticationService.createAuthentication((HttpServletRequest) request);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);

@@ -17,14 +17,6 @@ multipart:
 security:
   basic.enabled: false
 
-spring.data.mongodb:
-  database: rosette
-  # grid-fs-database:
-  host: 127.0.0.1
-  port: 27017
-  # password:
-  # username:
-
 spring.mail:
   testConnection: true
   protocol: smtp
@@ -42,5 +34,5 @@ rosette:
   apiVersion: v1
   jwtSecretToken: tooShort # Don't change this. Override this property in production with environment variable
   defaultMailFrom: no-reply@localhost
-  uploadsPath: ./rosetteUploads
-  uploadCacheMaxAge: 604800 # One week
+  filesPath: ./rosetteFiles
+  fileClientCacheMaxAge: 604800 # One week

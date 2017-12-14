@@ -1,126 +1,45 @@
 buildscript {
-    ext {
-        springBootVersion = '1.4.1.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-    }
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
 }
 
 apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'idea'
-apply plugin: 'spring-boot' 
-apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
 
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-def rosetteVersion = '1.1.0-SNAPSHOT'
-
-springBoot {
-    mainClass = 'se.leafcoders.rosette.RosetteApplication'
-}
-
-bootRepackage {
-    dependsOn jar
-    mainClass = 'se.leafcoders.rosette.RosetteApplication'
-}
-
-jar {
-    baseName = 'rosette'
-    version =  rosetteVersion
-}
-
-war {
-    baseName = 'rosette'
-    version = rosetteVersion
-}
-
-configurations {
-    providedRuntime
-}
-
-test {
-    System.getProperties().stringPropertyNames().forEach { String key ->
-        if (key.startsWith('rosette')) {
-            systemProperties[key] = System.getProperty(key)
-        }
-    } 
-}
-
-// Ignore 'test' task when running 'build' task
-test.onlyIf {
-    !gradle.taskGraph.hasTask(build)
-}
 
 repositories {
-    mavenCentral()
-    maven { url "https://repo.spring.io/snapshot" }
-    maven { url "https://repo.spring.io/milestone" }
+	mavenCentral()
 }
 
+
 dependencies {
-    compile("org.springframework.boot:spring-boot-devtools")
-    compile("org.springframework.boot:spring-boot-starter-logging")
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-mail")
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-mail')
 	compile('org.springframework.boot:spring-boot-starter-security')
-    compile("org.springframework.boot:spring-boot-starter-data-mongodb")
-    compile("org.springframework.boot:spring-boot-configuration-processor")
-	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    testCompile("org.springframework.boot:spring-boot-starter-web")
-	testCompile("org.springframework.boot:spring-boot-starter-test")
-
-	compile("org.codehaus.groovy:groovy-all:2.3.10")
-
-	compile("joda-time:joda-time:2.3")
+	compile('org.springframework.boot:spring-boot-starter-web')
+	runtime('org.springframework.boot:spring-boot-devtools')
+	runtime('mysql:mysql-connector-java')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.security:spring-security-test')
 	
 	compile("io.jsonwebtoken:jjwt:0.4")
-
-	compile("net.sf.biweekly:biweekly:0.4.4")
 	
-	compile("commons-io:commons-io:2.4")
-	
-	compile("javax.xml.bind:jaxb-api:2.2.12")
-
 	// Google common libraries
-	compile("com.google.guava:guava:18.0")
-
-	// iCalendar support
-	compile("net.sf.biweekly:biweekly:0.4.2")
-
+	compile("com.google.guava:guava:21.0")
+	
     // Thumbnailator
     compile("net.coobird:thumbnailator:0.4.8")
   
     // MP3 audio support
     compile("com.googlecode.soundlibs:mp3spi:1.9.5-1")
-
-	// org.apache.http.*
-	testCompile("org.apache.httpcomponents:httpclient:4.3.1")
-    testCompile("org.apache.httpcomponents:httpmime:4.3.1")
-}
-
-
-eclipse {
-    classpath {
-         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-    }
-}
-
-task buildWarAndJar {
-    description = 'Builds Rosette war and jar packages for production'
-    group = 'build'
-    dependsOn bootRepackage
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
 }

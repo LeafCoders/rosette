@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import se.leafcoders.rosette.model.PermissionTree;
+import se.leafcoders.rosette.permission.PermissionTree;
 
 public class CurrentUserAuthentication implements Authentication {
 
@@ -20,7 +20,7 @@ public class CurrentUserAuthentication implements Authentication {
      * Anonymous user authentication
      */
     public CurrentUserAuthentication() {
-    	this.user = new CurrentUser();
+        this.user = new CurrentUser();
     }
 
     /**
@@ -32,7 +32,7 @@ public class CurrentUserAuthentication implements Authentication {
 
     @Override
     public String getName() {
-		return user.getUsername();
+        return user.getUsername();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CurrentUserAuthentication implements Authentication {
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
     }
-    
+
     public PermissionTree getPermissionTree() {
         return permissionTree;
     }

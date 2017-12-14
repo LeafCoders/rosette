@@ -1,8 +1,9 @@
 package se.leafcoders.rosette.controller.auth;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import se.leafcoders.rosette.controller.AbstractController;
+import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("auth")
-public abstract class AuthController extends AbstractController {
+@RestController
+@RequestMapping(value = "auth", produces = "application/json")
+public abstract class AuthController {
 }
