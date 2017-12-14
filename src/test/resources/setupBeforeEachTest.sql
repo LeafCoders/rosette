@@ -2,9 +2,9 @@ delete from slides;
 delete from slideshows;
 
 
-delete from articleseries;
-delete from article_authors;
 delete from articles;
+delete from article_authors;
+delete from articleseries;
 
 
 delete from resourcerequirement_resources;
