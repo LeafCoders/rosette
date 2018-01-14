@@ -43,8 +43,8 @@ public class AssetsController {
     }
 
     @GetMapping()
-    public Collection<AssetOut> getAssets(HttpServletRequest request) {
-        return assetService.toOut(assetService.readMany(true));
+    public Collection<AssetOut> getAssets(HttpServletRequest request, @RequestParam Long assetFolderId) {
+        return assetService.toOut(assetService.findAllInFolder(assetFolderId, true));
     }
 
     @PostMapping(consumes = "application/json")

@@ -1,15 +1,13 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
-
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.RosetteSettings;
 import se.leafcoders.rosette.controller.dto.AssetFileIn;
 import se.leafcoders.rosette.controller.dto.AssetIn;
@@ -51,6 +49,10 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         return (AssetRepository) repository;
     }
 
+    public List<Asset> findAllInFolder(Long assetFolderId, boolean checkPermissions) {
+        return readManyCheckPermissions(repo().findByFolderId(assetFolderId), checkPermissions);
+    }
+    
     protected void extraValidation(Asset item) {
     }
     

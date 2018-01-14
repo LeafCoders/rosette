@@ -1,19 +1,19 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import se.leafcoders.rosette.controller.dto.GroupIn;
 import se.leafcoders.rosette.controller.dto.GroupOut;
 import se.leafcoders.rosette.controller.dto.UserOut;
@@ -30,43 +30,43 @@ public class GroupsController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public GroupOut getGroup(@PathVariable Long id) {
         return groupService.toOut(groupService.read(id, true));
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Collection<GroupOut> getGroups(HttpServletRequest request) {
         Sort sort = new Sort(Sort.Direction.ASC, "name");        
         return groupService.toOut(groupService.readMany(sort, true));
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+    @PostMapping(consumes = "application/json")
     public ResponseEntity<GroupOut> postGroup(@RequestBody GroupIn group) {
         return new ResponseEntity<GroupOut>(groupService.toOut(groupService.create(group, true)), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/json")
+    @PutMapping(value = "/{id}", consumes = "application/json")
     public GroupOut putGroup(@PathVariable Long id, HttpServletRequest request) {
         return groupService.toOut(groupService.update(id, GroupIn.class, request, true));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
         return groupService.delete(id, true);
     }
 
-    @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}/users")
     public Collection<UserOut> getUsersOfGroup(@PathVariable Long id) {
         return userService.toOut(groupService.getUsers(id));
     }
 
-    @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.POST, consumes = "application/json")
+    @PostMapping(value = "/{id}/users/{userId}", consumes = "application/json")
     public Collection<UserOut> addUserToGroup(@PathVariable Long id, @PathVariable Long userId) {
         return userService.toOut(groupService.addUser(id, userId));
     }
 
-    @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}/users/{userId}")
     public Collection<UserOut> removeUserFromGroup(@PathVariable Long id, @PathVariable Long userId) {
         return userService.toOut(groupService.removeUser(id, userId));
     }

@@ -10,9 +10,7 @@ import se.leafcoders.rosette.controller.dto.ArticleOut;
 import se.leafcoders.rosette.controller.dto.ArticleSerieRefOut;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.repository.ArticleRepository;
-import se.leafcoders.rosette.persistence.repository.ArticleSerieRepository;
 
 @Service
 public class ArticleService extends PersistenceService<Article, ArticleIn, ArticleOut> {

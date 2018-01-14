@@ -216,8 +216,11 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     protected void checkPermissions(List<PermissionValue> permissions) {
         securityService.permissionResultFor((PermissionValue[]) permissions.toArray()).checkAndThrow();
     }
-
     
+    public void checkPublicPermission(Long id) {
+        checkPermission(permissionValue(PermissionAction.PUBLIC).forId(id));
+    }
+
     public NotFoundException notFoundException(Long id) {
         return new NotFoundException(entityClass.getSimpleName(), id);
     }

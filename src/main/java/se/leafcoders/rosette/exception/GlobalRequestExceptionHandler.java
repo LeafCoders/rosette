@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -53,6 +54,14 @@ public class GlobalRequestExceptionHandler extends ResponseEntityExceptionHandle
         
         // TODO: Handle separately in create/update and delete
         ValidationError validationError = new ValidationError("id", ApiError.UNKNOWN_REASON);
+        return new ResponseEntity<List<ValidationError>>(Collections.singletonList(validationError), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ MultipartException.class })
+    public ResponseEntity<List<ValidationError>> handleFileSizeLimitExceededException(MultipartException ex, WebRequest request) {
+        System.err.println(ex.getMessage());
+        ex.printStackTrace(System.err);
+        ValidationError validationError = new ValidationError("uploading", ApiString.FILE_EXCEED_SIZE);
         return new ResponseEntity<List<ValidationError>>(Collections.singletonList(validationError), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 

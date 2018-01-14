@@ -1,8 +1,11 @@
 # https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 
-spring:
-  profiles:
-    active: development # If spring.profile.active is not specified, profile will be "development"
+spring.profiles:
+  active: development # If spring.profile.active is not specified, profile will be "development"
 
-  jackson:
-    serialization.WRITE_DATES_AS_TIMESTAMPS: false
+spring.jackson:
+  serialization.WRITE_DATES_AS_TIMESTAMPS: false
+
+spring.http.multipart:
+  max-file-size: 200MB
+  max-request-size: 200MB

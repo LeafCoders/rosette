@@ -6,6 +6,7 @@ public class ApiString {
 
     public static final String STRING_NOT_EMPTY = "error.string.notEmpty";
     public static final String STRING_MAX_200_CHARS = "error.string.max200Chars";
+    public static final String STRING_MAX_4000_CHARS = "error.string.max4000Chars";
     public static final String STRING_MAX_10000_CHARS = "error.string.max10000Chars";
     public static final String STRING_NOT_ANY_OF = "error.string.notAnyOf";
 
@@ -17,6 +18,7 @@ public class ApiString {
     public static final String FILENAME_INVALID = "error.filename.invalid";
     public static final String FILENAME_NOT_UNIQUE = "error.filename.notUnique";
 
+    public static final String FILE_EXCEED_SIZE = "error.file.exceedSize";
     public static final String FILE_NOT_READABLE = "error.file.notReadable";
     public static final String FILE_INVALID_CONTENT = "error.file.invalidContent";
     public static final String FILE_MIMETYPE_NOT_ALLOWED = "error.file.mimeTypeNotAllowed";

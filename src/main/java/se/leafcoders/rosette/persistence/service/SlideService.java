@@ -2,9 +2,7 @@ package se.leafcoders.rosette.persistence.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.controller.dto.SlideIn;
 import se.leafcoders.rosette.controller.dto.SlideOut;
 import se.leafcoders.rosette.permission.PermissionType;
