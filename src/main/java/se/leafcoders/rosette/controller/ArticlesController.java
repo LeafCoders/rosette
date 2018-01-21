@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.controller.dto.ArticleIn;
 import se.leafcoders.rosette.controller.dto.ArticleOut;
+import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.persistence.service.ArticleService;
+import se.leafcoders.rosette.persistence.service.ResourceService;
 
 @RestController
 @RequestMapping(value = "api/articles", produces = "application/json")
@@ -25,13 +27,16 @@ public class ArticlesController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ResourceService resourceService;
+    
     @GetMapping(value = "/{id}")
     public ArticleOut getArticle(@PathVariable Long id) {
         return articleService.toOut(articleService.read(id, true));
     }
 
     @GetMapping
-    public Collection<ArticleOut> getArticles(HttpServletRequest request, @RequestParam Long articleTypeId) {
+    public Collection<ArticleOut> getArticles(@RequestParam Long articleTypeId) {
         return articleService.toOut(articleService.findAllOfType(articleTypeId, true));
     }
 
@@ -50,4 +55,18 @@ public class ArticlesController {
         return articleService.delete(id, true);
     }
 
+    @GetMapping(value = "/{id}/authors")
+    public Collection<ResourceOut> getUsersOfGroup(@PathVariable Long id) {
+        return resourceService.toOut(articleService.getAuthors(id));
+    }
+
+    @PostMapping(value = "/{id}/authors/{authorId}", consumes = "application/json")
+    public Collection<ResourceOut> addUserToGroup(@PathVariable Long id, @PathVariable Long authorId) {
+        return resourceService.toOut(articleService.addAuthor(id, authorId));
+    }
+
+    @DeleteMapping(value = "/{id}/authors/{authorId}")
+    public Collection<ResourceOut> removeUserFromGroup(@PathVariable Long id, @PathVariable Long authorId) {
+        return resourceService.toOut(articleService.removeAuthor(id, authorId));
+    }
 }

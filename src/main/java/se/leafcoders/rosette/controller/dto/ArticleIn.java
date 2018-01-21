@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -25,6 +26,8 @@ public class ArticleIn {
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime time;
 
+    private List<Long> authorIds;
+    
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String title;
@@ -56,6 +59,14 @@ public class ArticleIn {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public List<Long> getAuthorIds() {
+        return authorIds;
+    }
+
+    public void setAuthorIds(List<Long> authorIds) {
+        this.authorIds = authorIds;
     }
 
     public String getTitle() {

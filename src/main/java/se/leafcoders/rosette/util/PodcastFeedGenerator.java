@@ -70,7 +70,7 @@ public class PodcastFeedGenerator {
                 tag("description", toContentData(article.getContent())),
                 tag("itunes:summary", toContentData(article.getContent())),
 
-                tag("itunes:author", article.getAuthors().stream().map(a -> noAmp(a.getFullName())).collect(Collectors.joining(" ,"))),
+                tag("itunes:author", article.getAuthors().stream().map(a -> noAmp(a.getName())).collect(Collectors.joining(" ,"))),
                 tag("itunes:explicit", "clean"), tag("guid", article.getId().toString()),
                 tag("pubDate", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(article.getTime())),
 

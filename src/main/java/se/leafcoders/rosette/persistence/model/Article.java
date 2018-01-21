@@ -53,7 +53,7 @@ public class Article extends Persistable {
         name = "article_authors", joinColumns = { @JoinColumn(name = "article_id") }, inverseJoinColumns = { @JoinColumn(name = "authors_id") },
         uniqueConstraints = { @UniqueConstraint(columnNames = { "article_id", "authors_id" }) }
     )
-    private List<User> authors = new ArrayList<>();
+    private List<Resource> authors = new ArrayList<>();
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
@@ -110,23 +110,23 @@ public class Article extends Persistable {
         this.setArticleSerieId(articleSerie != null ? articleSerie.getId() : null);
     }
 
-    public List<User> getAuthors() {
+    public List<Resource> getAuthors() {
         if (authors == null) {
             authors = new ArrayList<>();
         }
-        authors.sort((a, b) -> a.getFullName().compareTo(b.getFullName()));
+        authors.sort((a, b) -> a.getName().compareTo(b.getName()));
         return authors;
     }
 
-    public void setUsers(List<User> authors) {
+    public void setAuthors(List<Resource> authors) {
         this.authors = authors;
     }
 
-    public void addUser(User authors) {
+    public void addAuthor(Resource authors) {
         getAuthors().add(authors);
     }
 
-    public void removeUser(User authors) {
+    public void removeAuthor(Resource authors) {
         getAuthors().remove(authors);
     }
     

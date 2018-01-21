@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
@@ -16,6 +17,7 @@ public class ArticleOut {
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime time;
 
+    private List<ResourceRefOut> authors;
     private String title;
     private String content;
 
@@ -52,6 +54,14 @@ public class ArticleOut {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public List<ResourceRefOut> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<ResourceRefOut> authors) {
+        this.authors = authors;
     }
 
     public String getTitle() {
