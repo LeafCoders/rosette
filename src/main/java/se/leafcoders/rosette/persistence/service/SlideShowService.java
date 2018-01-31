@@ -23,7 +23,7 @@ import se.leafcoders.rosette.persistence.repository.SlideShowRepository;
 public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn, SlideShowOut> {
 
     @Autowired
-    AssetFolderService assetFolderService;
+    private AssetFolderService assetFolderService;
 
     private class SlideCrud extends ChildCrud<SlideShow, Slide, SlideIn> {
 

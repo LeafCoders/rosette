@@ -23,6 +23,9 @@ import se.leafcoders.rosette.persistence.repository.ArticleRepository;
 public class ArticleService extends PersistenceService<Article, ArticleIn, ArticleOut> {
 
     @Autowired
+    ArticleTypeService articleTypeService;
+    
+    @Autowired
     UserService userService;
 
     @Autowired
@@ -47,7 +50,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     protected Article convertFromInDTO(ArticleIn dto, JsonNode rawIn, Article item) {
         // Only set when create
         if (item.getArticleTypeId() == null) {
-            item.setArticleTypeId(dto.getArticleTypeId());
+            item.setArticleType(articleTypeService.read(dto.getArticleTypeId(), true));
         }
         if (rawIn == null || rawIn.has("articleSerieId")) {
             item.setArticleSerie(articleSerieService.read(dto.getArticleSerieId(), true));
@@ -56,7 +59,9 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
             item.setTime(dto.getTime());
         }
         if (rawIn == null || rawIn.has("authorIds")) {
-            item.setAuthors(dto.getAuthorIds().stream().map(authorId -> resourceService.read(authorId, true)).collect(Collectors.toList()));
+            if (dto.getAuthorIds() != null) { 
+                item.setAuthors(dto.getAuthorIds().stream().map(authorId -> resourceService.read(authorId, true)).collect(Collectors.toList()));
+            }
         }
         if (rawIn == null || rawIn.has("title")) {
             item.setTitle(dto.getTitle());

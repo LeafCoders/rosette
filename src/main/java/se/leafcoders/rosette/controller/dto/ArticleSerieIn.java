@@ -24,6 +24,10 @@ public class ArticleSerieIn {
     @Length(max = 10000, message = ApiString.STRING_MAX_10000_CHARS)
     private String content;
 
+    @NotNull(message = ApiString.NOT_NULL)
+    private Long imageId;
+
+
     // Getters and setters
 
     public Long getArticleTypeId() {
@@ -56,6 +60,14 @@ public class ArticleSerieIn {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
 }

@@ -7,6 +7,7 @@ public class ArticleSerieOut {
     private Long articleTypeId;
     private String title;
     private String content;
+    private AssetOut image;
 
     // Getters and setters
 
@@ -48,6 +49,14 @@ public class ArticleSerieOut {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public AssetOut getImage() {
+        return image;
+    }
+
+    public void setImage(AssetOut image) {
+        this.image = image;
     }
 
 }

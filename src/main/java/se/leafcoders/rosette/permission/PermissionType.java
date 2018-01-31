@@ -3,6 +3,9 @@ package se.leafcoders.rosette.permission;
 public enum PermissionType {
 
     ADMIN_DB("admin:db"),
+    ARTICLES("articles"),
+    ARTICLE_SERIES("articleSeries"),
+    ARTICLE_TYPES("articleTypes"),
     ASSETS("assets"),
     ASSET_FOLDERS("assetFolders"),
     ASSET_FOLDERS_FILES("assetFolders:files"),
@@ -17,8 +20,6 @@ public enum PermissionType {
     GROUPS("groups"),
     PERMISSIONS("permissions"),
     PODCASTS("podcasts"),
-    ARTICLES("articles"),
-    ARTICLE_SERIES("articleSeries"),
     RESOURCES("resources"),
     RESOURCE_TYPES("resourceTypes"),
     SLIDE_SHOWS("slideShows"),

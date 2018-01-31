@@ -170,9 +170,10 @@ public class FileByteRangeSupport {
         response.setHeader("Content-Disposition", disposition + ";filename=\"" + fileName + "\"");
         response.setHeader("Accept-Ranges", "bytes");
 
-        response.setHeader("ETag", fileName);
-        response.setDateHeader("Last-Modified", lastModified);
         if (expiresInSeconds != null) {
+            response.setHeader("ETag", fileName);
+            response.setDateHeader("Last-Modified", lastModified);
+
             if (contentType.startsWith("image")) {
                 response.addHeader("Cache-Control", "public");
                 response.addHeader("Cache-Control", "max-age=" + expiresInSeconds);

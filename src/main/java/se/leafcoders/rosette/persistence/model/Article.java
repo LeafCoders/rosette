@@ -26,9 +26,14 @@ import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer
 public class Article extends Persistable {
 
     @NotNull(message = ApiString.NOT_NULL)
-    @Column(name = "articletype_id", nullable = false, updatable = false)
+    @Column(name = "articletype_id", nullable = false, insertable = false, updatable = false)
     private Long articleTypeId;
-    
+
+    @NotNull(message = ApiString.NOT_NULL)
+    @ManyToOne
+    @JoinColumn(name = "articletype_id")
+    private ArticleType articleType;
+
     @NotNull(message = ApiString.NOT_NULL)
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
@@ -75,6 +80,15 @@ public class Article extends Persistable {
 
     public void setArticleTypeId(Long articleTypeId) {
         this.articleTypeId = articleTypeId;
+    }
+
+    public ArticleType getArticleType() {
+        return articleType;
+    }
+
+    public void setArticleType(ArticleType articleType) {
+        this.articleType = articleType;
+        this.setArticleTypeId(articleType != null ? articleType.getId() : null);
     }
 
     public LocalDateTime getLastModifiedTime() {

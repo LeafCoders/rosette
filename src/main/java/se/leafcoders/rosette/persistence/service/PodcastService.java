@@ -13,7 +13,7 @@ import se.leafcoders.rosette.persistence.repository.PodcastRepository;
 public class PodcastService extends PersistenceService<Podcast, PodcastIn, PodcastOut> {
 
     @Autowired
-    AssetService assetService;
+    private AssetService assetService;
 
     public PodcastService(PodcastRepository repository) {
         super(Podcast.class, PermissionType.PODCASTS, repository);
