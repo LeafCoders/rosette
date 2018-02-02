@@ -38,7 +38,12 @@ public class ArticleType extends Persistable {
     @ManyToOne
     @JoinColumn(name = "assetfolder_id")
     protected AssetFolder assetFolder;
-    
+
+    @NotNull(message = ApiString.NOT_NULL)
+    @ManyToOne
+    @JoinColumn(name = "author_resourcetype_id")
+    private ResourceType authorResourceType;
+
 
     public ArticleType() {
     }
@@ -100,6 +105,14 @@ public class ArticleType extends Persistable {
     public void setAssetFolder(AssetFolder assetFolder) {
         this.assetFolder = assetFolder;
         this.setAssetFolderId(assetFolder != null ? assetFolder.getId() : null);
+    }
+
+    public ResourceType getAuthorResourceType() {
+        return authorResourceType;
+    }
+
+    public void setAuthorResourceType(ResourceType authorResourceType) {
+        this.authorResourceType = authorResourceType;
     }
 
 }

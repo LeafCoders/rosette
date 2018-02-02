@@ -28,6 +28,9 @@ public class ArticleTypeIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Long assetFolderId;
     
+    @NotNull(message = ApiString.NOT_NULL)
+    private Long authorResourceTypeId;
+    
 
     // Getters and setters
 
@@ -77,6 +80,14 @@ public class ArticleTypeIn {
 
     public void setAssetFolderId(Long assetFolderId) {
         this.assetFolderId = assetFolderId;
+    }
+
+    public Long getAuthorResourceTypeId() {
+        return authorResourceTypeId;
+    }
+
+    public void setAuthorResourceTypeId(Long authorResourceTypeId) {
+        this.authorResourceTypeId = authorResourceTypeId;
     }
     
 }

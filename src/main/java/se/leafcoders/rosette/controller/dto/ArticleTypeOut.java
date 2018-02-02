@@ -9,6 +9,7 @@ public class ArticleTypeOut {
     private String articleSeriesTitle;
     private String newArticleSerieTitle;
     private AssetFolderOut assetFolder;
+    private ResourceTypeRefOut authorResourceType;
 
     // Getters and setters
 
@@ -66,6 +67,14 @@ public class ArticleTypeOut {
 
     public void setAssetFolder(AssetFolderOut assetFolder) {
         this.assetFolder = assetFolder;
+    }
+
+    public ResourceTypeRefOut getAuthorResourceType() {
+        return authorResourceType;
+    }
+
+    public void setAuthorResourceType(ResourceTypeRefOut authorResourceType) {
+        this.authorResourceType = authorResourceType;
     }
 
 }

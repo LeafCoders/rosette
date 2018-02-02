@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.ArticleTypeIn;
 import se.leafcoders.rosette.controller.dto.ArticleTypeOut;
+import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.repository.ArticleTypeRepository;
@@ -15,6 +16,9 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
     @Autowired
     private AssetFolderService assetFolderService;
 
+    @Autowired
+    private ResourceTypeService resourceTypeService;
+    
     public ArticleTypeService(ArticleTypeRepository repository) {
         super(ArticleType.class, PermissionType.GROUPS, repository);
     }
@@ -39,6 +43,9 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
         if (rawIn == null || rawIn.has("assetFolderId")) {
             item.setAssetFolder(assetFolderService.read(dto.getAssetFolderId(), true));
         }
+        if (rawIn == null || rawIn.has("authorResourceTypeId")) {
+            item.setAuthorResourceType(resourceTypeService.read(dto.getAuthorResourceTypeId(), true));
+        }
         return item;
     }
 
@@ -52,6 +59,7 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
         dto.setArticleSeriesTitle(item.getArticleSeriesTitle());
         dto.setNewArticleSerieTitle(item.getNewArticleSerieTitle());
         dto.setAssetFolder(assetFolderService.toOut(item.getAssetFolder()));
+        dto.setAuthorResourceType(new ResourceTypeRefOut(item.getAuthorResourceType()));
         return dto;
     }
 
