@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.ArticleIn;
 import se.leafcoders.rosette.controller.dto.ArticleOut;
 import se.leafcoders.rosette.controller.dto.ArticleSerieRefOut;
+import se.leafcoders.rosette.controller.dto.EventRefOut;
 import se.leafcoders.rosette.controller.dto.ResourceRefOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
@@ -24,15 +25,18 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
 
     @Autowired
     ArticleTypeService articleTypeService;
-    
-    @Autowired
-    UserService userService;
 
     @Autowired
     ResourceService resourceService;
-    
+
     @Autowired
     ArticleSerieService articleSerieService;
+
+    @Autowired
+    EventService eventService;
+
+    @Autowired
+    AssetService assetService;
 
     public ArticleService(ArticleRepository repository) {
         super(Article.class, PermissionType.ARTICLES, repository);
@@ -45,7 +49,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     public List<Article> findAllOfType(Long articleTypeId, boolean checkPermissions) {
         return readManyCheckPermissions(repo().findByArticleTypeId(articleTypeId), checkPermissions);
     }
-    
+
     @Override
     protected Article convertFromInDTO(ArticleIn dto, JsonNode rawIn, Article item) {
         // Only set when create
@@ -55,12 +59,16 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         if (rawIn == null || rawIn.has("articleSerieId")) {
             item.setArticleSerie(articleSerieService.read(dto.getArticleSerieId(), true));
         }
+        if (rawIn == null || rawIn.has("eventId")) {
+            item.setEvent(eventService.read(dto.getEventId(), true));
+        }
         if (rawIn == null || rawIn.has("time")) {
             item.setTime(dto.getTime());
         }
         if (rawIn == null || rawIn.has("authorIds")) {
-            if (dto.getAuthorIds() != null) { 
-                item.setAuthors(dto.getAuthorIds().stream().map(authorId -> resourceService.read(authorId, true)).collect(Collectors.toList()));
+            if (dto.getAuthorIds() != null) {
+                item.setAuthors(dto.getAuthorIds().stream().map(authorId -> resourceService.read(authorId, true))
+                        .collect(Collectors.toList()));
             }
         }
         if (rawIn == null || rawIn.has("title")) {
@@ -68,6 +76,9 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         }
         if (rawIn == null || rawIn.has("content")) {
             item.setContent(dto.getContent());
+        }
+        if (rawIn == null || rawIn.has("recordingId")) {
+            item.setRecording(assetService.read(dto.getRecordingId(), true));
         }
         item.setLastModifiedTime(LocalDateTime.now());
         return item;
@@ -78,11 +89,13 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         ArticleOut dto = new ArticleOut();
         dto.setId(item.getId());
         dto.setArticleTypeId(item.getArticleTypeId());
-        dto.setArticleSerie(new ArticleSerieRefOut(item.getArticleSerie()));
+        dto.setArticleSerie(articleSerieService.toOutRef(item.getArticleSerie(), ArticleSerieRefOut::new));
+        dto.setEvent(eventService.toOutRef(item.getEvent(), EventRefOut::new));
         dto.setTime(item.getTime());
         dto.setAuthors(item.getAuthors().stream().map(author -> new ResourceRefOut(author)).collect(Collectors.toList()));
         dto.setTitle(item.getTitle());
         dto.setContent(item.getContent());
+        dto.setRecording(assetService.toOut(item.getRecording()));
         return dto;
     }
 

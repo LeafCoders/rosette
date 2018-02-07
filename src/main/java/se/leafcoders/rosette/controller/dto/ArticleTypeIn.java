@@ -26,7 +26,10 @@ public class ArticleTypeIn {
     private String newArticleSerieTitle;
 
     @NotNull(message = ApiString.NOT_NULL)
-    private Long assetFolderId;
+    private Long imageFolderId;
+    
+    @NotNull(message = ApiString.NOT_NULL)
+    private Long recordingFolderId;
     
     @NotNull(message = ApiString.NOT_NULL)
     private Long authorResourceTypeId;
@@ -74,12 +77,20 @@ public class ArticleTypeIn {
         this.newArticleSerieTitle = newArticleSerieTitle;
     }
 
-    public Long getAssetFolderId() {
-        return assetFolderId;
+    public Long getImageFolderId() {
+        return imageFolderId;
     }
 
-    public void setAssetFolderId(Long assetFolderId) {
-        this.assetFolderId = assetFolderId;
+    public void setImageFolderId(Long imageFolderId) {
+        this.imageFolderId = imageFolderId;
+    }
+
+    public Long getRecordingFolderId() {
+        return recordingFolderId;
+    }
+
+    public void setRecordingFolderId(Long recordingFolderId) {
+        this.recordingFolderId = recordingFolderId;
     }
 
     public Long getAuthorResourceTypeId() {

@@ -31,14 +31,16 @@ public class ArticleType extends Persistable {
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     private String newArticleSerieTitle;
 
-    @Column(name = "assetfolder_id", nullable = false, insertable = false, updatable = false)
-    protected Long assetFolderId;
+    @NotNull(message = ApiString.NOT_NULL)
+    @ManyToOne
+    @JoinColumn(name = "imagefolder_id")
+    private AssetFolder imageFolder;
 
     @NotNull(message = ApiString.NOT_NULL)
     @ManyToOne
-    @JoinColumn(name = "assetfolder_id")
-    protected AssetFolder assetFolder;
-
+    @JoinColumn(name = "recordingfolder_id")
+    private AssetFolder recordingFolder;
+    
     @NotNull(message = ApiString.NOT_NULL)
     @ManyToOne
     @JoinColumn(name = "author_resourcetype_id")
@@ -90,21 +92,20 @@ public class ArticleType extends Persistable {
         this.newArticleSerieTitle = newArticleSerieTitle;
     }
 
-    public Long getAssetFolderId() {
-        return assetFolderId;
+    public AssetFolder getImageFolder() {
+        return imageFolder;
     }
 
-    public void setAssetFolderId(Long assetFolderId) {
-        this.assetFolderId = assetFolderId;
+    public void setImageFolder(AssetFolder imageFolder) {
+        this.imageFolder = imageFolder;
     }
 
-    public AssetFolder getAssetFolder() {
-        return assetFolder;
+    public AssetFolder getRecordingFolder() {
+        return recordingFolder;
     }
 
-    public void setAssetFolder(AssetFolder assetFolder) {
-        this.assetFolder = assetFolder;
-        this.setAssetFolderId(assetFolder != null ? assetFolder.getId() : null);
+    public void setRecordingFolder(AssetFolder recordingFolder) {
+        this.recordingFolder = recordingFolder;
     }
 
     public ResourceType getAuthorResourceType() {

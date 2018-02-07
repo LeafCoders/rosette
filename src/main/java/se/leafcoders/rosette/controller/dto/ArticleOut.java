@@ -12,6 +12,7 @@ public class ArticleOut {
     private Long id;
     private Long articleTypeId;
     private ArticleSerieRefOut articleSerie;
+    private EventRefOut event;
 
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
@@ -20,6 +21,7 @@ public class ArticleOut {
     private List<ResourceRefOut> authors;
     private String title;
     private String content;
+    private AssetOut recording;
 
     
     // Getters and setters
@@ -46,6 +48,14 @@ public class ArticleOut {
 
     public void setArticleSerie(ArticleSerieRefOut articleSerie) {
         this.articleSerie = articleSerie;
+    }
+
+    public EventRefOut getEvent() {
+        return event;
+    }
+
+    public void setEvent(EventRefOut event) {
+        this.event = event;
     }
 
     public LocalDateTime getTime() {
@@ -78,6 +88,14 @@ public class ArticleOut {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public AssetOut getRecording() {
+        return recording;
+    }
+
+    public void setRecording(AssetOut recording) {
+        this.recording = recording;
     }
 
 }

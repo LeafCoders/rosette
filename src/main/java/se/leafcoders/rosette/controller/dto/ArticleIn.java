@@ -20,6 +20,8 @@ public class ArticleIn {
 
     @NotNull(message = ApiString.NOT_NULL)
     private Long articleSerieId;
+
+    private Long eventId;
     
     @NotNull(message = ApiString.NOT_NULL)
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
@@ -35,6 +37,9 @@ public class ArticleIn {
     @Length(max = 10000, message = ApiString.STRING_MAX_10000_CHARS)
     private String content;
 
+    private Long recordingId;
+
+    
     // Getters and setters
 
     public Long getArticleTypeId() {
@@ -51,6 +56,14 @@ public class ArticleIn {
 
     public void setArticleSerieId(Long articleSerieId) {
         this.articleSerieId = articleSerieId;
+    }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public LocalDateTime getTime() {
@@ -83,6 +96,14 @@ public class ArticleIn {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Long getRecordingId() {
+        return recordingId;
+    }
+
+    public void setRecordingId(Long recordingId) {
+        this.recordingId = recordingId;
     }
 
 }

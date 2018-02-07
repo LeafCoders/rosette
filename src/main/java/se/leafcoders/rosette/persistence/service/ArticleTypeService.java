@@ -40,8 +40,11 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
         if (rawIn == null || rawIn.has("newArticleSerieTitle")) {
             item.setNewArticleSerieTitle(dto.getNewArticleSerieTitle());
         }
-        if (rawIn == null || rawIn.has("assetFolderId")) {
-            item.setAssetFolder(assetFolderService.read(dto.getAssetFolderId(), true));
+        if (rawIn == null || rawIn.has("imageFolderId")) {
+            item.setImageFolder(assetFolderService.read(dto.getImageFolderId(), true));
+        }
+        if (rawIn == null || rawIn.has("recordingFolderId")) {
+            item.setRecordingFolder(assetFolderService.read(dto.getRecordingFolderId(), true));
         }
         if (rawIn == null || rawIn.has("authorResourceTypeId")) {
             item.setAuthorResourceType(resourceTypeService.read(dto.getAuthorResourceTypeId(), true));
@@ -58,8 +61,9 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
         dto.setNewArticleTitle(item.getNewArticleTitle());
         dto.setArticleSeriesTitle(item.getArticleSeriesTitle());
         dto.setNewArticleSerieTitle(item.getNewArticleSerieTitle());
-        dto.setAssetFolder(assetFolderService.toOut(item.getAssetFolder()));
-        dto.setAuthorResourceType(new ResourceTypeRefOut(item.getAuthorResourceType()));
+        dto.setImageFolder(assetFolderService.toOut(item.getImageFolder()));
+        dto.setRecordingFolder(assetFolderService.toOut(item.getRecordingFolder()));
+        dto.setAuthorResourceType(resourceTypeService.toOutRef(item.getAuthorResourceType(), ResourceTypeRefOut::new));
         return dto;
     }
 

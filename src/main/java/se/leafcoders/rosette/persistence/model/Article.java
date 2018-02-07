@@ -34,6 +34,18 @@ public class Article extends Persistable {
     @JoinColumn(name = "articletype_id")
     private ArticleType articleType;
 
+    @Column(name = "articleserie_id", nullable = false, insertable = false, updatable = false)
+    private Long articleSerieId;
+
+    @NotNull(message = ApiString.NOT_NULL)
+    @ManyToOne
+    @JoinColumn(name = "articleserie_id")
+    private ArticleSerie articleSerie;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
+
     @NotNull(message = ApiString.NOT_NULL)
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
@@ -44,14 +56,6 @@ public class Article extends Persistable {
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime time;
-
-    @Column(name = "articleserie_id", nullable = false, insertable = false, updatable = false)
-    private Long articleSerieId;
-
-    @NotNull(message = ApiString.NOT_NULL)
-    @ManyToOne
-    @JoinColumn(name = "articleserie_id")
-    private ArticleSerie articleSerie;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -67,6 +71,10 @@ public class Article extends Persistable {
 
     @Length(max = 10000, message = ApiString.STRING_MAX_200_CHARS)
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "recording_id")
+    private Asset recording;
 
 
     public Article() {
@@ -91,22 +99,6 @@ public class Article extends Persistable {
         this.setArticleTypeId(articleType != null ? articleType.getId() : null);
     }
 
-    public LocalDateTime getLastModifiedTime() {
-        return lastModifiedTime;
-    }
-
-    public void setLastModifiedTime(LocalDateTime lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
     public Long getArticleSerieId() {
         return articleSerieId;
     }
@@ -122,6 +114,30 @@ public class Article extends Persistable {
     public void setArticleSerie(ArticleSerie articleSerie) {
         this.articleSerie = articleSerie;
         this.setArticleSerieId(articleSerie != null ? articleSerie.getId() : null);
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public LocalDateTime getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(LocalDateTime lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 
     public List<Resource> getAuthors() {
@@ -158,6 +174,14 @@ public class Article extends Persistable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+    
+    public Asset getRecording() {
+        return recording;
+    }
+
+    public void setRecording(Asset recording) {
+        this.recording = recording;
     }
 
 }

@@ -8,7 +8,8 @@ public class ArticleTypeOut {
     private String newArticleTitle;
     private String articleSeriesTitle;
     private String newArticleSerieTitle;
-    private AssetFolderOut assetFolder;
+    private AssetFolderOut imageFolder;
+    private AssetFolderOut recordingFolder;
     private ResourceTypeRefOut authorResourceType;
 
     // Getters and setters
@@ -61,12 +62,20 @@ public class ArticleTypeOut {
         this.newArticleSerieTitle = newArticleSerieTitle;
     }
 
-    public AssetFolderOut getAssetFolder() {
-        return assetFolder;
+    public AssetFolderOut getImageFolder() {
+        return imageFolder;
     }
 
-    public void setAssetFolder(AssetFolderOut assetFolder) {
-        this.assetFolder = assetFolder;
+    public void setImageFolder(AssetFolderOut imageFolder) {
+        this.imageFolder = imageFolder;
+    }
+
+    public AssetFolderOut getRecordingFolder() {
+        return recordingFolder;
+    }
+
+    public void setRecordingFolder(AssetFolderOut recordingFolder) {
+        this.recordingFolder = recordingFolder;
     }
 
     public ResourceTypeRefOut getAuthorResourceType() {

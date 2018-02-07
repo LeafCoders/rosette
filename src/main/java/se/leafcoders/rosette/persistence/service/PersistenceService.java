@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,6 +165,10 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         return item != null ? convertToOutDTO(item) : null;
     }
 
+    public <REF> REF toOutRef(T item, Function<T, REF> toRef) {
+        return item != null ? toRef.apply(item) : null;
+    }
+    
     public List<OUT> toOut(List<T> items) {
         return items != null ? items.stream().map(item -> convertToOutDTO(item)).collect(Collectors.toList()) : null;
     }

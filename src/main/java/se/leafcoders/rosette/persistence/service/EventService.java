@@ -97,7 +97,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         dto.setEndTime(item.getEndTime());
         dto.setTitle(item.getTitle());
         dto.setDescription(item.getDescription());
-        dto.setEventType(new EventTypeRefOut(item.getEventType()));
+        dto.setEventType(eventTypeService.toOutRef(item.getEventType(), EventTypeRefOut::new));
         dto.setResourceRequirements(resourceRequirementService.toOut(item.getResourceRequirements()));
         return dto;
     }
