@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller.dto;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
@@ -9,16 +10,20 @@ import se.leafcoders.rosette.exception.ApiString;
 public class UserIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Email(message = ApiString.EMAIL_INVALID)
     private String email;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String firstName;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String lastName;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String password;
     
     private Boolean isActive;

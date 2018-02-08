@@ -38,7 +38,9 @@ public class SlideIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Long imageId;
 
+
     // Getters and setters
+
     public String getTitle() {
         return title;
     }

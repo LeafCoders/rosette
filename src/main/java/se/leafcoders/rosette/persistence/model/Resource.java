@@ -23,6 +23,7 @@ import se.leafcoders.rosette.exception.ApiString;
 public class Resource extends Persistable {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Column(nullable = false, unique = true)
     private String name;
 

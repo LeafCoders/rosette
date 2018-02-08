@@ -5,8 +5,8 @@ delete from podcasts;
 
 delete from resourcerequirement_resources;
 delete from resourcerequirements;
-delete from event_resourcetypes;
-delete from events;
+
+delete from events_table;
 
 delete from article_authors;
 delete from articles;

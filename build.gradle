@@ -31,6 +31,9 @@ dependencies {
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
+
+	// Database migration
+	compile('org.flywaydb:flyway-core')
 	
 	compile("io.jsonwebtoken:jjwt:0.4")
 	

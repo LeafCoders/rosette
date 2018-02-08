@@ -7,27 +7,25 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.validator.IdAlias;
 
 @Entity
 @Table(name = "resourcetypes")
 public class ResourceType extends Persistable {
 
-    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = ApiString.IDALIAS_INVALID_FORMAT)
+    @IdAlias
     @Column(nullable = false, unique = true)
     private String idAlias;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS) // "error.description.max200Chars")
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resourceTypes")

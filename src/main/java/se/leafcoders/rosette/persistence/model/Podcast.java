@@ -7,7 +7,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,6 +15,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.persistence.validator.IdAlias;
 
 // Attributes from http://www.apple.com/itunes/podcasts/specs.html
 
@@ -26,37 +26,44 @@ public class Podcast extends Persistable {
     @NotNull(message = ApiString.NOT_NULL)
     private Long articleTypeId;
     
-    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = ApiString.IDALIAS_INVALID_FORMAT)
+    @IdAlias
     @Column(nullable = false, unique = true)
     private String idAlias;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String title;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String subTitle;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String authorName;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String copyright;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Length(max = 200, message = ApiString.STRING_MAX_4000_CHARS)
+    @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
     protected String description;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String mainCategory;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String subCategory;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String language;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String link;
 
     @JsonIgnore

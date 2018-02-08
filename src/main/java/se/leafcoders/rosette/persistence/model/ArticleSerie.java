@@ -6,11 +6,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.validator.IdAlias;
 
 @Entity
 @Table(name = "articleseries")
@@ -25,8 +25,7 @@ public class ArticleSerie extends Persistable {
     @JoinColumn(name = "articletype_id")
     private ArticleType articleType;
 
-    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = ApiString.IDALIAS_INVALID_FORMAT)
+    @IdAlias
     @Column(nullable = false, unique = true)
     private String idAlias;
 

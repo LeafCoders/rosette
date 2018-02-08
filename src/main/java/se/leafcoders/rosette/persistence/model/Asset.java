@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -25,14 +25,17 @@ public class Asset extends Persistable {
     private AssetType type;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Column(nullable = false)
     private String mimeType;
 
     private Long folderId;
 
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Pattern(regexp = "^[\\w._-]+.[\\w]$", message = ApiString.FILENAME_INVALID)
     private String fileName;    // File name in server file system
 
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @URL
     private String url;         // URL to external asset 
 

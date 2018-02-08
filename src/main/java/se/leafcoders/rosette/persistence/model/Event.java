@@ -25,7 +25,7 @@ import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer
 import se.leafcoders.rosette.persistence.validator.DateTimeAfter;
 
 @Entity
-@Table(name = "events")
+@Table(name = "events_table")
 @DateTimeAfter(startDateTime = "startTime", endDateTime = "endTime", errorAt = "endTime")
 public class Event extends Persistable {
 

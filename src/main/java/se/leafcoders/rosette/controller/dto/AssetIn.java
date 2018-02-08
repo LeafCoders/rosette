@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.controller.dto;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,9 +12,11 @@ import se.leafcoders.rosette.persistence.validator.StringEnumeration;
 public class AssetIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @StringEnumeration(enumClass = Asset.AssetType.class)
     private String type;
 
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @URL
     private String url;
 

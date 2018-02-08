@@ -1,11 +1,11 @@
 package se.leafcoders.rosette.controller.dto;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.validator.IdAlias;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PodcastIn {
@@ -13,36 +13,43 @@ public class PodcastIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Long articleTypeId;
     
-    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = ApiString.IDALIAS_INVALID_FORMAT)
+    @IdAlias
     private String idAlias;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String title;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String subTitle;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String authorName;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String copyright;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Length(max = 200, message = ApiString.STRING_MAX_4000_CHARS)
+    @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
     protected String description;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String mainCategory;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String subCategory;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String language;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     protected String link;
 
     @NotNull(message = ApiString.NOT_NULL)

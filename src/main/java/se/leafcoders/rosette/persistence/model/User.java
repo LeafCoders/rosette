@@ -10,6 +10,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Transient;
 import se.leafcoders.rosette.exception.ApiString;
@@ -19,15 +20,18 @@ import se.leafcoders.rosette.exception.ApiString;
 public class User extends Persistable {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Email(message = ApiString.EMAIL_INVALID)
     @Column(nullable = false, unique = true)
     private String email;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Column(nullable = false)
     private String firstName;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Column(nullable = false)
     private String lastName;
 

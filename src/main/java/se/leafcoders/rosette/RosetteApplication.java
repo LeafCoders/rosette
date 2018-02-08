@@ -1,7 +1,6 @@
 package se.leafcoders.rosette;
 
 import java.util.Arrays;
-
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -64,7 +63,7 @@ public class RosetteApplication extends SpringBootServletInitializer { // Is Spr
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-
+    
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(RosetteApplication.class).bannerMode(Banner.Mode.OFF);
     }

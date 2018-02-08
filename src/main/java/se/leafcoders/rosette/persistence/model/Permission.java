@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
@@ -25,6 +26,7 @@ public class Permission extends Persistable {
     public static Integer LEVEL_USER = 3;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String name;
 
     @Column(nullable = false)
@@ -36,6 +38,7 @@ public class Permission extends Persistable {
     private Long entityId;
 
     // TODO @ValidPermissions
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String patterns;
 
     public Permission() {

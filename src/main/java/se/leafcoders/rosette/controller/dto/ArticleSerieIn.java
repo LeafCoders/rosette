@@ -1,11 +1,11 @@
 package se.leafcoders.rosette.controller.dto;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.validator.IdAlias;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleSerieIn {
@@ -13,8 +13,7 @@ public class ArticleSerieIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Long articleTypeId;
     
-    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
-    @Pattern(regexp = "[a-z][a-zA-Z0-9]+", message = ApiString.IDALIAS_INVALID_FORMAT)
+    @IdAlias
     private String idAlias;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)

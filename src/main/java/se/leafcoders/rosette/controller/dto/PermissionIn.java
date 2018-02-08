@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller.dto;
 
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,6 +11,7 @@ import se.leafcoders.rosette.exception.ApiString;
 public class PermissionIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String name;
 
     @NotNull(message = ApiString.NOT_NULL)
@@ -17,6 +19,8 @@ public class PermissionIn {
     private Integer level;
 
     private Long entityId;
+
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String patterns;
 
     // Getters and setters
