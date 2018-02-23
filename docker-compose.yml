@@ -1,0 +1,44 @@
+version: '3'
+
+services: 
+  mysql-database:
+    image: mysql:5.7.21
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=rosette-db
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=dbpassword
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  rosette-server:
+    build: .
+#    image: leafcoders/rosette
+    depends_on:
+      - mysql-database
+    restart: always
+    ports:
+      - 9001:9000
+    environment:
+      #- PORT=9000
+      - DATABASE_HOST=mysql-database
+      - DATABASE_PORT=3306
+      - DATABASE_NAME=rosette-db
+      - DATABASE_USERNAME=dbuser
+      - DATABASE_PASSWORD=dbpassword
+      - MAIL_HOST=
+      - MAIL_PORT=
+      - MAIL_USERNAME=
+      - MAIL_PASSWORD=
+      - MAIL_SMTP_AUTH=false
+      - MAIL_SMTP_STARTTLS=false
+      - ROSETTE_JWTSECRET="sdf#4sdkF8(ksdo/%lksdfmmwpkdEWh)#jh2DF"
+      - ROSETTE_URL=http://localhost:9001
+      - ROSETTE_FILES=/var/lib/rosette
+    volumes:
+      - rosette-files:/var/lib/rosette
+
+volumes:
+  mysql-data:
+  rosette-files:

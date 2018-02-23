@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "rosette.base-url",
+    "type": "java.lang.String",
+    "description": "A description for 'rosette.base-url'"
+  },
+  {
+    "name": "rosette.api-version",
+    "type": "java.lang.String",
+    "description": "A description for 'rosette.api-version'"
+  },
+  {
+    "name": "rosette.jwt-secret-token",
+    "type": "java.lang.String",
+    "description": "A description for 'rosette.jwt-secret-token'"
+  },
+  {
+    "name": "rosette.default-mail-from",
+    "type": "java.lang.String",
+    "description": "A description for 'rosette.default-mail-from'"
+  },
+  {
+    "name": "rosette.files-path",
+    "type": "java.lang.String",
+    "description": "A description for 'rosette.files-path'"
+  },
+  {
+    "name": "rosette.file-client-cache-max-age",
+    "type": "java.lang.String",
+    "description": "A description for 'rosette.file-client-cache-max-age'"
+  }
+]}

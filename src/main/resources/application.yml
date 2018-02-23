@@ -3,9 +3,6 @@
 spring.profiles:
   active: development # If spring.profile.active is not specified, profile will be "development"
 
-server:
-  port: 9000
-
 security:
   basic.enabled: false
 
@@ -36,12 +33,6 @@ spring.mail:
   protocol: smtp
   host: localhost
   port: 1234
-  # username: 
-  # password: 
-  properties:
-    mail.smtp.auth: false
-    mail.smtp.starttls.enable: false
-    # mail.smtp.socketFactory.port:
 
 flyway:
   enabled: true
@@ -53,3 +44,89 @@ rosette:
   defaultMailFrom: no-reply@localhost
   filesPath: ./rosetteFiles
   fileClientCacheMaxAge: 0
+
+  
+---
+spring:
+  profiles: production
+
+server:
+  port: 9000 # Shall be set with environment variable PORT
+
+logging.level:
+  org.springframework.web.filter.CommonsRequestLoggingFilter: WARNING
+#logging.level:
+#  ROOT: ERROR
+#  se.leafcoders.rosette: ERROR
+
+spring.datasource:
+  url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?useSSL=false
+  username: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+
+spring.mail:
+# enable when real production!!!  testConnection: true
+  host: ${MAIL_HOST}
+  port: ${MAIL_PORT}
+  username: ${MAIL_USERNAME}
+  password: ${MAIL_PASSWORD}
+  properties:
+    mail.smtp.auth: ${MAIL_SMTP_AUTH}
+    mail.smtp.starttls.enable: ${MAIL_SMTP_STARTTLS}
+    # mail.smtp.socketFactory.port:
+
+rosette:
+  baseUrl: ${ROSETTE_URL}
+  jwtSecretToken: ${ROSETTE_JWTSECRET}
+  fileClientCacheMaxAge: 604800 # One week
+
+
+---
+spring:
+  profiles: development, test
+
+server:
+  port: 9000
+
+spring.datasource:
+  url: jdbc:mysql://localhost/test
+  username: root
+  password: root
+
+spring.mail:
+  protocol: smtp
+  host: localhost
+  port: 1234
+  properties:
+    mail.smtp.auth: false
+    mail.smtp.starttls.enable: false
+
+rosette:
+  baseUrl: http://localhost:9000
+
+
+---
+spring:
+  profiles: development
+
+logging.level:
+  org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+
+---
+spring:
+  profiles: test
+
+logging.level:
+  org.springframework.web.filter.CommonsRequestLoggingFilter: WARNING
+
+spring.jpa:
+  show-sql: true # Show log for each sql query
+
+
+# docker run -d  --name rosette-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=test -e MYSQL_USER=root -e MYSQL_PASSWORD=root mysql:latest  
+
+
+# docker run -d -p 2012:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=test -e MYSQL_USER=app_user -e MYSQL_PASSWORD=app_password mysql:latest
+
+# docker run -d --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=test -e MYSQL_USER=app_user -e MYSQL_PASSWORD=app_password mysql:latest
