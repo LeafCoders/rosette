@@ -1,14 +1,16 @@
 package se.leafcoders.rosette.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import se.leafcoders.rosette.IdResult;
 import se.leafcoders.rosette.IdResultHandler;
 import se.leafcoders.rosette.TimeRange;
+import se.leafcoders.rosette.data.ArticleData;
+import se.leafcoders.rosette.data.ArticleSerieData;
+import se.leafcoders.rosette.data.ArticleTypeData;
 import se.leafcoders.rosette.data.AssetFolderData;
 import se.leafcoders.rosette.data.EventData;
 import se.leafcoders.rosette.data.EventTypeData;
@@ -21,6 +23,7 @@ import se.leafcoders.rosette.data.UserData;
 import se.leafcoders.rosette.persistence.model.Asset;
 import se.leafcoders.rosette.persistence.model.AssetFolder;
 import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.persistence.repository.EventRepository;
 
 public class SeedTest extends AbstractControllerTest {
 
@@ -28,6 +31,9 @@ public class SeedTest extends AbstractControllerTest {
     private static final int SUNDAY = 7;
     private static final int DURATION_60 = 60;
     private static final int DURATION_90 = 90;
+
+    @Autowired
+    protected EventRepository eventRepository;
     
     @Before
     public void setup() throws Exception {
@@ -68,7 +74,7 @@ public class SeedTest extends AbstractControllerTest {
         givenPermissionForUser(userRepository.findOne(admin), "*");
 
         // Slide shows
-        final AssetFolder slideShowFolder = givenAssetFolder(AssetFolderData.newAssetFolder("slideShow", "Slide show images", "image/"));
+        final AssetFolder slideShowFolder = givenAssetFolder(AssetFolderData.newAssetFolder("slideShow", "Bilder till bildspel", "image/"));
         final Long slideShow1 = post(user1, "/slideShows", json(SlideShowData.newSlideShow("tv1", "TV 1", slideShowFolder)));
         final Long slideShow2 = post(user1, "/slideShows", json(SlideShowData.newSlideShow("tv2", "TV 2", slideShowFolder)));
 
@@ -121,9 +127,13 @@ public class SeedTest extends AbstractControllerTest {
 
 
         // Events
-        final Long event1 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst", TimeRange.start(SUNDAY, 10, 0).weekOffset(0).endAfterMinutes(DURATION_60))));
-        final Long event2 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst", TimeRange.start(SUNDAY, 11, 0).weekOffset(1).endAfterMinutes(DURATION_90))));
-        final Long event3 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst", TimeRange.start(SUNDAY, 11, 0).weekOffset(2).endAfterMinutes(DURATION_90))));
+        final Long event1 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst 1", TimeRange.start(SUNDAY, 10, 0).weekOffset(0).endAfterMinutes(DURATION_60))));
+        final Long event2 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst 2", TimeRange.start(SUNDAY, 11, 0).weekOffset(1).endAfterMinutes(DURATION_90))));
+        final Long event3 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst 3", TimeRange.start(SUNDAY, 11, 0).weekOffset(2).endAfterMinutes(DURATION_90))));
+
+        for (int i = 4; i < 50; i++) {
+            post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst " + i, TimeRange.start(SUNDAY, 11, 0).weekOffset(i - 1).endAfterMinutes(DURATION_90))));
+        }
         
         // Event resource requirements
 // Dessa tre skapas redan när eventet skapas. Koppla resurserna behöver vi ändå göra, men kanske inte nu...
@@ -141,6 +151,22 @@ public class SeedTest extends AbstractControllerTest {
         postReturnArray(0, user1, "/events/" + event2 + "/resourceRequirements", json(ResourceRequirementData.newResourceRequirement(predikantRT)));
         postReturnArray(0, user1, "/events/" + event3 + "/resourceRequirements", json(ResourceRequirementData.newResourceRequirement(predikantRT)));
 */
+        
+        
+        // Article types
+        final AssetFolder articleTypeImageFolder = givenAssetFolder(AssetFolderData.newAssetFolder("articleImage", "Bilder till artiklar", "image/"));
+        final AssetFolder articleTypeRecordingFolder = givenAssetFolder(AssetFolderData.newAssetFolder("articleRecording", "Ljudinspelningar till artiklar", "audio/"));
+        final Long articleType1 = post(user1, "/articleTypes", json(ArticleTypeData.newArticleType("Predikan", predikantRT, articleTypeImageFolder.getId(), articleTypeRecordingFolder.getId())));
+        
+        // Article series
+        Asset articleSerie1Image = givenAssetInFolder(articleTypeImageFolder.getId(), "image.png", "easter.png", "image/png");
+        final Long articleSerie1 = post(user1, "/articleSeries", json(ArticleSerieData.newArticleSerie(articleType1, "Påsk", articleSerie1Image.getId())));
+        
+        // Articles
+        Asset article1Recording = givenAssetInFolder(articleTypeRecordingFolder.getId(), "audio.mp3", "predikan1.mp3", "audio/mp3");
+        final Long article1 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findOne(event1), patrikPastorResurs, article1Recording.getId())));
+        final Long article2 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findOne(event2), pamelaPastorResurs, article1Recording.getId())));
+        final Long article3 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findOne(event3), pavelPastorResurs, article1Recording.getId())));                
     }
 
     public Long post(User authUser, String controllerUrl, String jsonString) throws Exception {
