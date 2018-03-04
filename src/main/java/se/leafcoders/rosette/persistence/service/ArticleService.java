@@ -89,6 +89,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         ArticleOut dto = new ArticleOut();
         dto.setId(item.getId());
         dto.setArticleTypeId(item.getArticleTypeId());
+        dto.setArticleTypeIdAlias(item.getArticleType().getIdAlias());
         dto.setArticleSerie(articleSerieService.toOutRef(item.getArticleSerie(), ArticleSerieRefOut::new));
         dto.setEvent(eventService.toOutRef(item.getEvent(), EventRefOut::new));
         dto.setTime(item.getTime());

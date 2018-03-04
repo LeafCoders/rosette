@@ -3,6 +3,7 @@ package se.leafcoders.rosette.persistence.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,10 +19,12 @@ import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionId;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.permission.PermissionValue;
+import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.model.Resource;
 import se.leafcoders.rosette.persistence.model.ResourceRequirement;
 import se.leafcoders.rosette.persistence.model.ResourceType;
+import se.leafcoders.rosette.persistence.repository.ArticleRepository;
 import se.leafcoders.rosette.persistence.repository.EventRepository;
 import se.leafcoders.rosette.persistence.repository.ResourceRequirementRepository;
 
@@ -29,19 +32,22 @@ import se.leafcoders.rosette.persistence.repository.ResourceRequirementRepositor
 public class EventService extends PersistenceService<Event, EventIn, EventOut> {
 
     @Autowired
-    EventTypeService eventTypeService;
+    private EventTypeService eventTypeService;
 
     @Autowired
-    ResourceTypeService resourceTypeService;
+    private ResourceTypeService resourceTypeService;
 
     @Autowired
-    ResourceRequirementService resourceRequirementService;
+    private ResourceRequirementService resourceRequirementService;
     
     @Autowired
-    ResourceRequirementRepository resourceRequirementRepository;
+    private ResourceRequirementRepository resourceRequirementRepository;
     
     @Autowired
-    ResourceService resourceService;
+    private ResourceService resourceService;
+    
+    @Autowired
+    private ArticleRepository articleRepository;
     
     public EventService(EventRepository repository) {
         super(Event.class, PermissionType.EVENTS, repository);
@@ -139,9 +145,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     }
 
     private ResourceRequirement getResourceRequirement(Long eventId, Long resourceRequirementId) {
-        ResourceRequirement rr = getResourceRequirements(eventId).stream().filter(item -> item.getId() == resourceRequirementId).findFirst().get();
-        if (rr != null) {
-            return rr;
+        Optional<ResourceRequirement> rr = getResourceRequirements(eventId).stream().filter(item -> item.getId().equals(resourceRequirementId)).findFirst();
+        if (rr.isPresent()) {
+            return rr.get();
         }
         throw new NotFoundException(ResourceRequirement.class, resourceRequirementId);
     }
@@ -183,6 +189,12 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
             resourceRequirement.setResources(null);
         }
         return resourceRequirementRepository.save(resourceRequirement).getResources();
+    }
+
+    public List<Article> getArticles(Long eventId) {
+        // Check permission with a read
+        read(eventId, true);
+        return articleRepository.findByEventId(eventId);
     }
 
 }

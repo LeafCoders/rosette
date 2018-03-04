@@ -20,7 +20,6 @@ import se.leafcoders.rosette.controller.dto.UserIn;
 import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.persistence.model.User;
 import se.leafcoders.rosette.persistence.service.PermissionService;
 import se.leafcoders.rosette.persistence.service.UserService;
 import se.leafcoders.rosette.service.SecurityService;
@@ -39,8 +38,8 @@ public class UsersController {
     private SecurityService securityService;
     
     @GetMapping(value = "/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.read(id, true);
+    public UserOut getUser(@PathVariable Long id) {
+        return userService.toOut(userService.read(id, true));
     }
 
     @GetMapping

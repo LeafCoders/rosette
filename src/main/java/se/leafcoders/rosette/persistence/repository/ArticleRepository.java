@@ -8,4 +8,6 @@ import se.leafcoders.rosette.persistence.model.Article;
 public interface ArticleRepository extends ModelRepository<Article> {
     
     public List<Article> findByArticleTypeId(Long articleTypeId);
+
+    public List<Article> findByEventId(Long eventId);
 }

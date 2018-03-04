@@ -11,6 +11,7 @@ public class ArticleOut {
 
     private Long id;
     private Long articleTypeId;
+    private String articleTypeIdAlias;
     private ArticleSerieRefOut articleSerie;
     private EventRefOut event;
 
@@ -40,6 +41,14 @@ public class ArticleOut {
 
     public void setArticleTypeId(Long articleTypeId) {
         this.articleTypeId = articleTypeId;
+    }
+
+    public String getArticleTypeIdAlias() {
+        return articleTypeIdAlias;
+    }
+
+    public void setArticleTypeIdAlias(String articleTypeIdAlias) {
+        this.articleTypeIdAlias = articleTypeIdAlias;
     }
 
     public ArticleSerieRefOut getArticleSerie() {

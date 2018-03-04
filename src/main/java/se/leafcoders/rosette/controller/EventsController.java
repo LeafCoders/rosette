@@ -1,9 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -17,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import se.leafcoders.rosette.controller.dto.ArticleOut;
 import se.leafcoders.rosette.controller.dto.EventIn;
 import se.leafcoders.rosette.controller.dto.EventOut;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
+import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.EventService;
 import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
 import se.leafcoders.rosette.persistence.service.ResourceService;
@@ -39,6 +38,9 @@ public class EventsController {
     
     @Autowired
     private ResourceService resourceService;
+    
+    @Autowired
+    private ArticleService articleService;
     
     @GetMapping(value = "/{id}")
     public EventOut getEvent(@PathVariable Long id) {
@@ -69,7 +71,7 @@ public class EventsController {
     // ResourceRequirements
     
     @GetMapping(value = "/{id}/resourceRequirements")
-    public Collection<ResourceRequirementOut> getResourceRequirementOfEvent(@PathVariable Long id) {
+    public Collection<ResourceRequirementOut> getResourceRequirementsOfEvent(@PathVariable Long id) {
         return resourceRequirementService.toOut(eventService.getResourceRequirements(id));
     }
 
@@ -103,9 +105,15 @@ public class EventsController {
     }
     
     @DeleteMapping(value = "/{id}/resourceRequirements/{resourceRequirementId}/resources/{resourceId}")
-    public Collection<ResourceOut> removeResourceFromRequirement(
-            @PathVariable Long id, @PathVariable Long resourceRequirementId, @PathVariable Long resourceId
-            ) {
+    public Collection<ResourceOut> removeResourceFromRequirement(@PathVariable Long id, @PathVariable Long resourceRequirementId, @PathVariable Long resourceId) {
         return resourceService.toOut(eventService.removeResource(id, resourceRequirementId, resourceId));
     }
+    
+    // Articles
+    
+    @GetMapping(value = "/{id}/articles")
+    public Collection<ArticleOut> getArticlesOfEvent(@PathVariable Long id) {
+        return articleService.toOut(eventService.getArticles(id));
+    }
+    
 }

@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -66,10 +67,25 @@ public class GlobalRequestExceptionHandler extends ResponseEntityExceptionHandle
     }
 
     @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
+        System.err.println(ex.getMessage());
+        ex.printStackTrace(System.err);
+
+        ValidationError validationError = new ValidationError(ex.getParameterName(), ApiString.NOT_NULL);
+        return new ResponseEntity<Object>(Collections.singletonList(validationError), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         System.err.println(ex.getMessage());
         ex.printStackTrace(System.err);
-        return super.handleExceptionInternal(ex, body, headers, status, request);
+        super.handleExceptionInternal(ex, body, headers, status, request);
+        
+        return new ResponseEntity<Object>(
+                new ExceptionError(ApiError.UNKNOWN_ERROR.toString(), ApiError.UNKNOWN_ERROR.toString(), null), headers, status
+        );
+
     }
 
 }

@@ -10,6 +10,9 @@
 ### Docker
 
 1. Install `Docker x.x.x` from x
+2. Create and run docker container with `docker run --name=mysql --env="MYSQL_ROOT_PASSWORD=root" --publish 3306:3306 -d mysql:5.7.21`
+
+When you need start the container again (after computer reboot) just run `docker run mysql`
 
 
 ### Eclipse 
