@@ -9,7 +9,8 @@ import se.leafcoders.rosette.persistence.model.Asset;
 public interface AssetRepository extends ModelRepository<Asset> {
 
     public List<Asset> findByFolderId(Long assetFolderId, Sort sort);
+    public Asset findOneByFileId(String fileId);
     
     public boolean existsByFolderId(Long folderId);
-    public boolean existsByFolderIdAndFileName(Long folderId, String fileName);
+    public boolean existsByFileId(String fileId);
 }

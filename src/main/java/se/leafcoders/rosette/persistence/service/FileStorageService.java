@@ -92,7 +92,7 @@ public class FileStorageService {
     }
 
     public void streamAssetFile(String thumbSize, Asset asset, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        final String fileName = asset.getFileName();
+        final String fileName = asset.getFileId();
 
         if (fileName != null) {
             try {
@@ -134,8 +134,8 @@ public class FileStorageService {
     
     private String createThumbSize(Asset ofAsset, final String thumbSize) throws IOException {
         if (ofAsset.getType() == AssetType.FILE && ofAsset.getMimeType().startsWith("image")) {
-            String orgFilePath = absolutePath(ofAsset.getFolderId(), null, ofAsset.getFileName());
-            String thumbFilePath = absolutePath(ofAsset.getFolderId(), thumbSize, ofAsset.getFileName());
+            String orgFilePath = absolutePath(ofAsset.getFolderId(), null, ofAsset.getFileId());
+            String thumbFilePath = absolutePath(ofAsset.getFolderId(), thumbSize, ofAsset.getFileId());
             Thumbnails.of(orgFilePath)
                 .crop(Positions.CENTER)
                 .size(THUMB_WIDTH_ICON, THUMB_HEIGHT_ICON)
@@ -143,7 +143,7 @@ public class FileStorageService {
             return thumbFilePath;
         } else {
     		    // TODO: Should return a icon image for the mime type of this asset
-    		    return ofAsset.getFileName();
+    		    return ofAsset.getFileId();
         }
     }
 

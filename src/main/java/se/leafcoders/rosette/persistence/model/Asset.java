@@ -29,7 +29,10 @@ public class Asset extends Persistable {
     @Column(nullable = false)
     private String mimeType;
 
+    @NotNull(message = ApiString.NOT_NULL)
     private Long folderId;
+    
+    private String fileId;
 
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Pattern(regexp = "^[\\w._-]+.[\\w]$", message = ApiString.FILENAME_INVALID)
@@ -73,6 +76,14 @@ public class Asset extends Persistable {
 
     public void setFolderId(Long folderId) {
         this.folderId = folderId;
+    }
+
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
     }
 
     public String getFileName() {

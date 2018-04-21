@@ -68,6 +68,7 @@ create table assets (
 	version integer not null,
 	type integer not null,
 	folder_id bigint,
+	file_id varchar(220),
 	file_name varchar(200),
 	file_size bigint,
 	mime_type varchar(200) not null,

@@ -1,6 +1,8 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.exception.SingleValidationException;
 import se.leafcoders.rosette.exception.ValidationError;
 import se.leafcoders.rosette.permission.PermissionAction;
+import se.leafcoders.rosette.permission.PermissionId;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Asset;
@@ -50,6 +53,20 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         return (AssetRepository) repository;
     }
 
+    public Asset readByFileId(String fileId, boolean checkPermissions) {
+        if (fileId == null) {
+            return null;
+        }
+        Asset item = repo().findOneByFileId(fileId);
+        if (item == null) {
+            throw new NotFoundException("Asset with fileId (" + fileId + ") was not found.");
+        }
+        if (checkPermissions) {
+            checkPermissions(itemPermissions(PermissionAction.READ, new PermissionId<Asset>(item)));
+        }
+        return item;
+    }
+    
     public List<Asset> findAllInFolder(Long assetFolderId, Sort sort, boolean checkPermissions) {
         return readManyCheckPermissions(repo().findByFolderId(assetFolderId, sort), checkPermissions);
     }
@@ -81,7 +98,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         dto.setFileName(item.getFileName());
 
         if (item.getType() == AssetType.FILE) {
-        	    dto.setUrl(rosetteSettings.getBaseUrl() + "/api/assets/files/" + item.getId());
+        	    dto.setUrl(rosetteSettings.getBaseUrl() + "/api/assets/files/" + item.getFileId());
         } else {
         		dto.setUrl(item.getUrl());
         }
@@ -108,10 +125,6 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         validateFolderExist(folder);
         checkMimeTypeAllowed(folder, mimeType);
 
-        if (repo().existsByFolderIdAndFileName(folderId, fileName)) {
-            throw new SingleValidationException(new ValidationError("fileName", ApiString.FILENAME_NOT_UNIQUE));
-        }
-        
         byte[] fileData;
         try {
             fileData = file.getBytes();
@@ -122,13 +135,14 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         Asset asset = new Asset();
         asset.setType(Asset.AssetType.FILE);
         asset.setFolderId(folderId);
+        asset.setFileId(generateFileId(fileName));
         asset.setFileName(fileName);
         asset.setMimeType(mimeType);
         asset.setFileSize(new Long(fileData.length));
         readMetadata(fileData, asset);
         securityService.validate(asset, null);
 
-        boolean stored = fileStorageService.storeFile(folderId, fileName, fileData);
+        boolean stored = fileStorageService.storeFile(folderId, asset.getFileId(), fileData);
         if (!stored) {
             throw new SingleValidationException(new ValidationError("file", ApiString.FILE_INVALID_CONTENT));
         }
@@ -140,6 +154,21 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         }
     }
 
+    private String generateFileId(String fileName) {
+        String fileId;
+        int maxTries = 10;
+        do {
+            final byte[] rand = String.format("%05d", (int) Math.floor(Math.random() * 100000d)).getBytes();
+            final StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < rand.length; i++) {
+                sb.append(Integer.toString((rand[i] & 0x0f), 16).substring(1));
+            }
+            fileId = rand.toString().substring(3, 8) + "-" + fileName;
+            maxTries--;
+        } while (repo().existsByFileId(fileId) && maxTries >= 0);
+        return fileId;
+    }
+    
     private void validateFolderExist(AssetFolder folder) {
         if (!fileStorageService.folderExist(folder.getId())) {
             throw new NotFoundException(AssetFolder.class, folder.getId());
