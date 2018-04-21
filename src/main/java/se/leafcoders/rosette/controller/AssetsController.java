@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,7 +45,8 @@ public class AssetsController {
 
     @GetMapping()
     public Collection<AssetOut> getAssets(HttpServletRequest request, @RequestParam Long assetFolderId) {
-        return assetService.toOut(assetService.findAllInFolder(assetFolderId, true));
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        return assetService.toOut(assetService.findAllInFolder(assetFolderId, sort, true));
     }
 
     @PostMapping(consumes = "application/json")

@@ -22,6 +22,7 @@ public class ApiString {
     public static final String FILE_EXCEED_SIZE = "error.file.exceedSize";
     public static final String FILE_NOT_READABLE = "error.file.notReadable";
     public static final String FILE_INVALID_CONTENT = "error.file.invalidContent";
+    public static final String FILE_INVALID_DIMENSION = "error.file.invalidDimension";
     public static final String FILE_MIMETYPE_NOT_ALLOWED = "error.file.mimeTypeNotAllowed";
     
     public static final String IDALIAS_INVALID_FORMAT = "error.idAlias.invalidFormat";
