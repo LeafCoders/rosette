@@ -32,6 +32,9 @@ public class PodcastsController {
 
     @Autowired
     private ArticleService articleService;
+    
+    @Autowired
+    private PodcastFeedGenerator podcastFeedGenerator;
 
     @GetMapping(value = "/{id}")
     public PodcastOut getPodcast(@PathVariable Long id) {
@@ -43,7 +46,7 @@ public class PodcastsController {
         podcastService.checkPublicPermission(id);
         Podcast podcast = podcastService.read(id, false);
         List<Article> articles = articleService.findAllOfType(podcast.getArticleTypeId(), false);
-        return PodcastFeedGenerator.getPodcastFeed(podcast, articles);
+        return podcastFeedGenerator.getPodcastFeed(podcast, articles);
     }
 
     @GetMapping

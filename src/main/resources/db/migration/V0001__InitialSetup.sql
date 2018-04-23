@@ -145,7 +145,7 @@ create table podcasts (
 	id bigint not null auto_increment,
 	version integer not null,
 	id_alias varchar(32) not null,
-	article_type_id bigint not null,
+	articletype_id bigint not null,
 	title varchar(200) not null,
 	sub_title varchar(200) not null,
 	author_name varchar(200) not null,
@@ -268,6 +268,7 @@ alter table eventtype_resourcetypes add constraint fk_eventtype_resourcetypes_ev
 alter table group_users add constraint fk_group_users_userid foreign key (user_id) references users (id);
 alter table group_users add constraint fk_group_users_groupid foreign key (group_id) references groups (id);
 
+alter table podcasts add constraint fk_podcasts_articletypeid foreign key (articletype_id) references articletypes (id);
 alter table podcasts add constraint fk_podcasts_imageid foreign key (image_id) references assets (id);
 
 alter table resource_resourcetypes add constraint fk_resource_resourcetypes_resourcetypeid foreign key (resourcetype_id) references resourcetypes (id);

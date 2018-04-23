@@ -3,7 +3,7 @@ package se.leafcoders.rosette.controller.dto;
 public class PodcastOut {
 
     private Long id;
-    private Long articleTypeId;
+    private ArticleTypeRefOut articleType;
     private String idAlias;
     private String title;
     private String subTitle;
@@ -27,14 +27,14 @@ public class PodcastOut {
         this.id = id;
     }
 
-    public Long getArticleTypeId() {
-        return articleTypeId;
+    public ArticleTypeRefOut getArticleType() {
+        return articleType;
     }
-    
-    public void setArticleTypeId(Long articleTypeId) {
-        this.articleTypeId = articleTypeId;
+
+    public void setArticleType(ArticleTypeRefOut articleType) {
+        this.articleType = articleType;
     }
-    
+
     public String getIdAlias() {
         return idAlias;
     }

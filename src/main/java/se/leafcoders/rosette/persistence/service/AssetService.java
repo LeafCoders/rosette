@@ -1,8 +1,6 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +68,15 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
     public List<Asset> findAllInFolder(Long assetFolderId, Sort sort, boolean checkPermissions) {
         return readManyCheckPermissions(repo().findByFolderId(assetFolderId, sort), checkPermissions);
     }
-    
+
+    public String urlOfAsset(Asset asset) {
+        if (asset.getType() == AssetType.FILE) {
+            return rosetteSettings.getBaseUrl() + "/api/assets/files/" + asset.getFileId();
+        } else {
+            return asset.getUrl();
+        }
+    }
+
     protected void extraValidation(Asset item) {
     }
     
@@ -96,12 +102,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
         dto.setMimeType(item.getMimeType());
         dto.setFileName(item.getFileName());
-
-        if (item.getType() == AssetType.FILE) {
-        	    dto.setUrl(rosetteSettings.getBaseUrl() + "/api/assets/files/" + item.getFileId());
-        } else {
-        		dto.setUrl(item.getUrl());
-        }
+        dto.setUrl(urlOfAsset(item));
 
         dto.setFileSize(item.getFileSize());
         dto.setWidth(item.getWidth());

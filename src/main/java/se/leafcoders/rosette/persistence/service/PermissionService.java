@@ -81,22 +81,35 @@ public class PermissionService extends PersistenceService<Permission, Permission
     }
 
     public List<String> getForUser(Long userId) {
-        List<String> permissions = new LinkedList<String>();
+        List<String> permissionStrings = new LinkedList<String>();
 
-        // Adding permissions for everyone
-        permissions.addAll(getForEveryone());
+        // Adding permissions for everyone (implicit also from Public)
+        permissionStrings.addAll(getForEveryone());
 
         // Adding permissions for specified user
         User user = userId != null ? userRepository.findOne(userId) : null;
         if (user != null) {
-            permissions.addAll(getPermissionsForUser(user));
-            permissions.addAll(getPermissionsForGroups(user));
+            permissionStrings.addAll(getPermissionsForUser(user));
+            permissionStrings.addAll(getPermissionsForGroups(user));
         }
-        return permissions;
+        return permissionStrings;
     }
 
     public List<String> getForEveryone() {
+        List<String> permissionStrings = new LinkedList<String>();
+
+        // Adding permissions for public
+        permissionStrings.addAll(getForPublic());
+
         List<Permission> permissions = repo().findByLevel(Permission.LEVEL_ALL_USERS);
+        if (permissions != null) {
+            permissionStrings.addAll(permissions.stream().map(p -> p.getEachPattern()).flatMap(List::stream).collect(Collectors.toList()));
+        }
+        return permissionStrings;
+    }
+
+    public List<String> getForPublic() {
+        List<Permission> permissions = repo().findByLevel(Permission.LEVEL_PUBLIC);
         if (permissions != null) {
             return permissions.stream().map(p -> p.getEachPattern()).flatMap(List::stream).collect(Collectors.toList());
         }

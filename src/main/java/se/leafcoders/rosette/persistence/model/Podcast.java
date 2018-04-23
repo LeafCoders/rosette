@@ -23,8 +23,14 @@ import se.leafcoders.rosette.persistence.validator.IdAlias;
 @Table(name = "podcasts")
 public class Podcast extends Persistable {
 
-    @NotNull(message = ApiString.NOT_NULL)
+    @JsonIgnore
+    @Column(name = "articletype_id", nullable = false, insertable = false, updatable = false)
     private Long articleTypeId;
+
+    @NotNull(message = ApiString.NOT_NULL)
+    @ManyToOne
+    @JoinColumn(name = "articletype_id")
+    private ArticleType articleType;
     
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -93,6 +99,15 @@ public class Podcast extends Persistable {
         this.articleTypeId = articleTypeId;
     }
     
+    public ArticleType getArticleType() {
+        return articleType;
+    }
+
+    public void setArticleType(ArticleType articleType) {
+        this.articleType = articleType;
+        this.articleTypeId = articleType != null ? articleType.getId() : null;
+    }
+
     public String getIdAlias() {
         return idAlias;
     }

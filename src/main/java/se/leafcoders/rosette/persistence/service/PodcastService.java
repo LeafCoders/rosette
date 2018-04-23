@@ -3,6 +3,7 @@ package se.leafcoders.rosette.persistence.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.controller.dto.ArticleTypeRefOut;
 import se.leafcoders.rosette.controller.dto.PodcastIn;
 import se.leafcoders.rosette.controller.dto.PodcastOut;
 import se.leafcoders.rosette.permission.PermissionType;
@@ -13,8 +14,11 @@ import se.leafcoders.rosette.persistence.repository.PodcastRepository;
 public class PodcastService extends PersistenceService<Podcast, PodcastIn, PodcastOut> {
 
     @Autowired
-    private AssetService assetService;
+    private ArticleTypeService articleTypeService;
 
+    @Autowired
+    private AssetService assetService;
+    
     public PodcastService(PodcastRepository repository) {
         super(Podcast.class, PermissionType.PODCASTS, repository);
     }
@@ -23,7 +27,7 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
     protected Podcast convertFromInDTO(PodcastIn dto, JsonNode rawIn, Podcast item) {
         // Only set when create
         if (item.getArticleTypeId() == null) {
-            item.setArticleTypeId(dto.getArticleTypeId());
+            item.setArticleType(articleTypeService.read(dto.getArticleTypeId(), true));
         }
         if (rawIn == null || rawIn.has("idAlias")) {
             item.setIdAlias(dto.getIdAlias());
@@ -66,7 +70,7 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
         PodcastOut dto = new PodcastOut();
         dto.setIdAlias(item.getIdAlias());
         dto.setId(item.getId());
-        dto.setArticleTypeId(item.getArticleTypeId());
+        dto.setArticleType(new ArticleTypeRefOut(item.getArticleType()));
         dto.setTitle(item.getTitle());
         dto.setSubTitle(item.getSubTitle());
         dto.setAuthorName(item.getAuthorName());

@@ -50,12 +50,13 @@ public class SecurityService {
 
     private boolean isPermitted(String permission) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        HashMap<String, Object> permissionTree;
         if (authentication instanceof CurrentUserAuthentication) {
-            HashMap<String, Object> permissionTree = getPermissionTree((CurrentUserAuthentication) authentication);
-            return PermissionTreeHelper.checkPermission(permissionTree, permission);
+            permissionTree = getPermissionTree((CurrentUserAuthentication) authentication);
         } else {
-            return false;
+            permissionTree = getPermissionTree(null);
         }
+        return PermissionTreeHelper.checkPermission(permissionTree, permission);
     }
 
     public void validate(Object object, JsonNode attrsToValidate) {
@@ -82,27 +83,17 @@ public class SecurityService {
     }
 
     private HashMap<String, Object> getPermissionTree(CurrentUserAuthentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
-        if (userId == null) {
-            userId = 0L;
-        }
-
-        /*
-         * TODO: Apply this for performance... PermissionTree permissionTree =
-         * mongoTemplate.findById(userId, PermissionTree.class); if
-         * (permissionTree != null) { return permissionTree.getTree(); }
-         */
         PermissionTreeHelper pth = new PermissionTreeHelper();
-        if (authentication.getPrincipal() != null) {
-            pth.create(permissionService.getForUser(userId));
+        if (authentication == null) {
+            pth.create(permissionService.getForPublic());
         } else {
-            pth.create(permissionService.getForEveryone());
+            Long userId = (Long) authentication.getPrincipal();
+            if (userId != null) {
+                pth.create(permissionService.getForUser(userId));
+            } else {
+                pth.create(permissionService.getForEveryone());
+            }
         }
-        /*
-         * permissionTree = new PermissionTree(); permissionTree.setId(userId);
-         * permissionTree.setTree(pth.getTree());
-         * mongoTemplate.save(permissionTree);
-         */
         return pth.getTree();
     }
 
