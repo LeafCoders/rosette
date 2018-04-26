@@ -13,8 +13,8 @@ services:
       - mysql-data:/var/lib/mysql
 
   rosette-server:
-    build: ../..
-#    image: leafcoders/rosette
+#    build: ../..
+    image: leafcoders/rosette:0.1
     depends_on:
       - mysql-database
     restart: always
@@ -40,7 +40,7 @@ services:
       - rosette-files:/var/lib/rosette
 
   cordate-client:
-    image: leafcoders/cordate:1.1
+    image: leafcoders/cordate:0.1
     depends_on:
       - rosette-server
     restart: always
