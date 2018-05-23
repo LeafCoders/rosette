@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.persistence.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +54,10 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         super(Event.class, PermissionType.EVENTS, repository);
     }
 
+    private EventRepository repo() {
+        return (EventRepository) repository;
+    }
+
     @Override
     public List<PermissionValue> itemPermissions(PermissionAction actionType, PermissionId<Event> permissionId) {
         Event event = permissionId.getItem();
@@ -92,6 +97,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         if (rawIn == null || rawIn.has("eventTypeId")) {
             item.setEventType(eventTypeService.read(dto.getEventTypeId(), true));
         }
+        if (rawIn == null || rawIn.has("isPublic")) {
+            item.setIsPublic(dto.getIsPublic());
+        }
         return item;
     }
 
@@ -104,8 +112,13 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         dto.setTitle(item.getTitle());
         dto.setDescription(item.getDescription());
         dto.setEventType(eventTypeService.toOutRef(item.getEventType(), EventTypeRefOut::new));
+        dto.setIsPublic(item.getIsPublic());
         dto.setResourceRequirements(resourceRequirementService.toOut(item.getResourceRequirements()));
         return dto;
+    }
+
+    public List<Event> readForCalendar(List<Long> eventTypeIds, LocalDateTime afterTime, LocalDateTime beforeTime) {
+        return repo().findForCalendar(eventTypeIds, afterTime, beforeTime);
     }
 
     public List<ResourceRequirement> getResourceRequirements(Long eventId) {

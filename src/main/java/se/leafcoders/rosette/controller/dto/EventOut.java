@@ -25,6 +25,7 @@ public class EventOut {
     private String description;
     private EventTypeRefOut eventType;
     private List<ResourceRequirementOut> resourceRequirements;
+    private Boolean isPublic;
 
     // Getters and setters
 
@@ -83,4 +84,13 @@ public class EventOut {
     public void setResourceRequirements(List<ResourceRequirementOut> resourceRequirements) {
         this.resourceRequirements = resourceRequirements;
     }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
 }

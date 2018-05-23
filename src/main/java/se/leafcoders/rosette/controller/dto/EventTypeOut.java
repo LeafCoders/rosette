@@ -9,6 +9,8 @@ public class EventTypeOut {
     private String name;
     private String description;
     private List<ResourceTypeRefOut> resourceTypes;
+    private Boolean isPublic;
+
 
     // Getters and setters
 
@@ -50,6 +52,14 @@ public class EventTypeOut {
 
     public void setResourceTypes(List<ResourceTypeRefOut> resourceTypes) {
         this.resourceTypes = resourceTypes;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
 }

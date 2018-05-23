@@ -10,6 +10,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import se.leafcoders.rosette.exception.ApiString;
@@ -39,6 +40,9 @@ public class EventType extends Persistable {
         uniqueConstraints = { @UniqueConstraint(columnNames = { "eventtype_id", "resourcetype_id" }) }
     )
     private List<ResourceType> resourceTypes = new ArrayList<>();
+
+    @NotNull(message = ApiString.NOT_NULL)
+    private Boolean isPublic;
 
 
     public EventType() {
@@ -87,6 +91,14 @@ public class EventType extends Persistable {
 
     public void removeResourceType(ResourceType resourceType) {
         getResourceTypes().remove(resourceType);
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
 }

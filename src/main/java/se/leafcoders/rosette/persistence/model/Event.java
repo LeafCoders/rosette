@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-
+import org.springframework.data.annotation.Version;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -55,6 +55,12 @@ public class Event extends Persistable {
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResourceRequirement> resourceRequirements;
+
+    @NotNull(message = ApiString.NOT_NULL)
+    private Boolean isPublic;
+
+    @Version
+    private Integer version;
 
 
     public Event() {
@@ -128,6 +134,18 @@ public class Event extends Persistable {
 
     public void removeResourceRequirement(ResourceRequirement resourceRequirement) {
         getResourceRequirements().remove(resourceRequirement);
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
 }

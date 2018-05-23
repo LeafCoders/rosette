@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.controller.dto;
 
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -18,6 +19,10 @@ public class EventTypeIn {
 
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String description;
+
+    @NotNull(message = ApiString.NOT_NULL)
+    private Boolean isPublic;
+
 
     public EventTypeIn() {
     }
@@ -46,6 +51,14 @@ public class EventTypeIn {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic != null ? isPublic : true;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
 }

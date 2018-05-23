@@ -37,6 +37,9 @@ public class EventIn {
 
     @NotNull(message = ApiString.NOT_NULL)
     private Long eventTypeId;
+    
+    @NotNull(message = ApiString.NOT_NULL)
+    private Boolean isPublic;
 
     // Getters and setters
 
@@ -78,6 +81,14 @@ public class EventIn {
 
     public void setEventTypeId(Long eventTypeId) {
         this.eventTypeId = eventTypeId;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic != null ? isPublic : true;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
 }

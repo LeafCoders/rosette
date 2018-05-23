@@ -56,6 +56,9 @@ public class EventTypeService extends PersistenceService<EventType, EventTypeIn,
         if (rawIn == null || rawIn.has("description")) {
             item.setDescription(dto.getDescription());
         }
+        if (rawIn == null || rawIn.has("isPublic")) {
+            item.setIsPublic(dto.getIsPublic());
+        }
         return item;
     }
 
@@ -66,6 +69,7 @@ public class EventTypeService extends PersistenceService<EventType, EventTypeIn,
         dto.setIdAlias(item.getIdAlias());
         dto.setName(item.getName());
         dto.setDescription(item.getDescription());
+        dto.setIsPublic(item.getIsPublic());
         dto.setResourceTypes(item.getResourceTypes().stream().map(resourceType -> new ResourceTypeRefOut(resourceType)).collect(Collectors.toList()));
         return dto;
     }
