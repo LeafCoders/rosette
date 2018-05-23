@@ -21,7 +21,7 @@ apply plugin: 'docker'
 
 
 group = 'se.leafcoders'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.1-SNAPSHOT'
 
 
 sourceCompatibility = 1.8
@@ -46,7 +46,10 @@ dependencies {
 	compile('org.flywaydb:flyway-core')
 	
 	compile("io.jsonwebtoken:jjwt:0.4")
-	
+
+	// For ical feed
+	compile("net.sf.biweekly:biweekly:0.6.2")
+
 	// Google common libraries
 	compile("com.google.guava:guava:21.0")
 	
