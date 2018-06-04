@@ -20,6 +20,7 @@ public class RosetteSettings {
     private String filesPath;
     private Long fileClientCacheMaxAge;
 
+    private String cordateUrl;
 
     // Getters and setters
 
@@ -70,5 +71,13 @@ public class RosetteSettings {
 
     public void setFileClientCacheMaxAge(Long fileClientCacheMaxAge) {
         this.fileClientCacheMaxAge = fileClientCacheMaxAge;
+    }
+
+    public String getCordateUrl() {
+        return cordateUrl;
+    }
+
+    public void setCordateUrl(String cordateUrl) {
+        this.cordateUrl = cordateUrl;
     }
 }

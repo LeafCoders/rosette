@@ -44,8 +44,9 @@ rosette:
   defaultMailFrom: no-reply@localhost
   filesPath: ./rosetteFiles
   fileClientCacheMaxAge: 0
+  cordateUrl: http://localhost:4200
 
-  
+
 ---
 spring:
   profiles: production
@@ -79,6 +80,7 @@ rosette:
   baseUrl: ${ROSETTE_URL}
   jwtSecretToken: ${ROSETTE_JWTSECRET}
   fileClientCacheMaxAge: 604800 # One week
+  cordateUrl: ${CORDATE_URL}
 
 
 ---
@@ -103,6 +105,7 @@ spring.mail:
 
 rosette:
   baseUrl: http://localhost:9000
+  cordateUrl: http://localhost:4200
 
 
 ---

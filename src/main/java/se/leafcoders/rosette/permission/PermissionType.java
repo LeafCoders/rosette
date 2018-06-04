@@ -18,6 +18,7 @@ public enum PermissionType {
     EVENTS_BY_EVENT_TYPES("eventsByEventTypes"),
     EVENT_TYPES("eventTypes"),
     GROUPS("groups"),
+    MESSAGES("messages"),
     PERMISSIONS("permissions"),
     PODCASTS("podcasts"),
     RESOURCES("resources"),

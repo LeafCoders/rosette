@@ -45,6 +45,7 @@ services:
       - ROSETTE_JWTSECRET= // Must at least be 10 chars
       - ROSETTE_URL= // Public url to rosette server
       - ROSETTE_FILES=/var/lib/rosette
+      - CORDATE_URL= // Public url to cordate client
     volumes:
       - rosette-files:/var/lib/rosette
 

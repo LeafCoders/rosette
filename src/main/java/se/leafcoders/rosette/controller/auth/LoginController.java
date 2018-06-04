@@ -46,7 +46,7 @@ public class LoginController extends AuthController {
             return successData(userToLogin);
         } else {
             if (userToLogin.isEnabled()) {
-                throw new ForbiddenException(ApiError.AUTH_INVALID_PASSWORD);
+                throw new ForbiddenException(ApiError.AUTH_INCORRECT_PASSWORD);
             }
             throw new ForbiddenException(ApiError.AUTH_USER_NOT_ACTIVATED);
         }

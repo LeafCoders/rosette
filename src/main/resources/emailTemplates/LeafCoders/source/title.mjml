@@ -1,0 +1,6 @@
+<mj-section>
+  <mj-column>
+    <mj-text font-weight="300" font-size="32px" line-height="40px" color="#73B532">%%title.row1%%</mj-text>
+    <mj-text font-weight="400" padding-top="0px">%%title.row2%%</mj-text>
+  </mj-column>
+</mj-section>

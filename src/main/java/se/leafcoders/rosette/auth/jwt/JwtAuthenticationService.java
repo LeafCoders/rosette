@@ -44,4 +44,8 @@ public class JwtAuthenticationService {
     public String createTokenForUser(User user) {
         return tokenHandler.createTokenForUserId(user.getId());
     }
+    
+    public String createTokenForForgottenPassword(User user) {
+        return tokenHandler.createTokenForForgottenPassword(user.getFirstName());
+    }
 }

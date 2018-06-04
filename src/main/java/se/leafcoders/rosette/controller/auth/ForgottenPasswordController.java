@@ -1,35 +1,30 @@
 package se.leafcoders.rosette.controller.auth;
 
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import se.leafcoders.rosette.persistence.service.ForgottenPasswordService;
 
 @RestController
 public class ForgottenPasswordController extends AuthController {
-/*
+
     @Autowired
     private ForgottenPasswordService forgottenPasswordService;
 
-	@RequestMapping(value = "forgottenPassword", method = RequestMethod.POST, consumes = "application/json")
-	public void createForgottenPassword(
-        @RequestParam(value="email", required=true) String email,
-        HttpServletResponse response
-    ) {
+	@PostMapping(value = "forgottenPassword")
+	public ResponseEntity<Void> createForgottenPassword(@RequestParam(required = true) String email) {
 	    forgottenPasswordService.create(email);
-        response.setStatus(HttpServletResponse.SC_CREATED);
+	    return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
-    @RequestMapping(value = "forgottenPassword", method = RequestMethod.PUT, consumes = "application/json")
-    public void applyForgottenPassword(
-        @RequestParam(value="token", required=true) String token,
-        @RequestParam(value="password", required=true) String password,
-        HttpServletResponse response
-    ) {
+    @PutMapping(value = "forgottenPassword")
+    public ResponseEntity<Void> applyForgottenPassword(@RequestParam(required = true) String token, @RequestParam(required = true) String password) {
         forgottenPasswordService.apply(token, password);
-        response.setStatus(HttpServletResponse.SC_OK);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
-*/
+
 }

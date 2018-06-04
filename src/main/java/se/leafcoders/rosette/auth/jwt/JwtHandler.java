@@ -11,6 +11,7 @@ import se.leafcoders.rosette.auth.CurrentUserService;
 public final class JwtHandler {
 
     private static long VALID_LENGTH = 14 * 24 * 60 * 60 * 1000;
+    private static long FORGOTTENPASSWORD_VALID_LENGTH = 30 * 60 * 1000;
 
     private final String jwtSecret;
     private final CurrentUserService userService;
@@ -40,6 +41,14 @@ public final class JwtHandler {
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + VALID_LENGTH))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+    
+    public String createTokenForForgottenPassword(String nameOfUser) {
+        return Jwts.builder()
+                .setSubject(nameOfUser)
+                .setExpiration(new Date(System.currentTimeMillis() + FORGOTTENPASSWORD_VALID_LENGTH))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

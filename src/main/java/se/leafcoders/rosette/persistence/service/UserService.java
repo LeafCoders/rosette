@@ -91,6 +91,14 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
         }
     }
 
+    public User changePassword(Long id, String password) {
+        User user = read(id, false);
+        String hashedPassword = new BCryptPasswordEncoder().encode(password);
+        user.setPassword(hashedPassword);
+        securityService.validate(user, null);
+        return user;
+    }
+
     /*
      * @Override public List<User> readMany(final ManyQuery manyQuery) {
      * List<User> users = super.readMany(manyQuery); for (User user : users) {
