@@ -1,3 +1,5 @@
+delete messages;
+
 delete from slides;
 delete from slideshows;
 

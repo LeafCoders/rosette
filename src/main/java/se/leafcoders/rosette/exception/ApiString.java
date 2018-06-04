@@ -5,7 +5,9 @@ public class ApiString {
     public static final String NOT_NULL = "error.notNull";
 
     public static final String STRING_NOT_EMPTY = "error.string.notEmpty";
+    public static final String STRING_MAX_8_CHARS = "error.string.max8Chars";
     public static final String STRING_MAX_32_CHARS = "error.string.max32Chars";
+    public static final String STRING_MAX_80_CHARS = "error.string.max80Chars";
     public static final String STRING_MAX_200_CHARS = "error.string.max200Chars";
     public static final String STRING_MAX_4000_CHARS = "error.string.max4000Chars";
     public static final String STRING_MAX_10000_CHARS = "error.string.max10000Chars";

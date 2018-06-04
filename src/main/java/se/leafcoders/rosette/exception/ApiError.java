@@ -7,7 +7,7 @@ public enum ApiError {
 	FORBIDDEN("error.forbidden"),
 	NOT_FOUND("error.notFound"),
 
-    AUTH_INVALID_PASSWORD("auth.invalidPassword"),
+    AUTH_INCORRECT_PASSWORD("auth.incorrectPassword"),
     AUTH_USER_NOT_ACTIVATED("auth.userNotActivated"),
 
 
