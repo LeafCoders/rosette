@@ -1,9 +1,14 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
+import se.leafcoders.rosette.controller.dto.SignupUserIn;
 import se.leafcoders.rosette.controller.dto.UserIn;
 import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.exception.ApiString;
@@ -11,14 +16,22 @@ import se.leafcoders.rosette.exception.SingleValidationException;
 import se.leafcoders.rosette.exception.ValidationError;
 import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.persistence.model.Consent;
 import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.persistence.repository.ConsentRepository;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
+import se.leafcoders.rosette.service.EmailTemplateService;
 
 @Service
 public class UserService extends PersistenceService<User, UserIn, UserOut> {
 
-    // @Autowired
-    // private SecurityService securityService;
+    static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    
+    @Autowired
+    private ConsentRepository consentRepository;
+    
+    @Autowired
+    private EmailTemplateService emailTemplateService;
 
     public UserService(UserRepository repository) {
         super(User.class, PermissionType.USERS, repository);
@@ -79,6 +92,16 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
         checkChangeOfIsActive(userIn);
     }
 
+    @Override
+    public User update(Long id, Class<UserIn> inClass, HttpServletRequest request, boolean checkPermissions) {
+        boolean isActive = repo().isActive(id);
+        User updatedUser = super.update(id, inClass, request, checkPermissions);
+        if (!isActive && updatedUser.getIsActive()) {
+            emailTemplateService.sendActivatedUserEmail(updatedUser);
+        }
+        return updatedUser;
+    }
+
     private void checkChangeOfIsActive(UserIn userIn) {
         if (userIn.getIsActive() != null) {
             checkPermission(permissionValue(PermissionAction.ADMIN));
@@ -97,6 +120,32 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
         user.setPassword(hashedPassword);
         securityService.validate(user, null);
         return user;
+    }
+    
+    public User createSignupUser(SignupUserIn signupUserIn) {
+        UserIn userIn = new UserIn(signupUserIn);
+        User user = create(userIn, false);
+
+        // Save signup consent
+        try {
+            Consent signupConsent = new Consent();
+            signupConsent.setType(Consent.Type.SIGNUP);
+            signupConsent.setSource(Consent.Source.WEBPAGE);
+            signupConsent.setTime(LocalDateTime.now());
+            signupConsent.setUserId(user.getId());
+            signupConsent.setConsentText(signupUserIn.getConsentText());
+            consentRepository.save(signupConsent);
+        } catch (Exception exception) {
+            logger.error("Failed to save signup consent due to: " + exception.getMessage());
+        }
+
+        // Send welcome email
+        emailTemplateService.sendWelcomeEmail(user);
+        return user;
+    }
+
+    public boolean isOkToSignupUser() {
+        return repo().countRecentSignups(LocalDateTime.now().minusHours(1)) <= 60;
     }
 
     /*

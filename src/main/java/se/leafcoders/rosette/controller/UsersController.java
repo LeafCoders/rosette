@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.leafcoders.rosette.controller.dto.SignupUserIn;
 import se.leafcoders.rosette.controller.dto.UserIn;
 import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.exception.ApiError;
@@ -36,7 +37,7 @@ public class UsersController {
 
     @Autowired
     private SecurityService securityService;
-    
+
     @GetMapping(value = "/{id}")
     public UserOut getUser(@PathVariable Long id) {
         return userService.toOut(userService.read(id, true));
@@ -51,6 +52,14 @@ public class UsersController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UserOut> postUser(@RequestBody UserIn user) {
         return new ResponseEntity<UserOut>(userService.toOut(userService.create(user, true)), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/signup", consumes = "application/json")
+    public ResponseEntity<UserOut> postSignupUser(@RequestBody SignupUserIn signupUser) {
+        if (userService.isOkToSignupUser()) {
+            return new ResponseEntity<UserOut>(userService.toOut(userService.createSignupUser(signupUser)), HttpStatus.CREATED);
+        }
+        throw new ForbiddenException(ApiError.UNKNOWN_REASON, "Too many calls");
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")

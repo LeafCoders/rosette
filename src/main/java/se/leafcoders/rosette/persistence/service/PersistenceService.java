@@ -54,7 +54,9 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
 
     public T create(IN itemIn, boolean checkPermissions, Consumer<T> beforeValidate) {
-        checkPermissions(itemPermissions(PermissionAction.CREATE));
+        if (checkPermissions) {
+            checkPermissions(itemPermissions(PermissionAction.CREATE));
+        }
         securityService.validate(itemIn, null);
         T item = fromIn(itemIn);
         if (beforeValidate != null) {

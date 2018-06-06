@@ -31,13 +31,10 @@ public class EmailTemplateService {
 
     private final String templateTheme = "LeafCoders";
 
-    public void sendForgottenPassword(User user, String token) {
+    public void sendForgottenPasswordEmail(User user, String token) {
         final String subject = messageService.lookup("forgottenPasswordEmail.title");
         
-        Map<String, String> templateValues = new HashMap<>();
-        templateValues.put("%%header.imageUrl%%", messageService.lookup("emailHeader.imageUrl"));
-        templateValues.put("%%footer.row1%%", messageService.lookup("emailFooter.row1"));
-        templateValues.put("%%footer.row2%%", messageService.lookup("emailFooter.row2"));
+        Map<String, String> templateValues = defaultTemplateValues();
         templateValues.put("%%title.row1%%", subject);
         templateValues.put("%%title.row2%%", messageService.lookup("forgottenPasswordEmail.subTitle"));
         templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
@@ -46,27 +43,59 @@ public class EmailTemplateService {
         templateValues.put("%%content.setPasswordUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/forgotten?token=" + token);
         templateValues.put("%%content.setPasswordTitle%%", messageService.lookup("forgottenPasswordEmail.changePassword"));
 
-        String body = replaceAllTemplateValues(readTemplate("forgottenPassword.html"), templateValues);
+        String body = replaceAllTemplateValues(readTemplate("forgottenPasswordEmail.html"), templateValues);
         mailSenderService.send(user.getEmail(), subject, body);
     }
 
-    public void sendChangedPasswordNotification(User user) {
+    public void sendChangedPasswordEmail(User user) {
         final String subject = messageService.lookup("changedPasswordEmail.title");
         
-        Map<String, String> templateValues = new HashMap<>();
-        templateValues.put("%%header.imageUrl%%", messageService.lookup("emailHeader.imageUrl"));
-        templateValues.put("%%footer.row1%%", messageService.lookup("emailFooter.row1"));
-        templateValues.put("%%footer.row2%%", messageService.lookup("emailFooter.row2"));
+        Map<String, String> templateValues = defaultTemplateValues();
         templateValues.put("%%title.row1%%", subject);
         templateValues.put("%%title.row2%%", messageService.lookup("changedPasswordEmail.subTitle"));
         templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
         templateValues.put("%%content.row1%%", messageService.lookup("changedPasswordEmail.textRow1"));
-        templateValues.put("%%content.row2%%", messageService.lookup("changedPasswordEmail.textRow2"));
         
-        String body = replaceAllTemplateValues(readTemplate("changedPassword.html"), templateValues);
+        String body = replaceAllTemplateValues(readTemplate("changedPasswordEmail.html"), templateValues);
         mailSenderService.send(user.getEmail(), subject, body);
     }
-    
+
+    public void sendWelcomeEmail(User user) {
+        final String subject = messageService.lookup("welcomeEmail.title");
+        
+        Map<String, String> templateValues = defaultTemplateValues();
+        templateValues.put("%%title.row1%%", subject);
+        templateValues.put("%%title.row2%%", messageService.lookup("welcomeEmail.subTitle"));
+        templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
+        templateValues.put("%%content.row1%%", messageService.lookup("welcomeEmail.textRow1"));
+
+        String body = replaceAllTemplateValues(readTemplate("welcomeEmail.html"), templateValues);
+        mailSenderService.send(user.getEmail(), subject, body);
+    }
+
+    public void sendActivatedUserEmail(User user) {
+        final String subject = messageService.lookup("activatedUserEmail.title");
+        
+        Map<String, String> templateValues = defaultTemplateValues();
+        templateValues.put("%%title.row1%%", subject);
+        templateValues.put("%%title.row2%%", messageService.lookup("activatedUserEmail.subTitle"));
+        templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
+        templateValues.put("%%content.row1%%", messageService.lookup("activatedUserEmail.textRow1"));
+        templateValues.put("%%content.loginUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/login?username=" + user.getEmail());
+        templateValues.put("%%content.loginTitle%%", messageService.lookup("activatedUserEmail.login"));
+
+        String body = replaceAllTemplateValues(readTemplate("activatedUserEmail.html"), templateValues);
+        mailSenderService.send(user.getEmail(), subject, body);
+    }
+
+    private Map<String, String> defaultTemplateValues() {
+        Map<String, String> templateValues = new HashMap<>();
+        templateValues.put("%%header.imageUrl%%", messageService.lookup("emailHeader.imageUrl"));
+        templateValues.put("%%footer.row1%%", messageService.lookup("emailFooter.row1"));
+        templateValues.put("%%footer.row2%%", messageService.lookup("emailFooter.row2"));
+        return templateValues;
+    }
+
     private String replaceAllTemplateValues(String rawTemplate, Map<String, String> templateValues) {
         for (String key : templateValues.keySet()) {
             rawTemplate = rawTemplate.replace(key, templateValues.get(key));

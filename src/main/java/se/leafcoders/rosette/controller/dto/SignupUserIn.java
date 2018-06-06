@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserIn {
+public class SignupUserIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
@@ -25,24 +25,17 @@ public class UserIn {
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String password;
-    
+
+    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String description;
 
-    private Boolean isActive;
+    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
+    private String consentText;
 
-    public UserIn() {}
-    
-    public UserIn(SignupUserIn signupUser) {
-        isActive = null;
-        email = signupUser.getEmail();
-        firstName = signupUser.getFirstName();
-        lastName = signupUser.getLastName();
-        password = signupUser.getPassword();
-        description = signupUser.getDescription();
-    }
-    
     // Getters and setters
+
 
     public String getEmail() {
         return email;
@@ -84,12 +77,12 @@ public class UserIn {
         this.description = description;
     }
 
-    public Boolean getIsActive() {
-        return isActive;
+    public String getConsentText() {
+        return consentText;
     }
 
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
+    public void setConsentText(String consentText) {
+        this.consentText = consentText;
     }
 
 }

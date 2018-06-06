@@ -35,7 +35,7 @@ public class ForgottenPasswordService {
             forgottenPassword.setUserId(user.getId());
             forgottenPassword.setToken(jwtAuthenticationService.createTokenForForgottenPassword(user));
             forgottenPasswordRepository.save(forgottenPassword);
-            emailTemplateService.sendForgottenPassword(user, forgottenPassword.getToken());
+            emailTemplateService.sendForgottenPasswordEmail(user, forgottenPassword.getToken());
             return forgottenPassword;
         }
         return null;
@@ -46,7 +46,7 @@ public class ForgottenPasswordService {
         if (forgottenPassword != null) {
             User user = userService.changePassword(forgottenPassword.getUserId(), password);
             forgottenPasswordRepository.delete(forgottenPassword);
-            emailTemplateService.sendChangedPasswordNotification(user);
+            emailTemplateService.sendChangedPasswordEmail(user);
             return true;
         }
         throw new NotFoundException("Token for 'forgotten password' was not found: " + token);

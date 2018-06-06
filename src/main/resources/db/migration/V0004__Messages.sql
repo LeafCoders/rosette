@@ -4,6 +4,7 @@ create table messages (
 	version integer not null,
 	message_language varchar(8) default null,
 	message varchar(4000) not null,
+	is_useradded bit default 0,
 
 	primary key (id),
 	constraint uk_message_keylang unique (message_key, message_language)	

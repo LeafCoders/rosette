@@ -22,4 +22,10 @@ public interface UserRepository extends ModelRepository<User> {
     @Modifying
     @Query("UPDATE User u SET u.lastLoginTime = :time WHERE u.id = :id")
     int setLastLoginTime(@Param("id") Long id, @Param("time") LocalDateTime time);
+    
+    @Query("SELECT COUNT(u) FROM User u WHERE u.lastLoginTime > :afterTime and u.isActive = false")
+    Long countRecentSignups(@Param("afterTime") LocalDateTime afterTime);
+    
+    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.id = :id and u.isActive = 1")
+    boolean isActive(@Param("id") Long id);
 }

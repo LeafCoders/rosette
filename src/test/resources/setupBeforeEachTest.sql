@@ -1,4 +1,5 @@
-delete messages;
+delete from messages where is_useradded = 1;
+delete from consents;
 
 delete from slides;
 delete from slideshows;
