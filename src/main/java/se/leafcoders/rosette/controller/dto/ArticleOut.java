@@ -21,7 +21,8 @@ public class ArticleOut {
 
     private List<ResourceRefOut> authors;
     private String title;
-    private String content;
+    private String contentRaw;
+    private String contentHtml;
     private AssetOut recording;
 
     
@@ -91,12 +92,20 @@ public class ArticleOut {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getContentRaw() {
+        return contentRaw;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContentRaw(String contentRaw) {
+        this.contentRaw = contentRaw;
+    }
+
+    public String getContentHtml() {
+        return contentHtml;
+    }
+
+    public void setContentHtml(String contentHtml) {
+        this.contentHtml = contentHtml;
     }
 
     public AssetOut getRecording() {

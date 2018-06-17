@@ -4,6 +4,7 @@ import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.model.Asset;
+import se.leafcoders.rosette.persistence.model.HtmlContent;
 
 public class ArticleSerieData {
 
@@ -12,7 +13,7 @@ public class ArticleSerieData {
         articleSerie.setArticleType(articleType);
         articleSerie.setIdAlias(idAlias);
         articleSerie.setTitle("En serie " + idAlias);
-        articleSerie.setContent("Innehåll...");
+        articleSerie.setContent(new HtmlContent("Innehåll...", "Innehåll..."));
         articleSerie.setImage(image);
         return articleSerie;
     }
@@ -32,7 +33,8 @@ public class ArticleSerieData {
         articleSerie.setArticleTypeId(articleTypeId);
         articleSerie.setIdAlias(idAlias);
         articleSerie.setTitle("En serie " + idAlias);
-        articleSerie.setContent("Innehåll...");
+        articleSerie.setContentRaw("Innehåll...");
+        articleSerie.setContentHtml("Innehåll...");
         articleSerie.setImageId(imageId);
         return articleSerie;
     }

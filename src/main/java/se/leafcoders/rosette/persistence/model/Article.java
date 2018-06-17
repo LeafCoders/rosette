@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -69,8 +70,8 @@ public class Article extends Persistable {
     @Column(nullable = false)
     private String title;
 
-    @Length(max = 10000, message = ApiString.STRING_MAX_200_CHARS)
-    private String content;
+    @Embedded
+    private HtmlContent content;
 
     @ManyToOne
     @JoinColumn(name = "recording_id")
@@ -168,11 +169,11 @@ public class Article extends Persistable {
         this.title = title;
     }
 
-    public String getContent() {
+    public HtmlContent getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(HtmlContent content) {
         this.content = content;
     }
     

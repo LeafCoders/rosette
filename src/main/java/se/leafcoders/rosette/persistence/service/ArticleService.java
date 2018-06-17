@@ -17,6 +17,7 @@ import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Article;
+import se.leafcoders.rosette.persistence.model.HtmlContent;
 import se.leafcoders.rosette.persistence.model.Resource;
 import se.leafcoders.rosette.persistence.repository.ArticleRepository;
 
@@ -74,8 +75,8 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         if (rawIn == null || rawIn.has("title")) {
             item.setTitle(dto.getTitle());
         }
-        if (rawIn == null || rawIn.has("content")) {
-            item.setContent(dto.getContent());
+        if (rawIn == null || rawIn.has("contentRaw") || rawIn.has("contentHtml")) {
+            item.setContent(new HtmlContent(dto.getContentRaw(), dto.getContentHtml()));
         }
         if (rawIn == null || rawIn.has("recordingId")) {
             item.setRecording(assetService.read(dto.getRecordingId(), true));
@@ -95,7 +96,8 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         dto.setTime(item.getTime());
         dto.setAuthors(item.getAuthors().stream().map(author -> new ResourceRefOut(author)).collect(Collectors.toList()));
         dto.setTitle(item.getTitle());
-        dto.setContent(item.getContent());
+        dto.setContentRaw(item.getContent().getContentRaw());
+        dto.setContentHtml(item.getContent().getContentHtml());
         dto.setRecording(assetService.toOut(item.getRecording()));
         return dto;
     }

@@ -84,7 +84,7 @@ public class PodcastFeedGenerator {
         return String.join("\n", new String[] {
                 tag("title", noAmp(article.getTitle())),
                 tag("itunes:subtitle", noAmp(article.getArticleSerie().getTitle())),
-                tag("description", toContentData(article.getContent())),
+                tag("description", toContentData(article.getContent().getContentPodcast())),
                 //tag("itunes:summary", toContentData(article.getContent())),
                 //tag("content:encoded", toHtmlContentData(article.getContent())), // May contain <p>, <ol>, <ul> or <a>
                 //tag("link", article.getLinkToWebPageWithArticle()),

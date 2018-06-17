@@ -6,7 +6,8 @@ public class ArticleSerieOut {
     private String idAlias;
     private Long articleTypeId;
     private String title;
-    private String content;
+    private String contentRaw;
+    private String contentHtml;
     private AssetOut image;
 
     // Getters and setters
@@ -43,12 +44,20 @@ public class ArticleSerieOut {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getContentRaw() {
+        return contentRaw;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContentRaw(String contentRaw) {
+        this.contentRaw = contentRaw;
+    }
+
+    public String getContentHtml() {
+        return contentHtml;
+    }
+
+    public void setContentHtml(String contentHtml) {
+        this.contentHtml = contentHtml;
     }
 
     public AssetOut getImage() {

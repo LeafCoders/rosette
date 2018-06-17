@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.persistence.model;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,8 +35,8 @@ public class ArticleSerie extends Persistable {
     @Column(nullable = false)
     private String title;
 
-    @Length(max = 10000, message = ApiString.STRING_MAX_200_CHARS)
-    private String content;
+    @Embedded
+    private HtmlContent content;
 
     @JsonIgnore
     @Column(name = "image_id", nullable = false, insertable = false, updatable = false)
@@ -85,11 +86,11 @@ public class ArticleSerie extends Persistable {
         this.title = title;
     }
 
-    public String getContent() {
+    public HtmlContent getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(HtmlContent content) {
         this.content = content;
     }
 

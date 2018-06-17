@@ -35,7 +35,10 @@ public class ArticleIn {
     private String title;
 
     @Length(max = 10000, message = ApiString.STRING_MAX_10000_CHARS)
-    private String content;
+    private String contentRaw;
+
+    @Length(max = 10000, message = ApiString.STRING_MAX_10000_CHARS)
+    private String contentHtml;
 
     private Long recordingId;
 
@@ -90,12 +93,20 @@ public class ArticleIn {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getContentRaw() {
+        return contentRaw;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContentRaw(String contentRaw) {
+        this.contentRaw = contentRaw;
+    }
+
+    public String getContentHtml() {
+        return contentHtml;
+    }
+
+    public void setContentHtml(String contentHtml) {
+        this.contentHtml = contentHtml;
     }
 
     public Long getRecordingId() {

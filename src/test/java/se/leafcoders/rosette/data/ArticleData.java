@@ -8,6 +8,7 @@ import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.model.Asset;
 import se.leafcoders.rosette.persistence.model.Event;
+import se.leafcoders.rosette.persistence.model.HtmlContent;
 import se.leafcoders.rosette.persistence.model.Resource;
 
 public class ArticleData {
@@ -19,7 +20,7 @@ public class ArticleData {
         article.setTime(time);
         article.setAuthors(Collections.singletonList(author));
         article.setTitle(title);
-        article.setContent("Innehåll...");
+        article.setContent(new HtmlContent("Innehåll...", "Innehåll..."));
         article.setRecording(recording);
         return article;
     }
@@ -41,7 +42,8 @@ public class ArticleData {
         article.setTime(time);
         article.setAuthorIds(Collections.singletonList(authorId));
         article.setTitle(title);
-        article.setContent("Innehåll...");
+        article.setContentRaw("Innehåll...");
+        article.setContentHtml("Innehåll...");
         article.setRecordingId(recordingId);
         return article;
     }
@@ -54,7 +56,8 @@ public class ArticleData {
         article.setTime(event.getStartTime());
         article.setAuthorIds(Collections.singletonList(authorId));
         article.setTitle(event.getTitle());
-        article.setContent("Innehåll...");
+        article.setContentRaw("Innehåll...");
+        article.setContentHtml("Innehåll...");
         article.setRecordingId(recordingId);
         return article;
     }

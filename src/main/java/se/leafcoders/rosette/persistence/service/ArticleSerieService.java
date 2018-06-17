@@ -8,6 +8,7 @@ import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
 import se.leafcoders.rosette.controller.dto.ArticleSerieOut;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
+import se.leafcoders.rosette.persistence.model.HtmlContent;
 import se.leafcoders.rosette.persistence.repository.ArticleSerieRepository;
 
 @Service
@@ -43,8 +44,8 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
         if (rawIn == null || rawIn.has("title")) {
             item.setTitle(dto.getTitle());
         }
-        if (rawIn == null || rawIn.has("content")) {
-            item.setContent(dto.getContent());
+        if (rawIn == null || rawIn.has("contentRaw") || rawIn.has("contentHtml")) {
+            item.setContent(new HtmlContent(dto.getContentRaw(), dto.getContentHtml()));
         }
         if (rawIn == null || rawIn.has("image")) {
             item.setImage(assetService.read(dto.getImageId(), true));
@@ -59,7 +60,8 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
         dto.setIdAlias(item.getIdAlias());
         dto.setArticleTypeId(item.getArticleTypeId());
         dto.setTitle(item.getTitle());
-        dto.setContent(item.getContent());
+        dto.setContentRaw(item.getContent().getContentRaw());
+        dto.setContentHtml(item.getContent().getContentHtml());
         dto.setImage(assetService.toOut(item.getImage()));
         return dto;
     }
