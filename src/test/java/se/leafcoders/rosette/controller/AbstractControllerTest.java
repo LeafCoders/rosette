@@ -126,7 +126,7 @@ abstract class AbstractControllerTest {
         File file = new File("src/test/resources/" + fileName);
         FileInputStream fis = new FileInputStream(file);
         MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), mimeType, fis);
-        return fileUpload("/api/assets/files")
+        return fileUpload("/api/files")
             .file(multipartFile)
             .param("folderId", folderId.toString())
             .param("fileName", asFileName);

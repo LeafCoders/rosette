@@ -39,10 +39,10 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     @Autowired
     private AssetFolderService assetFolderService;
-    
+
     @Autowired
     private FileStorageService fileStorageService;
-    
+
     public AssetService(AssetRepository repository) {
         super(Asset.class, PermissionType.ASSETS, repository);
     }
@@ -64,14 +64,14 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         }
         return item;
     }
-    
+
     public List<Asset> findAllInFolder(Long assetFolderId, Sort sort, boolean checkPermissions) {
         return readManyCheckPermissions(repo().findByFolderId(assetFolderId, sort), checkPermissions);
     }
 
     public String urlOfAsset(Asset asset) {
         if (asset.getType() == AssetType.FILE) {
-            return rosetteSettings.getBaseUrl() + "/api/assets/files/" + asset.getFileId();
+            return rosetteSettings.getBaseUrl() + "/api/files/" + asset.getFileId();
         } else {
             return asset.getUrl();
         }
@@ -79,7 +79,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     protected void extraValidation(Asset item) {
     }
-    
+
     @Override
     protected Asset convertFromInDTO(AssetIn dto, JsonNode rawIn, Asset item) {
         if (rawIn == null || rawIn.has("type")) {
@@ -88,9 +88,9 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         if (rawIn == null || rawIn.has("url")) {
             item.setUrl(dto.getUrl());
         }
-        
+
         item.setMimeType("image/jpg");
-        
+
         return item;
     }
 
@@ -117,10 +117,8 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         final String fileName = fileIn.getFileName();
         final String mimeType = file.getContentType();
 
-        checkAnyPermission(
-            new PermissionValue(PermissionType.ASSETS, PermissionAction.CREATE),
-            new PermissionValue(PermissionType.ASSET_FOLDERS_FILES, PermissionAction.CREATE).forId(folderId)
-        );
+        checkAnyPermission(new PermissionValue(PermissionType.ASSETS, PermissionAction.CREATE),
+                new PermissionValue(PermissionType.ASSET_FOLDERS_FILES, PermissionAction.CREATE).forId(folderId));
 
         AssetFolder folder = assetFolderService.read(folderId, false);
         validateFolderExist(folder);
@@ -169,7 +167,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         } while (repo().existsByFileId(fileId) && maxTries >= 0);
         return fileId;
     }
-    
+
     private void validateFolderExist(AssetFolder folder) {
         if (!fileStorageService.folderExist(folder.getId())) {
             throw new NotFoundException(AssetFolder.class, folder.getId());
