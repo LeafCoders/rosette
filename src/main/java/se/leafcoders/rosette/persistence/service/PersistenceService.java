@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -93,6 +94,10 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
 
     public List<T> readMany(Sort sort, boolean checkPermissions) {
         return readManyCheckPermissions(repository.findAll(sort), checkPermissions);
+    }
+    
+    public List<T> readMany(Specification<T> specification, Sort sort, boolean checkPermissions) {
+        return readManyCheckPermissions(repository.findAll(specification, sort), checkPermissions);
     }
     
     protected List<T> readManyCheckPermissions(Iterable<T> items, boolean checkPermissions) {

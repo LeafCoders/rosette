@@ -1,9 +1,13 @@
 package se.leafcoders.rosette.controller;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +25,7 @@ import se.leafcoders.rosette.controller.dto.EventOut;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
+import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.EventService;
 import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
@@ -48,9 +53,37 @@ public class EventsController {
     }
 
     @GetMapping()
-    public Collection<EventOut> getEvents(HttpServletRequest request) {
+    public Collection<EventOut> getEvents(
+        @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime from,            
+        @RequestParam(value = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime before
+    ) {
         Sort sort = new Sort(Sort.Direction.ASC, "startTime");
-        return eventService.toOut(eventService.readMany(sort, true));
+        System.out.println(from);
+        System.out.println(before);
+        
+        Specification<Event> spec = null;
+        if (from != null && before != null) {
+            spec = (root, query, cb) -> {
+                return cb.and(
+                    cb.greaterThanOrEqualTo(root.get("startTime"), from),
+                    cb.lessThan(root.get("startTime"), before)
+                );
+            };
+        } else if (from != null) {
+            spec = (root, query, cb) -> {
+                return cb.greaterThanOrEqualTo(root.get("startTime"), from);
+            };
+        } else if (before != null) {
+            spec = (root, query, cb) -> {
+                return cb.lessThan(root.get("startTime"), before);
+            };
+        }
+
+        if (spec != null) {
+            return eventService.toOut(eventService.readMany(spec, sort, true));
+        } else {
+            return eventService.toOut(eventService.readMany(sort, true));
+        }
     }
 
     @PostMapping(consumes = "application/json")
