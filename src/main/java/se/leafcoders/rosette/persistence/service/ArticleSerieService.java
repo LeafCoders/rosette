@@ -60,8 +60,10 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
         dto.setIdAlias(item.getIdAlias());
         dto.setArticleTypeId(item.getArticleTypeId());
         dto.setTitle(item.getTitle());
-        dto.setContentRaw(item.getContent().getContentRaw());
-        dto.setContentHtml(item.getContent().getContentHtml());
+        if (item.getContent() != null) {
+            dto.setContentRaw(item.getContent().getContentRaw());
+            dto.setContentHtml(item.getContent().getContentHtml());
+        }
         dto.setImage(assetService.toOut(item.getImage()));
         return dto;
     }

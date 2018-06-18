@@ -96,8 +96,10 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         dto.setTime(item.getTime());
         dto.setAuthors(item.getAuthors().stream().map(author -> new ResourceRefOut(author)).collect(Collectors.toList()));
         dto.setTitle(item.getTitle());
-        dto.setContentRaw(item.getContent().getContentRaw());
-        dto.setContentHtml(item.getContent().getContentHtml());
+        if (item.getContent() != null) {
+            dto.setContentRaw(item.getContent().getContentRaw());
+            dto.setContentHtml(item.getContent().getContentHtml());
+        }
         dto.setRecording(assetService.toOut(item.getRecording()));
         return dto;
     }
