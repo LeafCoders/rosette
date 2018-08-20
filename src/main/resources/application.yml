@@ -42,6 +42,7 @@ rosette:
   apiVersion: v1
   jwtSecretToken: developmentSimpleJwtSecretToken
   defaultMailFrom: no-reply@localhost
+  adminMailTo: admin@localhost
   filesPath: ./rosetteFiles
   fileClientCacheMaxAge: 0
   cordateUrl: http://localhost:4200

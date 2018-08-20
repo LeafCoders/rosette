@@ -76,6 +76,7 @@ Rosette specific properties are descried here:
 - `baseUrl` - Must be a public accessible url to the Rosette application
 - `jwtSecretToken` - A secret token for JWT authentication. Must be at least 10 characters long
 - `defaultMailFrom` - Mail sent from Rosette will have this address in the from field 
+- `adminMailTo` - Mail address to administrator. Help request will be sent to this address. 
 - `uploadsPath` - Folder where all uploads will be stored 
 
 Read more about the configuration properties in https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html

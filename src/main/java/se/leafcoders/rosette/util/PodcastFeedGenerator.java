@@ -119,8 +119,7 @@ public class PodcastFeedGenerator {
 
         boolean isHtmlContent = text.startsWith("<");
         if (isHtmlContent) {
-            return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("’", "&apos;")
-                    .replace("\"", "&quot;");
+            return HtmlSanitize.sanitize(text);
         } else {
             return "<![CDATA[" + text + "]]>";
         }

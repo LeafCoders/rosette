@@ -17,6 +17,8 @@ public class RosetteSettings {
 
     private String defaultMailFrom;
 
+    private String adminMailTo;
+
     private String filesPath;
     private Long fileClientCacheMaxAge;
 
@@ -55,6 +57,14 @@ public class RosetteSettings {
 
     public void setDefaultMailFrom(String defaultMailFrom) {
         this.defaultMailFrom = defaultMailFrom;
+    }
+
+    public String getAdminMailTo() {
+        return adminMailTo;
+    }
+
+    public void setAdminMailTo(String adminMailTo) {
+        this.adminMailTo = adminMailTo;
     }
 
     public String getFilesPath() {
