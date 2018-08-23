@@ -1,7 +1,11 @@
 package se.leafcoders.rosette.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -57,26 +61,14 @@ public class EventsController {
         @RequestParam(value = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime before
     ) {
         Sort sort = new Sort(Sort.Direction.ASC, "startTime");
-        
-        Specification<Event> spec = null;
-        if (from != null && before != null) {
-            spec = (root, query, cb) -> {
-                return cb.and(
-                    cb.greaterThanOrEqualTo(root.get("startTime"), from),
-                    cb.lessThan(root.get("startTime"), before)
-                );
-            };
-        } else if (from != null) {
-            spec = (root, query, cb) -> {
-                return cb.greaterThanOrEqualTo(root.get("startTime"), from);
-            };
-        } else if (before != null) {
-            spec = (root, query, cb) -> {
-                return cb.lessThan(root.get("startTime"), before);
-            };
-        }
 
-        if (spec != null) {
+        if (from != null || before != null) {
+            Specification<Event> spec = (root, query, cb) -> {
+                List<Predicate> predicates = new ArrayList<>();
+                Optional.ofNullable(from).ifPresent(time -> predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), time)));
+                Optional.ofNullable(before).ifPresent(time -> predicates.add(cb.lessThan(root.get("startTime"), time)));
+                return cb.and(predicates.toArray(new Predicate[0]));
+            };        
             return eventService.toOut(eventService.readMany(spec, sort, true));
         } else {
             return eventService.toOut(eventService.readMany(sort, true));
