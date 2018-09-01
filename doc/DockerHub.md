@@ -8,7 +8,7 @@ Rosette is a REST API server. Its main focus is to serve calendar events, slide 
 Rosette uses MySQL as database. The Rosette docker image has built in support for waiting to start until a database connection has been established. That means that you can start both the database and the server at the same time. As with the Docker Compose example below.
 
 ```yaml
-# docker-compose.yaml
+# docker-compose.yml
 version: '3'
 
 services:
@@ -34,6 +34,7 @@ services:
       - DATABASE_HOST=mysql-database
       - DATABASE_PORT=3306
       - DATABASE_NAME=rosette-db
+      - DATABASE_USE_SSL=false
       - DATABASE_USERNAME=dbuser
       - DATABASE_PASSWORD=dbpassword
       - MAIL_HOST=
@@ -42,10 +43,15 @@ services:
       - MAIL_PASSWORD=
       - MAIL_SMTP_AUTH=false
       - MAIL_SMTP_STARTTLS=false
+      - MAIL_SMTP_SSL_TRUST=
+      - MAIL_TEST_CONNECTION=false // Assert mail connectivity at startup
+      - MAIL_DEBUG=false
       - ROSETTE_JWTSECRET= // Must at least be 10 chars
-      - ROSETTE_URL= // Public url to rosette server
-      - ROSETTE_FILES=/var/lib/rosette
-      - CORDATE_URL= // Public url to cordate client
+      - ROSETTE_FILES_FOLDER=/var/lib/rosette // Local folder where the application may store files in
+      - ROSETTE_DEFAULT_MAIL_FROM= // Default mail from address
+      - ROSETTE_ADMIN_MAIL_TO= // Mail address to administrator
+      - ROSETTE_URL=${ROSETTE_URL:?Must specify ROSETTE_URL in environment} // Public url to rosette server
+      - CORDATE_URL=${CORDATE_URL:?Must specify CORDATE_URL in environment} // Public url to cordate client
     volumes:
       - rosette-files:/var/lib/rosette
 
@@ -55,4 +61,8 @@ volumes:
 ```
 
 Start with:  
-```$ docker-compose up -d```
+```
+$ export ROSETTE_URL='https://myserver.app/rosette'
+$ export CORDATE_URL='https://myserver.app/cordate'
+$ docker-compose up -d
+```

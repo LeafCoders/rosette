@@ -8,6 +8,7 @@ public enum ApiError {
 	NOT_FOUND("error.notFound"),
 
     AUTH_INCORRECT_PASSWORD("auth.incorrectPassword"),
+    AUTH_USER_NOT_FOUND("auth.userNotFound"),
     AUTH_USER_NOT_ACTIVATED("auth.userNotActivated"),
 
 

@@ -15,7 +15,6 @@ import se.leafcoders.rosette.auth.CurrentUserService;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
 
 @RestController
@@ -36,7 +35,7 @@ public class LoginController extends AuthController {
         try {
             userToLogin = currentUserService.loadUserByUsername(login.getUsername());
         } catch (UsernameNotFoundException ignore) {
-        		throw new NotFoundException("User with username " + login.getUsername() + " not found");
+            throw new ForbiddenException(ApiError.AUTH_USER_NOT_FOUND, login.getUsername());
         }
 
         if (userToLogin != null && userToLogin.isEnabled() && new BCryptPasswordEncoder().matches(login.getPassword(), userToLogin.getPassword())) {

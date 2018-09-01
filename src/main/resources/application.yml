@@ -11,9 +11,6 @@ spring.http.multipart:
   max-request-size: 200MB
 
 spring.datasource:
-  url: jdbc:mysql://localhost:3306/test
-  username: root
-  password: root
   tomcat:
     testWhileIdle: true # Keep the connection alive if idle for a long time (needed in production)
     validationQuery: SELECT 1
@@ -29,23 +26,11 @@ spring.jackson:
   serialization:
     WRITE_DATES_AS_TIMESTAMPS: false
 
-spring.mail:
-  protocol: smtp
-  host: localhost
-  port: 1234
-
 flyway:
   enabled: true
 
 rosette:
-  baseUrl: http://localhost:9000
   apiVersion: v1
-  jwtSecretToken: developmentSimpleJwtSecretToken
-  defaultMailFrom: no-reply@localhost
-  adminMailTo: admin@localhost
-  filesPath: ./rosetteFiles
-  fileClientCacheMaxAge: 0
-  cordateUrl: http://localhost:4200
 
 
 ---
@@ -62,26 +47,31 @@ logging.level:
 #  se.leafcoders.rosette: ERROR
 
 spring.datasource:
-  url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?useSSL=false
+  url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?useSSL=${DATABASE_USE_SSL}
   username: ${DATABASE_USERNAME}
   password: ${DATABASE_PASSWORD}
 
 spring.mail:
-# enable when real production!!!  testConnection: true
   host: ${MAIL_HOST}
   port: ${MAIL_PORT}
   username: ${MAIL_USERNAME}
   password: ${MAIL_PASSWORD}
+  test-connection: ${MAIL_TEST_CONNECTION}
   properties:
     mail.smtp.auth: ${MAIL_SMTP_AUTH}
     mail.smtp.starttls.enable: ${MAIL_SMTP_STARTTLS}
-    # mail.smtp.socketFactory.port:
+    mail.smtp.ssl.trust: ${MAIL_SMTP_SSL_TRUST}
+    mail.debug: ${MAIL_DEBUG}
 
 rosette:
   baseUrl: ${ROSETTE_URL}
   jwtSecretToken: ${ROSETTE_JWTSECRET}
+  defaultMailFrom: ${ROSETTE_DEFAULT_MAIL_FROM}
+  adminMailTo: ${ROSETTE_ADMIN_MAIL_TO}
+  filesPath: ${ROSETTE_FILES_FOLDER}
   fileClientCacheMaxAge: 604800 # One week
   cordateUrl: ${CORDATE_URL}
+
 
 
 ---
@@ -105,6 +95,11 @@ spring.mail:
     mail.smtp.starttls.enable: false
 
 rosette:
+  jwtSecretToken: developmentSimpleJwtSecretToken
+  defaultMailFrom: no-reply@localhost
+  adminMailTo: admin@localhost
+  filesPath: ./rosetteFiles
+  fileClientCacheMaxAge: 0
   baseUrl: http://localhost:9000
   cordateUrl: http://localhost:4200
 

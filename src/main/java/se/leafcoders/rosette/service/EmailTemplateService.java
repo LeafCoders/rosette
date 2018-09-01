@@ -1,15 +1,15 @@
 package se.leafcoders.rosette.service;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import se.leafcoders.rosette.RosetteSettings;
 import se.leafcoders.rosette.persistence.model.User;
 import se.leafcoders.rosette.persistence.service.MessageService;
@@ -104,12 +104,21 @@ public class EmailTemplateService {
     }
 
     private String readTemplate(String templateName) {
-        File file = new File(classLoader.getResource("emailTemplates/" + templateTheme + "/" + templateName).getFile());
+        InputStream inputStream = null;
         try {
-            return Files.toString(file, Charsets.UTF_8);
+            inputStream = classLoader.getResourceAsStream("emailTemplates/" + templateTheme + "/" + templateName);
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            return result.toString("UTF-8");
         } catch (IOException e) {
-            logger.error("Email template file '" + templateTheme + "/" + templateName + "' was not found!");
+            logger.error("Email template file '" + templateTheme + "/" + templateName + "' was not found!", e);
             return "Something went wrong when generating this email. Please contact the administrator.";
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
     }
 
