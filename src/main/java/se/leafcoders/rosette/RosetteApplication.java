@@ -1,11 +1,13 @@
 package se.leafcoders.rosette;
 
 import java.util.Arrays;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,16 +27,11 @@ import org.springframework.web.filter.CorsFilter;
 @SpringBootApplication
 @Configuration
 @EnableJpaRepositories
+@PersistenceContext(type = PersistenceContextType.TRANSACTION)
 @EnableTransactionManagement
-@ComponentScan(basePackages = {
-	"se.leafcoders.rosette",
-	"se.leafcoders.rosette.persitency.repository",
-	"se.leafcoders.rosette.controller",
-	"se.leafcoders.rosette.auth",
-	"se.leafcoders.rosette.auth.jwt",
-})
+@ComponentScan
 @EnableScheduling
-public class RosetteApplication extends SpringBootServletInitializer { // Is SpringBootServletInitializer needed?
+public class RosetteApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(RosetteApplication.class, args);

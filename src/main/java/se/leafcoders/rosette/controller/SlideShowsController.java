@@ -3,7 +3,7 @@ package se.leafcoders.rosette.controller;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +20,16 @@ import se.leafcoders.rosette.controller.dto.SlideShowOut;
 import se.leafcoders.rosette.persistence.service.SlideService;
 import se.leafcoders.rosette.persistence.service.SlideShowService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/slideShows", produces = "application/json")
 public class SlideShowsController {
 
     @Autowired
-    private SlideShowService slideShowService;
-
-    @Autowired
     private SlideService slideService;
+    
+    @Autowired
+    private SlideShowService slideShowService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public SlideShowOut getSlideShow(@PathVariable Long id) {

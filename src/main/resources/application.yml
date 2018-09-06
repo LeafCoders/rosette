@@ -3,10 +3,7 @@
 spring.profiles:
   active: development # If spring.profile.active is not specified, profile will be "development"
 
-security:
-  basic.enabled: false
-
-spring.http.multipart:
+spring.servlet.multipart:
   max-file-size: 200MB
   max-request-size: 200MB
 
@@ -16,9 +13,9 @@ spring.datasource:
     validationQuery: SELECT 1
 
 spring.jpa:
+  open-in-view: false
   hibernate:
-    ddl-auto: none # Hibernate ddl auto (none, validate, create, create-drop, update)
-    naming.strategy: org.hibernate.cfg.ImprovedNamingStrategy # Naming strategy
+    ddl-auto: none # Hibernate ddl auto (none, validate, create, create-drop, update)    
   properties:
     hibernate.dialect: org.hibernate.dialect.MySQL5Dialect # The SQL dialect makes Hibernate generate better SQL for the chosen database
 
@@ -26,7 +23,7 @@ spring.jackson:
   serialization:
     WRITE_DATES_AS_TIMESTAMPS: false
 
-flyway:
+spring.flyway:
   enabled: true
 
 rosette:
@@ -41,7 +38,7 @@ server:
   port: 9000 # Shall be set with environment variable PORT
 
 logging.level:
-  org.springframework.web.filter.CommonsRequestLoggingFilter: WARNING
+  org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
 #logging.level:
 #  ROOT: ERROR
 #  se.leafcoders.rosette: ERROR
@@ -82,7 +79,7 @@ server:
   port: 9000
 
 spring.datasource:
-  url: jdbc:mysql://localhost/test
+  url: jdbc:mysql://localhost/test?autoReconnect=true&useSSL=false
   username: root
   password: root
 
@@ -117,7 +114,7 @@ spring:
   profiles: test
 
 logging.level:
-  org.springframework.web.filter.CommonsRequestLoggingFilter: WARNING
+  org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
 
 spring.jpa:
   show-sql: true # Show log for each sql query

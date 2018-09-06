@@ -1,13 +1,12 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.3.RELEASE'
+		springBootVersion = '2.0.4.RELEASE'
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath('se.transmode.gradle:gradle-docker:1.2')
 	}
 }
 
@@ -17,20 +16,21 @@ plugins {
 }
 
 apply plugin: 'org.springframework.boot'
-apply plugin: 'docker'
+apply plugin: 'io.spring.dependency-management'
 
+bootJar {
+    baseName = 'rosette'
+    version =  '0.2-SNAPSHOT'
+}
 
 group = 'se.leafcoders'
-version = '0.2-SNAPSHOT'
-
 
 sourceCompatibility = 1.8
-// targetCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
 }
-
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -38,7 +38,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	runtime('org.springframework.boot:spring-boot-devtools')
-	runtime('mysql:mysql-connector-java:6.0.6')
+	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
 
@@ -60,15 +60,6 @@ dependencies {
     compile("com.googlecode.soundlibs:mp3spi:1.9.5-1")
 }
 
-
-task buildDocker(type: Docker, dependsOn: 'bootRepackage') {
-    baseImage = 'java:8'
-    push = project.hasProperty('push')
-    tag = 'leafcoders/rosette'
-    addFile {
-        from jar
-        rename { 'rosette.jar' }
-    }
-    volume('/tmp')
-    entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-Dspring.profiles.active=production', '-jar', '/rosette.jar'])
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10'
 }

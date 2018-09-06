@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.controller;
 
 import java.text.MessageFormat;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import se.leafcoders.rosette.controller.dto.HelpRequestIn;
 import se.leafcoders.rosette.service.MailSenderService;
 import se.leafcoders.rosette.util.HtmlSanitize;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/sendmessages", produces = "application/json")
 public class SendMessagesController {

@@ -14,7 +14,7 @@ import javax.persistence.Version;
 public abstract class Persistable implements Serializable, Cloneable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     protected Long id;
 

@@ -2,13 +2,12 @@ package se.leafcoders.rosette.controller;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,7 +22,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,10 +38,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import se.leafcoders.rosette.IdResult;
@@ -126,7 +122,7 @@ abstract class AbstractControllerTest {
         File file = new File("src/test/resources/" + fileName);
         FileInputStream fis = new FileInputStream(file);
         MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), mimeType, fis);
-        return fileUpload("/api/files")
+        return multipart("/api/files")
             .file(multipartFile)
             .param("folderId", folderId.toString())
             .param("fileName", asFileName);
@@ -168,7 +164,7 @@ abstract class AbstractControllerTest {
         withUser(uploadUser, uploadFile(folderId, fileName, asFileName, mimeType))
             .andExpect(status().isCreated())
             .andDo(IdResultHandler.assignTo("$.id", idResult));
-        return assetRepository.findOne(idResult.id);
+        return assetRepository.findById(idResult.id).orElse(null);
     }
 
     protected AssetFolder givenAssetFolder(AssetFolderIn assetFolder) throws Exception {
@@ -179,7 +175,7 @@ abstract class AbstractControllerTest {
             .andExpect(status().isCreated())
             .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
             .andDo(IdResultHandler.assignTo("$.id", idResult));
-        return assetFolderRepository.findOne(idResult.id);
+        return assetFolderRepository.findById(idResult.id).orElse(null);
     }
 
     // UPLOAD USER

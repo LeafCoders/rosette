@@ -3,7 +3,7 @@ package se.leafcoders.rosette.persistence.model;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import se.leafcoders.rosette.exception.ApiString;
 
 @Entity

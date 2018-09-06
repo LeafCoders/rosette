@@ -71,7 +71,7 @@ public class SeedTest extends AbstractControllerTest {
         
         
         // User permissions
-        givenPermissionForUser(userRepository.findOne(admin), "*");
+        givenPermissionForUser(userRepository.findById(admin).get(), "*");
 
         // Slide shows
         final AssetFolder slideShowFolder = givenAssetFolder(AssetFolderData.newAssetFolder("slideShow", "Bilder till bildspel", "image/"));
@@ -164,9 +164,9 @@ public class SeedTest extends AbstractControllerTest {
         
         // Articles
         Asset article1Recording = givenAssetInFolder(articleTypeRecordingFolder.getId(), "audio.mp3", "predikan1.mp3", "audio/mp3");
-        final Long article1 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findOne(event1), patrikPastorResurs, article1Recording.getId())));
-        final Long article2 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findOne(event2), pamelaPastorResurs, article1Recording.getId())));
-        final Long article3 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findOne(event3), pavelPastorResurs, article1Recording.getId())));                
+        final Long article1 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event1).get(), patrikPastorResurs, article1Recording.getId())));
+        final Long article2 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event2).get(), pamelaPastorResurs, article1Recording.getId())));
+        final Long article3 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event3).get(), pavelPastorResurs, article1Recording.getId())));                
     }
 
     public Long post(User authUser, String controllerUrl, String jsonString) throws Exception {

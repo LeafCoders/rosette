@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,6 +35,7 @@ import se.leafcoders.rosette.persistence.service.EventService;
 import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
 import se.leafcoders.rosette.persistence.service.ResourceService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/events", produces = "application/json")
 public class EventsController {

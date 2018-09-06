@@ -3,17 +3,13 @@ package se.leafcoders.rosette.service;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.exception.MultipleValidationException;
 import se.leafcoders.rosette.permission.PermissionResult;

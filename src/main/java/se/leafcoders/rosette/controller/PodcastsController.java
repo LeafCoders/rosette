@@ -3,6 +3,7 @@ package se.leafcoders.rosette.controller;
 import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.PodcastService;
 import se.leafcoders.rosette.util.PodcastFeedGenerator;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/podcasts", produces = "application/json")
 public class PodcastsController {

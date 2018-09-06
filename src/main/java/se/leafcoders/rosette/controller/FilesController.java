@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import se.leafcoders.rosette.persistence.model.Asset;
 import se.leafcoders.rosette.persistence.service.AssetService;
 import se.leafcoders.rosette.persistence.service.FileStorageService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/files", produces = "application/json")
 public class FilesController {

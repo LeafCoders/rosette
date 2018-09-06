@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import biweekly.util.Duration;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.service.EventService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/calendar", produces = "application/json")
 public class CalendarController {

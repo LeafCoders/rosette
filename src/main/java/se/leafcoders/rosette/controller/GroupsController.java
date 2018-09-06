@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.persistence.service.GroupService;
 import se.leafcoders.rosette.persistence.service.UserService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/groups", produces = "application/json")
 public class GroupsController {

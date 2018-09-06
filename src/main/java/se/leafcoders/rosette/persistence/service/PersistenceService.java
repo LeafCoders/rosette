@@ -78,10 +78,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         if (id == null) {
             return null;
         }
-        T item = repository.findOne(id);
-        if (item == null) {
-            throw notFoundException(id);
-        }
+        T item = repository.findById(id).orElseThrow(() -> notFoundException(id));
         if (checkPermissions) {
             checkPermissions(itemPermissions(PermissionAction.READ, new PermissionId<T>(item)));
         }
@@ -93,10 +90,12 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
 
     public List<T> readMany(Sort sort, boolean checkPermissions) {
+        sort = sort != null ? sort : new Sort(Sort.Direction.ASC, "id");
         return readManyCheckPermissions(repository.findAll(sort), checkPermissions);
     }
-    
+
     public List<T> readMany(Specification<T> specification, Sort sort, boolean checkPermissions) {
+        sort = sort != null ? sort : new Sort(Sort.Direction.ASC, "id");
         return readManyCheckPermissions(repository.findAll(specification, sort), checkPermissions);
     }
     
@@ -113,10 +112,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
 
     public T update(Long id, Class<IN> inClass, HttpServletRequest request, boolean checkPermissions) {
-        T itemInDb = repository.findOne(id);
-        if (itemInDb == null) {
-            throw notFoundException(id);
-        }
+        T itemInDb = repository.findById(id).orElseThrow(() -> notFoundException(id));
         checkPermissions(itemPermissions(PermissionAction.UPDATE, new PermissionId<T>(itemInDb)));
 
         try {
@@ -143,7 +139,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     public ResponseEntity<Void> delete(Long id, boolean checkPermissions) {
         checkPermissions(itemPermissions(PermissionAction.DELETE, new PermissionId<T>(id)));
         securityService.checkNotReferenced(id, entityClass);
-        repository.delete(id);
+        repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 

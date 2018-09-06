@@ -8,7 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 

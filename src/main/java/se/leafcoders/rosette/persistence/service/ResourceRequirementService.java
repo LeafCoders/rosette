@@ -2,9 +2,7 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
-
 import se.leafcoders.rosette.controller.dto.ResourceRefOut;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
 import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
@@ -22,11 +20,7 @@ public class ResourceRequirementService {
     }
 
     public ResourceRequirement read(Long id) {
-        ResourceRequirement rr = repository.findOne(id);
-        if (rr != null) {
-            return rr;
-        }
-        throw new NotFoundException(ResourceRequirement.class.getSimpleName(), id);
+        return repository.findById(id).orElseThrow(() -> new NotFoundException(ResourceRequirement.class.getSimpleName(), id));
     }
     
     public ResourceRequirementOut toOut(ResourceRequirement item) {

@@ -68,10 +68,9 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
     }
 
     public C update(Long parentId, Long childId, Class<CIN> itemInClass, HttpServletRequest request) {
-        C itemInDb = childRepository.findOne(childId);
-        if (itemInDb == null) {
-            throw new NotFoundException(childClass.getSimpleName(), childId);
-        }
+        C itemInDb = childRepository.findById(childId).orElseThrow(() -> {
+            return new NotFoundException(childClass.getSimpleName(), childId);
+        });
         if (!getParentId(itemInDb).equals(parentId)) {
             throw ForbiddenException.dontBelongsTo(childClass, childId, parentClass, parentId);
         }
@@ -102,14 +101,13 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
         parentService.checkPermissions(parentItemPermissions(PermissionAction.DELETE, parent));
         // securityService.checkNotReferenced(id, entityClass);
 
-        C child = childRepository.findOne(childId);
-        if (child == null) {
-            throw new NotFoundException(childClass.getSimpleName(), childId);
-        }
+        C child = childRepository.findById(childId).orElseThrow(() -> {
+            return new NotFoundException(childClass.getSimpleName(), childId);
+        });
         if (!getParentId(child).equals(parentId)) {
             throw ForbiddenException.dontBelongsTo(childClass, childId, parentClass, parentId);
         }
-        childRepository.delete(childId);
+        childRepository.deleteById(childId);
         return ResponseEntity.noContent().build();
     }
 

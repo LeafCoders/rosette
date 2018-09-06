@@ -3,7 +3,6 @@ package se.leafcoders.rosette.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import se.leafcoders.rosette.persistence.model.User;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
 
@@ -14,7 +13,7 @@ public class CurrentUserService implements org.springframework.security.core.use
     private UserRepository userRepository;
 
     @Override
-    public final CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
         if (user != null) {
             return new CurrentUser(user.getId(), user.getFullName(), user.getEmail(), user.getPassword(), user.getIsActive());
@@ -23,7 +22,7 @@ public class CurrentUserService implements org.springframework.security.core.use
     }
 
     public CurrentUser loadUserById(Long userId) {
-        User user = userRepository.findOne(userId);
+        User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
             return new CurrentUser(userId, user.getFullName(), user.getEmail(), "", user.getIsActive());
         }

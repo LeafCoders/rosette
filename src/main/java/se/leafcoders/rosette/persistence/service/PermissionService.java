@@ -3,18 +3,14 @@ package se.leafcoders.rosette.persistence.service;
 import static se.leafcoders.rosette.permission.PermissionAction.READ;
 import static se.leafcoders.rosette.permission.PermissionAction.UPDATE;
 import static se.leafcoders.rosette.permission.PermissionType.USERS;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.controller.dto.PermissionIn;
 import se.leafcoders.rosette.controller.dto.PermissionOut;
 import se.leafcoders.rosette.permission.PermissionType;
@@ -87,7 +83,7 @@ public class PermissionService extends PersistenceService<Permission, Permission
         permissionStrings.addAll(getForEveryone());
 
         // Adding permissions for specified user
-        User user = userId != null ? userRepository.findOne(userId) : null;
+        User user = userId != null ? userRepository.findById(userId).get() : null;
         if (user != null) {
             permissionStrings.addAll(getPermissionsForUser(user));
             permissionStrings.addAll(getPermissionsForGroups(user));

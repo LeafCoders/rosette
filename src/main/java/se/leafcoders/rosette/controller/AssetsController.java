@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import se.leafcoders.rosette.controller.dto.AssetIn;
 import se.leafcoders.rosette.controller.dto.AssetOut;
 import se.leafcoders.rosette.persistence.service.AssetService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/assets", produces = "application/json")
 public class AssetsController {

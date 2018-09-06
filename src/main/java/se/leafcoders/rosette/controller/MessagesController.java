@@ -3,6 +3,7 @@ package se.leafcoders.rosette.controller;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.NotSupportedException;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import se.leafcoders.rosette.controller.dto.MessageIn;
 import se.leafcoders.rosette.controller.dto.MessageOut;
 import se.leafcoders.rosette.persistence.service.MessageService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/messages", produces = "application/json")
 public class MessagesController {

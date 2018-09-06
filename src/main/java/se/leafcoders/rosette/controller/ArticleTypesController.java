@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import se.leafcoders.rosette.controller.dto.ArticleTypeIn;
 import se.leafcoders.rosette.controller.dto.ArticleTypeOut;
 import se.leafcoders.rosette.persistence.service.ArticleTypeService;
 
+@Transactional
 @RestController
 @RequestMapping(value = "api/articleTypes", produces = "application/json")
 public class ArticleTypesController {
