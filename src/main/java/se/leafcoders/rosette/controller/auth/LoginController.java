@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,11 @@ import se.leafcoders.rosette.auth.CurrentUserService;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.permission.PermissionAction;
+import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
+import se.leafcoders.rosette.service.SecurityService;
 
 @RestController
 public class LoginController extends AuthController {
@@ -28,6 +33,10 @@ public class LoginController extends AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SecurityService securityService;
+
 
 	@PostMapping(value = "login")
 	public Object login(@RequestBody Login login, HttpServletResponse response) {
@@ -50,6 +59,26 @@ public class LoginController extends AuthController {
             throw new ForbiddenException(ApiError.AUTH_USER_NOT_ACTIVATED);
         }
 	}
+
+    @PostMapping(value = "loginAs/{userId}")
+    public Object loginAs(@PathVariable Long userId, HttpServletResponse response) {
+        securityService.checkPermission(new PermissionValue(PermissionType.USERS, PermissionAction.ADMIN).forId(userId));
+
+        CurrentUser userToLogin = null;
+        try {
+            userToLogin = currentUserService.loadUserById(userId);
+        } catch (UsernameNotFoundException ignore) {
+            throw new ForbiddenException(ApiError.AUTH_USER_NOT_FOUND, userId.toString());
+        }
+
+        if (userToLogin != null) {
+            jwtAuthenticationService.addAuthenticationHeader(response, new CurrentUserAuthentication(userToLogin));
+            response.setStatus(HttpServletResponse.SC_OK);
+            return successData(userToLogin);
+        } else {
+            throw new ForbiddenException(ApiError.AUTH_USER_NOT_FOUND, userId.toString());
+        }
+    }
 
 	private void updateLastLoginTime(Long id) {
 	    userRepository.setLastLoginTime(id, LocalDateTime.now());
