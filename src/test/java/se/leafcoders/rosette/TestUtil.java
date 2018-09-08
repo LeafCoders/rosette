@@ -34,6 +34,20 @@ public class TestUtil {
         if (expectedNode == null) {
             return null;
         }
+        if (actualNode == null) {
+            Map<String, String> result = new HashMap<String, String>();
+            result.put("path", path);
+            result.put("expected", expectedNode != null ? expectedNode.toString() : null);
+            result.put("actual", "Node does not exist");
+            return result;
+        }
+        if (expectedNode.isNull() != actualNode.isNull()) {
+            Map<String, String> result = new HashMap<String, String>();
+            result.put("path", path);
+            result.put("expected", expectedNode != null ? expectedNode.toString() : null);
+            result.put("actual", actualNode != null ? actualNode.toString() : null);
+            return result;
+        }
         if (expectedNode.isValueNode()) {
             if (expectedNode != null && actualNode != null && expectedNode.asText() != actualNode.asText()) {
                 Map<String, String> result = new HashMap<String, String>();

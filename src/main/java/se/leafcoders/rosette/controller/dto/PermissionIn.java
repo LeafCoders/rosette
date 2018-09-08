@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.validator.ValidPermissions;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PermissionIn {
@@ -20,6 +21,7 @@ public class PermissionIn {
 
     private Long entityId;
 
+    @ValidPermissions
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String patterns;
 

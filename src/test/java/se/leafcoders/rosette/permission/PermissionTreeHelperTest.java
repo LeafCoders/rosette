@@ -24,6 +24,9 @@ public class PermissionTreeHelperTest {
     public void checkPermissionFormat() throws JsonProcessingException, IOException {
         assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events"));
         assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:*"));
+        assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:read"));
+        assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:read/update"));
+        assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:read/update:12"));
         assertTrue(PermissionTreeHelper.hasValidPermissionFormat("events:*:resourceTypes"));
         assertTrue(PermissionTreeHelper.hasValidPermissionFormat("*:update:*"));
 
@@ -33,6 +36,9 @@ public class PermissionTreeHelperTest {
         assertFalse(PermissionTreeHelper.hasValidPermissionFormat(":events"));
         assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events*"));
         assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events: read:*"));
+        assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events,users"));
+        assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events\nusers"));
+        assertFalse(PermissionTreeHelper.hasValidPermissionFormat("events_users"));
     }
 
     @Test
@@ -40,8 +46,8 @@ public class PermissionTreeHelperTest {
         List<String> permissions = new ArrayList<String>();
         permissions.add("*:read:*");
         permissions.add("events:read:12");
-        permissions.add("events:update,delete");
         permissions.add("events:update:*");
+        permissions.add("events:update/delete");
         permissions.add("events:create:12");
         permissions.add("events:create:*");
 

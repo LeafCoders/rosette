@@ -3,7 +3,7 @@ package se.leafcoders.rosette.persistence.model;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.Range;
 
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.permission.PermissionTreeHelper;
+import se.leafcoders.rosette.persistence.validator.ValidPermissions;
 
 @Entity
 @Table(name = "permissions")
@@ -37,7 +38,7 @@ public class Permission extends Persistable {
     // TODO NotNull when level 2 or 3
     private Long entityId;
 
-    // TODO @ValidPermissions
+    @ValidPermissions
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String patterns;
 
@@ -91,16 +92,9 @@ public class Permission extends Persistable {
     }
 
     private String cleanPatterns(String patternsToClean) {
-        /*
-         * TODO: if (patternsToClean != null) {
-         * patternsToClean.removeAll(Arrays.asList("", null));
-         * 
-         * for (int index = 0; index < patternsToClean.size(); ++index) { String
-         * permission = patternsToClean.get(index); while
-         * (permission.endsWith(":*")) { permission = permission.substring(0,
-         * permission.length() - 2); } patternsToClean.set(index, permission); }
-         * }
-         */
+        if (patternsToClean != null) {
+            patternsToClean = Arrays.stream(patternsToClean.split(",")).filter(p -> !p.isEmpty()).collect(Collectors.joining(","));
+        }
         return patternsToClean;
     }
 

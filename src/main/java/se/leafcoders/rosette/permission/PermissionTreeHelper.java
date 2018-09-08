@@ -37,8 +37,10 @@ public class PermissionTreeHelper {
         permissions.forEach(
             (String permission) -> {
                 permission = trimEndOfPermissionString(permission);
-                String[] levels = permission.split(LEVEL_DIVIDER);
-                addPermissionLevel(levels, 0, permissionTree);
+                if (!permission.isEmpty()) {
+                    String[] levels = permission.split(LEVEL_DIVIDER);
+                    addPermissionLevel(levels, 0, permissionTree);
+                }
             }
         );
 
@@ -137,6 +139,10 @@ public class PermissionTreeHelper {
 
     public static boolean hasValidPermissionFormat(final String permission) {
         if (permission != null) {
+            // Don't allow character that is not a-z, A-Z, 0-9, ':', '*' and '/'  
+            if (permission.contains(PERMISSION_DIVIDER) || permission.matches(".*[^a-zA-Z0-9:\\*\\/].*")) {
+                return false;
+            }
             boolean lastCharIsDivider = false;
             for (int i = 0; i < permission.length(); ++i) {
                 boolean currentCharIsDivider = permission.charAt(i) == LEVEL_DIVIDER.charAt(0) || permission.charAt(i) == VALUE_DIVIDER.charAt(0);
