@@ -160,7 +160,7 @@ public class SeedTest extends AbstractControllerTest {
         
         // Article series
         Asset articleSerie1Image = givenAssetInFolder(articleTypeImageFolder.getId(), "image.png", "easter.png", "image/png");
-        final Long articleSerie1 = post(user1, "/articleSeries", json(ArticleSerieData.newArticleSerie(articleType1, "Påsk", articleSerie1Image.getId())));
+        final Long articleSerie1 = post(user1, "/articleSeries", json(ArticleSerieData.newArticleSerie(articleType1, "pask", "Påsk", articleSerie1Image.getId())));
         
         // Articles
         Asset article1Recording = givenAssetInFolder(articleTypeRecordingFolder.getId(), "audio.mp3", "predikan1.mp3", "audio/mp3");

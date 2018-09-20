@@ -26,7 +26,6 @@ public class ArticleSerieIn {
     @Length(max = 10000, message = ApiString.STRING_MAX_10000_CHARS)
     private String contentHtml;
 
-    @NotNull(message = ApiString.NOT_NULL)
     private Long imageId;
 
 

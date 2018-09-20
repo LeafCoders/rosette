@@ -26,7 +26,7 @@ create table articleseries (
 	id_alias varchar(32) not null,
 	articletype_id bigint not null,
 	content varchar(10000),
-	image_id bigint not null,
+	image_id bigint,
 	title varchar(200) not null,
 
 	primary key (id),

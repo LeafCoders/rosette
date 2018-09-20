@@ -1,7 +1,11 @@
 package se.leafcoders.rosette.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
@@ -78,7 +82,7 @@ public class ArticleIn {
     }
 
     public List<Long> getAuthorIds() {
-        return authorIds;
+        return Optional.ofNullable(authorIds).orElse(new ArrayList<>()).stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public void setAuthorIds(List<Long> authorIds) {

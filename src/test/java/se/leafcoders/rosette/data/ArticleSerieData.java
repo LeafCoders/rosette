@@ -28,11 +28,11 @@ public class ArticleSerieData {
         return articleSerie;
     }
 
-    public static ArticleSerieIn newArticleSerie(Long articleTypeId, String idAlias, Long imageId) {
+    public static ArticleSerieIn newArticleSerie(Long articleTypeId, String idAlias, String title, Long imageId) {
         ArticleSerieIn articleSerie = new ArticleSerieIn();
         articleSerie.setArticleTypeId(articleTypeId);
         articleSerie.setIdAlias(idAlias);
-        articleSerie.setTitle("En serie " + idAlias);
+        articleSerie.setTitle("En serie " + title);
         articleSerie.setContentRaw("Innehåll...");
         articleSerie.setContentHtml("Innehåll...");
         articleSerie.setImageId(imageId);

@@ -42,7 +42,6 @@ public class ArticleSerie extends Persistable {
     @Column(name = "image_id", nullable = false, insertable = false, updatable = false)
     private Long imageId;
 
-    @NotNull(message = ApiString.NOT_NULL)
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Asset image;
