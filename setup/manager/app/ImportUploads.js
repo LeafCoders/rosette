@@ -3,7 +3,7 @@
 function ImportUploadsCtrl($scope, serverAPI) {
 
 	var uploads = [];
-	$scope.uploadToFolderId = 'predikningar';
+	$scope.uploadToFolderId = '';
 
 	$scope.selectedFilesChanged = function () {
 		var newUploads = [];
@@ -38,20 +38,20 @@ function ImportUploadsCtrl($scope, serverAPI) {
 			return;
 		}
 		var upload = uploads[fromIndex];
-    	upload.imported = 'Importing...';
+		upload.imported = 'Importing...';
         
-    	serverAPI.uploadFile($scope.uploadToFolderId, upload.file)
-    		.then(function (data) {
-	        	upload.imported = 'YES';
-	        	uploadAll(fromIndex + 1);
-	        })
-	        .catch(function(response) {
-	        	upload.imported = 'FAILED: ' + response.statusText;
-	        	if (response.status === 400) {
-	        		upload.imported += ' - ' + response.data[0].message;
-	        	}
-	        	uploadAll(fromIndex + 1);
-	        });
+    		serverAPI.uploadFile($scope.uploadToFolderId, upload.file)
+    			.then(function (data) {
+    				upload.imported = 'YES';
+    				uploadAll(fromIndex + 1);
+    			})
+    			.catch(function(response) {
+    				upload.imported = 'FAILED: ' + response.statusText;
+    				if (response.status === 400) {
+    					upload.imported += ' - ' + response.data[0].message;
+    				}
+    				uploadAll(fromIndex + 1);
+    			});
 	}
 }
 

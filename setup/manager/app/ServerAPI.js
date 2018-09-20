@@ -6,16 +6,16 @@ function ServerAPIService($resource) {
     var authJwt = undefined;
 
     this.setRosetteUrl = function (url) {
-    	rosetteUrl = url ? url : '';
+    		rosetteUrl = url ? url : '';
     }
     
     this.isAuthenticated = function () {
-    	return !!authJwt;
+    		return !!authJwt;
     }
     
 	this.login = function (username, password) {
         return $resource(rosetteUrl + '/auth/login')
-        		.save({ username: username, password: btoa(password) }, {}, function success(data, header) {
+        		.save({}, { username: username, password: password }, function success(data, header) {
         			authJwt = header('X-AUTH-TOKEN');
         		}, function failure(response) {
         			authJwt = undefined;
@@ -26,9 +26,9 @@ function ServerAPIService($resource) {
 
 	this.uploadFile = function (folderId, file) {
         return $resource(
-        		rosetteUrl + '/api/v1/uploads/:folderId',
-        		{ folderId: '@folderId' },
-        		{
+        		rosetteUrl + '/api/files',
+        		{},
+            {
         			upload: {
         				method: 'POST',
     					transformRequest: function formDataObject(data) {
@@ -41,13 +41,13 @@ function ServerAPIService($resource) {
     					headers: { 'Content-Type': undefined, enctype: 'multipart/form-data', 'X-AUTH-TOKEN': authJwt }
         			}
         		}
-        		).upload({ folderId: folderId }, { file: file, fileName: file.name }).$promise;
+    		).upload({}, { folderId: folderId, file: file, fileName: file.name }).$promise;
 	};
 
-	this.readUploads = function (folderId) {
+	this.readUploads = function (assetFolderId) {
         return $resource(
-        		rosetteUrl + '/api/v1/uploads/:folderId',
-        		{ folderId: '@folderId' },
+        		rosetteUrl + '/api/assets',
+        		{ assetFolderId: assetFolderId },
         		{
         			read: {
         				method: 'GET',
@@ -55,12 +55,12 @@ function ServerAPIService($resource) {
     					headers: { 'X-AUTH-TOKEN': authJwt }
         			}
         		}
-        		).read({ folderId: folderId }).$promise;
+    		).read({ assetFolderId: assetFolderId }).$promise;
 	};
 	
-	this.createEducation = function (educationTypeId, educationThemeId, time, authorName, authorUserId, title, recording) {
+	this.createResource = function (name) {
         return $resource(
-        		rosetteUrl + '/api/v1/educations',
+        		rosetteUrl + '/api/resources',
         		{},
         		{
         			create: {
@@ -68,20 +68,28 @@ function ServerAPIService($resource) {
     					headers: { 'Content-Type': 'application/json', 'X-AUTH-TOKEN': authJwt }
         			}
         		}
-        		).create({
-        			type: 'simple',
-        			educationType: { id: educationTypeId },
-        			educationTheme: { id: educationThemeId },
-        			time: toModelDate(time),
-        			title: title,
-        			recording: recording,
-        			author: { ref: (authorUserId ? { id: authorUserId } : undefined), text: authorName }
-    			}).$promise;
+    		).create({
+    			name: name
+		}).$promise;
 	};
 	
-	this.readEducations = function () {
+	this.addResourceTypeToResource = function (resourceId, resourceTypeId) {
         return $resource(
-        		rosetteUrl + '/api/v1/educations',
+        		rosetteUrl + '/api/resources/' + resourceId + '/resourceTypes/' + resourceTypeId,
+        		{},
+        		{
+        			create: {
+        				method: 'POST',
+        				isArray: true,
+    					headers: { 'Content-Type': 'application/json', 'X-AUTH-TOKEN': authJwt }
+        			}
+        		}
+    		).create({}).$promise;
+	};
+	
+	this.readResources = function () {
+        return $resource(
+        		rosetteUrl + '/api/resources',
         		{},
         		{
         			read: {
@@ -90,11 +98,78 @@ function ServerAPIService($resource) {
     					headers: { 'X-AUTH-TOKEN': authJwt }
         			}
         		}
-        		).read().$promise;
+    		).read({}).$promise;
+	};
+	
+	this.createArticleSerie = function (articleTypeId, idAlias, title) {
+        return $resource(
+        		rosetteUrl + '/api/articleSeries',
+        		{},
+        		{
+        			create: {
+        				method: 'POST',
+    					headers: { 'Content-Type': 'application/json', 'X-AUTH-TOKEN': authJwt }
+        			}
+        		}
+    		).create({
+    			articleTypeId: articleTypeId,
+    			idAlias: idAlias,
+    			title: title
+		}).$promise;
+	};
+	
+	this.readArticleSeries = function (articleTypeId) {
+        return $resource(
+        		rosetteUrl + '/api/articleSeries',
+        		{ articleTypeId: articleTypeId },
+        		{
+        			read: {
+        				method: 'GET',
+        				isArray: true,
+    					headers: { 'X-AUTH-TOKEN': authJwt }
+        			}
+        		}
+		).read({ articleTypeId: articleTypeId }).$promise;
+	};
+	
+	this.createArticle = function (articleTypeId, articleSerieId, time, authorId, title, content, recordingId) {
+        return $resource(
+        		rosetteUrl + '/api/articles',
+        		{},
+        		{
+        			create: {
+        				method: 'POST',
+    					headers: { 'Content-Type': 'application/json', 'X-AUTH-TOKEN': authJwt }
+        			}
+        		}
+    		).create({
+    			articleTypeId: articleTypeId,
+    			articleSerieId: articleSerieId,
+    			time: toModelDate(time),
+    			authorIds: [authorId],
+    			title: title,
+    			contentRaw: content,
+    			contentHtml: content,
+    			recordingId: recordingId,
+		}).$promise;
+	};
+	
+	this.readArticles = function (articleTypeId) {
+        return $resource(
+        		rosetteUrl + '/api/articles',
+        		{ articleTypeId: articleTypeId },
+        		{
+        			read: {
+        				method: 'GET',
+        				isArray: true,
+    					headers: { 'X-AUTH-TOKEN': authJwt }
+        			}
+        		}
+    		).read({ articleTypeId: articleTypeId }).$promise;
 	};
 	
 	function toModelDate(time) {
-		return time + ' Europe/Stockholm';
+		return time;
 	}
 }
 
