@@ -81,17 +81,17 @@ public class ArticlesController {
     }
 
     @GetMapping(value = "/{id}/authors")
-    public Collection<ResourceOut> getUsersOfGroup(@PathVariable Long id) {
+    public Collection<ResourceOut> getAuthors(@PathVariable Long id) {
         return resourceService.toOut(articleService.getAuthors(id));
     }
 
     @PostMapping(value = "/{id}/authors/{authorId}", consumes = "application/json")
-    public Collection<ResourceOut> addUserToGroup(@PathVariable Long id, @PathVariable Long authorId) {
+    public Collection<ResourceOut> addAuthor(@PathVariable Long id, @PathVariable Long authorId) {
         return resourceService.toOut(articleService.addAuthor(id, authorId));
     }
 
     @DeleteMapping(value = "/{id}/authors/{authorId}")
-    public Collection<ResourceOut> removeUserFromGroup(@PathVariable Long id, @PathVariable Long authorId) {
+    public Collection<ResourceOut> removeAuthor(@PathVariable Long id, @PathVariable Long authorId) {
         return resourceService.toOut(articleService.removeAuthor(id, authorId));
     }
 }

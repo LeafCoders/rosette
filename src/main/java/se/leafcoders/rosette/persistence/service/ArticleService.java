@@ -114,6 +114,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         Article article = read(articleId, true);
         Resource resource = resourceService.read(resourceId, true);
         article.addAuthor(resource);
+        updateResourceUsage(article);
         try {
             return repository.save(article).getAuthors();
         } catch (DataIntegrityViolationException ignore) {
