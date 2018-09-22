@@ -22,6 +22,10 @@ public class ResourceTypeService extends PersistenceService<ResourceType, Resour
     public ResourceTypeService(ResourceTypeRepository repository) {
         super(ResourceType.class, PermissionType.RESOURCE_TYPES, repository);
     }
+    
+    private ResourceTypeRepository repo() {
+        return (ResourceTypeRepository) repository;
+    }
 
     @Override
     protected ResourceType convertFromInDTO(ResourceTypeIn dto, JsonNode rawIn, ResourceType item) {
@@ -48,6 +52,6 @@ public class ResourceTypeService extends PersistenceService<ResourceType, Resour
     }
     
     public List<Resource> readResources(Long resourceTypeId) {
-        return read(resourceTypeId, true).getResources();
+        return repo().getResources(resourceTypeId);
     }
 }

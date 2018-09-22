@@ -1,6 +1,9 @@
 package se.leafcoders.rosette.controller.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 
 public class ResourceOut {
 
@@ -9,6 +12,8 @@ public class ResourceOut {
     private String description;
     private List<ResourceTypeRefOut> resourceTypes;
     private UserRefOut user;
+    @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
+    private LocalDateTime lastUseTime;
 
     // Getters and setters
 
@@ -50,5 +55,13 @@ public class ResourceOut {
 
     public void setUser(UserRefOut user) {
         this.user = user;
+    }
+
+    public LocalDateTime getLastUseTime() {
+        return lastUseTime;
+    }
+
+    public void setLastUseTime(LocalDateTime lastUseTime) {
+        this.lastUseTime = lastUseTime;
     }
 }

@@ -3,6 +3,7 @@ package se.leafcoders.rosette.persistence.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -126,6 +127,24 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         Resource resource = resourceService.read(resourceId, true);
         article.removeAuthor(resource);
         return repository.save(article).getAuthors();
+    }
+
+    @Override
+    public Article create(ArticleIn articleIn, boolean checkPermissions) {
+        Article createdArticle = super.create(articleIn, checkPermissions); 
+        updateResourceUsage(createdArticle);
+        return createdArticle;
+    }
+
+    @Override
+    public Article update(Long id, Class<ArticleIn> inClass, HttpServletRequest request, boolean checkPermissions) {
+        Article updatedArticle = super.update(id, inClass, request, checkPermissions);
+        updateResourceUsage(updatedArticle);
+        return updatedArticle;
+    }
+
+    private void updateResourceUsage(Article article) {
+        article.getAuthors().forEach(author -> resourceService.updateUsage(author));
     }
 
 }

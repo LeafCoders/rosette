@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.persistence.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,9 @@ public class Resource extends Persistable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private LocalDateTime lastUseTime;
+    
+    
     public Resource() {
     }
 
@@ -100,5 +104,13 @@ public class Resource extends Persistable {
     public void setUser(User user) {
         this.user = user;
         this.setUserId(user != null ? user.getId() : null);
+    }
+
+    public LocalDateTime getLastUseTime() {
+        return lastUseTime;
+    }
+
+    public void setLastUseTime(LocalDateTime lastUseTime) {
+        this.lastUseTime = lastUseTime;
     }
 }

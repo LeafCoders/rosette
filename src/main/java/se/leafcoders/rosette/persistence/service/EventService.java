@@ -180,6 +180,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
                 throw ForbiddenException.dontBelongsTo(Resource.class, resourceId, ResourceType.class, resourceRequirement.getResourceType().getId());
             }
             resourceRequirement.addResource(resource);
+            resourceService.updateUsage(resource);
         } else {
            resourceRequirement.setResources(new ArrayList<>(resourceRequirement.getResourceType().getResources()));
         }

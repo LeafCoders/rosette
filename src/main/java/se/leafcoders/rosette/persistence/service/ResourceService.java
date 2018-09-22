@@ -1,14 +1,12 @@
 package se.leafcoders.rosette.persistence.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.controller.dto.ResourceIn;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
@@ -34,6 +32,10 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
         super(Resource.class, PermissionType.RESOURCES, repository);
     }
 
+    private ResourceRepository repo() {
+        return (ResourceRepository) repository;
+    }
+
     @Override
     protected Resource convertFromInDTO(ResourceIn dto, JsonNode rawIn, Resource item) {
         if (rawIn == null || rawIn.has("name")) {
@@ -56,6 +58,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
         dto.setDescription(item.getDescription());
         dto.setResourceTypes(item.getResourceTypes().stream().map(resourceType -> new ResourceTypeRefOut(resourceType)).collect(Collectors.toList()));
         dto.setUser(item.getUser() != null ? new UserRefOut(item.getUser()) : null);
+        dto.setLastUseTime(item.getLastUseTime());
         return dto;
     }
 
@@ -81,5 +84,11 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
         resource.removeResourceType(resourceType);
         return repository.save(resource).getResourceTypes();
+    }
+    
+    public void updateUsage(Resource resource) {
+        try {
+            repo().setLastUseTime(resource.getId(), LocalDateTime.now());
+        } catch (Exception ignore) {}
     }
 }
