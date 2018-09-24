@@ -1,10 +1,13 @@
 package se.leafcoders.rosette.controller;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.controller.dto.ArticleOut;
 import se.leafcoders.rosette.controller.dto.EventIn;
 import se.leafcoders.rosette.controller.dto.EventOut;
+import se.leafcoders.rosette.controller.dto.EventsPublicOut;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
@@ -139,5 +143,32 @@ public class EventsController {
     public Collection<ArticleOut> getArticlesOfEvent(@PathVariable Long id) {
         return articleService.toOut(eventService.getArticles(id));
     }
-    
+
+    // Public
+
+    @GetMapping(value = "/public")
+    public EventsPublicOut getPublicEvents(@RequestParam(required = true) String rangeMode, @RequestParam Integer rangeOffset) {
+        rangeOffset = rangeOffset != null ? rangeOffset : 0;
+        LocalDateTime from;
+        LocalDateTime before;
+        if (rangeMode.toLowerCase().contains("week")) {
+            from = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).with(DayOfWeek.MONDAY).plusWeeks(rangeOffset);
+            before = from.plusDays(7);
+        } else {
+            from = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1).plusMonths(rangeOffset);
+            before = from.plusMonths(1);
+        }
+        
+        Sort sort = new Sort(Sort.Direction.ASC, "startTime");
+
+        Specification<Event> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            Optional.ofNullable(from).ifPresent(time -> predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), time)));
+            Optional.ofNullable(before).ifPresent(time -> predicates.add(cb.lessThan(root.get("startTime"), time)));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };        
+        List<Event> publicEvents = eventService.readMany(spec, sort, false).stream().filter(e -> e.getIsPublic()).collect(Collectors.toList());
+        return new EventsPublicOut(from, before, publicEvents);
+    }
+
 }

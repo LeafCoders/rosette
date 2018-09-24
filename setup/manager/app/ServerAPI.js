@@ -168,8 +168,28 @@ function ServerAPIService($resource) {
     		).read({ articleTypeId: articleTypeId }).$promise;
 	};
 	
+	this.createEvent = function (eventTypeId, startTime, endTime, title, description, isPublic) {
+        return $resource(
+        		rosetteUrl + '/api/events',
+        		{},
+        		{
+        			create: {
+        				method: 'POST',
+    					headers: { 'Content-Type': 'application/json', 'X-AUTH-TOKEN': authJwt }
+        			}
+        		}
+    		).create({
+    			eventTypeId: eventTypeId,
+    			startTime: toModelDate(startTime),
+    			endTime: toModelDate(endTime),
+    			title: title,
+    			description: description && description.length > 0 ? description : undefined,
+    			isPublic: isPublic,
+		}).$promise;
+	};
+	
 	function toModelDate(time) {
-		return time;
+		return time && time.length > 0 ? time : undefined;
 	}
 }
 

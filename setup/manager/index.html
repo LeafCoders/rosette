@@ -27,6 +27,7 @@
 			<div class="radio"><label><input type="radio" ng-model="tool" ng-init="tool = 'login'" value="login">Login</label></div>
 			<div class="radio"><label><input type="radio" ng-model="tool" value="uploads">Uploads</label></div>
 			<div class="radio"><label><input type="radio" ng-model="tool" value="articles">Articles</label></div>
+			<div class="radio"><label><input type="radio" ng-model="tool" value="events">Events</label></div>
 		</div>
 		
 		<div class="col-sm-10" ng-switch="tool">
@@ -111,6 +112,28 @@
 					</tbody>
 				</table>
 			</div>
+
+			<div ng-switch-when="events" ng-controller="ImportEventsCtrl as ctrl">
+				<form class="bg-info" style="padding: 12px;">
+					<div class="form-group">
+						<label>Events import file</label>
+						<input class="form-control" type="file" id="eventsFile" onchange="angular.element(this).scope().selectedEventsFileChanged()">
+						<span class="help-block">Format: <pre>eventTypeId|startTime|endTime|title|description|isPublic</pre></span>
+					</div>
+					<button type="button" class="btn btn-primary" ng-click="ctrl.importEvents()">Import events</button>
+				</form>
+				<br>
+				<table class="table table-striped">
+					<tbody>
+						<tr><th>Time</th><th>Title</th><th>Imported</th></tr>
+						<tr ng-repeat="item in ctrl.events">
+							<td>{{ item.startTime }}</td>
+							<td>{{ item.title }}</td>
+							<td>{{ item.imported }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 			
 		</div>
 	</div>
@@ -119,6 +142,7 @@
 	<script src="./app/ServerAPI.js" type="text/javascript"></script>
 	<script src="./app/Login.js" type="text/javascript"></script>
 	<script src="./app/ImportArticles.js" type="text/javascript"></script>
+	<script src="./app/ImportEvents.js" type="text/javascript"></script>
 	<script src="./app/ImportUploads.js" type="text/javascript"></script>
 </body>
 </html>
