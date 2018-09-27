@@ -14,7 +14,7 @@ services:
 
   rosette-server:
 #    build: ../..
-    image: leafcoders/rosette:0.1
+    image: leafcoders/rosette:0.3
     depends_on:
       - mysql-database
     restart: always
