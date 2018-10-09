@@ -3,6 +3,7 @@ package se.leafcoders.rosette.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -115,7 +116,7 @@ public class EmailTemplateService {
             }
             return result.toString("UTF-8");
         } catch (IOException e) {
-            logger.error("Email template file '" + templateTheme + "/" + templateName + "' was not found!", e);
+            logger.error(MessageFormat.format("Email template file \"{0}/{1}\" was not found!", templateTheme, templateName), e);
             return "Something went wrong when generating this email. Please contact the administrator.";
         } finally {
             IOUtils.closeQuietly(inputStream);

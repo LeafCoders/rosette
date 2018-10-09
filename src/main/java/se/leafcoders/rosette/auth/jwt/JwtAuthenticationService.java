@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.auth.jwt;
 
+import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -35,8 +36,7 @@ public class JwtAuthenticationService {
             if (user != null) {
                 return new CurrentUserAuthentication(user);
             }
-
-            logger.info("Requst had an invalid token '{}'. Request handled as anonymous.", token);
+            logger.info(MessageFormat.format("Requst had an invalid token \"{0}\". Request will be handled as anonymous.", token));
         }
         return null;
     }

@@ -170,7 +170,7 @@ public class Article extends Persistable {
     }
 
     public HtmlContent getContent() {
-        return content;
+        return content != null ? content : new HtmlContent();
     }
 
     public void setContent(HtmlContent content) {

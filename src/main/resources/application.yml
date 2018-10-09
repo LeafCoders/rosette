@@ -87,6 +87,7 @@ spring.mail:
   protocol: smtp
   host: localhost
   port: 1234
+  test-connection: false # Enable to check connection to smtp server
   properties:
     mail.smtp.auth: false
     mail.smtp.starttls.enable: false

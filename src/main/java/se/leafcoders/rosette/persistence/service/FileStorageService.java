@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public class FileStorageService {
         final Long rootFolder = null;
         if (!folderExist(rootFolder)) {
             if (!createFolder(rootFolder)) {
-                logger.error("Setting 'rosette.filesPath' specifies a folder without write access. The path is '" + absolutePath(null)  + "'.");
+                logger.error(MessageFormat.format("Setting \"rosette.filesPath\" specifies a folder without write access. The root path is \"{0}\".", absolutePath(null)));
                 System.exit(0);
             }
         }
@@ -50,7 +51,7 @@ public class FileStorageService {
         try {
             result = new File(folderPath).exists();
         } catch (SecurityException e) {
-            logger.error("Failed to check if folder " + folderPath + " exists. " + e.getMessage());
+            logger.error(MessageFormat.format("Failed to check if folder \"{0}\" exists. Reason: {1}", folderPath, e.getMessage()), e);
         }
         return result;
     }
@@ -64,7 +65,7 @@ public class FileStorageService {
         try {
             result = new File(folderPath).mkdir();
         } catch (SecurityException e) {
-            logger.error("Failed to create folder " + folderPath + ". " + e.getMessage());
+            logger.error(MessageFormat.format("Failed to create folder \"{0}\". Reason: {1}", folderPath, e.getMessage()), e);
         }
         return result;
     }
@@ -75,7 +76,7 @@ public class FileStorageService {
         try {
             result = new File(filePath).exists();
         } catch (SecurityException e) {
-            logger.error("Failed to check if file " + filePath + " exists. ", e.getMessage());
+            logger.error(MessageFormat.format("Failed to check if file \"{0}\" exists. Reason: {1}", filePath, e.getMessage()), e);
         }
         return result;
     }
@@ -85,7 +86,7 @@ public class FileStorageService {
         try {
             Files.write(fileData, new File(filePath));
         } catch (IOException e) {
-            logger.error("Failed to write file to " + filePath + ". " + e.getMessage());
+            logger.error(MessageFormat.format("Failed to write file to \"{0}\". Reason: {1}", filePath, e.getMessage()), e);
             return false;
         }
         return true;
@@ -124,7 +125,7 @@ public class FileStorageService {
         String thumbFolderPath = absolutePath(ofAsset.getFolderId(), thumbSize);
         if (!folderExist(thumbFolderPath)) {
             if (!createFolder(thumbFolderPath)) {
-                logger.error("Folder \"" + thumbFolderPath + "\" couldn't be created.");
+                logger.error(MessageFormat.format("Folder \"{0}\" couldn't be created.", thumbFolderPath));
                 // TODO: Better please!
                 throw new NotFoundException("Folder could not be created!");
             }

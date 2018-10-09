@@ -80,8 +80,8 @@ function ImportEventsCtrl($scope, serverAPI) {
 				startTime: startTime,
 				endTime: endTime,
 				title: title,
-				description: description,
-				isPublic: !!isPublic,
+				description: description ? description.replace(/<br>/g, "\n") : undefined,
+				isPublic: isPublic == '1',
 				imported: '-'
 			});
 		}

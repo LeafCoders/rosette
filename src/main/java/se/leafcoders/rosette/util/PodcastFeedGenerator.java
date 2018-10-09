@@ -103,9 +103,12 @@ public class PodcastFeedGenerator {
         });
     }
 
-    private String tag(String tagName, String tagValue, String... tagElements) {
-        String elements = tagElements.length > 0 ? " " + String.join(" ", tagElements) : "";
-        return "<" + tagName + elements + ">" + tagValue + "</" + tagName + ">";
+    private String tag(String tagName, String tagValue, String... tagAttributes) {
+        if (tagName != null && tagValue != null) {
+            String attributes = tagAttributes.length > 0 ? " " + String.join(" ", tagAttributes) : "";
+            return "<" + tagName + attributes + ">" + tagValue + "</" + tagName + ">";
+        }
+        return "";
     }
 
     private String noAmp(String text) {

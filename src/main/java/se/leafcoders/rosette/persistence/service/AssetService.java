@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,7 +196,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
             if (duration != null) {
                 asset.setDuration(duration);
             } else {
-                logger.warn("Could not read duration of audio file '" + asset.getFileName() + "'.");
+                logger.warn(MessageFormat.format("Couldn't read duration of audio file \"{0}\".", asset.getFileName()));
             }
         }
     }

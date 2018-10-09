@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.persistence.service;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -136,7 +137,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
             signupConsent.setConsentText(signupUserIn.getConsentText());
             consentRepository.save(signupConsent);
         } catch (Exception exception) {
-            logger.error("Failed to save signup consent due to: " + exception.getMessage());
+            logger.error(MessageFormat.format("Failed to save signup consent due to: {0}", exception.getMessage()), exception);
         }
 
         // Send welcome email
