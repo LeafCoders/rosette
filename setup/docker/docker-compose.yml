@@ -55,7 +55,8 @@ services:
     environment:
       - ROSETTE_URL=${ROSETTE_URL:?Must specify ROSETTE_URL in environment}
       - APPLICATION_NAME=${CORDATE_APPNAME:?Must specify CORDATE_APPNAME in environment}
-    command: /bin/bash -c "envsubst '$$ROSETTE_URL $$APPLICATION_NAME' < /etc/nginx/conf.d/cordate_conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+      - CORDATE_PATH=${CORDATE_PATH:?Must specify CORDATE_PATH in environment} # Url path of cordate uri ('/app/cordate' in https://myserver.com/app/cordate)
+    command: /bin/bash -c "envsubst '$$ROSETTE_URL $$APPLICATION_NAME $$CORDATE_PATH' < /etc/nginx/conf.d/cordate_conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 
 volumes:
   mysql-data:
