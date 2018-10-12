@@ -16,7 +16,7 @@ public class SlideService extends PersistenceService<Slide, SlideIn, SlideOut> {
     AssetService assetService;
 
     public SlideService(SlideRepository repository) {
-        super(Slide.class, PermissionType.SLIDE_SHOWS, repository);
+        super(Slide.class, PermissionType::slides, repository);
     }
 
     @Override

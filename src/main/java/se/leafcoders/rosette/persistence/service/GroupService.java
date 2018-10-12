@@ -11,7 +11,6 @@ import se.leafcoders.rosette.controller.dto.GroupOut;
 import se.leafcoders.rosette.controller.dto.UserRefOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Group;
 import se.leafcoders.rosette.persistence.model.User;
@@ -24,7 +23,7 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
     UserService userService;
 
     public GroupService(GroupRepository repository) {
-        super(Group.class, PermissionType.GROUPS, repository);
+        super(Group.class, PermissionType::groups, repository);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
     }
 
     public List<User> addUser(Long groupId, Long userId) {
-        checkPermission(permissionValue(PermissionAction.UPDATE).forId(groupId));
+        checkPermission(PermissionType.groups().update().forId(groupId));
         Group group = read(groupId, true);
         User user = userService.read(userId, true);
         group.addUser(user);
@@ -69,7 +68,7 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
     }
 
     public List<User> removeUser(Long groupId, Long userId) {
-        checkPermission(permissionValue(PermissionAction.UPDATE).forId(groupId));
+        checkPermission(PermissionType.groups().update().forId(groupId));
         Group group = read(groupId, true);
         User user = userService.read(userId, true);
         group.removeUser(user);

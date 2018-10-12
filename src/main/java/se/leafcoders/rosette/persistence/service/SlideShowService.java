@@ -1,19 +1,19 @@
 package se.leafcoders.rosette.persistence.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.controller.dto.SlideIn;
 import se.leafcoders.rosette.controller.dto.SlideShowIn;
 import se.leafcoders.rosette.controller.dto.SlideShowOut;
+import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Slide;
 import se.leafcoders.rosette.persistence.model.SlideShow;
 import se.leafcoders.rosette.persistence.repository.SlideRepository;
@@ -28,9 +28,32 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
     private class SlideCrud extends ChildCrud<SlideShow, Slide, SlideIn> {
 
         public SlideCrud(SlideShowService service, SlideService slideService, SlideRepository slideRepository) {
-            super(service, SlideShow.class, slideService, slideRepository, Slide.class, "slides");
+            super(service, SlideShow.class, slideService, slideRepository, Slide.class);
         }
 
+        @Override
+        public List<PermissionValue> getPermissionValuesForAction(PermissionAction action, SlideShow slideShow) {
+            PermissionValue permissionValue = null;
+            switch (action) {
+            case CREATE:
+                permissionValue = PermissionType.slideShows().createSlides().forPersistable(slideShow);
+                break;
+            case READ:
+                permissionValue = PermissionType.slideShows().readSlides().forPersistable(slideShow);
+                break;
+            case UPDATE:
+                permissionValue = PermissionType.slideShows().updateSlides().forPersistable(slideShow);
+                break;
+            case DELETE:
+                permissionValue = PermissionType.slideShows().deleteSlides().forPersistable(slideShow);
+                break;
+            default:
+                break;
+            }
+            return permissionValue != null ? Collections.singletonList(permissionValue) : Collections.emptyList();
+        }
+
+        
         @Override
         public Long getParentId(Slide child) {
             return child.getSlideShowId();
@@ -51,7 +74,7 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
     private SlideService slideService;
 
     public SlideShowService(SlideShowRepository repository, SlideService slideService, SlideRepository slideRepository) {
-        super(SlideShow.class, PermissionType.SLIDE_SHOWS, repository);
+        super(SlideShow.class, PermissionType::slideShows, repository);
         slideCrud = new SlideCrud(this, slideService, slideRepository);
         this.slideService = slideService;
     }

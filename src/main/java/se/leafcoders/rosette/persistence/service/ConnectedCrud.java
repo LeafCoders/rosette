@@ -1,13 +1,10 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.util.List;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.repository.CrudRepository;
-
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.persistence.model.Persistable;
 
 public abstract class ConnectedCrud<P extends Persistable, C extends Persistable> {
@@ -31,7 +28,7 @@ public abstract class ConnectedCrud<P extends Persistable, C extends Persistable
     }
 
     public List<C> connect(Long parentId, Long childId) {
-        parentService.checkPermission(parentService.permissionValue(PermissionAction.UPDATE).forId(parentId));
+        parentService.checkPermission(parentService.permissionValueCreator.get().update().forId(parentId));
         P parent = parentService.read(parentId, true);
         C child = childService.read(childId, true);
         addChild(parent, child);
@@ -43,7 +40,7 @@ public abstract class ConnectedCrud<P extends Persistable, C extends Persistable
     }
 
     public List<C> disconnect(Long parentId, Long childId) {
-        parentService.checkPermission(parentService.permissionValue(PermissionAction.UPDATE).forId(parentId));
+        parentService.checkPermission(parentService.permissionValueCreator.get().update().forId(parentId));
         P parent = parentService.read(parentId, true);
         C child = childService.read(childId, true);
         removeChild(parent, child);

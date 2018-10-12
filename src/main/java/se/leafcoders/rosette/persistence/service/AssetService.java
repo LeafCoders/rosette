@@ -23,7 +23,6 @@ import se.leafcoders.rosette.exception.ValidationError;
 import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionId;
 import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Asset;
 import se.leafcoders.rosette.persistence.model.Asset.AssetType;
 import se.leafcoders.rosette.persistence.model.AssetFolder;
@@ -45,7 +44,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
     private FileStorageService fileStorageService;
 
     public AssetService(AssetRepository repository) {
-        super(Asset.class, PermissionType.ASSETS, repository);
+        super(Asset.class, PermissionType::assets, repository);
     }
 
     private AssetRepository repo() {
@@ -118,8 +117,10 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         final String fileName = fileIn.getFileName();
         final String mimeType = file.getContentType();
 
-        checkAnyPermission(new PermissionValue(PermissionType.ASSETS, PermissionAction.CREATE),
-                new PermissionValue(PermissionType.ASSET_FOLDERS_FILES, PermissionAction.CREATE).forId(folderId));
+        checkAnyPermission(
+                PermissionType.assets().create(),
+                PermissionType.assetFolders().manageAssets().forId(folderId)
+        );
 
         AssetFolder folder = assetFolderService.read(folderId, false);
         validateFolderExist(folder);

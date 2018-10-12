@@ -1,49 +1,68 @@
 package se.leafcoders.rosette.permission;
 
-public enum PermissionType {
+public class PermissionType {
 
-    ADMIN_DB("admin:db"),
-    ARTICLES("articles"),
-    ARTICLE_SERIES("articleSeries"),
-    ARTICLE_TYPES("articleTypes"),
-    ASSETS("assets"),
-    ASSET_FOLDERS("assetFolders"),
-    ASSET_FOLDERS_FILES("assetFolders:files"),
-    EDUCATIONS("educations"),
-    EDUCATIONS_EDUCATION_TYPES("educations:educationTypes"),
-    EDUCATION_THEMES("educationThemes"),
-    EDUCATION_THEMES_EDUCATION_TYPES("educationThemes:educationTypes"),
-    EDUCATION_TYPES("educationTypes"),
-    EVENTS("events"),
-    EVENTS_BY_EVENT_TYPES("eventsByEventTypes"),
-    EVENT_TYPES("eventTypes"),
-    GROUPS("groups"),
-    MESSAGES("messages"),
-    PERMISSIONS("permissions"),
-    PODCASTS("podcasts"),
-    RESOURCES("resources"),
-    RESOURCE_TYPES("resourceTypes"),
-    SLIDE_SHOWS("slideShows"),
-    TEXT_VALUES("textValues"),
-    USERS("users"),
-    PUBLIC("public");
-
-    private final String type;
-
-    PermissionType(String type) {
-        this.type = type;
+    public static PermissionValueArticleSeries articleSeries() {
+        return new PermissionValueArticleSeries();
     }
 
-    public String toString() {
-        return type;
+    public static PermissionValueArticles articles() {
+        return new PermissionValueArticles();
     }
 
-    public String withAction(final PermissionAction action) {
-        if (type.contains(":")) {
-            return type.replaceFirst(":", ":" + action + ":");
-        } else {
-            return type + ":" + action;
-        }
+    public static PermissionValueArticleTypes articleTypes() {
+        return new PermissionValueArticleTypes();
     }
 
+    public static PermissionValueAssetFolders assetFolders() {
+        return new PermissionValueAssetFolders();
+    }
+
+    public static PermissionValueAssets assets() {
+        return new PermissionValueAssets();
+    }
+
+    public static PermissionValueEvents events() {
+        return new PermissionValueEvents();
+    }
+    
+    public static PermissionValueEventTypes eventTypes() {
+        return new PermissionValueEventTypes();
+    }
+    
+    public static PermissionValueGroups groups() {
+        return new PermissionValueGroups();
+    }
+
+    public static PermissionValueMessages messages() {
+        return new PermissionValueMessages();
+    }
+
+    public static PermissionValuePermissions permissions() {
+        return new PermissionValuePermissions();
+    }
+
+    public static PermissionValuePodcasts podcasts() {
+        return new PermissionValuePodcasts();
+    }
+
+    public static PermissionValueResources resources() {
+        return new PermissionValueResources();
+    }
+
+    public static PermissionValueResourceTypes resourceTypes() {
+        return new PermissionValueResourceTypes();
+    }
+
+    public static PermissionValueSlides slides() {
+        return new PermissionValueSlides();
+    }
+
+    public static PermissionValueSlideShows slideShows() {
+        return new PermissionValueSlideShows();
+    }
+
+    public static PermissionValueUsers users() {
+        return new PermissionValueUsers();
+    }
 }

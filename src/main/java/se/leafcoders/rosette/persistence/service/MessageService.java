@@ -19,7 +19,7 @@ public class MessageService extends PersistenceService<Message, MessageIn, Messa
     private ConcurrentHashMap<String, String> messageCache = new ConcurrentHashMap<>();
 
     public MessageService(MessageRepository repository) {
-        super(Message.class, PermissionType.MESSAGES, repository);
+        super(Message.class, PermissionType::messages, repository);
     }
 
     private String getMessage(String key) {

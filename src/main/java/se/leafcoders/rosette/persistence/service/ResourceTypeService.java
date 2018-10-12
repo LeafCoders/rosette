@@ -3,9 +3,7 @@ package se.leafcoders.rosette.persistence.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.controller.dto.ResourceTypeIn;
 import se.leafcoders.rosette.controller.dto.ResourceTypeOut;
 import se.leafcoders.rosette.permission.PermissionType;
@@ -20,7 +18,7 @@ public class ResourceTypeService extends PersistenceService<ResourceType, Resour
     ResourceService resourceService;
 
     public ResourceTypeService(ResourceTypeRepository repository) {
-        super(ResourceType.class, PermissionType.RESOURCE_TYPES, repository);
+        super(ResourceType.class, PermissionType::resourceTypes, repository);
     }
     
     private ResourceTypeRepository repo() {

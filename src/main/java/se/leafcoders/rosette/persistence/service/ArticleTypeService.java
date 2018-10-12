@@ -20,7 +20,7 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
     private ResourceTypeService resourceTypeService;
     
     public ArticleTypeService(ArticleTypeRepository repository) {
-        super(ArticleType.class, PermissionType.GROUPS, repository);
+        super(ArticleType.class, PermissionType::articleTypes, repository);
     }
 
     @Override

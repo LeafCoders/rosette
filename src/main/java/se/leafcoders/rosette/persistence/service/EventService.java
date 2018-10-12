@@ -2,7 +2,6 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +50,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     private ArticleRepository articleRepository;
     
     public EventService(EventRepository repository) {
-        super(Event.class, PermissionType.EVENTS, repository);
+        super(Event.class, PermissionType::events, repository);
     }
 
     private EventRepository repo() {
@@ -59,14 +58,28 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     }
 
     @Override
-    public List<PermissionValue> itemPermissions(PermissionAction actionType, PermissionId<Event> permissionId) {
+    public List<PermissionValue> itemPermissions(PermissionAction permissionAction, PermissionId<Event> permissionId) {
         Event event = permissionId.getItem();
-        return Arrays.asList(
-            permissionValue(PermissionType.EVENTS, actionType).forId(permissionId.getId()),
-            permissionValue(PermissionType.EVENTS_BY_EVENT_TYPES, actionType).forId(event != null ? event.getEventTypeId() : null)
-        );
+        Long eventTypeId = event != null ? event.getEventTypeId() : null;
+        
+        List<PermissionValue> permissions = new ArrayList<>(); 
+        permissions.add(PermissionType.events().action(permissionAction).forId(permissionId.getId()));
+
+        if (permissionAction == PermissionAction.CREATE) {
+            permissions.add(PermissionType.eventTypes().createEvents().forId(eventTypeId));
+        } else if (permissionAction == PermissionAction.READ) {
+            List<ResourceType> resourceTypes = event != null ? event.getResourceRequirements().stream().map(rr -> rr.getResourceType()).collect(Collectors.toList()) : null;
+            permissions.add(PermissionType.eventTypes().readEvents().forId(eventTypeId));
+            permissions.add(PermissionType.resourceTypes().readEvents().forPersistables(resourceTypes));
+            permissions.add(PermissionType.resourceTypes().assignEventResources().forPersistables(resourceTypes));
+        } else if (permissionAction == PermissionAction.UPDATE) {
+            permissions.add(PermissionType.eventTypes().updateEvents().forId(eventTypeId));
+        } else if (permissionAction == PermissionAction.DELETE) {
+            permissions.add(PermissionType.eventTypes().deleteEvents().forId(eventTypeId));
+        }
+        return permissions;
     }
-    
+
     @Override
     public Event create(EventIn itemIn, boolean checkPermissions) {
         Event event = super.create(itemIn, checkPermissions);
@@ -128,7 +141,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     public List<ResourceRequirement> addResourceRequirement(Long eventId, Long resourceTypeId) {
         Event event = read(eventId, true);
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
-        checkResourceRequirementPermission(event, resourceTypeId);
+        checkModifyResourceRequirementPermission(event, resourceTypeId);
 
         ResourceRequirement resourceRequirement = new ResourceRequirement(event, resourceType);
         event.addResourceRequirement(resourceRequirement);
@@ -142,18 +155,28 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     public List<ResourceRequirement> removeResourceRequirement(Long eventId, Long resourceRequirementId) {
         Event event = read(eventId, true);
         ResourceRequirement resourceRequirement = resourceRequirementService.read(resourceRequirementId);
-        checkResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
+        checkModifyResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
 
         resourceRequirement.getResourceType().getResources();
         event.removeResourceRequirement(resourceRequirement);
         return repository.save(event).getResourceRequirements();
     }
 
-    private void checkResourceRequirementPermission(Event event, Long resourceTypeId) {
+    private void checkModifyResourceRequirementPermission(Event event, Long resourceTypeId) {
         checkAnyPermission(
-            permissionValue(PermissionType.EVENTS, PermissionAction.UPDATE).forPersistable(event),
-            permissionValue(PermissionType.EVENTS_BY_EVENT_TYPES, PermissionAction.UPDATE).forId(event.getEventTypeId()),
-            permissionValue(PermissionType.RESOURCE_TYPES, PermissionAction.ASSIGN).forId(resourceTypeId)
+                PermissionType.events().update().forPersistable(event),
+                PermissionType.eventTypes().updateEvents().forId(event.getEventTypeId()),
+                PermissionType.eventTypes().modifyEventResourceRequirements().forId(event.getEventTypeId()),
+                PermissionType.resourceTypes().modifyEventResourceRequirement().forId(resourceTypeId)
+        );
+    }
+
+    private void checkAssignResourceRequirementPermission(Event event, Long resourceTypeId) {
+        checkAnyPermission(
+                PermissionType.events().update().forPersistable(event),
+                PermissionType.eventTypes().updateEvents().forId(event.getEventTypeId()),
+                PermissionType.eventTypes().assignEventResources().forId(event.getEventTypeId()),
+                PermissionType.resourceTypes().assignEventResources().forId(resourceTypeId)
         );
     }
 
@@ -172,7 +195,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     public List<Resource> addResource(Long eventId, Long resourceRequirementId, Long resourceId) {
         Event event = read(eventId, true);
         ResourceRequirement resourceRequirement = getResourceRequirement(eventId, resourceRequirementId);
-        checkResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
+        checkAssignResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
 
         if (resourceId != null) {
             Resource resource = resourceService.read(resourceId, true);
@@ -194,7 +217,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     public List<Resource> removeResource(Long eventId, Long resourceRequirementId, Long resourceId) {
         Event event = read(eventId, true);
         ResourceRequirement resourceRequirement = getResourceRequirement(eventId, resourceRequirementId);
-        checkResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
+        checkAssignResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
 
         if (resourceId != null) {
             Resource resource = resourceService.read(resourceId, true);

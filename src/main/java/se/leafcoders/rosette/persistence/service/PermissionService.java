@@ -1,8 +1,5 @@
 package se.leafcoders.rosette.persistence.service;
 
-import static se.leafcoders.rosette.permission.PermissionAction.READ;
-import static se.leafcoders.rosette.permission.PermissionAction.UPDATE;
-import static se.leafcoders.rosette.permission.PermissionType.USERS;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +11,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.PermissionIn;
 import se.leafcoders.rosette.controller.dto.PermissionOut;
 import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Group;
 import se.leafcoders.rosette.persistence.model.Permission;
 import se.leafcoders.rosette.persistence.model.User;
@@ -28,7 +24,7 @@ public class PermissionService extends PersistenceService<Permission, Permission
     private UserRepository userRepository;
 
     public PermissionService(PermissionRepository repository) {
-        super(Permission.class, PermissionType.PERMISSIONS, repository);
+        super(Permission.class, PermissionType::permissions, repository);
     }
 
     @Override
@@ -116,8 +112,8 @@ public class PermissionService extends PersistenceService<Permission, Permission
         List<String> permissions = new ArrayList<String>();
 
         // Add read/update permissions for own user
-        permissions.add(new PermissionValue(USERS, READ, user.getId().toString()).toString());
-        permissions.add(new PermissionValue(USERS, UPDATE, user.getId().toString()).toString());
+        permissions.add(PermissionType.users().read().forPersistable(user).toString());
+        permissions.add(PermissionType.users().update().forPersistable(user).toString());
 
         // Adding permissions specific for this user
         List<Permission> userPermissions = repo().findByLevelAndEntityId(Permission.LEVEL_USER, user.getId());
@@ -145,7 +141,7 @@ public class PermissionService extends PersistenceService<Permission, Permission
             List<User> usersInGroups = userRepository.findUsersInGroups(groups);
             if (usersInGroups != null && !usersInGroups.isEmpty()) {
                 permissions
-                    .addAll(usersInGroups.stream().map(u -> new PermissionValue(USERS, READ, u.getId().toString()).toString()).collect(Collectors.toList()));
+                    .addAll(usersInGroups.stream().map(u -> PermissionType.users().read().forPersistable(user).toString()).collect(Collectors.toList()));
             }
         }
         return permissions;

@@ -15,7 +15,6 @@ import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.exception.SingleValidationException;
 import se.leafcoders.rosette.exception.ValidationError;
-import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Consent;
 import se.leafcoders.rosette.persistence.model.User;
@@ -35,7 +34,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
     private EmailTemplateService emailTemplateService;
 
     public UserService(UserRepository repository) {
-        super(User.class, PermissionType.USERS, repository);
+        super(User.class, PermissionType::users, repository);
     }
 
     @Override
@@ -105,7 +104,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
 
     private void checkChangeOfIsActive(UserIn userIn) {
         if (userIn.getIsActive() != null) {
-            checkPermission(permissionValue(PermissionAction.ADMIN));
+            checkPermission(PermissionType.users().activate());
         }
     }
 

@@ -1,8 +1,10 @@
 package se.leafcoders.rosette.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ public class SecurityService {
 
     @Autowired
     private Validator validator;
-
+    
     public void checkPermission(PermissionValue... permissionValues) {
         permissionResultFor(permissionValues).checkAndThrow();
     }
@@ -36,8 +38,12 @@ public class SecurityService {
     }
 
     public PermissionResult permissionResultFor(PermissionValue... permissionValues) {
+        return permissionResultFor(Stream.of(permissionValues).collect(Collectors.toList()));
+    }
+
+    public PermissionResult permissionResultFor(List<PermissionValue> permissionValues) {
         for (PermissionValue value : permissionValues) {
-            if (isPermitted(value.toString())) {
+            if (value.toStringListForEachId().stream().anyMatch(permission -> isPermitted(permission))) {
                 return new PermissionResult();
             }
         }

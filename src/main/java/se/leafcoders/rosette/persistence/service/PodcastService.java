@@ -20,7 +20,7 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
     private AssetService assetService;
     
     public PodcastService(PodcastRepository repository) {
-        super(Podcast.class, PermissionType.PODCASTS, repository);
+        super(Podcast.class, PermissionType::podcasts, repository);
     }
 
     @Override

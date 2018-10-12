@@ -13,7 +13,6 @@ import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.permission.PermissionAction;
-import se.leafcoders.rosette.permission.PermissionId;
 import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Persistable;
 
@@ -24,22 +23,18 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
     private final CrudRepository<C, Long> childRepository;
     private final Class<P> parentClass;
     private final Class<C> childClass;
-    private final String childPermission;
 
     public ChildCrud(PersistenceService<P, ?, ?> parentService, Class<P> parentClass, PersistenceService<C, CIN, ?> childService,
-        CrudRepository<C, Long> childRepository, Class<C> childClass, String childPermission) {
+        CrudRepository<C, Long> childRepository, Class<C> childClass) {
         this.parentService = parentService;
         this.childService = childService;
         this.childRepository = childRepository;
         this.parentClass = parentClass;
         this.childClass = childClass;
-        this.childPermission = childPermission;
     }
 
-    private List<PermissionValue> parentItemPermissions(PermissionAction actionType, P parent) {
-        List<PermissionValue> permissions = parentService.itemPermissions(PermissionAction.READ, new PermissionId<P>(parent));
-        permissions.stream().forEach(permission -> permission.part(childPermission));
-        return permissions;
+    private List<PermissionValue> parentItemPermissions(PermissionAction action, P parent) {
+        return getPermissionValuesForAction(action, parent);
     }
     
     public List<C> readAll(Long parentId) {
@@ -110,6 +105,8 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
         childRepository.deleteById(childId);
         return ResponseEntity.noContent().build();
     }
+
+    public abstract List<PermissionValue> getPermissionValuesForAction(PermissionAction action, P parent);
 
     public abstract Long getParentId(C child);
 

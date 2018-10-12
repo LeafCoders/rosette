@@ -42,7 +42,7 @@ public class EventTypeService extends PersistenceService<EventType, EventTypeIn,
     };
 
     public EventTypeService(EventTypeRepository repository) {
-        super(EventType.class, PermissionType.EVENT_TYPES, repository);
+        super(EventType.class, PermissionType::eventTypes, repository);
     }
 
     @Override

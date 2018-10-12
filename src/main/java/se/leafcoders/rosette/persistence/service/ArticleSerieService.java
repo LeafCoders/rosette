@@ -21,7 +21,7 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
     private AssetService assetService;
     
     public ArticleSerieService(ArticleSerieRepository repository) {
-        super(ArticleSerie.class, PermissionType.ARTICLE_SERIES, repository);
+        super(ArticleSerie.class, PermissionType::articleSeries, repository);
     }
 
     protected ArticleSerieRepository repo() {

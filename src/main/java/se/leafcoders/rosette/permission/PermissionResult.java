@@ -1,28 +1,33 @@
 package se.leafcoders.rosette.permission;
 
-import org.springframework.util.StringUtils;
-
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 
 public class PermissionResult {
 
-    private PermissionValue[] permissionValues = null;
+    private List<PermissionValue> permissionValues = null;
 
     public PermissionResult() {
     }
 
-    public PermissionResult(PermissionValue... permissionValues) {
+    public PermissionResult(List<PermissionValue> permissionValues) {
         this.permissionValues = permissionValues;
     }
 
+    public PermissionResult(PermissionValue... permissionValues) {
+        this.permissionValues = Stream.of(permissionValues).collect(Collectors.toList());
+    }
+
     public boolean isPermitted() {
-        return permissionValues == null;
+        return permissionValues == null || permissionValues.isEmpty();
     }
 
     public void checkAndThrow() {
         if (!isPermitted()) {
-            throw new ForbiddenException(ApiError.MISSING_PERMISSION, StringUtils.arrayToCommaDelimitedString(this.permissionValues));
+            throw new ForbiddenException(ApiError.MISSING_PERMISSION, permissionValues.stream().map(PermissionValue::toString).collect(Collectors.joining(", ")));
         }
     }
 }

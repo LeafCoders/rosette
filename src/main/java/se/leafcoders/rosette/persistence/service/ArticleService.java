@@ -15,7 +15,6 @@ import se.leafcoders.rosette.controller.dto.EventRefOut;
 import se.leafcoders.rosette.controller.dto.ResourceRefOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.HtmlContent;
@@ -41,7 +40,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     AssetService assetService;
 
     public ArticleService(ArticleRepository repository) {
-        super(Article.class, PermissionType.ARTICLES, repository);
+        super(Article.class, PermissionType::articles, repository);
     }
 
     protected ArticleRepository repo() {
@@ -110,7 +109,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     }
 
     public List<Resource> addAuthor(Long articleId, Long resourceId) {
-        checkPermission(permissionValue(PermissionAction.UPDATE).forId(articleId));
+        checkPermission(PermissionType.articles().update().forId(articleId));
         Article article = read(articleId, true);
         Resource resource = resourceService.read(resourceId, true);
         article.addAuthor(resource);
@@ -123,7 +122,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     }
 
     public List<Resource> removeAuthor(Long articleId, Long resourceId) {
-        checkPermission(permissionValue(PermissionAction.UPDATE).forId(articleId));
+        checkPermission(PermissionType.articles().update().forId(articleId));
         Article article = read(articleId, true);
         Resource resource = resourceService.read(resourceId, true);
         article.removeAuthor(resource);

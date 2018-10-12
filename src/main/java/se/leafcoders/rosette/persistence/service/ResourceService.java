@@ -13,7 +13,6 @@ import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
 import se.leafcoders.rosette.controller.dto.UserRefOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Resource;
 import se.leafcoders.rosette.persistence.model.ResourceType;
@@ -29,7 +28,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     ResourceTypeService resourceTypeService;
 
     public ResourceService(ResourceRepository repository) {
-        super(Resource.class, PermissionType.RESOURCES, repository);
+        super(Resource.class, PermissionType::resources, repository);
     }
 
     private ResourceRepository repo() {
@@ -67,7 +66,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     }
 
     public List<ResourceType> addResourceType(Long resourceId, Long resourceTypeId) {
-        checkPermission(permissionValue(PermissionAction.UPDATE).forId(resourceId));
+        checkPermission(PermissionType.resources().update().forId(resourceId));
         Resource resource = read(resourceId, true);
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
         resource.addResourceType(resourceType);
@@ -79,7 +78,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     }
 
     public List<ResourceType> removeResourceType(Long resourceId, Long resourceTypeId) {
-        checkPermission(permissionValue(PermissionAction.UPDATE).forId(resourceId));
+        checkPermission(PermissionType.resources().update().forId(resourceId));
         Resource resource = read(resourceId, true);
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
         resource.removeResourceType(resourceType);

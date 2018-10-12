@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import se.leafcoders.rosette.controller.dto.AssetFolderIn;
 import se.leafcoders.rosette.controller.dto.AssetFolderOut;
 import se.leafcoders.rosette.exception.ApiError;
@@ -29,7 +27,7 @@ public class AssetFolderService extends PersistenceService<AssetFolder, AssetFol
     private AssetRepository assetRepository;
 
     public AssetFolderService(AssetFolderRepository repository) {
-        super(AssetFolder.class, PermissionType.ASSET_FOLDERS, repository);
+        super(AssetFolder.class, PermissionType::assetFolders, repository);
     }
 
     @Override

@@ -2,10 +2,10 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.permission.PermissionAction;
 import se.leafcoders.rosette.permission.PermissionId;
-import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Persistable;
 import se.leafcoders.rosette.persistence.repository.ModelRepository;
@@ -33,17 +32,17 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
 
     protected final Class<T> entityClass;
     protected final ModelRepository<T> repository;
-    protected final PermissionType permissionType;
+    protected final Supplier<PermissionValue> permissionValueCreator;
 
-    public PersistenceService(Class<T> entityClass, PermissionType permissionType, ModelRepository<T> repository) {
+    public PersistenceService(Class<T> entityClass, Supplier<PermissionValue> permissionValueCreator, ModelRepository<T> repository) {
         this.entityClass = entityClass;
-        this.permissionType = permissionType;
+        this.permissionValueCreator = permissionValueCreator;
         this.repository = repository;
     }
 
     // Override me to check more permissions
     public List<PermissionValue> itemPermissions(PermissionAction actionType, PermissionId<T> permissionId) {
-        return Arrays.asList(permissionValue(actionType).forId(permissionId != null ? permissionId.getId() : null));
+        return Arrays.asList(permissionValueCreator.get().action(actionType).forId(permissionId != null ? permissionId.getId() : null));
     }
 
     protected List<PermissionValue> itemPermissions(PermissionAction actionType) {
@@ -96,19 +95,12 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
 
     public List<T> readMany(Specification<T> specification, Sort sort, boolean checkPermissions) {
         sort = sort != null ? sort : new Sort(Sort.Direction.ASC, "id");
-        return readManyCheckPermissions(repository.findAll(specification, sort), checkPermissions);
+        List<T> items = repository.findAll(specification, sort);
+        return readManyCheckPermissions(items, checkPermissions);
     }
-    
-    protected List<T> readManyCheckPermissions(Iterable<T> items, boolean checkPermissions) {
-        if (checkPermissions) {
-            return filterPermittedItems(items/* , manyQuery */);
-        } else {
-            List<T> result = new LinkedList<T>();
-            for (T item : items) {
-                result.add(item);
-            }
-            return result; // manyQuery.filter(items);
-        }
+
+    protected List<T> readManyCheckPermissions(List<T> items, boolean checkPermissions) {
+        return checkPermissions ? filterPermittedItems(items) : items;
     }
 
     public T update(Long id, Class<IN> inClass, HttpServletRequest request, boolean checkPermissions) {
@@ -173,42 +165,17 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
     
     public List<OUT> toOut(List<T> items) {
-        return items != null ? items.stream().map(item -> convertToOutDTO(item)).collect(Collectors.toList()) : null;
+        return items != null ? items.stream().map(this::convertToOutDTO).collect(Collectors.toList()) : null;
     }
 
-    protected List<T> filterPermittedItems(
-        Iterable<T> items/* , ManyQuery manyQuery */) {
-        List<T> result = new LinkedList<T>();
-        if (items != null) {
-            // int skippedItems = 0;
-            for (T item : items) {
-                if (readManyItemFilter(item)) {
-                    // if (skippedItems >= manyQuery.getStartIndex()) {
-                    result.add(item);
-                    // } else {
-                    // skippedItems++;
-                    // }
-                }
-                // if (result.size() >= manyQuery.getMaxItems()) {
-                // return result;
-                // }
-            }
-        }
-        return result;
+    protected List<T> filterPermittedItems(List<T> items) {
+        return items != null ? items.stream().filter(this::readManyItemFilter).collect(Collectors.toList()) : null;
     }
 
     public boolean readManyItemFilter(T item) {
         return isPermitted(itemPermissions(PermissionAction.READ, new PermissionId<T>(item)));
     }
 
-    protected PermissionValue permissionValue(PermissionType type, PermissionAction actionType) {
-        return new PermissionValue(type, actionType);
-    }
-
-    protected PermissionValue permissionValue(PermissionAction actionType) {
-        return new PermissionValue(permissionType, actionType);
-    }
-    
     protected void checkPermission(PermissionValue permission) {
         securityService.permissionResultFor(permission).checkAndThrow();
     }
@@ -218,15 +185,15 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
 
     protected boolean isPermitted(List<PermissionValue> permissions) {
-        return securityService.permissionResultFor((PermissionValue[]) permissions.toArray()).isPermitted();
+        return securityService.permissionResultFor(permissions).isPermitted();
     }
 
     protected void checkPermissions(List<PermissionValue> permissions) {
-        securityService.permissionResultFor((PermissionValue[]) permissions.toArray()).checkAndThrow();
+        securityService.permissionResultFor(permissions).checkAndThrow();
     }
     
     public void checkPublicPermission(Long id) {
-        checkPermission(permissionValue(PermissionAction.PUBLIC).forId(id));
+        checkPermission(permissionValueCreator.get().action(PermissionAction.PUBLIC).forId(id));
     }
 
     public NotFoundException notFoundException(Long id) {

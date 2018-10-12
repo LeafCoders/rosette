@@ -1,54 +1,79 @@
 package se.leafcoders.rosette.permission;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import se.leafcoders.rosette.persistence.model.Persistable;
 
 public class PermissionValue {
-    private final PermissionType type;
-    private final PermissionAction action;
-    private Long id = null;
-    private String part = null;
-    private final String[] params;
 
-    public PermissionValue(PermissionType type, PermissionAction action, String... params) {
+    private final String type;
+    private String action = null;
+    private List<Long> ids = Collections.emptyList();
+
+    PermissionValue(String type) {
         this.type = type;
+    }
+
+    @SuppressWarnings("unchecked")
+    <TYPE> TYPE withAction(String action) {
         this.action = action;
-        this.params = params;
+        return (TYPE) this;
     }
-
-    public PermissionValue forPersistable(Persistable data) {
-        this.id = data != null ? data.getId() : null;
+    
+    public PermissionValue action(PermissionAction action) {
+        return withAction(action.toString()); 
+    }
+    
+    public PermissionValue create() {
+        return withAction(PermissionAction.CREATE.toString()); 
+    }
+    
+    public PermissionValue read() {
+        return withAction(PermissionAction.READ.toString()); 
+    }
+    
+    public PermissionValue update() {
+        return withAction(PermissionAction.UPDATE.toString()); 
+    }
+    
+    public PermissionValue delete() {
+        return withAction(PermissionAction.DELETE.toString()); 
+    }
+    
+    public PermissionValue forPersistable(Persistable persistable) {
+        this.ids = persistable != null ? Collections.singletonList(persistable.getId()) : Collections.emptyList();
         return this;
     }
 
+    public PermissionValue forPersistables(List<? extends Persistable> persistables) {
+        this.ids = persistables != null ? persistables.stream().map(p -> p.getId()).collect(Collectors.toList()) : Collections.emptyList();
+        return this;
+    }
+    
     public PermissionValue forId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public PermissionValue part(String part) {
-        this.part = part;
+        this.ids = id != null ? Collections.singletonList(id) : Collections.emptyList();
         return this;
     }
 
     @Override
     public String toString() {
-        String permission = type.withAction(action);
-        if (id != null) {
-            permission += ":" + id.toString();
-            if (part != null) {
-                permission += ":" + part;
-            }
-        } else if (part != null) {
-            permission += ":*:" + part;
-
+        String permission = type;
+        if (action != null) {
+            permission += ":" + action;
         }
-        if (params != null) {
-            for (String param : params) {
-                if (param != null) {
-                    permission += ":" + param;
-                }
-            }
+        if (!ids.isEmpty()) {
+            permission += ":" + ids.stream().map(Object::toString).collect(Collectors.joining(","));
         }
         return permission;
+    }
+
+    public List<String> toStringListForEachId() {
+        final String permission = type + ":" + (action != null ? action : "*");
+        if (ids.isEmpty()) {
+            return Collections.singletonList(permission);
+        } else {
+            return ids.stream().map(id -> permission + ":" + id.toString()).collect(Collectors.toList());
+        }
     }
 }
