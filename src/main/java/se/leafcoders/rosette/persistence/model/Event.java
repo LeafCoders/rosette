@@ -3,7 +3,6 @@ package se.leafcoders.rosette.persistence.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,14 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Version;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
@@ -54,7 +51,7 @@ public class Event extends Persistable {
     @JoinColumn(name = "eventtype_id")
     private EventType eventType;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResourceRequirement> resourceRequirements;
 
     @NotNull(message = ApiString.NOT_NULL)

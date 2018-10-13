@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.exception.MultipleValidationException;
 import se.leafcoders.rosette.permission.PermissionResult;
+import se.leafcoders.rosette.permission.PermissionTree;
 import se.leafcoders.rosette.permission.PermissionTreeHelper;
 import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Persistable;
@@ -52,9 +53,15 @@ public class SecurityService {
 
     private boolean isPermitted(String permission) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Object> permissionTree;
+        HashMap<String, Object> permissionTree = new HashMap<>();
         if (authentication instanceof CurrentUserAuthentication) {
-            permissionTree = getPermissionTree((CurrentUserAuthentication) authentication);
+            PermissionTree pt = ((CurrentUserAuthentication) authentication).getPermissionTree();
+            if (pt != null) {
+                permissionTree = pt.getTree();
+            } else {
+                permissionTree = getPermissionTree((CurrentUserAuthentication) authentication);
+                ((CurrentUserAuthentication) authentication).setPermissionTree(new PermissionTree(permissionTree));
+            }
         } else {
             permissionTree = getPermissionTree(null);
         }

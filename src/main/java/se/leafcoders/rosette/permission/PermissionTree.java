@@ -6,6 +6,10 @@ public class PermissionTree {
 
     private HashMap<String, Object> tree;
 
+    public PermissionTree(HashMap<String, Object> tree) {
+        this.tree = tree;
+    }
+    
     // Getters and setters
 
     public HashMap<String, Object> getTree() {

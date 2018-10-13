@@ -70,6 +70,7 @@ public class EventsController {
 
         if (from != null || before != null) {
             Specification<Event> spec = (root, query, cb) -> {
+                root.fetch("resourceRequirements");
                 List<Predicate> predicates = new ArrayList<>();
                 Optional.ofNullable(from).ifPresent(time -> predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), time)));
                 Optional.ofNullable(before).ifPresent(time -> predicates.add(cb.lessThan(root.get("startTime"), time)));
