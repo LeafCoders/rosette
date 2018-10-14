@@ -1,13 +1,13 @@
 package se.leafcoders.rosette.controller.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ResourceRequirementOut {
 
     private Long id;
     private ResourceTypeRefOut resourceType;
-    private List<ResourceRefOut> resources;
+    private Set<ResourceRefOut> resources;
     
     // Getters and setters
 
@@ -27,11 +27,11 @@ public class ResourceRequirementOut {
         this.resourceType = resourceType;
     }
 
-    public List<ResourceRefOut> getResources() {
-        return resources != null ? resources : new ArrayList<>();
+    public Set<ResourceRefOut> getResources() {
+        return resources != null ? resources : new HashSet<>();
     }
 
-    public void setResources(List<ResourceRefOut> resources) {
+    public void setResources(Set<ResourceRefOut> resources) {
         this.resources = resources;
     }
 

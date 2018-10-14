@@ -2,8 +2,10 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -85,7 +87,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         Event event = super.create(itemIn, checkPermissions);
         event.setResourceRequirements(event.getEventType().getResourceTypes().stream().map(resourceType -> {
             return new ResourceRequirement(event, resourceType);
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toSet()));
         try {
             return repository.save(event);
         } catch (Exception ignore) {
@@ -134,11 +136,11 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         return repo().findForCalendar(eventTypeIds, afterTime, beforeTime);
     }
 
-    public List<ResourceRequirement> getResourceRequirements(Long eventId) {
+    public Set<ResourceRequirement> getResourceRequirements(Long eventId) {
         return read(eventId, true).getResourceRequirements();
     }
 
-    public List<ResourceRequirement> addResourceRequirement(Long eventId, Long resourceTypeId) {
+    public Set<ResourceRequirement> addResourceRequirement(Long eventId, Long resourceTypeId) {
         Event event = read(eventId, true);
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
         checkModifyResourceRequirementPermission(event, resourceTypeId);
@@ -152,7 +154,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         }
     }
 
-    public List<ResourceRequirement> removeResourceRequirement(Long eventId, Long resourceRequirementId) {
+    public Set<ResourceRequirement> removeResourceRequirement(Long eventId, Long resourceRequirementId) {
         Event event = read(eventId, true);
         ResourceRequirement resourceRequirement = resourceRequirementService.read(resourceRequirementId);
         checkModifyResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
@@ -188,11 +190,11 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         throw new NotFoundException(ResourceRequirement.class, resourceRequirementId);
     }
     
-    public List<Resource> getResources(Long eventId, Long resourceRequirementId) {
+    public Set<Resource> getResources(Long eventId, Long resourceRequirementId) {
         return getResourceRequirement(eventId, resourceRequirementId).getResources();
     }
 
-    public List<Resource> addResource(Long eventId, Long resourceRequirementId, Long resourceId) {
+    public Set<Resource> addResource(Long eventId, Long resourceRequirementId, Long resourceId) {
         Event event = read(eventId, true);
         ResourceRequirement resourceRequirement = getResourceRequirement(eventId, resourceRequirementId);
         checkAssignResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());
@@ -205,7 +207,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
             resourceRequirement.addResource(resource);
             resourceService.updateUsage(resource);
         } else {
-           resourceRequirement.setResources(new ArrayList<>(resourceRequirement.getResourceType().getResources()));
+           resourceRequirement.setResources(new HashSet<>(resourceRequirement.getResourceType().getResources()));
         }
         try {
             return resourceRequirementRepository.save(resourceRequirement).getResources();
@@ -214,7 +216,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         }
     }
 
-    public List<Resource> removeResource(Long eventId, Long resourceRequirementId, Long resourceId) {
+    public Set<Resource> removeResource(Long eventId, Long resourceRequirementId, Long resourceId) {
         Event event = read(eventId, true);
         ResourceRequirement resourceRequirement = getResourceRequirement(eventId, resourceRequirementId);
         checkAssignResourceRequirementPermission(event, resourceRequirement.getResourceType().getId());

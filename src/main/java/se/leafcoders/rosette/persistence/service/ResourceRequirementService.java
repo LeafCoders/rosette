@@ -1,6 +1,6 @@
 package se.leafcoders.rosette.persistence.service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.controller.dto.ResourceRefOut;
@@ -27,15 +27,15 @@ public class ResourceRequirementService {
         return item != null ? convertToOutDTO(item) : null;
     }
 
-    public List<ResourceRequirementOut> toOut(List<ResourceRequirement> items) {
-        return items != null ? items.stream().map(item -> convertToOutDTO(item)).collect(Collectors.toList()) : null;
+    public Set<ResourceRequirementOut> toOut(Set<ResourceRequirement> items) {
+        return items != null ? items.stream().map(item -> convertToOutDTO(item)).collect(Collectors.toSet()) : null;
     }
 
     protected ResourceRequirementOut convertToOutDTO(ResourceRequirement item) {
         ResourceRequirementOut dto = new ResourceRequirementOut();
         dto.setId(item.getId());
         dto.setResourceType(new ResourceTypeRefOut(item.getResourceType()));
-        dto.setResources(item.getResources().stream().map(resource -> new ResourceRefOut(resource)).collect(Collectors.toList()));
+        dto.setResources(item.getResources().stream().map(resource -> new ResourceRefOut(resource)).collect(Collectors.toSet()));
         return dto;
     }
 

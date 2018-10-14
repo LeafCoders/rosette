@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -34,6 +36,7 @@ import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
 import se.leafcoders.rosette.persistence.model.Event;
+import se.leafcoders.rosette.persistence.model.ResourceRequirement;
 import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.EventService;
 import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
@@ -66,20 +69,24 @@ public class EventsController {
         @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime from,            
         @RequestParam(value = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime before
     ) {
-        Sort sort = new Sort(Sort.Direction.ASC, "startTime");
-
-        if (from != null || before != null) {
-            Specification<Event> spec = (root, query, cb) -> {
-                root.fetch("resourceRequirements");
-                List<Predicate> predicates = new ArrayList<>();
-                Optional.ofNullable(from).ifPresent(time -> predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), time)));
-                Optional.ofNullable(before).ifPresent(time -> predicates.add(cb.lessThan(root.get("startTime"), time)));
-                return cb.and(predicates.toArray(new Predicate[0]));
-            };        
-            return eventService.toOut(eventService.readMany(spec, sort, true));
-        } else {
-            return eventService.toOut(eventService.readMany(sort, true));
+        if (from == null && before == null) {
+            from = LocalDateTime.now();
         }
+        Optional<LocalDateTime> fromOptional = Optional.ofNullable(from);
+        Optional<LocalDateTime> beforeOptional = Optional.ofNullable(before);
+
+        Sort sort = new Sort(Sort.Direction.ASC, "startTime");
+        Specification<Event> spec = (root, query, cb) -> {
+            // FETCH two levels deep and sort out duplicates (distinct)
+            query.distinct(true);
+            Fetch<Event, ResourceRequirement> rrFetch = root.fetch("resourceRequirements", JoinType.LEFT);
+            rrFetch.fetch("resources", JoinType.LEFT);
+            List<Predicate> predicates = new ArrayList<>();
+            fromOptional.ifPresent(time -> predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), time)));
+            beforeOptional.ifPresent(time -> predicates.add(cb.lessThan(root.get("startTime"), time)));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        return eventService.toOut(eventService.readMany(spec, sort, true));
     }
 
     @PostMapping(consumes = "application/json")

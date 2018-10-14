@@ -1,8 +1,7 @@
 package se.leafcoders.rosette.persistence.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -12,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
 import se.leafcoders.rosette.exception.ApiString;
 
 @Entity
@@ -29,14 +27,15 @@ public class ResourceRequirement extends Persistable {
     @JoinColumn(name = "resourcetype_id")
     private ResourceType resourceType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    // Must be a Set. Otherwise the two level FETCH will not work in EventsController
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "resourcerequirement_resources",
         joinColumns = @JoinColumn(name = "resourcerequirement_id"),
         inverseJoinColumns = @JoinColumn(name = "resource_id"),
         uniqueConstraints = @UniqueConstraint(columnNames = { "resourcerequirement_id", "resource_id" })
     )
-    private List<Resource> resources;
+    private Set<Resource> resources;
 
 
     public ResourceRequirement() {}
@@ -66,14 +65,14 @@ public class ResourceRequirement extends Persistable {
         this.resourceType = resourceType;
     }
 
-    public List<Resource> getResources() {
+    public Set<Resource> getResources() {
         if (resources == null) {
-            resources = new ArrayList<>();
+            resources = new HashSet<>();
         }
         return resources;
     }
 
-    public void setResources(List<Resource> resources) {
+    public void setResources(Set<Resource> resources) {
         this.resources = resources;
     }
 

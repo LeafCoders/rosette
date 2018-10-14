@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -164,11 +165,11 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         return item != null ? toRef.apply(item) : null;
     }
     
-    public List<OUT> toOut(List<T> items) {
+    public final List<OUT> toOut(Collection<T> items) {
         return items != null ? items.stream().map(this::convertToOutDTO).collect(Collectors.toList()) : null;
     }
 
-    protected List<T> filterPermittedItems(List<T> items) {
+    protected final List<T> filterPermittedItems(Collection<T> items) {
         return items != null ? items.stream().filter(this::readManyItemFilter).collect(Collectors.toList()) : null;
     }
 

@@ -1,8 +1,8 @@
 package se.leafcoders.rosette.persistence.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,8 +51,9 @@ public class Event extends Persistable {
     @JoinColumn(name = "eventtype_id")
     private EventType eventType;
 
+    // Must be a Set. Otherwise the two level FETCH will not work in EventsController
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ResourceRequirement> resourceRequirements;
+    private Set<ResourceRequirement> resourceRequirements;
 
     @NotNull(message = ApiString.NOT_NULL)
     private Boolean isPublic;
@@ -115,14 +116,14 @@ public class Event extends Persistable {
         this.setEventTypeId(eventType != null ? eventType.getId() : null);
     }
 
-    public List<ResourceRequirement> getResourceRequirements() {
+    public Set<ResourceRequirement> getResourceRequirements() {
         if (resourceRequirements == null) {
-            resourceRequirements = new ArrayList<>();
+            resourceRequirements = new HashSet<>();
         }
         return resourceRequirements;
     }
 
-    public void setResourceRequirements(List<ResourceRequirement> resourceRequirement) {
+    public void setResourceRequirements(Set<ResourceRequirement> resourceRequirement) {
         this.resourceRequirements = resourceRequirement;
     }
 
