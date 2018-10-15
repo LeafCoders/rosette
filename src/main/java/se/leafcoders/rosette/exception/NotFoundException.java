@@ -15,4 +15,8 @@ public class NotFoundException extends RuntimeException {
         this(clazz.getSimpleName(), id);
     }
 
+    public <T> NotFoundException(Class<T> clazz, String idAlias) {
+        super("IdAlias (" + idAlias + ") of resource type (" + clazz.getSimpleName() + ") was not found.");
+    }
+    
 }

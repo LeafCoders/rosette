@@ -5,4 +5,6 @@ import se.leafcoders.rosette.persistence.model.SlideShow;
 
 @Repository
 public interface SlideShowRepository extends ModelRepository<SlideShow> {
+    
+    public SlideShow findOneByIdAlias(String idAlias);
 }

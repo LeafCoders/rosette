@@ -41,6 +41,10 @@ public class PermissionValue {
         return withAction(PermissionAction.DELETE.toString()); 
     }
     
+    public PermissionValue publicPermission() {
+        return withAction(PermissionAction.PUBLIC.toString()); 
+    }
+    
     public PermissionValue forPersistable(Persistable persistable) {
         this.ids = persistable != null ? Collections.singletonList(persistable.getId()) : Collections.emptyList();
         return this;

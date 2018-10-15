@@ -79,6 +79,10 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
         this.slideService = slideService;
     }
 
+    private SlideShowRepository repo() {
+        return (SlideShowRepository) repository;
+    }
+    
     @Override
     protected SlideShow convertFromInDTO(SlideShowIn dto, JsonNode rawIn, SlideShow item) {
         if (rawIn == null || rawIn.has("idAlias")) {
@@ -104,6 +108,10 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
         return dto;
     }
 
+    public SlideShow findByIdAlias(String idAlias) {
+        return repo().findOneByIdAlias(idAlias);
+    }
+    
     public List<Slide> readSlides(Long slideShowId) {
         return slideCrud.readAll(slideShowId);
     }

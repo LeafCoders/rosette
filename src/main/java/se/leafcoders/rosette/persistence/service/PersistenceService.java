@@ -1,13 +1,13 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -35,28 +35,32 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     protected final ModelRepository<T> repository;
     protected final Supplier<PermissionValue> permissionValueCreator;
 
-    public PersistenceService(Class<T> entityClass, Supplier<PermissionValue> permissionValueCreator, ModelRepository<T> repository) {
+    public PersistenceService(Class<T> entityClass, Supplier<PermissionValue> permissionValueCreator,
+            ModelRepository<T> repository) {
         this.entityClass = entityClass;
         this.permissionValueCreator = permissionValueCreator;
         this.repository = repository;
     }
 
-    // Override me to check more permissions
-    public List<PermissionValue> itemPermissions(PermissionAction actionType, PermissionId<T> permissionId) {
-        return Arrays.asList(permissionValueCreator.get().action(actionType).forId(permissionId != null ? permissionId.getId() : null));
+    // Override me to check more permissions for CREATE
+    public List<PermissionValue> itemCreatePermissions(IN itemIn) {
+        return Stream.of(permissionValueCreator.get().create()).collect(Collectors.toList());
     }
 
-    protected List<PermissionValue> itemPermissions(PermissionAction actionType) {
-        return itemPermissions(actionType, new PermissionId<T>());
+    // Override me to check more permissions for READ, UPDATE and DELETE
+    public List<PermissionValue> itemReadUpdateDeletePermissions(PermissionAction actionType,
+            PermissionId<T> permissionId) {
+        return Stream.of(permissionValueCreator.get().action(actionType)
+                .forId(permissionId != null ? permissionId.getId() : null)).collect(Collectors.toList());
     }
-    
+
     public T create(IN itemIn, boolean checkPermissions) {
         return create(itemIn, checkPermissions, null);
     }
 
     public T create(IN itemIn, boolean checkPermissions, Consumer<T> beforeValidate) {
         if (checkPermissions) {
-            checkPermissions(itemPermissions(PermissionAction.CREATE));
+            checkPermissions(itemCreatePermissions(itemIn));
         }
         securityService.validate(itemIn, null);
         T item = fromIn(itemIn);
@@ -80,7 +84,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         }
         T item = repository.findById(id).orElseThrow(() -> notFoundException(id));
         if (checkPermissions) {
-            checkPermissions(itemPermissions(PermissionAction.READ, new PermissionId<T>(item)));
+            checkPermissions(itemReadUpdateDeletePermissions(PermissionAction.READ, new PermissionId<T>(item)));
         }
         return item;
     }
@@ -106,7 +110,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
 
     public T update(Long id, Class<IN> inClass, HttpServletRequest request, boolean checkPermissions) {
         T itemInDb = repository.findById(id).orElseThrow(() -> notFoundException(id));
-        checkPermissions(itemPermissions(PermissionAction.UPDATE, new PermissionId<T>(itemInDb)));
+        checkPermissions(itemReadUpdateDeletePermissions(PermissionAction.UPDATE, new PermissionId<T>(itemInDb)));
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -130,7 +134,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
 
     public ResponseEntity<Void> delete(Long id, boolean checkPermissions) {
-        checkPermissions(itemPermissions(PermissionAction.DELETE, new PermissionId<T>(id)));
+        checkPermissions(itemReadUpdateDeletePermissions(PermissionAction.DELETE, new PermissionId<T>(id)));
         securityService.checkNotReferenced(id, entityClass);
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -164,7 +168,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     public <REF> REF toOutRef(T item, Function<T, REF> toRef) {
         return item != null ? toRef.apply(item) : null;
     }
-    
+
     public final List<OUT> toOut(Collection<T> items) {
         return items != null ? items.stream().map(this::convertToOutDTO).collect(Collectors.toList()) : null;
     }
@@ -174,7 +178,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     }
 
     public boolean readManyItemFilter(T item) {
-        return isPermitted(itemPermissions(PermissionAction.READ, new PermissionId<T>(item)));
+        return isPermitted(itemReadUpdateDeletePermissions(PermissionAction.READ, new PermissionId<T>(item)));
     }
 
     protected void checkPermission(PermissionValue permission) {
@@ -192,9 +196,13 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     protected void checkPermissions(List<PermissionValue> permissions) {
         securityService.permissionResultFor(permissions).checkAndThrow();
     }
-    
+
+    public void checkPublicPermission() {
+        checkPermission(permissionValueCreator.get().publicPermission());
+    }
+
     public void checkPublicPermission(Long id) {
-        checkPermission(permissionValueCreator.get().action(PermissionAction.PUBLIC).forId(id));
+        checkPermission(permissionValueCreator.get().publicPermission().forId(id));
     }
 
     public NotFoundException notFoundException(Long id) {

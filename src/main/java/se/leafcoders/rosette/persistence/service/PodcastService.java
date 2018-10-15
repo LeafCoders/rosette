@@ -22,6 +22,10 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
     public PodcastService(PodcastRepository repository) {
         super(Podcast.class, PermissionType::podcasts, repository);
     }
+    
+    private PodcastRepository repo() {
+        return (PodcastRepository) repository;
+    }
 
     @Override
     protected Podcast convertFromInDTO(PodcastIn dto, JsonNode rawIn, Podcast item) {
@@ -82,5 +86,9 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
         dto.setLink(item.getLink());
         dto.setImage(assetService.toOut(item.getImage()));
         return dto;
+    }
+    
+    public Podcast findByIdAlias(String idAlias) {
+        return repo().findOneByIdAlias(idAlias);
     }
 }

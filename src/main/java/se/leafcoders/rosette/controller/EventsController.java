@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -156,6 +155,8 @@ public class EventsController {
 
     @GetMapping(value = "/public")
     public EventsPublicOut getPublicEvents(@RequestParam(required = true) String rangeMode, @RequestParam Integer rangeOffset) {
+        eventService.checkPublicPermission();
+        
         rangeOffset = rangeOffset != null ? rangeOffset : 0;
         LocalDateTime from;
         LocalDateTime before;
@@ -171,11 +172,12 @@ public class EventsController {
 
         Specification<Event> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            Optional.ofNullable(from).ifPresent(time -> predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), time)));
-            Optional.ofNullable(before).ifPresent(time -> predicates.add(cb.lessThan(root.get("startTime"), time)));
+            predicates.add(cb.greaterThanOrEqualTo(root.get("startTime"), from));
+            predicates.add(cb.lessThan(root.get("startTime"), before));
+            predicates.add(cb.isTrue(root.get("isPublic")));
             return cb.and(predicates.toArray(new Predicate[0]));
         };        
-        List<Event> publicEvents = eventService.readMany(spec, sort, false).stream().filter(e -> e.getIsPublic()).collect(Collectors.toList());
+        List<Event> publicEvents = eventService.readMany(spec, sort, false);
         return new EventsPublicOut(from, before, publicEvents);
     }
 

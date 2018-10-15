@@ -60,7 +60,14 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     }
 
     @Override
-    public List<PermissionValue> itemPermissions(PermissionAction permissionAction, PermissionId<Event> permissionId) {
+    public List<PermissionValue> itemCreatePermissions(EventIn eventIn) {
+        List<PermissionValue> permissions = super.itemCreatePermissions(eventIn);
+        permissions.add(PermissionType.eventTypes().createEvents().forId(eventIn.getEventTypeId()));
+        return permissions;
+    }
+    
+    @Override
+    public List<PermissionValue> itemReadUpdateDeletePermissions(PermissionAction permissionAction, PermissionId<Event> permissionId) {
         Event event = permissionId.getItem();
         Long eventTypeId = event != null ? event.getEventTypeId() : null;
         

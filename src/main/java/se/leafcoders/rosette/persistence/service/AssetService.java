@@ -60,7 +60,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
             throw new NotFoundException("Asset with fileId (" + fileId + ") was not found.");
         }
         if (checkPermissions) {
-            checkPermissions(itemPermissions(PermissionAction.READ, new PermissionId<Asset>(item)));
+            checkPermissions(itemReadUpdateDeletePermissions(PermissionAction.READ, new PermissionId<Asset>(item)));
         }
         return item;
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.controller.dto.PodcastIn;
 import se.leafcoders.rosette.controller.dto.PodcastOut;
+import se.leafcoders.rosette.exception.NotFoundException;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.Podcast;
 import se.leafcoders.rosette.persistence.service.ArticleService;
@@ -43,14 +44,6 @@ public class PodcastsController {
         return podcastService.toOut(podcastService.read(id, true));
     }
 
-    @GetMapping(value = "/{id}/feed", produces = "application/rss+xml; charset=UTF-8")
-    public String getPodcastFeed(@PathVariable Long id) {
-        podcastService.checkPublicPermission(id);
-        Podcast podcast = podcastService.read(id, false);
-        List<Article> articles = articleService.findAllOfType(podcast.getArticleTypeId(), false);
-        return podcastFeedGenerator.getPodcastFeed(podcast, articles);
-    }
-
     @GetMapping
     public Collection<PodcastOut> getPodcasts(HttpServletRequest request) {
         Sort sort = new Sort(Sort.Direction.ASC, "title");        
@@ -71,4 +64,21 @@ public class PodcastsController {
     public ResponseEntity<Void> deletePodcast(@PathVariable Long id) {
         return podcastService.delete(id, true);
     }
+    
+    // Public
+
+    @GetMapping(value = "/feed/{idAlias}", produces = "application/rss+xml; charset=UTF-8")
+    public String getPodcastFeed(@PathVariable String idAlias) {
+        Podcast podcast = podcastService.findByIdAlias(idAlias);
+        if (podcast == null) {
+            throw new NotFoundException(Podcast.class, idAlias);
+        }
+
+        podcastService.checkPublicPermission(podcast.getId());
+
+        List<Article> articles = articleService.findAllOfType(podcast.getArticleTypeId(), false);
+        return podcastFeedGenerator.getPodcastFeed(podcast, articles);
+    }
+
+    
 }

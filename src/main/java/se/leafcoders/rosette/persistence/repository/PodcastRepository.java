@@ -5,4 +5,6 @@ import se.leafcoders.rosette.persistence.model.Podcast;
 
 @Repository
 public interface PodcastRepository extends ModelRepository<Podcast> {
+
+    public Podcast findOneByIdAlias(String idAlias);
 }
