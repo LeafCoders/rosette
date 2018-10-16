@@ -12,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.RosetteSettings;
+import se.leafcoders.rosette.controller.dto.SignupUserIn;
 import se.leafcoders.rosette.persistence.model.User;
 import se.leafcoders.rosette.persistence.service.MessageService;
+import se.leafcoders.rosette.util.HtmlSanitize;
 
 @Service
 public class EmailTemplateService {
@@ -33,60 +35,88 @@ public class EmailTemplateService {
     private final String templateTheme = "LeafCoders";
 
     public void sendForgottenPasswordEmail(User user, String token) {
-        final String subject = messageService.lookup("forgottenPasswordEmail.title");
+        try {
+            final String subject = messageService.lookup("forgottenPasswordEmail.title");
         
-        Map<String, String> templateValues = defaultTemplateValues();
-        templateValues.put("%%title.row1%%", subject);
-        templateValues.put("%%title.row2%%", messageService.lookup("forgottenPasswordEmail.subTitle"));
-        templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
-        templateValues.put("%%content.row1%%", messageService.lookup("forgottenPasswordEmail.textRow1"));
-        templateValues.put("%%content.row2%%", messageService.lookup("forgottenPasswordEmail.textRow2"));
-        templateValues.put("%%content.setPasswordUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/forgotten?token=" + token);
-        templateValues.put("%%content.setPasswordTitle%%", messageService.lookup("forgottenPasswordEmail.changePassword"));
-
-        String body = replaceAllTemplateValues(readTemplate("forgottenPasswordEmail.html"), templateValues);
-        mailSenderService.send(user.getEmail(), subject, body);
+            Map<String, String> templateValues = defaultTemplateValues();
+            templateValues.put("%%title.row1%%", subject);
+            templateValues.put("%%title.row2%%", messageService.lookup("forgottenPasswordEmail.subTitle"));
+            templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
+            templateValues.put("%%content.row1%%", messageService.lookup("forgottenPasswordEmail.textRow1"));
+            templateValues.put("%%content.row2%%", messageService.lookup("forgottenPasswordEmail.textRow2"));
+            templateValues.put("%%content.setPasswordUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/forgotten?token=" + token);
+            templateValues.put("%%content.setPasswordTitle%%", messageService.lookup("forgottenPasswordEmail.changePassword"));
+    
+            String body = replaceAllTemplateValues(readTemplate("forgottenPasswordEmail.html"), templateValues);
+            mailSenderService.send(user.getEmail(), subject, body);
+        } catch (Exception e) {
+            logError("Forgotten Password", user.getEmail(), e);
+        }
     }
 
     public void sendChangedPasswordEmail(User user) {
-        final String subject = messageService.lookup("changedPasswordEmail.title");
-        
-        Map<String, String> templateValues = defaultTemplateValues();
-        templateValues.put("%%title.row1%%", subject);
-        templateValues.put("%%title.row2%%", messageService.lookup("changedPasswordEmail.subTitle"));
-        templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
-        templateValues.put("%%content.row1%%", messageService.lookup("changedPasswordEmail.textRow1"));
-        
-        String body = replaceAllTemplateValues(readTemplate("changedPasswordEmail.html"), templateValues);
-        mailSenderService.send(user.getEmail(), subject, body);
+        try {
+            final String subject = messageService.lookup("changedPasswordEmail.title");
+            
+            Map<String, String> templateValues = defaultTemplateValues();
+            templateValues.put("%%title.row1%%", subject);
+            templateValues.put("%%title.row2%%", messageService.lookup("changedPasswordEmail.subTitle"));
+            templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
+            templateValues.put("%%content.row1%%", messageService.lookup("changedPasswordEmail.textRow1"));
+            
+            String body = replaceAllTemplateValues(readTemplate("changedPasswordEmail.html"), templateValues);
+            mailSenderService.send(user.getEmail(), subject, body);
+        } catch (Exception e) {
+            logError("Change Password", user.getEmail(), e);
+        }
     }
 
     public void sendWelcomeEmail(User user) {
-        final String subject = messageService.lookup("welcomeEmail.title");
-        
-        Map<String, String> templateValues = defaultTemplateValues();
-        templateValues.put("%%title.row1%%", subject);
-        templateValues.put("%%title.row2%%", messageService.lookup("welcomeEmail.subTitle"));
-        templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
-        templateValues.put("%%content.row1%%", messageService.lookup("welcomeEmail.textRow1"));
-
-        String body = replaceAllTemplateValues(readTemplate("welcomeEmail.html"), templateValues);
-        mailSenderService.send(user.getEmail(), subject, body);
+        try {
+            final String subject = messageService.lookup("welcomeEmail.title");
+            
+            Map<String, String> templateValues = defaultTemplateValues();
+            templateValues.put("%%title.row1%%", subject);
+            templateValues.put("%%title.row2%%", messageService.lookup("welcomeEmail.subTitle"));
+            templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
+            templateValues.put("%%content.row1%%", messageService.lookup("welcomeEmail.textRow1"));
+    
+            String body = replaceAllTemplateValues(readTemplate("welcomeEmail.html"), templateValues);
+            mailSenderService.send(user.getEmail(), subject, body);
+        } catch (Exception e) {
+            logError("Welcome", user.getEmail(), e);
+        }
     }
 
     public void sendActivatedUserEmail(User user) {
-        final String subject = messageService.lookup("activatedUserEmail.title");
-        
-        Map<String, String> templateValues = defaultTemplateValues();
-        templateValues.put("%%title.row1%%", subject);
-        templateValues.put("%%title.row2%%", messageService.lookup("activatedUserEmail.subTitle"));
-        templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
-        templateValues.put("%%content.row1%%", messageService.lookup("activatedUserEmail.textRow1"));
-        templateValues.put("%%content.loginUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/login?username=" + user.getEmail());
-        templateValues.put("%%content.loginTitle%%", messageService.lookup("activatedUserEmail.login"));
+        try {
+            final String subject = messageService.lookup("activatedUserEmail.title");
+            
+            Map<String, String> templateValues = defaultTemplateValues();
+            templateValues.put("%%title.row1%%", subject);
+            templateValues.put("%%title.row2%%", messageService.lookup("activatedUserEmail.subTitle"));
+            templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
+            templateValues.put("%%content.row1%%", messageService.lookup("activatedUserEmail.textRow1"));
+            templateValues.put("%%content.loginUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/login?username=" + user.getEmail());
+            templateValues.put("%%content.loginTitle%%", messageService.lookup("activatedUserEmail.login"));
+    
+            String body = replaceAllTemplateValues(readTemplate("activatedUserEmail.html"), templateValues);
+            mailSenderService.send(user.getEmail(), subject, body);
+        } catch (Exception e) {
+            logError("Activated User", user.getEmail(), e);
+        }
+    }
 
-        String body = replaceAllTemplateValues(readTemplate("activatedUserEmail.html"), templateValues);
-        mailSenderService.send(user.getEmail(), subject, body);
+    public void toAdminSendActivateUserEmail(SignupUserIn signupUser) {
+        try {
+            String fromName = HtmlSanitize.sanitize(signupUser.getFirstName() + " " + signupUser.getLastName());
+            String fromEmail = HtmlSanitize.sanitize(signupUser.getEmail());
+            String message = HtmlSanitize.sanitizeAndConvertNewline(signupUser.getDescription());
+            String body = MessageFormat.format("<p>{0} ({1}) har registrerat sig på Cordate. Du behöver aktivera användaren och lägga till den i rätt grupper. Användaren har följande önskemål:</p><hr><p><em>{2}</em></p>", fromName, fromEmail, message);
+            mailSenderService.sendToAdmin("Aktivera en ny användare", body);
+        } catch (Exception e) {
+            logError("To Admin: Activate User", "<amdin email>", e);
+        }
     }
 
     private Map<String, String> defaultTemplateValues() {
@@ -123,4 +153,7 @@ public class EmailTemplateService {
         }
     }
 
+    private void logError(String type, String to, Exception e) {
+        logger.error(MessageFormat.format("Failed to send \"{0}\" mail to \"{1}\". Reason: {2}", type, to, e.getMessage()), e);
+    }
 }

@@ -139,8 +139,9 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
             logger.error(MessageFormat.format("Failed to save signup consent due to: {0}", exception.getMessage()), exception);
         }
 
-        // Send welcome email
+        // Send welcome email and activate email
         emailTemplateService.sendWelcomeEmail(user);
+        emailTemplateService.toAdminSendActivateUserEmail(signupUserIn);
         return user;
     }
 

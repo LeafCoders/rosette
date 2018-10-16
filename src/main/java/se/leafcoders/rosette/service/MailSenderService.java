@@ -24,6 +24,10 @@ public class MailSenderService {
     @Autowired
     private RosetteSettings rosetteSettings;
 
+    public void sendToAdmin(String subject, String body) {
+        send(rosetteSettings.getAdminMailTo(), subject, body);
+    }
+    
     public void send(String to, String subject, String body) {
         String from = rosetteSettings.getDefaultMailFrom();
         MimeMessage message = javaMailSender.createMimeMessage();
