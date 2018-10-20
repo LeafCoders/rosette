@@ -116,6 +116,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         if (rawIn == null || rawIn.has("description")) {
             item.setDescription(dto.getDescription());
         }
+        if (rawIn == null || rawIn.has("privateDescription")) {
+            item.setPrivateDescription(dto.getPrivateDescription());
+        }
         if (rawIn == null || rawIn.has("eventTypeId")) {
             item.setEventType(eventTypeService.read(dto.getEventTypeId(), true));
         }
@@ -133,6 +136,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         dto.setEndTime(item.getEndTime());
         dto.setTitle(item.getTitle());
         dto.setDescription(item.getDescription());
+        dto.setPrivateDescription(item.getPrivateDescription());
         dto.setEventType(eventTypeService.toOutRef(item.getEventType(), EventTypeRefOut::new));
         dto.setIsPublic(item.getIsPublic());
         dto.setResourceRequirements(resourceRequirementService.toOut(item.getResourceRequirements()));

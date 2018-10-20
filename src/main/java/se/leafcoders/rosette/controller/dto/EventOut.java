@@ -21,6 +21,7 @@ public class EventOut {
 
     private String title;
     private String description;
+    private String privateDescription;
     private EventTypeRefOut eventType;
     private Set<ResourceRequirementOut> resourceRequirements;
     private Boolean isPublic;
@@ -65,6 +66,14 @@ public class EventOut {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPrivateDescription() {
+        return privateDescription;
+    }
+
+    public void setPrivateDescription(String privateDescription) {
+        this.privateDescription = privateDescription;
     }
 
     public EventTypeRefOut getEventType() {

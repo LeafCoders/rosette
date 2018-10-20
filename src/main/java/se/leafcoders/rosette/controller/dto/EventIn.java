@@ -35,6 +35,9 @@ public class EventIn {
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String description;
 
+    @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
+    private String privateDescription;
+    
     @NotNull(message = ApiString.NOT_NULL)
     private Long eventTypeId;
     
@@ -73,6 +76,14 @@ public class EventIn {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPrivateDescription() {
+        return privateDescription;
+    }
+
+    public void setPrivateDescription(String privateDescription) {
+        this.privateDescription = privateDescription;
     }
 
     public Long getEventTypeId() {

@@ -43,6 +43,9 @@ public class Event extends Persistable {
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String description;
 
+    @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
+    private String privateDescription;
+
     @Column(name = "eventtype_id", nullable = false, insertable = false, updatable = false)
     private Long eventTypeId;
 
@@ -97,6 +100,14 @@ public class Event extends Persistable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPrivateDescription() {
+        return privateDescription;
+    }
+
+    public void setPrivateDescription(String privateDescription) {
+        this.privateDescription = privateDescription;
     }
 
     public Long getEventTypeId() {
