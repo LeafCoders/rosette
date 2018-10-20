@@ -93,7 +93,7 @@ public class FileStorageService {
     }
 
     public void streamAssetFile(String thumbSize, Asset asset, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        final String fileName = asset.getFileId();
+        final String fileName = asset.fileNameOnDisk();
 
         if (fileName != null) {
             try {
@@ -108,7 +108,8 @@ public class FileStorageService {
                     fileSize = asset.getFileSize();
                 }
                 Long expiresIn = null;
-                if (rosetteSettings.getFileClientCacheMaxAge() > 0) {
+                // No cache for text files
+                if (!asset.isTextFile() && rosetteSettings.getFileClientCacheMaxAge() > 0) {
                     expiresIn = rosetteSettings.getFileClientCacheMaxAge();
                 }
                 String uniqueName = asset.getId().toString() + "_" + fileName;
@@ -135,8 +136,8 @@ public class FileStorageService {
     
     private String createThumbSize(Asset ofAsset, final String thumbSize) throws IOException {
         if (ofAsset.getType() == AssetType.FILE && ofAsset.getMimeType().startsWith("image")) {
-            String orgFilePath = absolutePath(ofAsset.getFolderId(), null, ofAsset.getFileId());
-            String thumbFilePath = absolutePath(ofAsset.getFolderId(), thumbSize, ofAsset.getFileId());
+            String orgFilePath = absolutePath(ofAsset.getFolderId(), null, ofAsset.fileNameOnDisk());
+            String thumbFilePath = absolutePath(ofAsset.getFolderId(), thumbSize, ofAsset.fileNameOnDisk());
             Thumbnails.of(orgFilePath)
                 .crop(Positions.CENTER)
                 .size(THUMB_WIDTH_ICON, THUMB_HEIGHT_ICON)
@@ -144,7 +145,7 @@ public class FileStorageService {
             return thumbFilePath;
         } else {
     		    // TODO: Should return a icon image for the mime type of this asset
-    		    return ofAsset.getFileId();
+    		    return ofAsset.fileNameOnDisk();
         }
     }
 

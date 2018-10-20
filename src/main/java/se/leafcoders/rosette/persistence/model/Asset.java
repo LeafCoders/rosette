@@ -1,16 +1,16 @@
 package se.leafcoders.rosette.persistence.model;
 
+import java.util.Arrays;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
-
 import se.leafcoders.rosette.exception.ApiString;
 
 @Entity
@@ -31,9 +31,11 @@ public class Asset extends Persistable {
 
     @NotNull(message = ApiString.NOT_NULL)
     private Long folderId;
-    
+
     private String fileId;
 
+    private Integer fileVersion;
+    
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     @Pattern(regexp = "^[\\w._-]+.[\\w]$", message = ApiString.FILENAME_INVALID)
     private String fileName;    // File name in server file system
@@ -86,6 +88,14 @@ public class Asset extends Persistable {
         this.fileId = fileId;
     }
 
+    public Integer getFileVersion() {
+        return fileVersion;
+    }
+
+    public void setFileVersion(Integer fileVersion) {
+        this.fileVersion = fileVersion;
+    }
+
     public String getFileName() {
         return fileName;
     }
@@ -134,4 +144,32 @@ public class Asset extends Persistable {
         this.duration = length;
     }
 
+    public String fileNameOnDisk() {
+        if (fileVersion != null) {
+            return fileId.replaceFirst("-", "-" + String.format("%04d", fileVersion) + "-");
+        } else {
+            // Stored files before "fileVersion" were added has no version info in its filename on disk
+            return fileId;
+        }
+    }
+    
+    public boolean isImageFile() {
+        return mimeType.startsWith("image/");
+    }
+    
+    public boolean isAudioFile() {
+        return mimeType.startsWith("audio/");
+    }
+    
+    public boolean isTextFile() {
+        return Arrays.asList(
+                "text/",
+                "application/json",
+                "application/xml",
+                "application/xhtml+xml",
+                "application/html",
+                "application/javascript",
+                "application/ecmascript"
+        ).stream().anyMatch(type -> mimeType.startsWith(type));
+    }
 }

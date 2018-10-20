@@ -7,7 +7,11 @@ public class AssetOut {
     private String mimeType;
 
     private String fileName;
-    private String url; 
+    private String url;
+    
+    private boolean isImageFile;
+    private boolean isAudioFile;
+    private boolean isTextFile;
 
     private Long fileSize;
     private Long width;
@@ -55,6 +59,30 @@ public class AssetOut {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean getIsImageFile() {
+        return isImageFile;
+    }
+
+    public void setImageFile(boolean isImageFile) {
+        this.isImageFile = isImageFile;
+    }
+
+    public boolean getIsAudioFile() {
+        return isAudioFile;
+    }
+
+    public void setAudioFile(boolean isAudioFile) {
+        this.isAudioFile = isAudioFile;
+    }
+
+    public boolean getIsTextFile() {
+        return isTextFile;
+    }
+
+    public void setTextFile(boolean isTextFile) {
+        this.isTextFile = isTextFile;
     }
 
     public Long getFileSize() {

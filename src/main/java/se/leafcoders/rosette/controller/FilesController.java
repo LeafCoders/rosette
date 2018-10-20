@@ -34,7 +34,7 @@ public class FilesController {
     // Upload file
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<AssetOut> postFile(
+    public ResponseEntity<AssetOut> createFile(
         @RequestParam(value = "folderId", required = true) Long folderId,
         @RequestParam(value = "fileName", required = true) String fileName,
         @RequestParam(value = "file", required = true) MultipartFile file,
@@ -49,6 +49,18 @@ public class FilesController {
         return new ResponseEntity<AssetOut>(assetService.toOut(assetService.createFile(item)), HttpStatus.CREATED);
     }
 
+    // Update file
+
+    @PostMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<AssetOut> updateFile(
+        @PathVariable Long id,
+        @RequestParam(value = "file", required = true) MultipartFile file,
+        HttpServletResponse response,
+        MultipartHttpServletRequest defaultMultipartHttpServletRequest
+    ) {        
+        return new ResponseEntity<AssetOut>(assetService.toOut(assetService.updateFile(id, file)), HttpStatus.CREATED);
+    }
+    
     // Download file
 
     @GetMapping("/{fileId:.+}")

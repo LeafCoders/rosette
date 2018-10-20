@@ -82,15 +82,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     @Override
     protected Asset convertFromInDTO(AssetIn dto, JsonNode rawIn, Asset item) {
-        if (rawIn == null || rawIn.has("type")) {
-            item.setType(Asset.AssetType.valueOf(dto.getType()));
-        }
-        if (rawIn == null || rawIn.has("url")) {
-            item.setUrl(dto.getUrl());
-        }
-
-        item.setMimeType("image/jpg");
-
+        // Update is not supported
         return item;
     }
 
@@ -103,6 +95,10 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         dto.setMimeType(item.getMimeType());
         dto.setFileName(item.getFileName());
         dto.setUrl(urlOfAsset(item));
+        
+        dto.setImageFile(item.isImageFile());
+        dto.setAudioFile(item.isAudioFile());
+        dto.setTextFile(item.isTextFile());
 
         dto.setFileSize(item.getFileSize());
         dto.setWidth(item.getWidth());
@@ -137,13 +133,14 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         asset.setType(Asset.AssetType.FILE);
         asset.setFolderId(folderId);
         asset.setFileId(generateFileId(fileName));
+        asset.setFileVersion(1);
         asset.setFileName(fileName);
         asset.setMimeType(mimeType);
         asset.setFileSize(new Long(fileData.length));
         readMetadata(fileData, asset);
         securityService.validate(asset, null);
 
-        boolean stored = fileStorageService.storeFile(folderId, asset.getFileId(), fileData);
+        boolean stored = fileStorageService.storeFile(folderId, asset.fileNameOnDisk(), fileData);
         if (!stored) {
             throw new SingleValidationException(new ValidationError("file", ApiString.FILE_INVALID_CONTENT));
         }
@@ -152,6 +149,53 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
             return repo().save(asset);
         } catch (org.springframework.dao.DuplicateKeyException ignore) {
             throw new ForbiddenException(ApiError.CREATE_ALREADY_EXIST, fileName);
+        }
+    }
+
+    public Asset updateFile(Long assetId, MultipartFile file) {
+        final Asset existingAsset = read(assetId, true);
+        final Long folderId = existingAsset.getFolderId();
+        final String mimeType = file.getContentType();
+
+        checkAnyPermission(
+                PermissionType.assets().update(),
+                PermissionType.assetFolders().manageAssets().forId(folderId)
+        );
+
+        if (!existingAsset.isTextFile()) {
+            throw new SingleValidationException(new ValidationError("file", ApiString.FILE_ONLY_TEXTFILES_ARE_UPDATEABLE));
+        }
+        if (!existingAsset.getMimeType().equals(mimeType)) {
+            throw new SingleValidationException(new ValidationError("file", ApiString.FILE_MIMETYPE_NOT_ALLOWED));
+        }
+
+        AssetFolder folder = assetFolderService.read(folderId, false);
+        validateFolderExist(folder);
+        checkMimeTypeAllowed(folder, mimeType);
+
+        byte[] fileData;
+        try {
+            fileData = file.getBytes();
+        } catch (IOException e) {
+            throw new SingleValidationException(new ValidationError("file", ApiString.FILE_NOT_READABLE));
+        }
+
+        existingAsset.setFileVersion(existingAsset.getFileVersion() + 1);
+        existingAsset.setMimeType(mimeType);
+        existingAsset.setFileSize(new Long(fileData.length));
+        readMetadata(fileData, existingAsset);
+        securityService.validate(existingAsset, null);
+
+        boolean stored = fileStorageService.storeFile(folderId, existingAsset.fileNameOnDisk(), fileData);
+        if (!stored) {
+            throw new SingleValidationException(new ValidationError("file", ApiString.FILE_INVALID_CONTENT));
+        }
+
+        try {
+            return repo().save(existingAsset);
+        } catch (Exception exception) {
+            exception.printStackTrace(System.err);
+            throw notFoundException(assetId);
         }
     }
 

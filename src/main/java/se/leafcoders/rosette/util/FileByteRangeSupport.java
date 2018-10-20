@@ -169,6 +169,7 @@ public class FileByteRangeSupport {
         response.setHeader("Content-Type", contentType);
         response.setHeader("Content-Disposition", disposition + ";filename=\"" + fileName + "\"");
         response.setHeader("Accept-Ranges", "bytes");
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
         if (expiresInSeconds != null) {
             response.setHeader("ETag", fileName);
