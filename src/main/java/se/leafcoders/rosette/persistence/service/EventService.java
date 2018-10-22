@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.EventIn;
@@ -50,6 +52,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     
     @Autowired
     private ArticleRepository articleRepository;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
     
     public EventService(EventRepository repository) {
         super(Event.class, PermissionType::events, repository);
@@ -96,10 +101,19 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
             return new ResourceRequirement(event, resourceType);
         }).collect(Collectors.toSet()));
         try {
-            return repository.save(event);
+            Event savedEvent = repository.save(event);
+            pushChangedEvent(savedEvent.getId());
+            return savedEvent;
         } catch (Exception ignore) {
             throw new ForbiddenException(ApiError.UNKNOWN_REASON);
         }
+    }
+    
+    @Override
+    public Event update(Long id, Class<EventIn> inClass, HttpServletRequest request, boolean checkPermissions) {
+        Event updatedEvent = super.update(id, inClass, request, checkPermissions);
+        pushChangedEvent(updatedEvent.getId());
+        return updatedEvent;
     }
 
     @Override
@@ -159,7 +173,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         ResourceRequirement resourceRequirement = new ResourceRequirement(event, resourceType);
         event.addResourceRequirement(resourceRequirement);
         try {
-            return repository.save(event).getResourceRequirements();
+            Set<ResourceRequirement> resourceRequirements = repository.save(event).getResourceRequirements();
+            pushChangedEvent(eventId);
+            return resourceRequirements;
         } catch (DataIntegrityViolationException ignore) {
             throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
         }
@@ -172,7 +188,10 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
 
         resourceRequirement.getResourceType().getResources();
         event.removeResourceRequirement(resourceRequirement);
-        return repository.save(event).getResourceRequirements();
+        
+        Set<ResourceRequirement> resourceRequirements = repository.save(event).getResourceRequirements();
+        pushChangedEvent(eventId);
+        return resourceRequirements;
     }
 
     private void checkModifyResourceRequirementPermission(Event event, Long resourceTypeId) {
@@ -221,7 +240,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
            resourceRequirement.setResources(new HashSet<>(resourceRequirement.getResourceType().getResources()));
         }
         try {
-            return resourceRequirementRepository.save(resourceRequirement).getResources();
+            Set<Resource> resources = resourceRequirementRepository.save(resourceRequirement).getResources();
+            pushChangedEvent(eventId);
+            return resources;
         } catch (DataIntegrityViolationException ignore) {
             throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
         }
@@ -238,13 +259,19 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         } else {
             resourceRequirement.setResources(null);
         }
-        return resourceRequirementRepository.save(resourceRequirement).getResources();
+        Set<Resource> resources = resourceRequirementRepository.save(resourceRequirement).getResources();
+        pushChangedEvent(eventId);
+        return resources;
     }
 
     public List<Article> getArticles(Long eventId) {
         // Check permission with a read
         read(eventId, true);
         return articleRepository.findByEventId(eventId);
+    }
+    
+    private void pushChangedEvent(Long eventId) {
+        simpMessagingTemplate.convertAndSend("/events", convertToOutDTO(read(eventId, false)));
     }
 
 }

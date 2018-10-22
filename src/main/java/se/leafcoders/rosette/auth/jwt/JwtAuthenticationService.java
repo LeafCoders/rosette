@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
@@ -41,6 +42,18 @@ public class JwtAuthenticationService {
         return null;
     }
 
+    public CurrentUserAuthentication createAuthentication(StompHeaderAccessor accessor) {
+        final String token = accessor.getFirstNativeHeader(AUTH_HEADER_NAME);
+        if (token != null) {
+            final CurrentUser user = tokenHandler.parseUserFromToken(token);
+            if (user != null) {
+                return new CurrentUserAuthentication(user);
+            }
+            logger.info(MessageFormat.format("Requst had an invalid token \"{0}\". Request will be handled as anonymous.", token));
+        }
+        return null;
+    }
+    
     public String createTokenForUser(User user) {
         return tokenHandler.createTokenForUserId(user.getId());
     }
