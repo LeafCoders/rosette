@@ -27,9 +27,6 @@ spring.jackson:
 spring.flyway:
   enabled: true
 
-rosette:
-  apiVersion: v1
-
 
 ---
 spring:

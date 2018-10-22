@@ -13,8 +13,6 @@ public class RosetteSettings {
 
     private String baseUrl;
 
-    private String apiVersion;
-
     private String jwtSecretToken;
 
     private String defaultMailFrom;
@@ -35,14 +33,6 @@ public class RosetteSettings {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
-    }
-
-    public String getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
     }
 
     public String getJwtSecretToken() {
