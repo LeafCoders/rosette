@@ -13,7 +13,11 @@ import javax.validation.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Transient;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 
 @Entity
 @Table(name = "users")
@@ -42,6 +46,8 @@ public class User extends Persistable {
     @NotNull
     private Boolean isActive;
     
+    @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
+    @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime lastLoginTime;
     
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")

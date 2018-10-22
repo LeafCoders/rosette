@@ -2,14 +2,13 @@ package se.leafcoders.rosette.persistence.converter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.TimeZone;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-/**
- * https://www.thoughts-on-java.org/persist-localdate-localdatetime-jpa/
- */
 public class RosetteDateTimeJsonDeserializer extends StdDeserializer<LocalDateTime> {
 
     private static final long serialVersionUID = 8889762207250422354L;
@@ -20,6 +19,9 @@ public class RosetteDateTimeJsonDeserializer extends StdDeserializer<LocalDateTi
 
     @Override
     public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        return LocalDateTime.parse(parser.readValueAs(String.class));
+        LocalDateTime clientDateTime = LocalDateTime.parse(parser.readValueAs(String.class));
+        ZonedDateTime timezoneDateTime = ZonedDateTime.of(clientDateTime, TimeZone.getDefault().toZoneId());
+        ZonedDateTime utcDateTime = timezoneDateTime.withZoneSameInstant(ZoneOffset.UTC);
+        return utcDateTime.toLocalDateTime();
     }
 }

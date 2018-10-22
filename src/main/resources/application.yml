@@ -18,6 +18,7 @@ spring.jpa:
     ddl-auto: none # Hibernate ddl auto (none, validate, create, create-drop, update)    
   properties:
     hibernate.dialect: org.hibernate.dialect.MySQL5Dialect # The SQL dialect makes Hibernate generate better SQL for the chosen database
+    hibernate.jdbc.time_zone: UTC # Times in database are stored in UTC timezone
 
 spring.jackson:
   serialization:

@@ -7,8 +7,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.validation.constraints.NotEmpty;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 
 @Entity
 @Table(name = "consents")
@@ -26,6 +30,8 @@ public class Consent extends Persistable {
     private Source source;
 
     @NotNull(message = ApiString.NOT_NULL)
+    @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
+    @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime time;
     
     @NotNull(message = ApiString.NOT_NULL)

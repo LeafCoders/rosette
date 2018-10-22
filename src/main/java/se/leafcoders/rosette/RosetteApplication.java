@@ -1,6 +1,8 @@
 package se.leafcoders.rosette;
 
 import java.util.Arrays;
+import java.util.TimeZone;
+import javax.annotation.PostConstruct;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import org.springframework.boot.Banner;
@@ -37,6 +39,11 @@ public class RosetteApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(RosetteApplication.class, args);
+    }
+
+    @PostConstruct
+    void started() {
+      TimeZone.setDefault(TimeZone.getTimeZone("Europe/Stockholm"));
     }
 
     /**
