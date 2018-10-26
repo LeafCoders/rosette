@@ -96,8 +96,8 @@ rosette:
   adminMailTo: admin@localhost
   filesPath: ./rosetteFiles
   fileClientCacheMaxAge: 0
-  baseUrl: http://localhost:9000
-  cordateUrl: http://localhost:4200
+  baseUrl: http://localhost:9000/
+  cordateUrl: http://localhost:4200/
 
 
 ---

@@ -71,7 +71,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     public String urlOfAsset(Asset asset) {
         if (asset.getType() == AssetType.FILE) {
-            return rosetteSettings.getBaseUrl() + "/api/files/" + asset.getFileId();
+            return rosetteSettings.getBaseUrl() + "api/files/" + asset.getFileId();
         } else {
             return asset.getUrl();
         }

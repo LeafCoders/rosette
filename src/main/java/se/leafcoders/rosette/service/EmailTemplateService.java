@@ -44,7 +44,7 @@ public class EmailTemplateService {
             templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
             templateValues.put("%%content.row1%%", messageService.lookup("forgottenPasswordEmail.textRow1"));
             templateValues.put("%%content.row2%%", messageService.lookup("forgottenPasswordEmail.textRow2"));
-            templateValues.put("%%content.setPasswordUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/forgotten?token=" + token);
+            templateValues.put("%%content.setPasswordUrl%%", rosetteSettings.getCordateUrl() + "#/auth/forgotten?token=" + token);
             templateValues.put("%%content.setPasswordTitle%%", messageService.lookup("forgottenPasswordEmail.changePassword"));
     
             String body = replaceAllTemplateValues(readTemplate("forgottenPasswordEmail.html"), templateValues);
@@ -97,7 +97,7 @@ public class EmailTemplateService {
             templateValues.put("%%title.row2%%", messageService.lookup("activatedUserEmail.subTitle"));
             templateValues.put("%%content.helloUser%%", messageService.lookup("common.helloUser", user.getFirstName()));
             templateValues.put("%%content.row1%%", messageService.lookup("activatedUserEmail.textRow1"));
-            templateValues.put("%%content.loginUrl%%", rosetteSettings.getCordateUrl() + "/#/auth/login?username=" + user.getEmail());
+            templateValues.put("%%content.loginUrl%%", rosetteSettings.getCordateUrl() + "#/auth/login?username=" + user.getEmail());
             templateValues.put("%%content.loginTitle%%", messageService.lookup("activatedUserEmail.login"));
     
             String body = replaceAllTemplateValues(readTemplate("activatedUserEmail.html"), templateValues);
