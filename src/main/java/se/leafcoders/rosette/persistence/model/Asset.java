@@ -169,6 +169,7 @@ public class Asset extends Persistable {
                 "application/xhtml+xml",
                 "application/html",
                 "application/javascript",
+                "application/x-javascript",
                 "application/ecmascript"
         ).stream().anyMatch(type -> mimeType.startsWith(type));
     }
