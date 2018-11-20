@@ -63,13 +63,15 @@ public class FilesController {
     
     // Download file
 
-    @GetMapping("/{fileId:.+}")
+    @GetMapping("/{fileKey}/{fileName:.+}")
     public void getFile(
-    		@PathVariable String fileId,
+    		@PathVariable String fileKey,
+    		@PathVariable String fileName,
     		@RequestParam(value = "size", required = false) String thumbSize,
     		HttpServletRequest request,
     		HttpServletResponse response
 	) throws Exception {
+        final String fileId = assetService.fileIdFromKeyAndFileName(fileKey, fileName);
         Asset asset = assetService.readByFileId(fileId, false);
     		// TODO: Check permission is !asset.isPublic
         fileStorageService.streamAssetFile(thumbSize, asset, request, response);

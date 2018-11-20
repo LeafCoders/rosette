@@ -32,6 +32,7 @@ public class Asset extends Persistable {
     @NotNull(message = ApiString.NOT_NULL)
     private Long folderId;
 
+    @Column(unique = true)
     private String fileId;
 
     private Integer fileVersion;

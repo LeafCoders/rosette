@@ -71,7 +71,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     public String urlOfAsset(Asset asset) {
         if (asset.getType() == AssetType.FILE) {
-            return rosetteSettings.getBaseUrl() + "api/files/" + asset.getFileId();
+            return rosetteSettings.getBaseUrl() + "api/files/" + asset.getFileId().replaceFirst("-", "/");
         } else {
             return asset.getUrl();
         }
@@ -132,7 +132,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         Asset asset = new Asset();
         asset.setType(Asset.AssetType.FILE);
         asset.setFolderId(folderId);
-        asset.setFileId(generateFileId(fileName));
+        asset.setFileId(generateFileId(folder, fileName));
         asset.setFileVersion(1);
         asset.setFileName(fileName);
         asset.setMimeType(mimeType);
@@ -199,7 +199,15 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         }
     }
 
-    private String generateFileId(String fileName) {
+    private String generateFileId(AssetFolder assetFolder, String fileName) {
+        if (assetFolder.getStaticFileKey()) {
+            String fileId = fileIdFromKeyAndFileName(assetFolder.getIdAlias(), fileName);
+            if (repo().existsByFileId(fileId)) {
+                throw new SingleValidationException(new ValidationError("file", ApiString.FILENAME_NOT_UNIQUE));
+            }
+            return fileId;
+        }
+
         String fileId;
         int maxTries = 10;
         do {
@@ -208,12 +216,16 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
             for (int i = 0; i < rand.length; i++) {
                 sb.append(Integer.toString((rand[i] & 0x0f), 16).substring(1));
             }
-            fileId = rand.toString().substring(3, 8) + "-" + fileName;
+            fileId = fileIdFromKeyAndFileName(rand.toString().substring(3, 8), fileName);
             maxTries--;
         } while (repo().existsByFileId(fileId) && maxTries >= 0);
         return fileId;
     }
 
+    public String fileIdFromKeyAndFileName(String fileKey, String fileName) {
+        return fileKey + "-" + fileName;
+    }
+    
     private void validateFolderExist(AssetFolder folder) {
         if (!fileStorageService.folderExist(folder.getId())) {
             throw new NotFoundException(AssetFolder.class, folder.getId());

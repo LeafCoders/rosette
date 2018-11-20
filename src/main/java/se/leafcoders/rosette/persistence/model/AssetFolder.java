@@ -25,6 +25,8 @@ public class AssetFolder extends Persistable {
     private String description;
 
     private String allowedMimeTypes;
+    
+    private Boolean staticFileKey = false;
 
 
     public AssetFolder() {}
@@ -63,6 +65,14 @@ public class AssetFolder extends Persistable {
 
     public void setAllowedMimeTypes(String allowedMimeTypes) {
         this.allowedMimeTypes = allowedMimeTypes;
+    }
+
+    public Boolean getStaticFileKey() {
+        return staticFileKey;
+    }
+
+    public void setStaticFileKey(Boolean staticFileKey) {
+        this.staticFileKey = staticFileKey;
     }
 
 }

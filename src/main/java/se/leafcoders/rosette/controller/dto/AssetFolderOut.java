@@ -7,6 +7,7 @@ public class AssetFolderOut {
     private String name;
     private String description;
     private String allowedMimeTypes;
+    private Boolean staticFileKey;
     
     // Getters and setters
 
@@ -48,6 +49,14 @@ public class AssetFolderOut {
 
     public void setAllowedMimeTypes(String allowedMimeTypes) {
         this.allowedMimeTypes = allowedMimeTypes;
+    }
+
+    public Boolean getStaticFileKey() {
+        return staticFileKey;
+    }
+
+    public void setStaticFileKey(Boolean staticFileKey) {
+        this.staticFileKey = staticFileKey;
     }
     
 }
