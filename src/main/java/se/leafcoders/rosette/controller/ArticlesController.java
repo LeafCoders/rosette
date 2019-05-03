@@ -9,6 +9,7 @@ import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,9 +26,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.controller.dto.ArticleIn;
 import se.leafcoders.rosette.controller.dto.ArticleOut;
+import se.leafcoders.rosette.controller.dto.ArticlePublicOut;
+import se.leafcoders.rosette.controller.dto.ArticlesPublicOut;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.service.ArticleService;
+import se.leafcoders.rosette.persistence.service.AssetService;
 import se.leafcoders.rosette.persistence.service.ResourceService;
 
 @Transactional
@@ -40,6 +44,9 @@ public class ArticlesController {
 
     @Autowired
     private ResourceService resourceService;
+    
+    @Autowired
+    private AssetService assetService;
     
     @GetMapping(value = "/{id}")
     public ArticleOut getArticle(@PathVariable Long id) {
@@ -94,4 +101,68 @@ public class ArticlesController {
     public Collection<ResourceOut> removeAuthor(@PathVariable Long id, @PathVariable Long authorId) {
         return resourceService.toOut(articleService.removeAuthor(id, authorId));
     }
+    
+    // Public
+
+    @GetMapping(value = "/public/{id}")
+    public ArticlePublicOut getPublicArticle(@PathVariable Long id) {
+        articleService.checkPublicPermission();
+        return new ArticlePublicOut(assetService, articleService.read(id, false));
+    }
+    
+    @GetMapping(value = "/public/chronologic")
+    public ArticlesPublicOut getPublicArticlesInChronologicOrder(
+            @RequestParam(value = "page", required = false) Integer page,            
+            @RequestParam(value = "pageSize", required = false, defaultValue="20") int pageSize,
+            @RequestParam(value = "articleTypeId", required = false) Long articleTypeId,
+            @RequestParam(value = "articleSerieId", required = false) Long articleSerieId
+        ) {
+        articleService.checkPublicPermission();
+        
+        Sort sort = new Sort(Sort.Direction.ASC, "time");
+
+        Specification<Article> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            Optional.ofNullable(articleTypeId).ifPresent(id -> predicates.add(cb.equal(root.get("articleTypeId"), id)));
+            Optional.ofNullable(articleSerieId).ifPresent(id -> predicates.add(cb.equal(root.get("articleSerieId"), id)));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        List<Article> publicArticles = articleService.readMany(spec, PageRequest.of(page, pageSize, sort), false);
+        return new ArticlesPublicOut(assetService, publicArticles);
+    }
+
+    @GetMapping(value = "/public/fromnow")
+    public ArticlesPublicOut getPublicArticlesStartingFromNow(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,            
+            @RequestParam(value = "pageSize", required = false, defaultValue="20") int pageSize,
+            @RequestParam(value = "future", required = false, defaultValue = "false") boolean future,            
+            @RequestParam(value = "articleTypeId", required = false) Long articleTypeId,
+            @RequestParam(value = "articleSerieId", required = false) Long articleSerieId
+        ) {
+        articleService.checkPublicPermission();
+        
+        Sort sort = new Sort(future ? Sort.Direction.ASC : Sort.Direction.DESC, "time");
+        
+        Specification<Article> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (future) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("time"), LocalDateTime.now()));
+            } else {
+                predicates.add(cb.lessThan(root.get("time"), LocalDateTime.now()));
+            }
+            Optional.ofNullable(articleTypeId).ifPresent(id -> predicates.add(cb.equal(root.get("articleTypeId"), id)));
+            Optional.ofNullable(articleSerieId).ifPresent(id -> predicates.add(cb.equal(root.get("articleSerieId"), id)));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        
+        List<Article> publicArticles;
+        if (pageSize > 0) {
+            publicArticles = articleService.readMany(spec, PageRequest.of(page, pageSize, sort), false);
+        } else {
+            publicArticles = articleService.readMany(spec, sort, false);
+        }
+        return new ArticlesPublicOut(assetService, publicArticles);
+    }
+
 }

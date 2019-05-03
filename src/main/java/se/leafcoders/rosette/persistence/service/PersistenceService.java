@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -104,6 +107,14 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         return readManyCheckPermissions(items, checkPermissions);
     }
 
+    public List<T> readMany(Specification<T> specification, Pageable pageable, boolean checkPermissions) {
+        if (pageable.getSort() == null) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), new Sort(Sort.Direction.ASC, "id"));
+        }
+        Page<T> page = repository.findAll(specification, pageable);
+        return readManyCheckPermissions(page.getContent(), checkPermissions);
+    }
+    
     protected List<T> readManyCheckPermissions(List<T> items, boolean checkPermissions) {
         return checkPermissions ? filterPermittedItems(items) : items;
     }

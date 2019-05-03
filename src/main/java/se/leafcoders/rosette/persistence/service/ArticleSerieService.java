@@ -47,7 +47,7 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
         if (rawIn == null || rawIn.has("contentRaw") || rawIn.has("contentHtml")) {
             item.setContent(new HtmlContent(dto.getContentRaw(), dto.getContentHtml()));
         }
-        if (rawIn == null || rawIn.has("image")) {
+        if (rawIn == null || rawIn.has("imageId")) {
             item.setImage(assetService.read(dto.getImageId(), true));
         }
         return item;
