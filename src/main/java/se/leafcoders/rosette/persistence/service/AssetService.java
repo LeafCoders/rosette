@@ -70,7 +70,9 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
     }
 
     public String urlOfAsset(Asset asset) {
-        if (asset.getType() == AssetType.FILE) {
+        if (asset == null) {
+            return null;
+        } else if (asset.getType() == AssetType.FILE) {
             return rosetteSettings.getBaseUrl() + "api/files/" + asset.getFileId().replaceFirst("-", "/");
         } else {
             return asset.getUrl();
@@ -82,7 +84,24 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     @Override
     protected Asset convertFromInDTO(AssetIn dto, JsonNode rawIn, Asset item) {
-        // Update is not supported
+        // Only set when create
+        if (item.getId() == null) {
+            if (rawIn == null || rawIn.has("type")) {
+                item.setType(AssetType.valueOf(dto.getType()));
+                if (item.getType() == AssetType.URL) {
+                    item.setMimeType("application/url");
+                }
+            }
+            if (rawIn == null || rawIn.has("folderId")) {
+                item.setFolderId(dto.getFolderId());
+            }
+        }
+        // Update is only supported for type URL
+        if (item.getType() == AssetType.URL) {
+            if (rawIn == null || rawIn.has("url")) {
+                item.setUrl(dto.getUrl());
+            }
+        }
         return item;
     }
 

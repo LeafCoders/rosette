@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller.dto;
 
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.URL;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
@@ -20,6 +21,9 @@ public class AssetIn {
     @URL
     private String url;
 
+    @NotNull(message = ApiString.NOT_NULL)
+    private Long folderId;
+    
     // Getters and setters
 
     public String getType() {
@@ -36,5 +40,13 @@ public class AssetIn {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Long getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(Long folderId) {
+        this.folderId = folderId;
     }
 }
