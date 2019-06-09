@@ -3,8 +3,6 @@ package se.leafcoders.rosette.controller;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
@@ -24,6 +22,7 @@ import biweekly.property.DateStart;
 import biweekly.property.Description;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.service.EventService;
 
@@ -80,9 +79,11 @@ public class CalendarController {
 
         vEvent.setSequence(event.getVersion());
 
-        vEvent.setDateStart(new DateStart(Date.from(event.getStartTime().atZone(ZoneId.systemDefault()).toInstant())));
+        LocalDateTime startTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getStartTime());
+        vEvent.setDateStart(new DateStart(RosetteDateTimeJsonSerializer.defaultTimeZoneAsDate(startTimeInDefaultTimeZone)));
         if (event.getEndTime() != null) {
-            vEvent.setDateEnd(new DateEnd(Date.from(event.getEndTime().atZone(ZoneId.systemDefault()).toInstant())));
+            LocalDateTime endTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getEndTime());
+            vEvent.setDateEnd(new DateEnd(RosetteDateTimeJsonSerializer.defaultTimeZoneAsDate(endTimeInDefaultTimeZone)));
         } else {
             vEvent.setDuration(Duration.fromMillis(60 * 60 * 1000));
         }

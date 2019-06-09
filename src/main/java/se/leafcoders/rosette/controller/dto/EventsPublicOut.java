@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.model.Event;
 
 public class EventsPublicOut {
@@ -56,10 +57,12 @@ public class EventsPublicOut {
             title = event.getTitle();
             description = event.getDescription();
             if (event.getStartTime() != null) {
-                startTime = event.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
+                LocalDateTime startTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getStartTime());
+                startTime = startTimeInDefaultTimeZone.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
             }
             if (event.getEndTime() != null) {
-                endTime = event.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
+                LocalDateTime endTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getEndTime());
+                endTime = endTimeInDefaultTimeZone.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
             }
         }
 
