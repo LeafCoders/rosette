@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.persistence.model.ArticleType;
+import se.leafcoders.rosette.persistence.validator.StringEnumeration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleIn {
@@ -45,6 +47,11 @@ public class ArticleIn {
     private String contentHtml;
 
     private Long recordingId;
+
+    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
+    @StringEnumeration(enumClass = ArticleType.RecordingStatus.class)
+    private String recordingStatus;
 
     
     // Getters and setters
@@ -119,6 +126,14 @@ public class ArticleIn {
 
     public void setRecordingId(Long recordingId) {
         this.recordingId = recordingId;
+    }
+
+    public String getRecordingStatus() {
+        return recordingStatus;
+    }
+
+    public void setRecordingStatus(String recordingStatus) {
+        this.recordingStatus = recordingStatus;
     }
 
 }

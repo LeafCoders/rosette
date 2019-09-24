@@ -2,12 +2,14 @@ package se.leafcoders.rosette.persistence.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotEmpty;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
@@ -15,6 +17,8 @@ import se.leafcoders.rosette.persistence.validator.IdAlias;
 @Table(name = "articletypes")
 public class ArticleType extends Persistable {
 
+    public enum RecordingStatus { NOT_EXPECTED, EXPECTING_RECORDING, HAS_RECORDING };
+    
     @IdAlias
     @Column(nullable = false, unique = true)
     private String idAlias;
@@ -44,7 +48,12 @@ public class ArticleType extends Persistable {
     @ManyToOne
     @JoinColumn(name = "recordingfolder_id")
     private AssetFolder recordingFolder;
-    
+
+    @NotNull(message = ApiString.STRING_NOT_EMPTY)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private RecordingStatus defaultRecordingStatus;
+
     @NotNull(message = ApiString.NOT_NULL)
     @ManyToOne
     @JoinColumn(name = "author_resourcetype_id")
@@ -110,6 +119,14 @@ public class ArticleType extends Persistable {
 
     public void setRecordingFolder(AssetFolder recordingFolder) {
         this.recordingFolder = recordingFolder;
+    }
+
+    public RecordingStatus getDefaultRecordingStatus() {
+        return defaultRecordingStatus;
+    }
+
+    public void setDefaultRecordingStatus(RecordingStatus defaultRecordingStatus) {
+        this.defaultRecordingStatus = defaultRecordingStatus;
     }
 
     public ResourceType getAuthorResourceType() {

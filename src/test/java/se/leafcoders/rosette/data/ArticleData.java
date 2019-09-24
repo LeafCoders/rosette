@@ -22,6 +22,7 @@ public class ArticleData {
         article.setTitle(title);
         article.setContent(new HtmlContent("Innehåll...", "Innehåll..."));
         article.setRecording(recording);
+        article.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING);
         return article;
     }
 
@@ -45,6 +46,7 @@ public class ArticleData {
         article.setContentRaw("Innehåll...");
         article.setContentHtml("Innehåll...");
         article.setRecordingId(recordingId);
+        article.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING.name());
         return article;
     }
     
@@ -59,6 +61,7 @@ public class ArticleData {
         article.setContentRaw("Innehåll...");
         article.setContentHtml("Innehåll...");
         article.setRecordingId(recordingId);
+        article.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING.name());
         return article;
     }
     

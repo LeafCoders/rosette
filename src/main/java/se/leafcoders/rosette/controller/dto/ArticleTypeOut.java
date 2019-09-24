@@ -10,6 +10,7 @@ public class ArticleTypeOut {
     private String newArticleSerieTitle;
     private AssetFolderOut imageFolder;
     private AssetFolderOut recordingFolder;
+    private String defaultRecordingStatus;
     private ResourceTypeRefOut authorResourceType;
 
     // Getters and setters
@@ -76,6 +77,14 @@ public class ArticleTypeOut {
 
     public void setRecordingFolder(AssetFolderOut recordingFolder) {
         this.recordingFolder = recordingFolder;
+    }
+
+    public String getDefaultRecordingStatus() {
+        return defaultRecordingStatus;
+    }
+
+    public void setDefaultRecordingStatus(String defaultRecordingStatus) {
+        this.defaultRecordingStatus = defaultRecordingStatus;
     }
 
     public ResourceTypeRefOut getAuthorResourceType() {

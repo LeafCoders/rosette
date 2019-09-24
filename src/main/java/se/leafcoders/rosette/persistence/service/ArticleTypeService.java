@@ -46,6 +46,9 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
         if (rawIn == null || rawIn.has("recordingFolderId")) {
             item.setRecordingFolder(assetFolderService.read(dto.getRecordingFolderId(), true));
         }
+        if (rawIn == null || rawIn.has("defaultRecordingStatus")) {
+            item.setDefaultRecordingStatus(ArticleType.RecordingStatus.valueOf(dto.getDefaultRecordingStatus()));
+        }
         if (rawIn == null || rawIn.has("authorResourceTypeId")) {
             item.setAuthorResourceType(resourceTypeService.read(dto.getAuthorResourceTypeId(), true));
         }
@@ -63,6 +66,7 @@ public class ArticleTypeService extends PersistenceService<ArticleType, ArticleT
         dto.setNewArticleSerieTitle(item.getNewArticleSerieTitle());
         dto.setImageFolder(assetFolderService.toOut(item.getImageFolder()));
         dto.setRecordingFolder(assetFolderService.toOut(item.getRecordingFolder()));
+        dto.setDefaultRecordingStatus(item.getDefaultRecordingStatus().name());
         dto.setAuthorResourceType(resourceTypeService.toOutRef(item.getAuthorResourceType(), ResourceTypeRefOut::new));
         return dto;
     }

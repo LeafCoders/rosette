@@ -24,6 +24,7 @@ public class ArticleOut {
     private String contentRaw;
     private String contentHtml;
     private AssetOut recording;
+    private String recordingStatus;
 
     
     // Getters and setters
@@ -114,6 +115,14 @@ public class ArticleOut {
 
     public void setRecording(AssetOut recording) {
         this.recording = recording;
+    }
+
+    public String getRecordingStatus() {
+        return recordingStatus;
+    }
+
+    public void setRecordingStatus(String recordingStatus) {
+        this.recordingStatus = recordingStatus;
     }
 
 }

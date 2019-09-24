@@ -151,6 +151,7 @@ function ServerAPIService($resource) {
     			contentRaw: content,
     			contentHtml: content,
     			recordingId: recordingId,
+    			recordingStatus: !!recordingId ? 'HAS_RECORDING' : 'NOT_EXPECTED'
 		}).$promise;
 	};
 	

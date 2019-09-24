@@ -17,6 +17,7 @@ import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.model.Article;
+import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.model.HtmlContent;
 import se.leafcoders.rosette.persistence.model.Resource;
 import se.leafcoders.rosette.persistence.repository.ArticleRepository;
@@ -81,7 +82,19 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         if (rawIn == null || rawIn.has("recordingId")) {
             item.setRecording(assetService.read(dto.getRecordingId(), true));
         }
+        if (rawIn == null || rawIn.has("recordingStatus")) {
+            item.setRecordingStatus(ArticleType.RecordingStatus.valueOf(dto.getRecordingStatus()));
+        }
         item.setLastModifiedTime(LocalDateTime.now());
+
+        // Force set recoding status if recording exist
+        if (item.getRecording() != null) {
+            item.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING);
+        }
+        // Force set recoding status if recording doesn't exist
+        if (item.getRecording() == null && ArticleType.RecordingStatus.HAS_RECORDING.equals(item.getRecordingStatus())) {
+            item.setRecordingStatus(item.getArticleType().getDefaultRecordingStatus());
+        }
         return item;
     }
 
@@ -101,6 +114,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
             dto.setContentHtml(item.getContent().getContentHtml());
         }
         dto.setRecording(assetService.toOut(item.getRecording()));
+        dto.setRecordingStatus(item.getRecordingStatus().name());
         return dto;
     }
 
