@@ -45,7 +45,8 @@ public class SeedTest extends AbstractControllerTest {
     public void seed() throws Exception {
         user1 = givenUser(user1);
         givenPermissionForUser(user1, "*");
-        givenPermissionForAll("*:view");
+        givenPermissionForAllUsers("*:view");
+        givenPermissionForPublic("events:public,articles:public");
 
         // Users
         final Long admin = post(user1, "/users", json(UserData.newActiveUser("Admin", "Admin")));

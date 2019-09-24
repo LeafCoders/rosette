@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,6 +23,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.persistence.model.ArticleType.RecordingStatus;
 
 @Entity
 @Table(name = "articles")
@@ -77,6 +80,10 @@ public class Article extends Persistable {
     @JoinColumn(name = "recording_id")
     private Asset recording;
 
+    @NotNull(message = ApiString.STRING_NOT_EMPTY)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private RecordingStatus recordingStatus;
 
     public Article() {
     }
@@ -183,6 +190,14 @@ public class Article extends Persistable {
 
     public void setRecording(Asset recording) {
         this.recording = recording;
+    }
+
+    public RecordingStatus getRecordingStatus() {
+        return recordingStatus;
+    }
+
+    public void setRecordingStatus(RecordingStatus recordingStatus) {
+        this.recordingStatus = recordingStatus;
     }
 
 }

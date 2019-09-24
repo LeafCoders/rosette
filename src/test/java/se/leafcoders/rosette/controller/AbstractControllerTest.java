@@ -153,10 +153,14 @@ abstract class AbstractControllerTest {
         return permissionRepository.save(new Permission("For user: " + user.getFullName(), Permission.LEVEL_USER, user.getId(), patterns));
     }
 
-    protected Permission givenPermissionForAll(String patterns) {
-        return permissionRepository.save(new Permission("For all", Permission.LEVEL_ALL_USERS, null, patterns));
+    protected Permission givenPermissionForAllUsers(String patterns) {
+        return permissionRepository.save(new Permission("For all users", Permission.LEVEL_ALL_USERS, null, patterns));
     }
 
+    protected Permission givenPermissionForPublic(String patterns) {
+        return permissionRepository.save(new Permission("For public access", Permission.LEVEL_PUBLIC, null, patterns));
+    }
+    
     protected Asset givenAssetInFolder(Long folderId, String fileName, String asFileName, String mimeType) throws Exception {
         createUploadUser();
 

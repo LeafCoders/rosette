@@ -17,6 +17,7 @@ public class ArticleTypeData {
         articleType.setAuthorResourceType(authorResourceType);
         articleType.setImageFolder(imageFolder);
         articleType.setRecordingFolder(recordingFolder);
+        articleType.setDefaultRecordingStatus(ArticleType.RecordingStatus.EXPECTING_RECORDING);
         return articleType;
     }
 
@@ -40,6 +41,7 @@ public class ArticleTypeData {
         articleType.setAuthorResourceTypeId(authorResourceTypeId);
         articleType.setImageFolderId(imageFolderId);
         articleType.setRecordingFolderId(recordingFolderId);
+        articleType.setDefaultRecordingStatus(ArticleType.RecordingStatus.EXPECTING_RECORDING.name());
         return articleType;
     }
     

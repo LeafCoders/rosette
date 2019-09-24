@@ -5,7 +5,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
+import se.leafcoders.rosette.persistence.validator.StringEnumeration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleTypeIn {
@@ -35,6 +37,11 @@ public class ArticleTypeIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Long recordingFolderId;
     
+    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
+    @StringEnumeration(enumClass = ArticleType.RecordingStatus.class)
+    private String defaultRecordingStatus;
+
     @NotNull(message = ApiString.NOT_NULL)
     private Long authorResourceTypeId;
     
@@ -95,6 +102,14 @@ public class ArticleTypeIn {
 
     public void setRecordingFolderId(Long recordingFolderId) {
         this.recordingFolderId = recordingFolderId;
+    }
+
+    public String getDefaultRecordingStatus() {
+        return defaultRecordingStatus;
+    }
+
+    public void setDefaultRecordingStatus(String defaultRecordingStatus) {
+        this.defaultRecordingStatus = defaultRecordingStatus;
     }
 
     public Long getAuthorResourceTypeId() {
