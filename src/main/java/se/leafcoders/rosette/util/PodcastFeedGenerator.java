@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.persistence.model.Article;
@@ -14,8 +15,10 @@ import se.leafcoders.rosette.persistence.model.Asset;
 import se.leafcoders.rosette.persistence.model.Podcast;
 import se.leafcoders.rosette.persistence.service.AssetService;
 
+// https://cyber.harvard.edu/rss/rss.html
 // https://help.apple.com/itc/podcasts_connect/
-// http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf
+// https://developers.google.com/search/reference/podcast/rss-feed
+
 @Service
 public class PodcastFeedGenerator {
     
@@ -23,7 +26,6 @@ public class PodcastFeedGenerator {
     private AssetService assetService;
 
     public String getPodcastFeed(Podcast podcast, List<Article> articles) {
-
         List<String> podcastData = new ArrayList<String>();
 
         // XML header and <rss>
@@ -55,25 +57,31 @@ public class PodcastFeedGenerator {
     }
 
     private String getChannelData(Podcast podcast) {
-        return String.join("\n", new String[] {
-                tag("title", noAmp(podcast.getTitle())),
-                tag("itunes:subtitle", noAmp(podcast.getSubTitle())),
-    
-                tag("description", toContentData(podcast.getDescription())),
-//                tag("itunes:summary", toContentData(podcast.getDescription())),
-    
-                tag("itunes:author", noAmp(podcast.getAuthorName())),
-                tag("link", podcast.getLink()),
-                tag("language", podcast.getLanguage()),
-                tag("copyright", noAmp(podcast.getCopyright())),
-                tag("itunes:explicit", "clean"),
-                tag("generator", "LeafCoders/Rosette"),
-    
-                tag("itunes:image", "", "href=\"" + assetService.urlOfAsset(podcast.getImage()) + "\""),
-                "<itunes:category text=\"" + noAmp(podcast.getMainCategory()) + "\">",
-                    "<itunes:category text=\"" + noAmp(podcast.getSubCategory()) + "\"/>",
-                "</itunes:category>",
-        });
+        Tag[] tags = new Tag[] {
+            // RSS 2.0 Specification
+            tag("title").plainContent(podcast.getTitle()),
+            tag("description").htmlContent(podcast.getDescription()),
+            tag("link").rawContent(podcast.getLink()),
+            tag("language").rawContent(podcast.getLanguage()),
+            tag("copyright").plainContent(podcast.getCopyright()),
+            tag("generator").rawContent("LeafCoders/Rosette"),
+            tag("image")
+                .tagContent(tag("link").rawContent(podcast.getLink()))
+                .tagContent(tag("title").plainContent(podcast.getTitle()))
+                .tagContent(tag("url").rawContent(assetService.urlOfAsset(podcast.getImage()))),
+
+            // Apple Podcaster https://help.apple.com/itc/podcasts_connect/#/itcb54353390
+            tag("itunes:subtitle").plainContent(podcast.getSubTitle()),
+            tag("itunes:summary").htmlContent(podcast.getDescription()),
+            tag("itunes:author").plainContent(podcast.getAuthorName()),
+            tag("itunes:explicit").rawContent("false"),
+            tag("itunes:type").rawContent("episodic"),
+            tag("itunes:image").attribute("href", assetService.urlOfAsset(podcast.getImage())),
+            
+            tag("itunes:category").attribute("text", podcast.getMainCategory())
+                .tagContent(tag("itunes:category").attribute("text", podcast.getSubCategory()))
+        };
+        return Stream.of(tags).map(Tag::toString).collect(Collectors.joining("\n"));
     }
 
     private String getItemData(Article article) {
@@ -81,51 +89,33 @@ public class PodcastFeedGenerator {
         final Asset recording = article.getRecording();
         final ZonedDateTime pubDate = ZonedDateTime.of(article.getTime(), ZoneId.systemDefault());
         
-        return String.join("\n", new String[] {
-                tag("title", noAmp(article.getTitle())),
-                tag("itunes:subtitle", noAmp(article.getArticleSerie().getTitle())),
-                tag("description", toContentData(article.getContent().getContentPodcast())),
-                //tag("itunes:summary", toContentData(article.getContent())),
-                //tag("content:encoded", toHtmlContentData(article.getContent())), // May contain <p>, <ol>, <ul> or <a>
-                //tag("link", article.getLinkToWebPageWithArticle()),
+        Tag[] tags = new Tag[] {
+            // RSS 2.0 Specification
+            tag("title").plainContent(article.getTitle()),
+            tag("description").htmlContent(article.getContent().getContentRaw()),
+            //tag("link", article.getLinkToWebPageWithArticle()),
+            tag("author").plainContent(article.getAuthors().stream().map(a -> a.getName()).collect(Collectors.joining(" ,"))),
+            tag("guid").rawContent(article.getId().toString()),
+            tag("pubDate").rawContent(pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME)),
+            tag("enclosure")
+                .attribute("url", assetService.urlOfAsset(recording))
+                .attribute("length", "" + recording.getFileSize())
+                .attribute("type", recording.getMimeType()),
 
-                tag("itunes:author", article.getAuthors().stream().map(a -> noAmp(a.getName())).collect(Collectors.joining(" ,"))),
-                tag("itunes:explicit", "clean"), tag("guid", article.getId().toString()),
-                tag("pubDate", pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME)),
-
-                tag("itunes:image", "", "href=\"" + assetService.urlOfAsset(articleSerie.getImage()) + "\""),
-
-                tag("enclosure", "",
-                        "url=\"" + assetService.urlOfAsset(recording) + "\"",
-                        "length=\"" + recording.getFileSize() + "\"",
-                        "type=\"" + recording.getMimeType() + "\""),
-                tag("itunes:duration", toDuration(recording.getDuration()))
-        });
+            // Apple Podcaster https://help.apple.com/itc/podcasts_connect/#/itcb54353390
+            tag("itunes:subtitle").plainContent(article.getArticleSerie().getTitle()),
+            tag("itunes:summary").htmlContent(article.getContent().getContentHtml()),
+            tag("content:encoded").htmlContent(article.getContent().getContentHtml()),
+            tag("itunes:author").plainContent(article.getAuthors().stream().map(a -> a.getName()).collect(Collectors.joining(" ,"))),
+            tag("itunes:explicit").rawContent("false"),
+            tag("itunes:image").attribute("href", assetService.urlOfAsset(articleSerie.getImage())),
+            tag("itunes:duration").rawContent(toDuration(recording.getDuration()))
+        };
+        return Stream.of(tags).map(Tag::toString).collect(Collectors.joining("\n"));
     }
-
-    private String tag(String tagName, String tagValue, String... tagAttributes) {
-        if (tagName != null && tagValue != null) {
-            String attributes = tagAttributes.length > 0 ? " " + String.join(" ", tagAttributes) : "";
-            return "<" + tagName + attributes + ">" + tagValue + "</" + tagName + ">";
-        }
-        return "";
-    }
-
-    private String noAmp(String text) {
-        return text != null ? text.replace("&", "&amp;") : "";
-    }
-
-    private String toContentData(String text) {
-        if (text == null) {
-            return "";
-        }
-
-        boolean isHtmlContent = text.startsWith("<");
-        if (isHtmlContent) {
-            return HtmlSanitize.sanitize(text);
-        } else {
-            return "<![CDATA[" + text + "]]>";
-        }
+    
+    private Tag tag(String tagName) {
+        return new Tag(tagName);
     }
 
     private String toDuration(Long totalSeconds) {
@@ -139,4 +129,62 @@ public class PodcastFeedGenerator {
         }
     }
 
+    private static class Tag {
+        private final String tagName;
+        private List<String> attributes = new ArrayList<>();
+        private String content = "";
+        
+        Tag(String tagName) {
+            this.tagName = tagName;
+        }
+
+        Tag attribute(String name, String value) {
+            attributes.add(name + "=\"" + HtmlSanitize.sanitize(value) + "\"");
+            return this;
+        }
+
+        Tag rawContent(String rawContent) {
+            content += rawContent;
+            return this;
+        }
+
+        Tag plainContent(String plainContent) {
+            content += HtmlSanitize.sanitize(plainContent);
+            return this;
+        }
+
+        Tag htmlContent(String htmlContent) {
+            content += toCDATA(toAllowedPodcastTags(htmlContent));
+            return this;
+        }
+        
+        Tag tagContent(Tag tagContent) {
+            content += tagContent;
+            return this;
+        }
+        
+        @Override
+        public String toString() {
+            String attrs = attributes.isEmpty() ? "" : " " + String.join(" ", attributes);
+            return "<" + tagName + attrs + ">" + content + "</" + tagName + ">";
+        }
+
+        private String toCDATA(String htmlContent) {
+            return "<![CDATA[" + htmlContent + "]]>";
+            
+        }
+
+        // Allowed tags are <p>, <ol>, <ul>, <li> and <a>
+        private String toAllowedPodcastTags(String htmlContent) {
+            return htmlContent
+                    .replace("</p>", "</p><p></p>")
+                    .replace("<h1>", "<p></p><p>=== ")
+                    .replace("</h1>", " ===</p><p></p>")
+                    .replace("<h2>", "<p></p><p>--- ")
+                    .replace("</h2>", " ---</p><p></p>")
+                    .replace("<blockquote>", "<p>--------</p><p>&nbsp;")
+                    .replace("</blockquote>", "</p><p>--------</p>");
+            // TODO: Convert "<img>" to "<a>"
+        }
+    }
 }
