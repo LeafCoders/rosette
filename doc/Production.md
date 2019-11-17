@@ -3,18 +3,25 @@
 Here are instructions of how to run Rosette in production mode
 
 
-## Build an run with  docker
+## Build an run with docker
 
 Starts MySQL, Rosette and Cordate.
 
-1. Update `rosette` version in `build.gradle` and `Dockerfile`
-2. Build `rosette` jar file with with: `/gradlew bootjar` (from folder `/rosette`)
-3. Build a docker image of `rosette` with: `docker build -t leafcoders/rosette:1.0 .` (from folder `/rosette`)
-4. Build a docker image of `cordate` with: `docker build --no-cache -t leafcoders/cordate:1.0 .` (from folder `/cordate`)
+1. Update `rosette` version `x.yy` in `build.gradle` and `Dockerfile`
+2. Build `rosette` jar file with with: `./gradlew bootjar` (from folder `/rosette`)
+3. Build a docker image of `rosette` with: `docker build -t leafcoders/rosette:x.yy .` (from folder `/rosette`)
+4. Build a docker image of `cordate` with: `docker build --no-cache -t leafcoders/cordate:x.yy .` (from folder `/cordate`)
 5. Copy `setup/docker/start_all.sh` and `setup/docker/docker-compose.yml` to a folder.
 6. Edit `start_all.sh` and enter your own values.
 7. Edit `docker-compose.yml` and enter your own values.
 8. In your folder, run: `./start_all.sh` to start.
+
+
+## Publish images to Docker Hub
+
+1. Sign in with the Docker Desktop application
+1. Publish `rosette` image with: `docker push leafcoders/rosette:x.yy`
+2. Publish `cordate` image with: `docker push leafcoders/cordate:x.yy`
 
 
 ## Configuration
