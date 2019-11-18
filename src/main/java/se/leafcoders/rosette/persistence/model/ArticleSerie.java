@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.persistence.model;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -45,6 +46,8 @@ public class ArticleSerie extends Persistable {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Asset image;
+
+    private LocalDateTime lastUseTime;
 
 
     public ArticleSerie() {
@@ -100,6 +103,14 @@ public class ArticleSerie extends Persistable {
     public void setImage(Asset image) {
         this.image = image;
         this.imageId = image != null ? image.getId() : null;
+    }
+
+    public LocalDateTime getLastUseTime() {
+        return lastUseTime;
+    }
+
+    public void setLastUseTime(LocalDateTime lastUseTime) {
+        this.lastUseTime = lastUseTime;
     }
 
 }

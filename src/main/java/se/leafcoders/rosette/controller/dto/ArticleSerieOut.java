@@ -1,5 +1,9 @@
 package se.leafcoders.rosette.controller.dto;
 
+import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+
 public class ArticleSerieOut {
 
     private Long id;
@@ -9,6 +13,8 @@ public class ArticleSerieOut {
     private String contentRaw;
     private String contentHtml;
     private AssetOut image;
+    @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
+    private LocalDateTime lastUseTime;
 
     // Getters and setters
 
@@ -66,6 +72,14 @@ public class ArticleSerieOut {
 
     public void setImage(AssetOut image) {
         this.image = image;
+    }
+
+    public LocalDateTime getLastUseTime() {
+        return lastUseTime;
+    }
+
+    public void setLastUseTime(LocalDateTime lastUseTime) {
+        this.lastUseTime = lastUseTime;
     }
 
 }

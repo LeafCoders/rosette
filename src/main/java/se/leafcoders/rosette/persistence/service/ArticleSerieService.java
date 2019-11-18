@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.persistence.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,16 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
             dto.setContentHtml(item.getContent().getContentHtml());
         }
         dto.setImage(assetService.toOut(item.getImage()));
+        dto.setLastUseTime(item.getLastUseTime());
         return dto;
+    }
+    
+    public void updateUsage(ArticleSerie articleSerie) {
+        if (articleSerie != null) {
+            try {
+                repo().setLastUseTime(articleSerie.getId(), LocalDateTime.now());
+            } catch (Exception ignore) {}
+        }
     }
 
 }

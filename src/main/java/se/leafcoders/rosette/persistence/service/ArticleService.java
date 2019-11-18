@@ -54,35 +54,39 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
 
     @Override
     protected Article convertFromInDTO(ArticleIn dto, JsonNode rawIn, Article item) {
+        final boolean isCreate = rawIn == null;
         // Only set when create
         if (item.getArticleTypeId() == null) {
             item.setArticleType(articleTypeService.read(dto.getArticleTypeId(), true));
         }
-        if (rawIn == null || rawIn.has("articleSerieId")) {
+        if (isCreate || rawIn.has("articleSerieId")) {
             item.setArticleSerie(articleSerieService.read(dto.getArticleSerieId(), true));
+            if (!isCreate) {
+                articleSerieService.updateUsage(item.getArticleSerie());
+            }
         }
-        if (rawIn == null || rawIn.has("eventId")) {
+        if (isCreate || rawIn.has("eventId")) {
             item.setEvent(eventService.read(dto.getEventId(), true));
         }
-        if (rawIn == null || rawIn.has("time")) {
+        if (isCreate || rawIn.has("time")) {
             item.setTime(dto.getTime());
         }
-        if (rawIn == null || rawIn.has("authorIds")) {
+        if (isCreate || rawIn.has("authorIds")) {
             if (dto.getAuthorIds() != null) {
                 item.setAuthors(dto.getAuthorIds().stream().map(authorId -> resourceService.read(authorId, true))
                         .collect(Collectors.toList()));
             }
         }
-        if (rawIn == null || rawIn.has("title")) {
+        if (isCreate || rawIn.has("title")) {
             item.setTitle(dto.getTitle());
         }
-        if (rawIn == null || rawIn.has("contentRaw") || rawIn.has("contentHtml")) {
+        if (isCreate || rawIn.has("contentRaw") || rawIn.has("contentHtml")) {
             item.setContent(new HtmlContent(dto.getContentRaw(), dto.getContentHtml()));
         }
-        if (rawIn == null || rawIn.has("recordingId")) {
+        if (isCreate || rawIn.has("recordingId")) {
             item.setRecording(assetService.read(dto.getRecordingId(), true));
         }
-        if (rawIn == null || rawIn.has("recordingStatus")) {
+        if (isCreate || rawIn.has("recordingStatus")) {
             item.setRecordingStatus(ArticleType.RecordingStatus.valueOf(dto.getRecordingStatus()));
         }
         item.setLastModifiedTime(LocalDateTime.now());
@@ -147,6 +151,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     public Article create(ArticleIn articleIn, boolean checkPermissions) {
         Article createdArticle = super.create(articleIn, checkPermissions); 
         updateResourceUsage(createdArticle);
+        articleSerieService.updateUsage(createdArticle.getArticleSerie());
         return createdArticle;
     }
 
