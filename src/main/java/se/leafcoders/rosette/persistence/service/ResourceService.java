@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.persistence.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +86,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     
     public void updateUsage(Resource resource) {
         try {
-            repo().setLastUseTime(resource.getId(), LocalDateTime.now());
+            repo().setLastUseTime(resource.getId(), serverTimeNow());
         } catch (Exception ignore) {}
     }
 }

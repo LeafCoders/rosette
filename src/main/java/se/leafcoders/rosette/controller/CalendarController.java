@@ -25,11 +25,12 @@ import biweekly.util.Duration;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.service.EventService;
+import se.leafcoders.rosette.util.ServerTime;
 
 @Transactional
 @RestController
 @RequestMapping(value = "api/calendar", produces = "application/json")
-public class CalendarController {
+public class CalendarController implements ServerTime {
 
     @Autowired
     private EventService eventService;
@@ -58,8 +59,8 @@ public class CalendarController {
     }
 
     private List<Event> getEvents(List<Long> eventTypeIds) {
-        LocalDateTime eventsFrom = LocalDateTime.now().minusDays(15);
-        LocalDateTime eventsBefore = LocalDateTime.now().plusYears(1);
+        LocalDateTime eventsFrom = serverTimeNow().minusDays(15);
+        LocalDateTime eventsBefore = serverTimeNow().plusYears(1);
         return eventService.readForCalendar(eventTypeIds, eventsFrom, eventsBefore);
     }
 

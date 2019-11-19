@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.persistence.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +88,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         if (isCreate || rawIn.has("recordingStatus")) {
             item.setRecordingStatus(ArticleType.RecordingStatus.valueOf(dto.getRecordingStatus()));
         }
-        item.setLastModifiedTime(LocalDateTime.now());
+        item.setLastModifiedTime(serverTimeNow());
 
         // Force set recoding status if recording exist
         if (item.getRecording() != null) {

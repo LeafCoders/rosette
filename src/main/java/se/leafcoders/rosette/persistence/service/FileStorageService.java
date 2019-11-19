@@ -27,6 +27,8 @@ public class FileStorageService {
 
     private final int THUMB_WIDTH_ICON = 300;
     private final int THUMB_HEIGHT_ICON = 300;
+    private final int THUMB_WIDTH_ARTICLE = 540;
+    private final int THUMB_HEIGHT_ARTICLE = 540;
 
     @Autowired
     private RosetteSettings rosetteSettings;
@@ -138,10 +140,13 @@ public class FileStorageService {
         if (ofAsset.getType() == AssetType.FILE && ofAsset.getMimeType().startsWith("image")) {
             String orgFilePath = absolutePath(ofAsset.getFolderId(), null, ofAsset.fileNameOnDisk());
             String thumbFilePath = absolutePath(ofAsset.getFolderId(), thumbSize, ofAsset.fileNameOnDisk());
-            Thumbnails.of(orgFilePath)
-                .crop(Positions.CENTER)
-                .size(THUMB_WIDTH_ICON, THUMB_HEIGHT_ICON)
-                .toFile(thumbFilePath);
+            Thumbnails.Builder<File> builder = Thumbnails.of(orgFilePath);
+            if ("article".equalsIgnoreCase(thumbSize)) {
+                builder.crop(Positions.CENTER).size(THUMB_WIDTH_ARTICLE, THUMB_HEIGHT_ARTICLE);
+            } else { // "icon"
+                builder.crop(Positions.CENTER).size(THUMB_WIDTH_ICON, THUMB_HEIGHT_ICON);
+            }
+            builder.toFile(thumbFilePath);
             return thumbFilePath;
         } else {
     		    // TODO: Should return a icon image for the mime type of this asset

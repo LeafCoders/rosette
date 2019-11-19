@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.controller.auth;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,10 @@ import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.permission.PermissionType;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
 import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.util.ServerTime;
 
 @RestController
-public class LoginController extends AuthController {
+public class LoginController extends AuthController implements ServerTime {
 
     @Autowired
     private JwtAuthenticationService jwtAuthenticationService;
@@ -79,7 +79,7 @@ public class LoginController extends AuthController {
     }
 
 	private void updateLastLoginTime(Long id) {
-	    userRepository.setLastLoginTime(id, LocalDateTime.now());
+	    userRepository.setLastLoginTime(id, serverTimeNow());
 	}
 
 	private HashMap<String, String> successData(CurrentUser user) {

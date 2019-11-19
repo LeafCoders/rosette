@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.persistence.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
     }
 
     public List<ArticleSerie> findAllOfType(Long articleTypeId, boolean checkPermissions) {
-        return readManyCheckPermissions(repo().findByArticleTypeId(articleTypeId), checkPermissions);
+        return readManyCheckPermissions(repo().findByArticleTypeIdOrderByLastUseTimeDesc(articleTypeId), checkPermissions);
     }
     
     @Override
@@ -73,7 +72,7 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
     public void updateUsage(ArticleSerie articleSerie) {
         if (articleSerie != null) {
             try {
-                repo().setLastUseTime(articleSerie.getId(), LocalDateTime.now());
+                repo().setLastUseTime(articleSerie.getId(), serverTimeNow());
             } catch (Exception ignore) {}
         }
     }

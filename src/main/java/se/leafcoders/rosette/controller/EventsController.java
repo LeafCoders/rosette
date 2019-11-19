@@ -40,11 +40,12 @@ import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.EventService;
 import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
 import se.leafcoders.rosette.persistence.service.ResourceService;
+import se.leafcoders.rosette.util.ServerTime;
 
 @Transactional
 @RestController
 @RequestMapping(value = "api/events", produces = "application/json")
-public class EventsController {
+public class EventsController implements ServerTime {
 
     @Autowired
     private EventService eventService;
@@ -69,7 +70,7 @@ public class EventsController {
         @RequestParam(value = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime before
     ) {
         if (from == null && before == null) {
-            from = LocalDateTime.now();
+            from = serverTimeNow();
         }
         Optional<LocalDateTime> fromOptional = Optional.ofNullable(from);
         Optional<LocalDateTime> beforeOptional = Optional.ofNullable(before);
@@ -161,10 +162,10 @@ public class EventsController {
         LocalDateTime from;
         LocalDateTime before;
         if (rangeMode.toLowerCase().contains("week")) {
-            from = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).with(DayOfWeek.MONDAY).plusWeeks(rangeOffset);
+            from = serverTimeNow().truncatedTo(ChronoUnit.DAYS).with(DayOfWeek.MONDAY).plusWeeks(rangeOffset);
             before = from.plusDays(7);
         } else {
-            from = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1).plusMonths(rangeOffset);
+            from = serverTimeNow().truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1).plusMonths(rangeOffset);
             before = from.plusMonths(1);
         }
         

@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
             if (user.getIsActive() == null) {
                 user.setIsActive(false);
             }
-            user.setLastLoginTime(LocalDateTime.now());
+            user.setLastLoginTime(LocalDateTime.now(ZoneOffset.UTC));
         });
     }
 
@@ -131,7 +132,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
             Consent signupConsent = new Consent();
             signupConsent.setType(Consent.Type.SIGNUP);
             signupConsent.setSource(Consent.Source.WEBPAGE);
-            signupConsent.setTime(LocalDateTime.now());
+            signupConsent.setTime(serverTimeNow());
             signupConsent.setUserId(user.getId());
             signupConsent.setConsentText(signupUserIn.getConsentText());
             consentRepository.save(signupConsent);
@@ -146,19 +147,6 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
     }
 
     public boolean isOkToSignupUser() {
-        return repo().countRecentSignups(LocalDateTime.now().minusHours(1)) <= 60;
+        return repo().countRecentSignups(serverTimeNow().minusHours(1)) <= 60;
     }
-
-    /*
-     * @Override public List<User> readMany(final ManyQuery manyQuery) {
-     * List<User> users = super.readMany(manyQuery); for (User user : users) {
-     * user.setHashedPassword(null); } return users; }
-     * 
-     * @Override public void delete(String id, HttpServletResponse response) {
-     * super.delete(id, response); securityService.resetPermissionCache(); }
-     * 
-     * public boolean changePassword(String id, String password) { User user =
-     * read(id, false); user.setAllPasswords(password); security.validate(user);
-     * mongoTemplate.save(user); return true; }
-     */
 }

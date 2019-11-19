@@ -12,7 +12,7 @@ import se.leafcoders.rosette.persistence.model.ArticleSerie;
 @Repository
 public interface ArticleSerieRepository extends ModelRepository<ArticleSerie> {
     
-    public List<ArticleSerie> findByArticleTypeId(Long articleTypeId);
+    public List<ArticleSerie> findByArticleTypeIdOrderByLastUseTimeDesc(Long articleTypeId);
 
     @Transactional
     @Modifying

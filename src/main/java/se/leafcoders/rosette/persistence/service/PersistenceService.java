@@ -28,8 +28,9 @@ import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Persistable;
 import se.leafcoders.rosette.persistence.repository.ModelRepository;
 import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.util.ServerTime;
 
-abstract class PersistenceService<T extends Persistable, IN, OUT> {
+abstract class PersistenceService<T extends Persistable, IN, OUT> implements ServerTime {
 
     @Autowired
     SecurityService securityService;
