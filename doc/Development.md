@@ -11,6 +11,10 @@
 
 1. Install `Docker x.x.x` from x
 2. Create and run docker container with `docker run --name=mysql --env="MYSQL_ROOT_PASSWORD=root" --publish 3306:3306 -d mysql:5.7.21`
+3. Run from a terminal: `docker exec -it mysql /bin/bash` to enter the running docker image
+4. Start mysql with `mysql -uroot -proot`
+5. Create the test database with `create database test;`
+6. From your IDE, run the `SeetTest` to setup the database tables.
 
 When you need start the container again (after computer reboot) just run `docker run mysql`
 
