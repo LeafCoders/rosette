@@ -171,11 +171,13 @@ public class PodcastFeedGenerator {
 
         private String toCDATA(String htmlContent) {
             return "<![CDATA[" + htmlContent + "]]>";
-            
         }
 
         // Allowed tags are <p>, <ol>, <ul>, <li> and <a>
         private String toAllowedPodcastTags(String htmlContent) {
+            if (htmlContent == null) {
+                return "";
+            }
             return htmlContent
                     .replace("</p>", "</p><p></p>")
                     .replace("<h1>", "<p></p><p>=== ")
