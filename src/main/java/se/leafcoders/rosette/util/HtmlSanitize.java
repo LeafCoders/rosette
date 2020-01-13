@@ -3,6 +3,9 @@ package se.leafcoders.rosette.util;
 public class HtmlSanitize {
 
     public static String sanitize(String plainText) {
+        if (plainText == null) {
+            return "";
+        }
         return plainText
                 .replace("&", "&amp;")
                 .replace("<", "&lt;")

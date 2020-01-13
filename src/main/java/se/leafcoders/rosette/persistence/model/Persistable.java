@@ -25,7 +25,7 @@ public abstract class Persistable implements Serializable, Cloneable {
         return id;
     }
 
-    protected void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

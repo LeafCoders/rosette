@@ -20,7 +20,7 @@ apply plugin: 'io.spring.dependency-management'
 
 bootJar {
     baseName = 'rosette'
-    version =  '0.13-SNAPSHOT'
+    version =  '0.14-SNAPSHOT'
 }
 
 group = 'se.leafcoders'
@@ -43,6 +43,7 @@ dependencies {
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
+	testCompile('org.mockito:mockito-core:2.11.0')
 
 	// Database migration
 	compile('org.flywaydb:flyway-core')

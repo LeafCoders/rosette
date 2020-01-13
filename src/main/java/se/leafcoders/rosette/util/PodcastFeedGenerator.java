@@ -5,9 +5,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
@@ -22,8 +22,11 @@ import se.leafcoders.rosette.persistence.service.AssetService;
 @Service
 public class PodcastFeedGenerator {
     
-    @Autowired
-    private AssetService assetService;
+    private final AssetService assetService;
+    
+    public PodcastFeedGenerator(AssetService assetService) {
+        this.assetService = assetService;
+    }
 
     public String getPodcastFeed(Podcast podcast, List<Article> articles) {
         List<String> podcastData = new ArrayList<String>();
@@ -38,7 +41,7 @@ public class PodcastFeedGenerator {
         podcastData.add(getChannelData(podcast));
 
         // Add all education items - Should be item with latest time first
-        articles.sort((a, b) -> b.getTime().compareTo(a.getTime()));
+        articles.sort((a, b) -> b.getTime() != null ? b.getTime().compareTo(a.getTime()) : -1);
         articles.forEach(article -> {
             if (article.getRecording() != null && article.getTime() != null) {
                 podcastData.add("<item>");
@@ -85,8 +88,8 @@ public class PodcastFeedGenerator {
     }
 
     private String getItemData(Article article) {
-        final ArticleSerie articleSerie = article.getArticleSerie();
-        final Asset recording = article.getRecording();
+        final ArticleSerie articleSerie = Optional.ofNullable(article.getArticleSerie()).orElse(new ArticleSerie());
+        final Asset recording = Optional.ofNullable(article.getRecording()).orElse(new Asset());
         final ZonedDateTime pubDate = ZonedDateTime.of(article.getTime(), ZoneId.systemDefault());
         
         Tag[] tags = new Tag[] {
@@ -103,7 +106,7 @@ public class PodcastFeedGenerator {
                 .attribute("type", recording.getMimeType()),
 
             // Apple Podcaster https://help.apple.com/itc/podcasts_connect/#/itcb54353390
-            tag("itunes:subtitle").plainContent(article.getArticleSerie().getTitle()),
+            tag("itunes:subtitle").plainContent(articleSerie.getTitle()),
             tag("itunes:summary").htmlContent(article.getContent().getContentHtml()),
             tag("content:encoded").htmlContent(article.getContent().getContentHtml()),
             tag("itunes:author").plainContent(article.getAuthors().stream().map(a -> a.getName()).collect(Collectors.joining(" ,"))),
@@ -144,22 +147,22 @@ public class PodcastFeedGenerator {
         }
 
         Tag rawContent(String rawContent) {
-            content += rawContent;
+            Optional.ofNullable(rawContent).ifPresent(c -> content += c);
             return this;
         }
 
         Tag plainContent(String plainContent) {
-            content += HtmlSanitize.sanitize(plainContent);
+            Optional.ofNullable(HtmlSanitize.sanitize(plainContent)).ifPresent(c -> content += c);
             return this;
         }
 
         Tag htmlContent(String htmlContent) {
-            content += toCDATA(toAllowedPodcastTags(htmlContent));
+            Optional.ofNullable(toCDATA(toAllowedPodcastTags(htmlContent))).ifPresent(c -> content += c);
             return this;
         }
         
         Tag tagContent(Tag tagContent) {
-            content += tagContent;
+            Optional.ofNullable(tagContent).ifPresent(c -> content += c);
             return this;
         }
         
@@ -170,7 +173,7 @@ public class PodcastFeedGenerator {
         }
 
         private String toCDATA(String htmlContent) {
-            return "<![CDATA[" + htmlContent + "]]>";
+            return htmlContent != null ? "<![CDATA[" + htmlContent + "]]>" : "";
         }
 
         // Allowed tags are <p>, <ol>, <ul>, <li> and <a>
