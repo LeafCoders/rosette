@@ -51,6 +51,7 @@ public class ArticleData {
     }
     
     public static ArticleIn newArticleFromEvent(Long articleTypeId, Long articleSerieId, Event event, Long authorId, Long recordingId) {
+        HtmlContent content = htmlContent("The title", "Some content...");
         ArticleIn article = new ArticleIn();
         article.setArticleTypeId(articleTypeId);
         article.setArticleSerieId(articleSerieId);
@@ -58,11 +59,16 @@ public class ArticleData {
         article.setTime(event.getStartTime());
         article.setAuthorIds(Collections.singletonList(authorId));
         article.setTitle(event.getTitle());
-        article.setContentRaw("Innehåll...");
-        article.setContentHtml("Innehåll...");
+        article.setContentRaw(content.getContentRaw());
+        article.setContentHtml(content.getContentHtml());
         article.setRecordingId(recordingId);
         article.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING.name());
         return article;
     }
-    
+
+    private static HtmlContent htmlContent(String header, String content) {
+        String raw = "{\"ops\":[{\"insert\":\"" + header + "\"},{\"attributes\":{\"header\":1},\"insert\":\"\\n\"},{\"insert\":\"" + content + "\\n\"}]}";
+        String html = "<h1>" + header + "</h1><p>" + content + "</p>";
+        return new HtmlContent(raw, html);
+    }
 }

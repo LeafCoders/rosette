@@ -15,6 +15,7 @@ import se.leafcoders.rosette.data.AssetFolderData;
 import se.leafcoders.rosette.data.EventData;
 import se.leafcoders.rosette.data.EventTypeData;
 import se.leafcoders.rosette.data.GroupData;
+import se.leafcoders.rosette.data.PodcastData;
 import se.leafcoders.rosette.data.ResourceData;
 import se.leafcoders.rosette.data.ResourceTypeData;
 import se.leafcoders.rosette.data.SlideData;
@@ -46,7 +47,7 @@ public class SeedTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         givenPermissionForUser(user1, "*");
         givenPermissionForAllUsers("*:view");
-        givenPermissionForPublic("events:public,articles:public");
+        givenPermissionForPublic("events:public,articles:public,podcasts:public");
 
         // Users
         final Long admin = post(user1, "/users", json(UserData.newActiveUser("Admin", "Admin")));
@@ -167,7 +168,13 @@ public class SeedTest extends AbstractControllerTest {
         Asset article1Recording = givenAssetInFolder(articleTypeRecordingFolder.getId(), "audio.mp3", "predikan1.mp3", "audio/mp3");
         final Long article1 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event1).get(), patrikPastorResurs, article1Recording.getId())));
         final Long article2 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event2).get(), pamelaPastorResurs, article1Recording.getId())));
-        final Long article3 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event3).get(), pavelPastorResurs, article1Recording.getId())));                
+        final Long article3 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event3).get(), pavelPastorResurs, article1Recording.getId())));
+
+
+        // Podcast
+        Asset podcastImage = givenAssetInFolder(slideShowFolder.getId(), "image.png", "yellow.png", "image/png");
+        final Long podcast1 = post(user1, "/podcasts", json(PodcastData.newPodcast(articleType1, podcastImage.getId())));
+        System.out.println("Podcast URL: http://localhost:9000/api/podcasts/feed/podcast");
     }
 
     public Long post(User authUser, String controllerUrl, String jsonString) throws Exception {
