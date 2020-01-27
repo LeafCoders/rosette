@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
+import se.leafcoders.rosette.controller.dto.ArticlePublicOut;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.model.Asset;
@@ -45,7 +46,7 @@ public class PodcastFeedGenerator {
         articles.forEach(article -> {
             if (article.getRecording() != null && article.getTime() != null) {
                 podcastData.add("<item>");
-                podcastData.add(getItemData(article));
+                podcastData.add(getItemData(podcast, article));
                 podcastData.add("</item>");
             }
         });
@@ -99,15 +100,17 @@ public class PodcastFeedGenerator {
         return Stream.of(tags).map(Tag::toString).collect(Collectors.joining("\n"));
     }
 
-    private String getItemData(Article article) {
+    private String getItemData(final Podcast podcast, final Article article) {
         final ArticleSerie articleSerie = Optional.ofNullable(article.getArticleSerie()).orElse(new ArticleSerie());
         final Asset recording = Optional.ofNullable(article.getRecording()).orElse(new Asset());
         final ZonedDateTime pubDate = ZonedDateTime.of(article.getTime(), ZoneId.systemDefault());
         final String author = article.getAuthors().stream().map(a -> a.getName()).collect(Collectors.joining(" ,"));
+        final String articleLink = podcast.getLink() != null ? podcast.getLink() + "/" + ArticlePublicOut.slug(article) : null;
         
         List<String> info = new ArrayList<>();
         Optional.ofNullable(articleSerie.getTitle()).ifPresent(info::add);
         Optional.ofNullable(author).filter(t -> !t.isEmpty()).ifPresent(info::add);
+        Optional.ofNullable(articleLink).filter(t -> !t.isEmpty()).ifPresent(info::add);
 
         String content;
         if (!info.isEmpty()) {
@@ -118,7 +121,7 @@ public class PodcastFeedGenerator {
         if (content.length() > 3950) {
             content = content.substring(0, 3950) + "...";
         }
-
+        
         Tag[] tags = new Tag[] {
             // TAGS FROM: RSS 2.0 Specification
             // The title of the item.
@@ -126,7 +129,7 @@ public class PodcastFeedGenerator {
             // The item synopsis.
             tag("description").cdataContent(content),
             // The URL of the item.
-            //tag("link", article.getLinkToWebPageWithArticle()),
+            tag("link").rawContent(articleLink),
             // A string that uniquely identifies the item. Must add `isPermaLink="false"` if the GUID is not an URL
             tag("guid").attribute("isPermaLink", "false").rawContent(article.getId().toString()),
             // Indicates when the item was published. RFC 2822.

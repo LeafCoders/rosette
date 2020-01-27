@@ -25,8 +25,12 @@ public class ArticlePublicOut {
     private String articleSerieSlug;
     private String articleSerieTitle;
 
+    public static String slug(final Article article) {
+        return IdToSlugConverter.convertIdToSlug(article.getId(), article.getTitle(), ARTICLE_SLUG_PREFIX);
+    }
+    
     public ArticlePublicOut(AssetService assetService, Article article) {
-        slug = IdToSlugConverter.convertIdToSlug(article.getId(), article.getTitle(), ARTICLE_SLUG_PREFIX);
+        slug = slug(article);
         title = article.getTitle();
         content = article.getContent().getContentHtml();
         if (article.getTime() != null) {
