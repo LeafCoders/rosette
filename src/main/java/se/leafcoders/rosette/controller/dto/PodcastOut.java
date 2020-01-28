@@ -8,12 +8,14 @@ public class PodcastOut {
     private String title;
     private String subTitle;
     private String authorName;
+    private String authorEmail;
+    private String authorLink;
     private String copyright;
-    protected String description;
-    protected String mainCategory;
-    protected String subCategory;
-    protected String language;
-    protected String link;
+    private String description;
+    private String mainCategory;
+    private String subCategory;
+    private String language;
+    private String articlesLink;
     private AssetOut image;
 
 
@@ -67,6 +69,22 @@ public class PodcastOut {
         this.authorName = authorName;
     }
 
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
+    }
+
+    public String getAuthorLink() {
+        return authorLink;
+    }
+
+    public void setAuthorLink(String authorLink) {
+        this.authorLink = authorLink;
+    }
+
     public String getCopyright() {
         return copyright;
     }
@@ -107,12 +125,12 @@ public class PodcastOut {
         this.language = language;
     }
 
-    public String getLink() {
-        return link;
+    public String getArticlesLink() {
+        return articlesLink;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setArticlesLink(String articlesLink) {
+        this.articlesLink = articlesLink;
     }
 
     public AssetOut getImage() {

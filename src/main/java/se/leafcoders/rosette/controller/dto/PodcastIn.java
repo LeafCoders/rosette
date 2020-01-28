@@ -2,6 +2,7 @@ package se.leafcoders.rosette.controller.dto;
 
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
@@ -30,27 +31,36 @@ public class PodcastIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
+    @Email(message = ApiString.EMAIL_INVALID)
+    private String authorEmail;
+
+    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
+    private String authorLink;
+
+    @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
+    @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String copyright;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
-    protected String description;
+    private String description;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
-    protected String mainCategory;
+    private String mainCategory;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
-    protected String subCategory;
+    private String subCategory;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
-    protected String language;
+    private String language;
     
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
-    protected String link;
+    private String articlesLink;
 
     @NotNull(message = ApiString.NOT_NULL)
     private Long imageId;
@@ -97,6 +107,22 @@ public class PodcastIn {
         this.authorName = authorName;
     }
 
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
+    }
+
+    public String getAuthorLink() {
+        return authorLink;
+    }
+
+    public void setAuthorLink(String authorLink) {
+        this.authorLink = authorLink;
+    }
+
     public String getCopyright() {
         return copyright;
     }
@@ -137,12 +163,12 @@ public class PodcastIn {
         this.language = language;
     }
 
-    public String getLink() {
-        return link;
+    public String getArticlesLink() {
+        return articlesLink;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setArticlesLink(String articlesLink) {
+        this.articlesLink = articlesLink;
     }
 
     public Long getImageId() {
@@ -152,4 +178,5 @@ public class PodcastIn {
     public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
+
 }

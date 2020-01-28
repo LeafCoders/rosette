@@ -68,7 +68,7 @@ public class PodcastFeedGenerator {
             // Phrase or sentence describing the channel. Supports CDATA for rich HTML.
             tag("description").cdataContent(podcast.getDescription()),
             // The URL to the HTML website corresponding to the channel.
-            tag("link").rawContent(podcast.getLink()),
+            tag("link").rawContent(podcast.getAuthorLink()),
             // A language ISO 639 code, e.g. "en-us".
             tag("language").rawContent(podcast.getLanguage()),
             // A string
@@ -77,7 +77,7 @@ public class PodcastFeedGenerator {
             tag("generator").rawContent("LeafCoders/Rosette"),
             // Specifies a GIF, JPEG or PNG image that can be displayed with the channel.
             tag("image")
-                .tagContent(tag("link").rawContent(podcast.getLink()))
+                .tagContent(tag("link").rawContent(podcast.getAuthorLink()))
                 .tagContent(tag("title").plainContent(podcast.getTitle()))
                 .tagContent(tag("url").rawContent(assetService.urlOfAsset(podcast.getImage()))),
 
@@ -87,8 +87,12 @@ public class PodcastFeedGenerator {
             tag("itunes:summary").cdataContent(podcast.getDescription()),
             // Author of the channel. String.
             tag("itunes:author").plainContent(podcast.getAuthorName()),
-            // The podcast parental advisory information. "true" or "false"            
-            tag("itunes:explicit").rawContent("false"),
+            // Owner of the channel
+            tag("itunes:owner")
+                .tagContent(tag("itunes:name").plainContent(podcast.getAuthorName()))
+                .tagContent(tag("itunes:email").plainContent(podcast.getAuthorEmail())),
+            // The podcast parental advisory information. "yes" or "no"            
+            tag("itunes:explicit").rawContent("no"),
             // The type of show. "episodic" or "serial".
             tag("itunes:type").rawContent("episodic"),
             // Minimum size of 1400 x 1400 pixels
@@ -105,18 +109,16 @@ public class PodcastFeedGenerator {
         final Asset recording = Optional.ofNullable(article.getRecording()).orElse(new Asset());
         final ZonedDateTime pubDate = ZonedDateTime.of(article.getTime(), ZoneId.systemDefault());
         final String author = article.getAuthors().stream().map(a -> a.getName()).collect(Collectors.joining(" ,"));
-        final String articleLink = podcast.getLink() != null ? podcast.getLink() + "/" + ArticlePublicOut.slug(article) : null;
+        final String articleLink = podcast.getArticlesLink() != null ? podcast.getArticlesLink() + "/" + ArticlePublicOut.slug(article) : null;
         
         List<String> info = new ArrayList<>();
-        Optional.ofNullable(articleSerie.getTitle()).ifPresent(info::add);
         Optional.ofNullable(author).filter(t -> !t.isEmpty()).ifPresent(info::add);
+        Optional.ofNullable(articleSerie.getTitle()).ifPresent(info::add);
         Optional.ofNullable(articleLink).filter(t -> !t.isEmpty()).ifPresent(info::add);
 
-        String content;
+        String content = Optional.ofNullable(article.getContent().getContentHtml()).orElse("");
         if (!info.isEmpty()) {
-            content = "<p>" + String.join("<br>", info) + "</p>" + article.getContent().getContentHtml();
-        } else {
-            content = article.getContent().getContentHtml();
+            content = "<p>" + String.join("<br>", info) + "</p>" + content;
         }
         if (content.length() > 3950) {
             content = content.substring(0, 3950) + "...";
@@ -131,7 +133,7 @@ public class PodcastFeedGenerator {
             // The URL of the item.
             tag("link").rawContent(articleLink),
             // A string that uniquely identifies the item. Must add `isPermaLink="false"` if the GUID is not an URL
-            tag("guid").attribute("isPermaLink", "false").rawContent(article.getId().toString()),
+            tag("guid").attribute("isPermaLink", "false").rawContent(podcast.getIdAlias() + "-" + article.getId().toString()),
             // Indicates when the item was published. RFC 2822.
             tag("pubDate").rawContent(pubDate.format(DateTimeFormatter.RFC_1123_DATE_TIME)),
             // Describes a media object that is attached to the item.
@@ -145,8 +147,8 @@ public class PodcastFeedGenerator {
             // The item synopsis.
             tag("itunes:summary").cdataContent(content),
             tag("itunes:author").plainContent(author),
-            // The episode parental advisory information. "true" or "false"            
-            tag("itunes:explicit").rawContent("false"),
+            // The episode parental advisory information. "yes" or "no"            
+            tag("itunes:explicit").rawContent("no"),
             // Minimum size of 1400 x 1400 pixels
             tag("itunes:image").attribute("href", assetService.urlOfAsset(articleSerie.getImage())),
             tag("itunes:duration").rawContent(toDuration(recording.getDuration()))

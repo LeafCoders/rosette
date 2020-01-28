@@ -45,6 +45,9 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
         if (rawIn == null || rawIn.has("authorName")) {
             item.setAuthorName(dto.getAuthorName());
         }
+        if (rawIn == null || rawIn.has("authorEmail")) {
+            item.setAuthorEmail(dto.getAuthorEmail());
+        }
         if (rawIn == null || rawIn.has("copyright")) {
             item.setCopyright(dto.getCopyright());
         }        
@@ -60,8 +63,11 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
         if (rawIn == null || rawIn.has("language")) {
             item.setLanguage(dto.getLanguage());
         }
-        if (rawIn == null || rawIn.has("link")) {
-            item.setLink(dto.getLink());
+        if (rawIn == null || rawIn.has("authorLink")) {
+            item.setAuthorLink(dto.getAuthorLink());
+        }
+        if (rawIn == null || rawIn.has("articlesLink")) {
+            item.setArticlesLink(dto.getArticlesLink());
         }
         if (rawIn == null || rawIn.has("image")) {
             item.setImage(assetService.read(dto.getImageId(), true));
@@ -78,12 +84,14 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
         dto.setTitle(item.getTitle());
         dto.setSubTitle(item.getSubTitle());
         dto.setAuthorName(item.getAuthorName());
+        dto.setAuthorEmail(item.getAuthorEmail());
         dto.setCopyright(item.getCopyright());
         dto.setDescription(item.getDescription());
         dto.setMainCategory(item.getMainCategory());
         dto.setSubCategory(item.getSubCategory());
         dto.setLanguage(item.getLanguage());
-        dto.setLink(item.getLink());
+        dto.setAuthorLink(item.getAuthorLink());
+        dto.setArticlesLink(item.getArticlesLink());
         dto.setImage(assetService.toOut(item.getImage()));
         return dto;
     }

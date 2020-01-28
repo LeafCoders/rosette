@@ -28,7 +28,7 @@ public class PodcastFeedGeneratorTest {
     private Article article;
     private Article article2;
     private HtmlContent articleContent;
-    
+
     @Before
     public void before() {
         assetService = mock(AssetService.class);
@@ -53,12 +53,14 @@ public class PodcastFeedGeneratorTest {
         podcast.setTitle("Title");
         podcast.setSubTitle("SubTitle");
         podcast.setAuthorName("AuthorName");
+        podcast.setAuthorEmail("author@email");
+        podcast.setAuthorLink("https://my.com");
         podcast.setCopyright("Copyright");
         podcast.setDescription("Description");
         podcast.setMainCategory("MainCategory");
         podcast.setSubCategory("SubCategory");
         podcast.setLanguage("sv-SE");
-        podcast.setLink("https://my.com");
+        podcast.setArticlesLink("https://my.com/articles");
         podcast.setImage(image);
         podcast.setChangedDate(LocalDateTime.now());
 
