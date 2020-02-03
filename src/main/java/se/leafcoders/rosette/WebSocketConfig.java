@@ -16,14 +16,10 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
-import se.leafcoders.rosette.util.UrlUtil;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Autowired
-    private RosetteSettings rosetteSettings;
 
     @Autowired
     private JwtAuthenticationService jwtAuthenticationService;
@@ -38,7 +34,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket-private").setAllowedOrigins(UrlUtil.withoutEndingSlash(rosetteSettings.getCordateUrl()));
+        registry.addEndpoint("/websocket-private").setAllowedOrigins("*");
     }
 
     @Override
