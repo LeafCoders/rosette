@@ -69,7 +69,7 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
         if (rawIn == null || rawIn.has("articlesLink")) {
             item.setArticlesLink(dto.getArticlesLink());
         }
-        if (rawIn == null || rawIn.has("image")) {
+        if (rawIn == null || rawIn.has("imageId")) {
             item.setImage(assetService.read(dto.getImageId(), true));
         }
         return item;
