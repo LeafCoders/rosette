@@ -19,6 +19,10 @@ public class SlideService extends PersistenceService<Slide, SlideIn, SlideOut> {
         super(Slide.class, PermissionType::slides, repository);
     }
 
+    private SlideRepository repo() {
+        return (SlideRepository) repository;
+    }
+
     @Override
     protected Slide convertFromInDTO(SlideIn dto, JsonNode rawIn, Slide item) {
         if (rawIn == null || rawIn.has("title")) {
@@ -48,6 +52,19 @@ public class SlideService extends PersistenceService<Slide, SlideIn, SlideOut> {
         dto.setStartTime(item.getStartTime());
         dto.setEndTime(item.getEndTime());
         dto.setImage(assetService.toOut(item.getImage()));
+        dto.setDisplayOrder(item.getDisplayOrder());
         return dto;
     }
+
+    public void moveSlide(Long slideShowId, Long slideId, Long toSlideId) {
+        final Slide slide = read(slideId, true);
+        final Slide slideMoveTo = read(toSlideId, true);
+        if (slide.getDisplayOrder() < slideMoveTo.getDisplayOrder()) {
+            repo().moveDisplayOrders(slideShowId, slide.getDisplayOrder(), slideMoveTo.getDisplayOrder(), -1L);
+        } else {
+            repo().moveDisplayOrders(slideShowId, slideMoveTo.getDisplayOrder(), slide.getDisplayOrder(), 1L);
+        }
+        repo().setDisplayOrder(slideId, slideMoveTo.getDisplayOrder());
+    }
+
 }

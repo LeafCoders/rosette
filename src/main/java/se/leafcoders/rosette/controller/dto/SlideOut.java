@@ -1,10 +1,8 @@
 package se.leafcoders.rosette.controller.dto;
 
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 
@@ -23,6 +21,8 @@ public class SlideOut {
 
     private Integer duration = 10;
     private AssetOut image;
+    private Long displayOrder;
+
 
     // Getters and setters
 
@@ -72,6 +72,14 @@ public class SlideOut {
 
     public void setImage(AssetOut image) {
         this.image = image;
+    }
+
+    public Long getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 }

@@ -64,6 +64,10 @@ public class Slide extends Persistable {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Asset image;
+    
+    @NotNull(message = ApiString.NOT_NULL)
+    private Long displayOrder;
+
 
     public Slide() {
     }
@@ -121,6 +125,14 @@ public class Slide extends Persistable {
     public void setImage(Asset image) {
         this.image = image;
         this.imageId = image != null ? image.getId() : null;
+    }
+
+    public Long getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 }

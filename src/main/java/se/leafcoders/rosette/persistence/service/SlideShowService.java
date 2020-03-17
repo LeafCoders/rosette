@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,11 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
 
     private class SlideCrud extends ChildCrud<SlideShow, Slide, SlideIn> {
 
+        private final SlideRepository slideRepository;
+        
         public SlideCrud(SlideShowService service, SlideService slideService, SlideRepository slideRepository) {
             super(service, SlideShow.class, slideService, slideRepository, Slide.class);
+            this.slideRepository = slideRepository;
         }
 
         @Override
@@ -66,6 +70,7 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
 
         @Override
         public void addChild(SlideShow parent, Slide child) {
+            child.setDisplayOrder(Optional.ofNullable(slideRepository.getHighestDisplayOrder(parent.getId())).map(i -> i + 1L).orElse(1L));
             parent.addSlide(child);
         }
     };
@@ -127,4 +132,5 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
     public ResponseEntity<Void> deleteSlide(Long slideShowId, Long slideId) {
         return slideCrud.delete(slideShowId, slideId);
     }
+    
 }

@@ -84,6 +84,12 @@ public class SlideShowsController {
         return slideShowService.deleteSlide(id, slideId);
     }
 
+    @PutMapping(value = "/{id}/slides/{slideId}/moveTo/{toSlideId}", consumes = "application/json")
+    public Collection<SlideOut> moveSlideInSlideShow(@PathVariable Long id, @PathVariable Long slideId, @PathVariable Long toSlideId, HttpServletRequest request) {
+        slideService.moveSlide(id, slideId, toSlideId);
+        return slideService.toOut(slideShowService.readSlides(id));
+    }
+
     // Public
 
     @GetMapping(value = "/public/{idAlias}")
