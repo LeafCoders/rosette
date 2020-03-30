@@ -57,7 +57,9 @@ public class AssetFolderService extends PersistenceService<AssetFolder, AssetFol
         if (rawIn == null || rawIn.has("allowedMimeTypes")) {
             item.setAllowedMimeTypes(dto.getAllowedMimeTypes());
         }
-        
+        if (rawIn == null || rawIn.has("staticFileKey")) {
+            item.setStaticFileKey(dto.getStaticFileKey());
+        }
         return item;
     }
 
@@ -69,6 +71,7 @@ public class AssetFolderService extends PersistenceService<AssetFolder, AssetFol
         dto.setName(item.getName());
         dto.setDescription(item.getDescription());
         dto.setAllowedMimeTypes(item.getAllowedMimeTypes());
+        dto.setStaticFileKey(item.getStaticFileKey());
         return dto;
     }
 

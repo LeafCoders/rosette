@@ -68,7 +68,7 @@ public class AssetFolder extends Persistable {
     }
 
     public Boolean getStaticFileKey() {
-        return staticFileKey;
+        return staticFileKey != null ? staticFileKey : false;
     }
 
     public void setStaticFileKey(Boolean staticFileKey) {

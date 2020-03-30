@@ -52,7 +52,7 @@ public class AssetFolderOut {
     }
 
     public Boolean getStaticFileKey() {
-        return staticFileKey;
+        return staticFileKey != null ? staticFileKey : false;
     }
 
     public void setStaticFileKey(Boolean staticFileKey) {
