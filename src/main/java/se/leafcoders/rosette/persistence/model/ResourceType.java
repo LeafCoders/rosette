@@ -9,6 +9,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
@@ -31,6 +32,9 @@ public class ResourceType extends Persistable {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resourceTypes")
     private List<Resource> resources = new ArrayList<>();
     
+    @NotNull(message = ApiString.NOT_NULL)
+    private Long displayOrder;
+
     public ResourceType() {
     }
 
@@ -62,5 +66,13 @@ public class ResourceType extends Persistable {
 
     public List<Resource> getResources() {
         return resources;
+    }
+
+    public Long getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
     }
 }

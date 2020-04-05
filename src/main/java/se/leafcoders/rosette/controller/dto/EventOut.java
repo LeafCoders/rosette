@@ -1,7 +1,7 @@
 package se.leafcoders.rosette.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
@@ -23,7 +23,7 @@ public class EventOut {
     private String description;
     private String privateDescription;
     private EventTypeRefOut eventType;
-    private Set<ResourceRequirementOut> resourceRequirements;
+    private List<ResourceRequirementOut> resourceRequirements;
     private Boolean isPublic;
 
     // Getters and setters
@@ -84,11 +84,11 @@ public class EventOut {
         this.eventType = eventType;
     }
 
-    public Set<ResourceRequirementOut> getResourceRequirements() {
+    public List<ResourceRequirementOut> getResourceRequirements() {
         return resourceRequirements;
     }
 
-    public void setResourceRequirements(Set<ResourceRequirementOut> resourceRequirements) {
+    public void setResourceRequirements(List<ResourceRequirementOut> resourceRequirements) {
         this.resourceRequirements = resourceRequirements;
     }
 

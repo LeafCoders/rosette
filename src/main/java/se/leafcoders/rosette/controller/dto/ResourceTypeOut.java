@@ -6,6 +6,7 @@ public class ResourceTypeOut {
     private String idAlias;
     private String name;
     private String description;
+    private Long displayOrder;
 
     // Getters and setters
 
@@ -39,6 +40,14 @@ public class ResourceTypeOut {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 }

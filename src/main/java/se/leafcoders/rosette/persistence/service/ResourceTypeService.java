@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,10 +47,28 @@ public class ResourceTypeService extends PersistenceService<ResourceType, Resour
         dto.setIdAlias(item.getIdAlias());
         dto.setName(item.getName());
         dto.setDescription(item.getDescription());
+        dto.setDisplayOrder(item.getDisplayOrder());
         return dto;
     }
-    
+
+    public ResourceType create(ResourceTypeIn resourceTypeIn, boolean checkPermissions) {
+        return super.create(resourceTypeIn, checkPermissions, (ResourceType resourceType) -> {
+            resourceType.setDisplayOrder(Optional.ofNullable(repo().getHighestDisplayOrder()).map(i -> i + 1L).orElse(1L));
+        });
+    }
+
     public List<Resource> readResources(Long resourceTypeId) {
         return repo().getResources(resourceTypeId);
+    }
+
+    public void moveResourceType(Long resourceTypeId, Long toResourceTypeId) {
+        final ResourceType resourceType = read(resourceTypeId, true);
+        final ResourceType resourceTypeMoveTo = read(toResourceTypeId, true);
+        if (resourceType.getDisplayOrder() < resourceTypeMoveTo.getDisplayOrder()) {
+            repo().moveDisplayOrders(resourceType.getDisplayOrder(), resourceTypeMoveTo.getDisplayOrder(), -1L);
+        } else {
+            repo().moveDisplayOrders(resourceTypeMoveTo.getDisplayOrder(), resourceType.getDisplayOrder(), 1L);
+        }
+        repo().setDisplayOrder(resourceTypeId, resourceTypeMoveTo.getDisplayOrder());
     }
 }

@@ -6,10 +6,12 @@ public class ResourceTypeRefOut {
 
     private Long id;
     private String name;
+    private Long displayOrder;
 
     public ResourceTypeRefOut(ResourceType resourceType) {
         id = resourceType.getId();
         name = resourceType.getName();
+        displayOrder = resourceType.getDisplayOrder();
     }
 
     // Getters and setters
@@ -28,6 +30,14 @@ public class ResourceTypeRefOut {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 }

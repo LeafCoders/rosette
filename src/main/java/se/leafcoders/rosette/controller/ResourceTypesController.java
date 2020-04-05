@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceTypeIn;
@@ -29,35 +32,45 @@ public class ResourceTypesController {
     @Autowired
     private ResourceService resourceService;
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public ResourceTypeOut getResourceType(@PathVariable Long id) {
         return resourceTypeService.toOut(resourceTypeService.read(id, true));
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Collection<ResourceTypeOut> getResourceTypes(HttpServletRequest request) {
-        Sort sort = new Sort(Sort.Direction.ASC, "name");        
-        return resourceTypeService.toOut(resourceTypeService.readMany(sort, true));
+        return readAll();
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+    @PostMapping(consumes = "application/json")
     public ResponseEntity<ResourceTypeOut> postResourceType(@RequestBody ResourceTypeIn resourceType) {
         return new ResponseEntity<ResourceTypeOut>(resourceTypeService.toOut(resourceTypeService.create(resourceType, true)), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/json")
+    @PutMapping(value = "/{id}", consumes = "application/json")
     public ResourceTypeOut putResourceType(@PathVariable Long id, HttpServletRequest request) {
         return resourceTypeService.toOut(resourceTypeService.update(id, ResourceTypeIn.class, request, true));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteResourceType(@PathVariable Long id) {
         return resourceTypeService.delete(id, true);
     }
+    
+    @PutMapping(value = "/{id}/moveTo/{toResourceTypeId}", consumes = "application/json")
+    public Collection<ResourceTypeOut> moveResourceType(@PathVariable Long id, @PathVariable Long toResourceTypeId) {
+        resourceTypeService.moveResourceType(id, toResourceTypeId);
+        return readAll();
+    }
 
+    private Collection<ResourceTypeOut> readAll() {
+        Sort sort = new Sort(Sort.Direction.ASC, "displayOrder");
+        return resourceTypeService.toOut(resourceTypeService.readMany(sort, true));
+    }
+    
     // Resources
 
-    @RequestMapping(value = "/{id}/resources", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}/resources")
     public Collection<ResourceOut> getResourcesInResourceType(@PathVariable Long id) {
         return resourceService.toOut(resourceTypeService.readResources(id));
     }
