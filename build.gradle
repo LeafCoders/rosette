@@ -20,7 +20,7 @@ apply plugin: 'io.spring.dependency-management'
 
 bootJar {
     baseName = 'rosette'
-    version =  '0.18-SNAPSHOT'
+    version =  '0.19-SNAPSHOT'
 }
 
 group = 'se.leafcoders'
