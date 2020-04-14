@@ -58,7 +58,7 @@ public class ArticlesController {
     public Collection<ArticleOut> getArticles(@RequestParam Long articleTypeId,
             @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime from,
             @RequestParam(value = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime before) {
-        Sort sort = new Sort(Sort.Direction.ASC, "time");
+        Sort sort = Sort.by("time").ascending();
 
         Specification<Article> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -128,7 +128,7 @@ public class ArticlesController {
     ) {
         articleService.checkPublicPermission();
 
-        Sort sort = new Sort(chronologic ? Sort.Direction.ASC : Sort.Direction.DESC, "time");
+        Sort sort = Sort.by(chronologic ? Sort.Direction.ASC : Sort.Direction.DESC, "time");
 
         Specification<Article> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

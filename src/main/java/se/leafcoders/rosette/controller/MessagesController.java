@@ -34,7 +34,7 @@ public class MessagesController {
 
     @GetMapping
     public Collection<MessageOut> getMessages(HttpServletRequest request) {
-        Sort sort = new Sort(Sort.Direction.ASC, "key");        
+        Sort sort = Sort.by("key").ascending();
         return messageService.toOut(messageService.readMany(sort, true));
     }
 

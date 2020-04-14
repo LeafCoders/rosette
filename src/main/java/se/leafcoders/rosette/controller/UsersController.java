@@ -47,7 +47,7 @@ public class UsersController {
 
     @GetMapping
     public Collection<UserOut> getUsers(HttpServletRequest request) {
-        Sort sort = new Sort(Sort.Direction.ASC, "firstName").and(new Sort(Sort.Direction.ASC, "lastName"));        
+        Sort sort = Sort.by("firstName").ascending().and(Sort.by("lastName").ascending());
         return userService.toOut(userService.readMany(sort, true));
     }
 

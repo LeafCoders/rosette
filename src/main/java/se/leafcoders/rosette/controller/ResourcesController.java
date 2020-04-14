@@ -39,7 +39,7 @@ public class ResourcesController {
 
     @GetMapping
     public Collection<ResourceOut> getResources(HttpServletRequest request) {
-        Sort sort = new Sort(Sort.Direction.DESC, "lastUseTime");        
+        Sort sort = Sort.by("lastUseTime").descending();
         return resourceService.toOut(resourceService.readMany(sort, true));
     }
 

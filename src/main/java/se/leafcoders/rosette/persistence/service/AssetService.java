@@ -155,7 +155,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         asset.setFileVersion(1);
         asset.setFileName(fileName);
         asset.setMimeType(mimeType);
-        asset.setFileSize(new Long(fileData.length));
+        asset.setFileSize(Long.valueOf(fileData.length));
         readMetadata(fileData, asset);
         securityService.validate(asset, null);
 
@@ -201,7 +201,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
         existingAsset.setFileVersion(existingAsset.getFileVersion() + 1);
         existingAsset.setMimeType(mimeType);
-        existingAsset.setFileSize(new Long(fileData.length));
+        existingAsset.setFileSize(Long.valueOf(fileData.length));
         readMetadata(fileData, existingAsset);
         securityService.validate(existingAsset, null);
 

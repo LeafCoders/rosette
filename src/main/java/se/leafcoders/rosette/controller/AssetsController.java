@@ -35,7 +35,7 @@ public class AssetsController {
 
     @GetMapping()
     public Collection<AssetOut> getAssets(HttpServletRequest request, @RequestParam Long assetFolderId) {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by("id").descending();
         return assetService.toOut(assetService.findAllInFolder(assetFolderId, sort, true));
     }
 

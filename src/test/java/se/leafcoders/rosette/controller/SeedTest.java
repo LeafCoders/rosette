@@ -41,7 +41,6 @@ public class SeedTest extends AbstractControllerTest {
         super.setup();
     }
 
-    @SuppressWarnings("unused")
     @Test
     public void seed() throws Exception {
         user1 = givenUser(user1);
@@ -166,14 +165,14 @@ public class SeedTest extends AbstractControllerTest {
         
         // Articles
         Asset article1Recording = givenAssetInFolder(articleTypeRecordingFolder.getId(), "audio.mp3", "predikan1.mp3", "audio/mp3");
-        final Long article1 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event1).get(), patrikPastorResurs, article1Recording.getId())));
-        final Long article2 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event2).get(), pamelaPastorResurs, article1Recording.getId())));
-        final Long article3 = post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event3).get(), pavelPastorResurs, article1Recording.getId())));
+        post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event1).get(), patrikPastorResurs, article1Recording.getId())));
+        post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event2).get(), pamelaPastorResurs, article1Recording.getId())));
+        post(user1, "/articles", json(ArticleData.newArticleFromEvent(articleType1, articleSerie1, eventRepository.findById(event3).get(), pavelPastorResurs, article1Recording.getId())));
 
 
         // Podcast
         Asset podcastImage = givenAssetInFolder(slideShowFolder.getId(), "image.png", "yellow.png", "image/png");
-        final Long podcast1 = post(user1, "/podcasts", json(PodcastData.newPodcast(articleType1, podcastImage.getId())));
+        post(user1, "/podcasts", json(PodcastData.newPodcast(articleType1, podcastImage.getId())));
         System.out.println("Podcast URL: http://localhost:9000/api/podcasts/feed/podcast");
     }
 

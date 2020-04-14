@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
 delete from messages where is_useradded = 1;
 delete from consents;
 
@@ -33,3 +35,5 @@ delete from users;
 
 delete from assets;
 delete from assetfolders;
+
+SET FOREIGN_KEY_CHECKS = 1;

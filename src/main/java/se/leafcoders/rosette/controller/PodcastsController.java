@@ -46,7 +46,7 @@ public class PodcastsController {
 
     @GetMapping
     public Collection<PodcastOut> getPodcasts(HttpServletRequest request) {
-        Sort sort = new Sort(Sort.Direction.ASC, "title");        
+        Sort sort = Sort.by("title").ascending();
         return podcastService.toOut(podcastService.readMany(sort, true));
     }
 

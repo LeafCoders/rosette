@@ -75,7 +75,7 @@ public class EventsController implements ServerTime {
         Optional<LocalDateTime> fromOptional = Optional.ofNullable(from);
         Optional<LocalDateTime> beforeOptional = Optional.ofNullable(before);
 
-        Sort sort = new Sort(Sort.Direction.ASC, "startTime");
+        Sort sort = Sort.by("startTime").ascending();
         Specification<Event> spec = (root, query, cb) -> {
             // FETCH two levels deep and sort out duplicates (distinct)
             query.distinct(true);
@@ -169,7 +169,7 @@ public class EventsController implements ServerTime {
             before = from.plusMonths(1);
         }
         
-        Sort sort = new Sort(Sort.Direction.ASC, "startTime");
+        Sort sort = Sort.by("startTime").ascending();
 
         Specification<Event> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

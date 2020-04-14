@@ -39,7 +39,7 @@ public class GroupsController {
 
     @GetMapping
     public Collection<GroupOut> getGroups(HttpServletRequest request) {
-        Sort sort = new Sort(Sort.Direction.ASC, "name");        
+        Sort sort = Sort.by("name").ascending();
         return groupService.toOut(groupService.readMany(sort, true));
     }
 

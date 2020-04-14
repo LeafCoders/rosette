@@ -64,7 +64,7 @@ public class ResourceTypesController {
     }
 
     private Collection<ResourceTypeOut> readAll() {
-        Sort sort = new Sort(Sort.Direction.ASC, "displayOrder");
+        Sort sort = Sort.by("displayOrder").ascending();
         return resourceTypeService.toOut(resourceTypeService.readMany(sort, true));
     }
     

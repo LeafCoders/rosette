@@ -2,9 +2,9 @@
 
 ## Development setup
 
-### Java 8 JDK
+### Java 14 JDK (AdoptOpenJDK)
 
-1. Install `Java 8` from http://www.oracle.com/technetwork/java/javase/index.html
+1. Install `Java 14` from https://adoptopenjdk.net/?variant=openjdk14&jvmVariant=openj9
 
 
 ### Docker
@@ -14,16 +14,15 @@
 3. Run from a terminal: `docker exec -it mysql /bin/bash` to enter the running docker image
 4. Start mysql with `mysql -uroot -proot`
 5. Create the test database with `create database test;`
-6. From your IDE, run the `SeetTest` to setup the database tables.
+6. From Visual Studio Code, open `SeetTest.java` and run the `seed` test to setup the database tables.
 
 When you need start the container again (after computer reboot) just run `docker run mysql`
 
 
-### Eclipse 
+### Visual Studio Code
 
-1. Install `Spring Tool Suite 3.9.0` from http://spring.io/tools/sts
-2. Install `Buildship Grade Integration` from Eclipse Marketplace
-3. Import the Rosette project with `File -> Import... -> Gradle -> Existing Gradle Project`
+1. Install latest `Visual Studio Code` from https://code.visualstudio.com
+2. Install the workspace recommended extensions. Go to `Extensions` and search for `@recommended` to see the extensions.
 
 
 ### FakeSMTP
@@ -37,8 +36,9 @@ Use FakeSMTP to simulate a local SMTP server. FakeSMTP has a GUI that shows sent
 
 ## Running server
 
-1. Open `Boot Dashboard` tool window. `rosette` should be listed here
-2. Select `rosette` and click start button 
+1. Make sure that the `mysql` docker container is running `docker run mysql`.
+2. Make sure that the database is populated with data. Run the `seed` test in `SeedTest.java`.
+3. Open `Gradle tasks` tool window. Start `rosette > application > bootRun`
 
 
 ## Running tests

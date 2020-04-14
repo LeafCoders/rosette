@@ -98,24 +98,24 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> implements Ser
     }
 
     public List<T> readMany(Sort sort, boolean checkPermissions) {
-        sort = sort != null ? sort : new Sort(Sort.Direction.ASC, "id");
+        sort = sort != null ? sort : Sort.by("id").ascending();
         return readManyCheckPermissions(repository.findAll(sort), checkPermissions);
     }
 
     public List<T> readMany(Specification<T> specification, Sort sort, boolean checkPermissions) {
-        sort = sort != null ? sort : new Sort(Sort.Direction.ASC, "id");
+        sort = sort != null ? sort : Sort.by("id").ascending();
         List<T> items = repository.findAll(specification, sort);
         return readManyCheckPermissions(items, checkPermissions);
     }
 
     public List<T> readMany(Specification<T> specification, Pageable pageable, boolean checkPermissions) {
         if (pageable.getSort() == null) {
-            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), new Sort(Sort.Direction.ASC, "id"));
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
         }
         Page<T> page = repository.findAll(specification, pageable);
         return readManyCheckPermissions(page.getContent(), checkPermissions);
     }
-    
+
     protected List<T> readManyCheckPermissions(List<T> items, boolean checkPermissions) {
         return checkPermissions ? filterPermittedItems(items) : items;
     }
@@ -129,8 +129,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> implements Ser
             JsonNode rawData = objectMapper.readTree(request.getReader());
             IN itemIn = objectMapper.treeToValue(rawData, inClass);
 
-
-// Kanske inte funkar med denna????            securityService.validate(itemIn, rawData);
+            // Kanske inte funkar med denna???? securityService.validate(itemIn, rawData);
             fromIn(itemIn, rawData, itemInDb);
             securityService.validate(itemInDb, null);
             extraValidation(itemInDb, itemIn);
@@ -152,17 +151,17 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> implements Ser
         return ResponseEntity.noContent().build();
     }
 
-    protected void extraValidation(T itemToValidate, IN itemChanges) {}
-    
+    protected void extraValidation(T itemToValidate, IN itemChanges) {
+    }
+
     protected abstract T convertFromInDTO(IN itemIn, JsonNode rawIn, T itemToUpdate);
 
     protected abstract OUT convertToOutDTO(T item);
 
     public T fromIn(IN itemIn) {
         try {
-            return itemIn != null ? fromIn(itemIn, null, entityClass.newInstance()) : null;
-        } catch (InstantiationException ignore) {
-        } catch (IllegalAccessException ignore) {
+            return itemIn != null ? fromIn(itemIn, null, entityClass.getDeclaredConstructor().newInstance()) : null;
+        } catch (Exception ignore) {
         }
         // TOOD: Throw some internal exception 500 when newInstance() throws or
         // when itemIn is null

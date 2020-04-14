@@ -19,7 +19,7 @@ public class FileMetadataReader {
         try {
             BufferedImage image = ImageIO.read(inputStream);
             if (image != null) {
-                return new Long[] { new Long(image.getWidth()), new Long(image.getHeight()) }; 
+                return new Long[] { Long.valueOf(image.getWidth()), Long.valueOf(image.getHeight()) }; 
             }
         } catch (Exception ignore) {
         } finally {

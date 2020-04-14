@@ -63,9 +63,7 @@ import se.leafcoders.rosette.persistence.repository.UserRepository;
 @Sql("/setupBeforeEachTest.sql")
 abstract class AbstractControllerTest {
 
-    public static final MediaType CONTENT_JSON = new MediaType(
-        MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8")
-    );
+    public static final MediaType CONTENT_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype());
 
     @Autowired
     private WebApplicationContext webApplicationContext;

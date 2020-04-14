@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "pivotal.vscode-boot-dev-pack",
+    "richardwillis.vscode-gradle-extension-pack"
+  ]
+}
