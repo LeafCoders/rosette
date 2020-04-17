@@ -3,13 +3,23 @@ package se.leafcoders.rosette.persistence.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "messages")
 public class Message extends Persistable {
+
+    private static final long serialVersionUID = -4746191929279339380L;
 
     @Column(name = "message_key")
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
@@ -22,32 +32,4 @@ public class Message extends Persistable {
 
     @Length(max = 4000, message = ApiString.STRING_MAX_4000_CHARS)
     private String message;
-
-
-    // Getters and setters
-
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

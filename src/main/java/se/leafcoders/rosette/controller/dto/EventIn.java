@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -17,6 +20,7 @@ import se.leafcoders.rosette.persistence.validator.DateTimeAfter;
 
 @DateTimeAfter(startDateTime = "startTime", endDateTime = "endTime", errorAt = "endTime")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class EventIn {
 
     @NotNull(message = ApiString.NOT_NULL)
@@ -44,62 +48,7 @@ public class EventIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Boolean isPublic;
 
-    // Getters and setters
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPrivateDescription() {
-        return privateDescription;
-    }
-
-    public void setPrivateDescription(String privateDescription) {
-        this.privateDescription = privateDescription;
-    }
-
-    public Long getEventTypeId() {
-        return eventTypeId;
-    }
-
-    public void setEventTypeId(Long eventTypeId) {
-        this.eventTypeId = eventTypeId;
-    }
-
     public Boolean getIsPublic() {
         return isPublic != null ? isPublic : true;
     }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
 }

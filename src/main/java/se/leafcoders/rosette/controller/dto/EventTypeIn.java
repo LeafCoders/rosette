@@ -2,12 +2,16 @@ package se.leafcoders.rosette.controller.dto;
 
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class EventTypeIn {
 
     @IdAlias
@@ -23,42 +27,7 @@ public class EventTypeIn {
     @NotNull(message = ApiString.NOT_NULL)
     private Boolean isPublic;
 
-
-    public EventTypeIn() {
-    }
-
-    // Getters and setters
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Boolean getIsPublic() {
         return isPublic != null ? isPublic : true;
     }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
 }

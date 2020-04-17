@@ -2,11 +2,15 @@ package se.leafcoders.rosette.controller.dto;
 
 import javax.validation.constraints.Email;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class UserIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
@@ -41,55 +45,4 @@ public class UserIn {
         password = signupUser.getPassword();
         description = signupUser.getDescription();
     }
-    
-    // Getters and setters
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
 }

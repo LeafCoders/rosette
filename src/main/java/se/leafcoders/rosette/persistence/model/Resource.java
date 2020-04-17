@@ -13,15 +13,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "resources")
 public class Resource extends Persistable {
+
+    private static final long serialVersionUID = 8585463249829759379L;
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
@@ -48,37 +56,13 @@ public class Resource extends Persistable {
 
     private LocalDateTime lastUseTime;
     
-    
-    public Resource() {
-    }
-
     // Getters and setters
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public List<ResourceType> getResourceTypes() {
         if (resourceTypes == null) {
             resourceTypes = new ArrayList<>();
         }
         return resourceTypes;
-    }
-
-    public void setResourceTypes(List<ResourceType> resourceTypes) {
-        this.resourceTypes = resourceTypes;
     }
 
     public void addResourceType(ResourceType resourceType) {
@@ -89,28 +73,8 @@ public class Resource extends Persistable {
         getResourceTypes().remove(resourceType);
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
     public void setUser(User user) {
         this.user = user;
         this.setUserId(user != null ? user.getId() : null);
-    }
-
-    public LocalDateTime getLastUseTime() {
-        return lastUseTime;
-    }
-
-    public void setLastUseTime(LocalDateTime lastUseTime) {
-        this.lastUseTime = lastUseTime;
     }
 }

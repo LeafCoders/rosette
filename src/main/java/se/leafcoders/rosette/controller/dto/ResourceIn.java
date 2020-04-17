@@ -1,11 +1,15 @@
 package se.leafcoders.rosette.controller.dto;
 
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class ResourceIn {
 
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
@@ -16,30 +20,4 @@ public class ResourceIn {
     private String description;
 
     private Long userId;
-
-    // Getters and setters
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }

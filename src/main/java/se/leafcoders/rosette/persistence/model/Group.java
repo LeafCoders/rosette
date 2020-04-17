@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,14 +11,24 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "groups")
 public class Group extends Persistable {
+
+    private static final long serialVersionUID = 3945087664808860374L;
 
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -38,34 +49,7 @@ public class Group extends Persistable {
     )
     private List<User> users = new ArrayList<>();
 
-    public Group() {
-    }
-
     // Getters and setters
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public List<User> getUsers() {
         if (users == null) {
@@ -73,10 +57,6 @@ public class Group extends Persistable {
         }
         users.sort((a, b) -> a.getFullName().compareTo(b.getFullName()));
         return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
     public void addUser(User user) {

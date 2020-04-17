@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "gabrielbb.vscode-lombok",
     "pivotal.vscode-boot-dev-pack",
     "richardwillis.vscode-gradle-extension-pack"
   ]

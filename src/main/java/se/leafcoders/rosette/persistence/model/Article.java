@@ -17,6 +17,11 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -25,9 +30,14 @@ import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializ
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.model.ArticleType.RecordingStatus;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "articles")
 public class Article extends Persistable {
+
+    private static final long serialVersionUID = -8107708146887268894L;
 
     @NotNull(message = ApiString.NOT_NULL)
     @Column(name = "articletype_id", nullable = false, insertable = false, updatable = false)
@@ -85,67 +95,16 @@ public class Article extends Persistable {
     @Column(nullable = false)
     private RecordingStatus recordingStatus;
 
-    public Article() {
-    }
-
     // Getters and setters
-
-    public Long getArticleTypeId() {
-        return articleTypeId;
-    }
-
-    public void setArticleTypeId(Long articleTypeId) {
-        this.articleTypeId = articleTypeId;
-    }
-
-    public ArticleType getArticleType() {
-        return articleType;
-    }
 
     public void setArticleType(ArticleType articleType) {
         this.articleType = articleType;
         this.setArticleTypeId(articleType != null ? articleType.getId() : null);
     }
 
-    public Long getArticleSerieId() {
-        return articleSerieId;
-    }
-
-    public void setArticleSerieId(Long articleSerieId) {
-        this.articleSerieId = articleSerieId;
-    }
-
-    public ArticleSerie getArticleSerie() {
-        return articleSerie;
-    }
-
     public void setArticleSerie(ArticleSerie articleSerie) {
         this.articleSerie = articleSerie;
         this.setArticleSerieId(articleSerie != null ? articleSerie.getId() : null);
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public LocalDateTime getLastModifiedTime() {
-        return lastModifiedTime;
-    }
-
-    public void setLastModifiedTime(LocalDateTime lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
     }
 
     public List<Resource> getAuthors() {
@@ -156,8 +115,8 @@ public class Article extends Persistable {
         return authors;
     }
 
-    public void setAuthors(List<Resource> authors) {
-        this.authors = authors;
+    public HtmlContent getContent() {
+        return content != null ? content : new HtmlContent();
     }
 
     public void addAuthor(Resource authors) {
@@ -167,37 +126,4 @@ public class Article extends Persistable {
     public void removeAuthor(Resource authors) {
         getAuthors().remove(authors);
     }
-    
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public HtmlContent getContent() {
-        return content != null ? content : new HtmlContent();
-    }
-
-    public void setContent(HtmlContent content) {
-        this.content = content;
-    }
-    
-    public Asset getRecording() {
-        return recording;
-    }
-
-    public void setRecording(Asset recording) {
-        this.recording = recording;
-    }
-
-    public RecordingStatus getRecordingStatus() {
-        return recordingStatus;
-    }
-
-    public void setRecordingStatus(RecordingStatus recordingStatus) {
-        this.recordingStatus = recordingStatus;
-    }
-
 }

@@ -2,20 +2,31 @@ package se.leafcoders.rosette.persistence.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "resourcetypes")
 public class ResourceType extends Persistable {
+
+    private static final long serialVersionUID = 4726268618071764182L;
 
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -34,45 +45,4 @@ public class ResourceType extends Persistable {
     
     @NotNull(message = ApiString.NOT_NULL)
     private Long displayOrder;
-
-    public ResourceType() {
-    }
-
-    // Getters and setters
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public Long getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Long displayOrder) {
-        this.displayOrder = displayOrder;
-    }
 }

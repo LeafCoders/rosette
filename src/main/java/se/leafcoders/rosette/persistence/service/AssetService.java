@@ -115,9 +115,9 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         dto.setFileName(item.getFileName());
         dto.setUrl(urlOfAsset(item));
         
-        dto.setImageFile(item.isImageFile());
-        dto.setAudioFile(item.isAudioFile());
-        dto.setTextFile(item.isTextFile());
+        dto.setIsImageFile(item.isImageFile());
+        dto.setIsAudioFile(item.isAudioFile());
+        dto.setIsTextFile(item.isTextFile());
 
         dto.setFileSize(item.getFileSize());
         dto.setWidth(item.getWidth());

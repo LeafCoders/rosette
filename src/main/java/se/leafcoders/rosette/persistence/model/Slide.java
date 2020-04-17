@@ -8,24 +8,32 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.validator.DateTimeAfter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "slides")
 @DateTimeAfter(startDateTime = "startTime", endDateTime = "endTime", errorAt = "endTime")
 public class Slide extends Persistable {
+
+    private static final long serialVersionUID = -865616765574642271L;
 
     @JsonIgnore
     @NotNull(message = ApiString.NOT_NULL)
@@ -68,71 +76,10 @@ public class Slide extends Persistable {
     @NotNull(message = ApiString.NOT_NULL)
     private Long displayOrder;
 
-
-    public Slide() {
-    }
-
     // Getters and setters
-
-    public Long getSlideShowId() {
-        return slideShowId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public Long getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
-    }
-
-    public Asset getImage() {
-        return image;
-    }
 
     public void setImage(Asset image) {
         this.image = image;
         this.imageId = image != null ? image.getId() : null;
     }
-
-    public Long getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Long displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-
 }

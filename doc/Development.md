@@ -2,9 +2,9 @@
 
 ## Development setup
 
-### Java 14 JDK (AdoptOpenJDK)
+### Java 14 JDK (AdoptOpenJDK HotSpot)
 
-1. Install `Java 14` from https://adoptopenjdk.net/?variant=openjdk14&jvmVariant=openj9
+1. Install `Java 14` from https://adoptopenjdk.net/?variant=openjdk14&jvmVariant=hotspot
 
 
 ### Docker

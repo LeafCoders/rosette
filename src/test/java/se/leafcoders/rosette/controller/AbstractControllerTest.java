@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;

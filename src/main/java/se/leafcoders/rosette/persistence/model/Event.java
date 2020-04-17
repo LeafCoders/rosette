@@ -3,6 +3,7 @@ package se.leafcoders.rosette.persistence.model;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,19 +14,30 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.data.annotation.Version;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.Version;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.validator.DateTimeAfter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "events_table")
 @DateTimeAfter(startDateTime = "startTime", endDateTime = "endTime", errorAt = "endTime")
 public class Event extends Persistable {
+
+    private static final long serialVersionUID = 6758296551835524190L;
 
     @NotNull(message = ApiString.NOT_NULL)
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
@@ -62,65 +74,10 @@ public class Event extends Persistable {
     private Boolean isPublic;
 
     @Version
+    @Setter(lombok.AccessLevel.NONE)
     private Integer version;
 
-
-    public Event() {
-    }
-
     // Getters and setters
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPrivateDescription() {
-        return privateDescription;
-    }
-
-    public void setPrivateDescription(String privateDescription) {
-        this.privateDescription = privateDescription;
-    }
-
-    public Long getEventTypeId() {
-        return eventTypeId;
-    }
-
-    public void setEventTypeId(Long eventTypeId) {
-        this.eventTypeId = eventTypeId;
-    }
-
-    public EventType getEventType() {
-        return eventType;
-    }
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
@@ -134,10 +91,6 @@ public class Event extends Persistable {
         return resourceRequirements;
     }
 
-    public void setResourceRequirements(Set<ResourceRequirement> resourceRequirement) {
-        this.resourceRequirements = resourceRequirement;
-    }
-
     public void addResourceRequirement(ResourceRequirement resourceRequirement) {
         getResourceRequirements().add(resourceRequirement);
     }
@@ -145,17 +98,4 @@ public class Event extends Persistable {
     public void removeResourceRequirement(ResourceRequirement resourceRequirement) {
         getResourceRequirements().remove(resourceRequirement);
     }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
 }

@@ -13,6 +13,8 @@ import javax.persistence.Version;
 @MappedSuperclass
 public abstract class Persistable implements Serializable, Cloneable {
 
+    private static final long serialVersionUID = -5413538382238005735L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,12 +27,12 @@ public abstract class Persistable implements Serializable, Cloneable {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

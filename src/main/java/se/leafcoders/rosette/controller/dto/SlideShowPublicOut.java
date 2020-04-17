@@ -1,8 +1,11 @@
 package se.leafcoders.rosette.controller.dto;
 
 import java.util.List;
+
+import lombok.Data;
 import se.leafcoders.rosette.persistence.model.SlideShow;
 
+@Data
 public class SlideShowPublicOut {
 
     private String name;
@@ -12,23 +15,4 @@ public class SlideShowPublicOut {
         this.name = slideShow.getName();
         this.slides = slides;
     }
-    
-    // Getters and setters
-    
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<SlideOut> getSlides() {
-        return slides;
-    }
-
-    public void setSlides(List<SlideOut> slides) {
-        this.slides = slides;
-    }
-
 }

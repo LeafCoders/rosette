@@ -77,7 +77,7 @@ public class SeedTest extends AbstractControllerTest {
         // Slide shows
         final AssetFolder slideShowFolder = givenAssetFolder(AssetFolderData.newAssetFolder("slideShow", "Bilder till bildspel", "image/"));
         final Long slideShow1 = post(user1, "/slideShows", json(SlideShowData.newSlideShow("tv1", "TV 1", slideShowFolder)));
-        final Long slideShow2 = post(user1, "/slideShows", json(SlideShowData.newSlideShow("tv2", "TV 2", slideShowFolder)));
+        post(user1, "/slideShows", json(SlideShowData.newSlideShow("tv2", "TV 2", slideShowFolder)));
 
         // Slide show images
         Asset slideShowImage1 = givenAssetInFolder(slideShowFolder.getId(), "image.png", "yellow.png", "image/png");

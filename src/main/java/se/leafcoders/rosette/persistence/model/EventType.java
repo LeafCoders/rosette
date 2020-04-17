@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,15 +11,25 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "eventtypes")
 public class EventType extends Persistable {
+
+    private static final long serialVersionUID = -854979754687811329L;
 
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -44,45 +55,13 @@ public class EventType extends Persistable {
     @NotNull(message = ApiString.NOT_NULL)
     private Boolean isPublic;
 
-
-    public EventType() {
-    }
-
     // Getters and setters
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public List<ResourceType> getResourceTypes() {
         if (resourceTypes == null) {
             resourceTypes = new ArrayList<>();
         }
         return resourceTypes;
-    }
-
-    public void setResourceTypes(List<ResourceType> resourceTypes) {
-        this.resourceTypes = resourceTypes;
     }
 
     public void addResourceType(ResourceType resourceType) {
@@ -92,13 +71,4 @@ public class EventType extends Persistable {
     public void removeResourceType(ResourceType resourceType) {
         getResourceTypes().remove(resourceType);
     }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
 }

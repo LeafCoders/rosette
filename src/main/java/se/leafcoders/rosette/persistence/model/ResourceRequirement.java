@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -11,11 +12,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "resourcerequirements", uniqueConstraints = @UniqueConstraint(columnNames = { "event_id", "resourcetype_id" }))
 public class ResourceRequirement extends Persistable {
+
+    private static final long serialVersionUID = 699124896259923524L;
 
     @NotNull(message = ApiString.NOT_NULL)
     @ManyToOne
@@ -37,43 +47,18 @@ public class ResourceRequirement extends Persistable {
     )
     private Set<Resource> resources;
 
-
-    public ResourceRequirement() {}
-
     public ResourceRequirement(Event event, ResourceType resourceType) {
         this.event = event;
         this.resourceType = resourceType;
     }
 
-
     // Getters and setters
-
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public ResourceType getResourceType() {
-        return resourceType;
-    }
-
-    public void setResourceType(ResourceType resourceType) {
-        this.resourceType = resourceType;
-    }
 
     public Set<Resource> getResources() {
         if (resources == null) {
             resources = new HashSet<>();
         }
         return resources;
-    }
-
-    public void setResources(Set<Resource> resources) {
-        this.resources = resources;
     }
 
     public void addResource(Resource resource) {

@@ -1,5 +1,8 @@
 package se.leafcoders.rosette.controller.dto;
 
+import lombok.Data;
+
+@Data
 public class ArticleTypeOut {
 
     private Long id;
@@ -12,87 +15,4 @@ public class ArticleTypeOut {
     private AssetFolderOut recordingFolder;
     private String defaultRecordingStatus;
     private ResourceTypeRefOut authorResourceType;
-
-    // Getters and setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getArticlesTitle() {
-        return articlesTitle;
-    }
-
-    public void setArticlesTitle(String articlesTitle) {
-        this.articlesTitle = articlesTitle;
-    }
-
-    public String getNewArticleTitle() {
-        return newArticleTitle;
-    }
-
-    public void setNewArticleTitle(String newArticleTitle) {
-        this.newArticleTitle = newArticleTitle;
-    }
-
-    public String getArticleSeriesTitle() {
-        return articleSeriesTitle;
-    }
-
-    public void setArticleSeriesTitle(String articleSeriesTitle) {
-        this.articleSeriesTitle = articleSeriesTitle;
-    }
-
-    public String getNewArticleSerieTitle() {
-        return newArticleSerieTitle;
-    }
-
-    public void setNewArticleSerieTitle(String newArticleSerieTitle) {
-        this.newArticleSerieTitle = newArticleSerieTitle;
-    }
-
-    public AssetFolderOut getImageFolder() {
-        return imageFolder;
-    }
-
-    public void setImageFolder(AssetFolderOut imageFolder) {
-        this.imageFolder = imageFolder;
-    }
-
-    public AssetFolderOut getRecordingFolder() {
-        return recordingFolder;
-    }
-
-    public void setRecordingFolder(AssetFolderOut recordingFolder) {
-        this.recordingFolder = recordingFolder;
-    }
-
-    public String getDefaultRecordingStatus() {
-        return defaultRecordingStatus;
-    }
-
-    public void setDefaultRecordingStatus(String defaultRecordingStatus) {
-        this.defaultRecordingStatus = defaultRecordingStatus;
-    }
-
-    public ResourceTypeRefOut getAuthorResourceType() {
-        return authorResourceType;
-    }
-
-    public void setAuthorResourceType(ResourceTypeRefOut authorResourceType) {
-        this.authorResourceType = authorResourceType;
-    }
-
 }

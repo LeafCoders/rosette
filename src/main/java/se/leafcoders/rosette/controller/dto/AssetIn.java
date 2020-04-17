@@ -4,11 +4,15 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.URL;
+
+import lombok.Data;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.model.Asset;
 import se.leafcoders.rosette.persistence.validator.StringEnumeration;
 
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetIn {
 
@@ -23,30 +27,4 @@ public class AssetIn {
 
     @NotNull(message = ApiString.NOT_NULL)
     private Long folderId;
-    
-    // Getters and setters
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Long getFolderId() {
-        return folderId;
-    }
-
-    public void setFolderId(Long folderId) {
-        this.folderId = folderId;
-    }
 }

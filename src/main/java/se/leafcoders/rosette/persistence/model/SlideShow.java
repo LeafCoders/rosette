@@ -2,6 +2,7 @@ package se.leafcoders.rosette.persistence.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,15 +10,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "slideshows")
 public class SlideShow extends Persistable {
+
+    private static final long serialVersionUID = -4815639774048738241L;
 
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -39,38 +50,7 @@ public class SlideShow extends Persistable {
     @OneToMany(mappedBy = "slideShow", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Slide> slides;
 
-    public SlideShow() {
-    }
-
     // Getters and setters
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getAssetFolderId() {
-        return assetFolderId;
-    }
-
-    public void setAssetFolderId(Long assetFolderId) {
-        this.assetFolderId = assetFolderId;
-    }
-
-    public AssetFolder getAssetFolder() {
-        return assetFolder;
-    }
 
     public void setAssetFolder(AssetFolder assetFolder) {
         this.assetFolder = assetFolder;
@@ -82,10 +62,6 @@ public class SlideShow extends Persistable {
             slides = new ArrayList<Slide>();
         }
         return slides;
-    }
-
-    public void setSlides(List<Slide> slides) {
-        this.slides = slides;
     }
 
     public void addSlide(Slide slide) {

@@ -9,15 +9,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "articletypes")
 public class ArticleType extends Persistable {
 
-    public enum RecordingStatus { NOT_EXPECTED, EXPECTING_RECORDING, HAS_RECORDING };
+    private static final long serialVersionUID = -2026041453379772684L;
+
+    public enum RecordingStatus {
+        NOT_EXPECTED, EXPECTING_RECORDING, HAS_RECORDING
+    };
     
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -58,83 +70,4 @@ public class ArticleType extends Persistable {
     @ManyToOne
     @JoinColumn(name = "author_resourcetype_id")
     private ResourceType authorResourceType;
-
-
-    public ArticleType() {
-    }
-
-    // Getters and setters
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getArticlesTitle() {
-        return articlesTitle;
-    }
-
-    public void setArticlesTitle(String articlesTitle) {
-        this.articlesTitle = articlesTitle;
-    }
-
-    public String getNewArticleTitle() {
-        return newArticleTitle;
-    }
-
-    public void setNewArticleTitle(String newArticleTitle) {
-        this.newArticleTitle = newArticleTitle;
-    }
-
-    public String getArticleSeriesTitle() {
-        return articleSeriesTitle;
-    }
-
-    public void setArticleSeriesTitle(String articleSeriesTitle) {
-        this.articleSeriesTitle = articleSeriesTitle;
-    }
-
-    public String getNewArticleSerieTitle() {
-        return newArticleSerieTitle;
-    }
-
-    public void setNewArticleSerieTitle(String newArticleSerieTitle) {
-        this.newArticleSerieTitle = newArticleSerieTitle;
-    }
-
-    public AssetFolder getImageFolder() {
-        return imageFolder;
-    }
-
-    public void setImageFolder(AssetFolder imageFolder) {
-        this.imageFolder = imageFolder;
-    }
-
-    public AssetFolder getRecordingFolder() {
-        return recordingFolder;
-    }
-
-    public void setRecordingFolder(AssetFolder recordingFolder) {
-        this.recordingFolder = recordingFolder;
-    }
-
-    public RecordingStatus getDefaultRecordingStatus() {
-        return defaultRecordingStatus;
-    }
-
-    public void setDefaultRecordingStatus(RecordingStatus defaultRecordingStatus) {
-        this.defaultRecordingStatus = defaultRecordingStatus;
-    }
-
-    public ResourceType getAuthorResourceType() {
-        return authorResourceType;
-    }
-
-    public void setAuthorResourceType(ResourceType authorResourceType) {
-        this.authorResourceType = authorResourceType;
-    }
-
 }

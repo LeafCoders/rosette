@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -19,6 +22,7 @@ import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.validator.StringEnumeration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class ArticleIn {
 
     @NotNull(message = ApiString.NOT_NULL)
@@ -56,84 +60,7 @@ public class ArticleIn {
     
     // Getters and setters
 
-    public Long getArticleTypeId() {
-        return articleTypeId;
-    }
-
-    public void setArticleTypeId(Long articleTypeId) {
-        this.articleTypeId = articleTypeId;
-    }
-
-    public Long getArticleSerieId() {
-        return articleSerieId;
-    }
-
-    public void setArticleSerieId(Long articleSerieId) {
-        this.articleSerieId = articleSerieId;
-    }
-
-    public Long getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
     public List<Long> getAuthorIds() {
         return Optional.ofNullable(authorIds).orElse(new ArrayList<>()).stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
-
-    public void setAuthorIds(List<Long> authorIds) {
-        this.authorIds = authorIds;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContentRaw() {
-        return contentRaw;
-    }
-
-    public void setContentRaw(String contentRaw) {
-        this.contentRaw = contentRaw;
-    }
-
-    public String getContentHtml() {
-        return contentHtml;
-    }
-
-    public void setContentHtml(String contentHtml) {
-        this.contentHtml = contentHtml;
-    }
-
-    public Long getRecordingId() {
-        return recordingId;
-    }
-
-    public void setRecordingId(Long recordingId) {
-        this.recordingId = recordingId;
-    }
-
-    public String getRecordingStatus() {
-        return recordingStatus;
-    }
-
-    public void setRecordingStatus(String recordingStatus) {
-        this.recordingStatus = recordingStatus;
-    }
-
 }

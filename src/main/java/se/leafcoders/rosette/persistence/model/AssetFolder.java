@@ -3,14 +3,24 @@ package se.leafcoders.rosette.persistence.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.validator.IdAlias;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "assetfolders")
 public class AssetFolder extends Persistable {
+
+    private static final long serialVersionUID = 2634706723961375417L;
 
     @IdAlias
     @Column(nullable = false, unique = true)
@@ -28,51 +38,9 @@ public class AssetFolder extends Persistable {
     
     private Boolean staticFileKey = false;
 
-
-    public AssetFolder() {}
-
-
     // Getters and setters
-
-
-    public String getIdAlias() {
-        return idAlias;
-    }
-
-    public void setIdAlias(String idAlias) {
-        this.idAlias = idAlias;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAllowedMimeTypes() {
-        return allowedMimeTypes;
-    }
-
-    public void setAllowedMimeTypes(String allowedMimeTypes) {
-        this.allowedMimeTypes = allowedMimeTypes;
-    }
 
     public Boolean getStaticFileKey() {
         return staticFileKey != null ? staticFileKey : false;
     }
-
-    public void setStaticFileKey(Boolean staticFileKey) {
-        this.staticFileKey = staticFileKey;
-    }
-
 }

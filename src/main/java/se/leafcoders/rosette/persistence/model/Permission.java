@@ -4,22 +4,32 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.permission.PermissionTreeHelper;
 import se.leafcoders.rosette.persistence.validator.ValidPermissions;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "permissions")
 public class Permission extends Persistable {
+
+    private static final long serialVersionUID = -1720660525271368229L;
 
     public static Integer LEVEL_PUBLIC = 0;
     public static Integer LEVEL_ALL_USERS = 1;
@@ -42,9 +52,6 @@ public class Permission extends Persistable {
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String patterns;
 
-    public Permission() {
-    }
-
     public Permission(String name, Integer level, Long entityId, String patterns) {
         this.name = name;
         this.level = level;
@@ -53,30 +60,6 @@ public class Permission extends Persistable {
     }
 
     // Getters and setters
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Long getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
 
     public String getPatterns() {
         return cleanPatterns(patterns);
