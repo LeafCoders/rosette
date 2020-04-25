@@ -23,11 +23,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.filter.CorsFilter;
 
-/*
- * To start mysql
- * docker run --detach --name=mysql --env="MYSQL_ROOT_PASSWORD=root" --publish 3306:3306 mysql
- */
-
 @SpringBootApplication
 @Configuration
 @EnableJpaRepositories
@@ -61,7 +56,7 @@ public class RosetteApplication extends SpringBootServletInitializer {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addExposedHeader("X-AUTH-TOKEN");

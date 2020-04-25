@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_14
 
 bootJar {
   archiveBaseName = "rosette"
-  archiveVersion =  "0.19-SNAPSHOT"
+  archiveVersion =  "0.22-SNAPSHOT"
 }
 
 repositories {
@@ -22,8 +22,6 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-mail")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-web")
-  implementation("org.springframework.boot:spring-boot-starter-websocket")
-  implementation("org.springframework.security:spring-security-messaging")
   runtimeOnly("org.springframework.boot:spring-boot-devtools")
   runtimeOnly("mysql:mysql-connector-java")
   testImplementation("org.springframework.boot:spring-boot-starter-test")

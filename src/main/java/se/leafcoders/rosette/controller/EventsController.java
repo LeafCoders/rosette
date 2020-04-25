@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.leafcoders.rosette.controller.dto.ArticleOut;
 import se.leafcoders.rosette.controller.dto.EventIn;
 import se.leafcoders.rosette.controller.dto.EventOut;
@@ -58,7 +61,7 @@ public class EventsController implements ServerTime {
     
     @Autowired
     private ArticleService articleService;
-    
+
     @GetMapping(value = "/{id}")
     public EventOut getEvent(@PathVariable Long id) {
         return eventService.toOut(eventService.read(id, true));

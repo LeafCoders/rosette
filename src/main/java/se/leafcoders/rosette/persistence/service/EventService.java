@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.EventIn;
@@ -31,6 +30,7 @@ import se.leafcoders.rosette.persistence.model.ResourceType;
 import se.leafcoders.rosette.persistence.repository.ArticleRepository;
 import se.leafcoders.rosette.persistence.repository.EventRepository;
 import se.leafcoders.rosette.persistence.repository.ResourceRequirementRepository;
+import se.leafcoders.rosette.service.SseService;
 
 @Service
 public class EventService extends PersistenceService<Event, EventIn, EventOut> {
@@ -43,19 +43,19 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
 
     @Autowired
     private ResourceRequirementService resourceRequirementService;
-    
+
     @Autowired
     private ResourceRequirementRepository resourceRequirementRepository;
-    
+
     @Autowired
     private ResourceService resourceService;
-    
+
     @Autowired
     private ArticleRepository articleRepository;
-    
+
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-    
+    private SseService sseService;
+
     public EventService(EventRepository repository) {
         super(Event.class, PermissionType::events, repository);
     }
@@ -70,19 +70,21 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         permissions.add(PermissionType.eventTypes().createEvents().forId(eventIn.getEventTypeId()));
         return permissions;
     }
-    
+
     @Override
-    public List<PermissionValue> itemReadUpdateDeletePermissions(PermissionAction permissionAction, PermissionId<Event> permissionId) {
+    public List<PermissionValue> itemReadUpdateDeletePermissions(PermissionAction permissionAction,
+            PermissionId<Event> permissionId) {
         Event event = permissionId.getItem();
         Long eventTypeId = event != null ? event.getEventTypeId() : null;
-        
-        List<PermissionValue> permissions = new ArrayList<>(); 
+
+        List<PermissionValue> permissions = new ArrayList<>();
         permissions.add(PermissionType.events().action(permissionAction).forId(permissionId.getId()));
 
         if (permissionAction == PermissionAction.CREATE) {
             permissions.add(PermissionType.eventTypes().createEvents().forId(eventTypeId));
         } else if (permissionAction == PermissionAction.READ) {
-            List<ResourceType> resourceTypes = event != null ? event.getResourceRequirements().stream().map(rr -> rr.getResourceType()).collect(Collectors.toList()) : null;
+            List<ResourceType> resourceTypes = event != null ? event.getResourceRequirements().stream()
+                    .map(rr -> rr.getResourceType()).collect(Collectors.toList()) : null;
             permissions.add(PermissionType.eventTypes().readEvents().forId(eventTypeId));
             permissions.add(PermissionType.resourceTypes().readEvents().forPersistables(resourceTypes));
             permissions.add(PermissionType.resourceTypes().assignEventResources().forPersistables(resourceTypes));
@@ -108,7 +110,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
             throw new ForbiddenException(ApiError.UNKNOWN_REASON);
         }
     }
-    
+
     @Override
     public Event update(Long id, Class<EventIn> inClass, HttpServletRequest request, boolean checkPermissions) {
         Event updatedEvent = super.update(id, inClass, request, checkPermissions);
@@ -188,38 +190,35 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
 
         resourceRequirement.getResourceType().getResources();
         event.removeResourceRequirement(resourceRequirement);
-        
+
         Set<ResourceRequirement> resourceRequirements = repository.save(event).getResourceRequirements();
         pushChangedEvent(eventId);
         return resourceRequirements;
     }
 
     private void checkModifyResourceRequirementPermission(Event event, Long resourceTypeId) {
-        checkAnyPermission(
-                PermissionType.events().update().forPersistable(event),
+        checkAnyPermission(PermissionType.events().update().forPersistable(event),
                 PermissionType.eventTypes().updateEvents().forId(event.getEventTypeId()),
                 PermissionType.eventTypes().modifyEventResourceRequirements().forId(event.getEventTypeId()),
-                PermissionType.resourceTypes().modifyEventResourceRequirement().forId(resourceTypeId)
-        );
+                PermissionType.resourceTypes().modifyEventResourceRequirement().forId(resourceTypeId));
     }
 
     private void checkAssignResourceRequirementPermission(Event event, Long resourceTypeId) {
-        checkAnyPermission(
-                PermissionType.events().update().forPersistable(event),
+        checkAnyPermission(PermissionType.events().update().forPersistable(event),
                 PermissionType.eventTypes().updateEvents().forId(event.getEventTypeId()),
                 PermissionType.eventTypes().assignEventResources().forId(event.getEventTypeId()),
-                PermissionType.resourceTypes().assignEventResources().forId(resourceTypeId)
-        );
+                PermissionType.resourceTypes().assignEventResources().forId(resourceTypeId));
     }
 
     private ResourceRequirement getResourceRequirement(Long eventId, Long resourceRequirementId) {
-        Optional<ResourceRequirement> rr = getResourceRequirements(eventId).stream().filter(item -> item.getId().equals(resourceRequirementId)).findFirst();
+        Optional<ResourceRequirement> rr = getResourceRequirements(eventId).stream()
+                .filter(item -> item.getId().equals(resourceRequirementId)).findFirst();
         if (rr.isPresent()) {
             return rr.get();
         }
         throw new NotFoundException(ResourceRequirement.class, resourceRequirementId);
     }
-    
+
     public Set<Resource> getResources(Long eventId, Long resourceRequirementId) {
         return getResourceRequirement(eventId, resourceRequirementId).getResources();
     }
@@ -232,12 +231,13 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         if (resourceId != null) {
             Resource resource = resourceService.read(resourceId, true);
             if (!resource.getResourceTypes().contains(resourceRequirement.getResourceType())) {
-                throw ForbiddenException.dontBelongsTo(Resource.class, resourceId, ResourceType.class, resourceRequirement.getResourceType().getId());
+                throw ForbiddenException.dontBelongsTo(Resource.class, resourceId, ResourceType.class,
+                        resourceRequirement.getResourceType().getId());
             }
             resourceRequirement.addResource(resource);
             resourceService.updateUsage(resource);
         } else {
-           resourceRequirement.setResources(new HashSet<>(resourceRequirement.getResourceType().getResources()));
+            resourceRequirement.setResources(new HashSet<>(resourceRequirement.getResourceType().getResources()));
         }
         try {
             Set<Resource> resources = resourceRequirementRepository.save(resourceRequirement).getResources();
@@ -269,9 +269,9 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         read(eventId, true);
         return articleRepository.findByEventId(eventId);
     }
-    
+
     private void pushChangedEvent(Long eventId) {
-        simpMessagingTemplate.convertAndSend("/events", convertToOutDTO(read(eventId, false)));
+        sseService.sendEvent(toOut(read(eventId, false)));
     }
 
 }

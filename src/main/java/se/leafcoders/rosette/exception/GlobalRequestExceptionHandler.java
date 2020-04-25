@@ -75,17 +75,4 @@ public class GlobalRequestExceptionHandler extends ResponseEntityExceptionHandle
         ValidationError validationError = new ValidationError(ex.getParameterName(), ApiString.NOT_NULL);
         return new ResponseEntity<Object>(Collections.singletonList(validationError), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
-
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        System.err.println(ex.getMessage());
-        ex.printStackTrace(System.err);
-        super.handleExceptionInternal(ex, body, headers, status, request);
-        
-        return new ResponseEntity<Object>(
-                new ExceptionError(ApiError.UNKNOWN_ERROR.toString(), ApiError.UNKNOWN_ERROR.toString(), null), headers, status
-        );
-
-    }
-
 }
