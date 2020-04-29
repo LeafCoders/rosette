@@ -97,15 +97,12 @@ public class UsersControllerTests extends AbstractControllerTest {
         user1 = givenUser(user1);
         user2 = givenUser(user2);
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("email", "a@b.c");
-                data.put("firstName", "Användare");
-                data.put("lastName", "Två");
-                data.put("password", "newPassword");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> {
+            data.put("email", "a@b.c");
+            data.put("firstName", "Användare");
+            data.put("lastName", "Två");
+            data.put("password", "newPassword");
+        });
 
         crt.allPutTests(user1, "users:update", "/users", user2.getId(), jsonData)
             .andExpect(jsonPath("$.email", is("a@b.c")))

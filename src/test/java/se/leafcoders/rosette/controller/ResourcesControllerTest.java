@@ -92,12 +92,7 @@ public class ResourcesControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         Resource resource = resourceRepository.save(ResourceData.lasseLjudtekniker());
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("name", "Super admins");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> data.put("name", "Super admins"));
 
         crt.allPutTests(user1, "resources:update", "/resources", resource.getId(), jsonData)
             .andExpect(jsonPath("$.name", is("Super admins")))

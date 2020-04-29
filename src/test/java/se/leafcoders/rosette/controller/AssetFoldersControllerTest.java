@@ -81,14 +81,11 @@ public class AssetFoldersControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         AssetFolder assetFolder = assetFolderRepository.save(AssetFolderData.image());
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("name", "New image");
-                data.put("description", "New image description");
-                data.put("allowedMimeTypes", "image/png");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> {
+            data.put("name", "New image");
+            data.put("description", "New image description");
+            data.put("allowedMimeTypes", "image/png");
+        });
 
         crt.allPutTests(user1, "assetFolders:update", "/assetFolders", assetFolder.getId(), jsonData)
             .andExpect(jsonPath("$.idAlias", is(assetFolder.getIdAlias())))

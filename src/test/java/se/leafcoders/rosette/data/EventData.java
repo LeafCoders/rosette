@@ -17,6 +17,7 @@ public class EventData {
         event.setTitle("Event title");
         event.setDescription("An event");
         event.setEventType(eventType);
+        event.setIsPublic(true);
         return event;
     }
 

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
 import se.leafcoders.rosette.controller.dto.ArticleSerieOut;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.model.HtmlContent;
 import se.leafcoders.rosette.persistence.repository.ArticleSerieRepository;
@@ -72,7 +73,7 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
     public void updateUsage(ArticleSerie articleSerie) {
         if (articleSerie != null) {
             try {
-                repo().setLastUseTime(articleSerie.getId(), serverTimeNow());
+                repo().setLastUseTime(articleSerie.getId(), ClientServerTime.serverTimeNow());
             } catch (Exception ignore) {}
         }
     }

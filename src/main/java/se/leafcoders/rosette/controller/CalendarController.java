@@ -6,12 +6,15 @@ import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import biweekly.ICalVersion;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -22,15 +25,15 @@ import biweekly.property.DateStart;
 import biweekly.property.Description;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.service.EventService;
-import se.leafcoders.rosette.util.ServerTime;
 
 @Transactional
 @RestController
 @RequestMapping(value = "api/calendar", produces = "application/json")
-public class CalendarController implements ServerTime {
+public class CalendarController {
 
     @Autowired
     private EventService eventService;
@@ -59,8 +62,8 @@ public class CalendarController implements ServerTime {
     }
 
     private List<Event> getEvents(List<Long> eventTypeIds) {
-        LocalDateTime eventsFrom = serverTimeNow().minusDays(15);
-        LocalDateTime eventsBefore = serverTimeNow().plusYears(1);
+        LocalDateTime eventsFrom = ClientServerTime.serverTimeNow().minusDays(15);
+        LocalDateTime eventsBefore = ClientServerTime.serverTimeNow().plusYears(1);
         return eventService.readForCalendar(eventTypeIds, eventsFrom, eventsBefore);
     }
 

@@ -79,12 +79,7 @@ public class ResourceTypesControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         ResourceType sound = resourceTypeRepository.save(ResourceTypeData.sound());
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("name", "Super sound");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> data.put("name", "Super sound"));
 
         crt.allPutTests(user1, "resourceTypes:update", "/resourceTypes", sound.getId(), jsonData)
             .andExpect(jsonPath("$.idAlias", is(sound.getIdAlias())))

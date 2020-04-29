@@ -3,13 +3,17 @@ package se.leafcoders.rosette.persistence.service;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import se.leafcoders.rosette.controller.dto.SignupUserIn;
 import se.leafcoders.rosette.controller.dto.UserIn;
 import se.leafcoders.rosette.controller.dto.UserOut;
@@ -17,6 +21,7 @@ import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.exception.SingleValidationException;
 import se.leafcoders.rosette.exception.ValidationError;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Consent;
 import se.leafcoders.rosette.persistence.model.User;
 import se.leafcoders.rosette.persistence.repository.ConsentRepository;
@@ -132,7 +137,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
             Consent signupConsent = new Consent();
             signupConsent.setType(Consent.Type.SIGNUP);
             signupConsent.setSource(Consent.Source.WEBPAGE);
-            signupConsent.setTime(serverTimeNow());
+            signupConsent.setTime(ClientServerTime.serverTimeNow());
             signupConsent.setUserId(user.getId());
             signupConsent.setConsentText(signupUserIn.getConsentText());
             consentRepository.save(signupConsent);
@@ -147,6 +152,6 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
     }
 
     public boolean isOkToSignupUser() {
-        return repo().countRecentSignups(serverTimeNow().minusHours(1)) <= 60;
+        return repo().countRecentSignups(ClientServerTime.serverTimeNow().minusHours(1)) <= 60;
     }
 }

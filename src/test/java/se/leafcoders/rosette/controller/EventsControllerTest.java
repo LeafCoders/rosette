@@ -42,7 +42,7 @@ public class EventsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         Event event = eventRepository.save(EventData.existingEvent(eventType));
 
-        crt.allGetOneTests(user1, "events:read", "/events", event.getId())
+        crt.allGetOneTests(user1, "events:read", "/api/events", event.getId())
             .andExpect(jsonPath("$.startTime", isDateTime(event.getStartTime())))
             .andExpect(jsonPath("$.endTime", isDateTime(event.getEndTime())))
             .andExpect(jsonPath("$.title", is(event.getTitle())))
@@ -57,7 +57,7 @@ public class EventsControllerTest extends AbstractControllerTest {
         Event event2 = eventRepository.save(EventData.existingEvent(eventType));
         Event event3 = eventRepository.save(EventData.existingEvent(eventType));
 
-        crt.allGetManyTests(user1, "events:read", "/events")
+        crt.allGetManyTests(user1, "events:read", "/api/events?from=2010-01-02T12:34:56")
             .andExpect(jsonPath("$", hasSize(3)))
             .andExpect(jsonPath("$[0].id", isIdOf(event1)))
             .andExpect(jsonPath("$[1].id", isIdOf(event2)))
@@ -69,7 +69,7 @@ public class EventsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         EventIn event = EventData.newEvent(eventType);
 
-        crt.allPostTests(user1, "eventTypes:read,events:create", "/events", json(event))
+        crt.allPostTests(user1, "eventTypes:read,events:create", "/api/events", json(event))
             .andExpect(jsonPath("$.startTime", isDateTime(event.getStartTime())))
             .andExpect(jsonPath("$.endTime", isDateTime(event.getEndTime())))
             .andExpect(jsonPath("$.title", is(event.getTitle())))
@@ -77,14 +77,14 @@ public class EventsControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.eventType.id", is(event.getEventTypeId().intValue())));
 
         // Check missing properties
-        crt.postExpectBadRequest(user1, "/events", json(EventData.missingAllProperties()))
+        crt.postExpectBadRequest(user1, "/api/events", json(EventData.missingAllProperties()))
             .andExpect(jsonPath("$", hasSize(3)))
             .andExpect(jsonPath("$[0]", isValidationError("eventTypeId", ApiString.NOT_NULL)))
             .andExpect(jsonPath("$[1]", isValidationError("startTime", ApiString.NOT_NULL)))
             .andExpect(jsonPath("$[2]", isValidationError("title", ApiString.STRING_NOT_EMPTY)));
 
         // Check invalid properties
-        crt.postExpectBadRequest(user1, "/events", json(EventData.invalidProperties()))
+        crt.postExpectBadRequest(user1, "/api/events", json(EventData.invalidProperties()))
             .andExpect(jsonPath("$", hasSize(3)))
             .andExpect(jsonPath("$[0]", isValidationError("endTime", ApiString.DATETIME_MUST_BE_AFTER)))
             .andExpect(jsonPath("$[1]", isValidationError("eventTypeId", ApiString.NOT_NULL)))
@@ -96,14 +96,9 @@ public class EventsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         Event event = eventRepository.save(EventData.existingEvent(eventType));
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("title", "New title");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> data.put("title", "New title"));
 
-        crt.allPutTests(user1, "events:update", "/events", event.getId(), jsonData)
+        crt.allPutTests(user1, "events:update", "/api/events", event.getId(), jsonData)
             .andExpect(jsonPath("$.title", is("New title")));
     }
 
@@ -112,6 +107,6 @@ public class EventsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         Event event = eventRepository.save(EventData.existingEvent(eventType));
 
-        crt.allDeleteTests(user1, "events:delete", "/events", event.getId());
+        crt.allDeleteTests(user1, "events:delete", "/api/events", event.getId());
     }
 }

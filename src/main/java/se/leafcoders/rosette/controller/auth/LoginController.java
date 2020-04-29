@@ -1,7 +1,9 @@
 package se.leafcoders.rosette.controller.auth;
 
 import java.util.HashMap;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
@@ -16,12 +19,12 @@ import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
 import se.leafcoders.rosette.service.SecurityService;
-import se.leafcoders.rosette.util.ServerTime;
 
 @RestController
-public class LoginController extends AuthController implements ServerTime {
+public class LoginController extends AuthController {
 
     @Autowired
     private JwtAuthenticationService jwtAuthenticationService;
@@ -79,7 +82,7 @@ public class LoginController extends AuthController implements ServerTime {
     }
 
 	private void updateLastLoginTime(Long id) {
-	    userRepository.setLastLoginTime(id, serverTimeNow());
+	    userRepository.setLastLoginTime(id, ClientServerTime.serverTimeNow());
 	}
 
 	private HashMap<String, String> successData(CurrentUser user) {

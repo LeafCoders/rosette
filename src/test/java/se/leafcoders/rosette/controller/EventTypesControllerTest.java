@@ -79,12 +79,7 @@ public class EventTypesControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         EventType admins = eventTypeRepository.save(EventTypeData.prayerMeeting());
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("name", "Super admins");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> data.put("name", "Super admins"));
 
         crt.allPutTests(user1, "eventTypes:update", "/eventTypes", admins.getId(), jsonData)
             .andExpect(jsonPath("$.idAlias", is(admins.getIdAlias())))

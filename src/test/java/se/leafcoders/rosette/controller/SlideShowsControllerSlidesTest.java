@@ -97,15 +97,12 @@ public class SlideShowsControllerSlidesTest extends AbstractControllerTest {
 
         String newStartTime = slide.getEndTime().minusMinutes(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String newEndTime = slide.getEndTime().minusMinutes(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String jsonData = mapToJson(
-            data -> {
-                data.put("title", "The only slide");
-                data.put("duration", 34);
-                data.put("startTime", newStartTime);
-                data.put("endTime", newEndTime);
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> {
+            data.put("title", "The only slide");
+            data.put("duration", 34);
+            data.put("startTime", newStartTime);
+            data.put("endTime", newEndTime);
+        });
 
         crt.allPutTests(user1, permission(extern, "update"), url(extern), slide.getId(), jsonData)
             .andExpect(jsonPath("$.id", isIdOf(slide)))

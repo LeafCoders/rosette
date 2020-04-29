@@ -2,11 +2,15 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import se.leafcoders.rosette.controller.dto.ArticleIn;
 import se.leafcoders.rosette.controller.dto.ArticleOut;
 import se.leafcoders.rosette.controller.dto.ArticleSerieRefOut;
@@ -15,6 +19,7 @@ import se.leafcoders.rosette.controller.dto.ResourceRefOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.ArticleType;
 import se.leafcoders.rosette.persistence.model.HtmlContent;
@@ -88,7 +93,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         if (isCreate || rawIn.has("recordingStatus")) {
             item.setRecordingStatus(ArticleType.RecordingStatus.valueOf(dto.getRecordingStatus()));
         }
-        item.setLastModifiedTime(serverTimeNow());
+        item.setLastModifiedTime(ClientServerTime.serverTimeNow());
 
         // Force set recoding status if recording exist
         if (item.getRecording() != null) {

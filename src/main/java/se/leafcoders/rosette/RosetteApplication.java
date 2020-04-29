@@ -38,7 +38,7 @@ public class RosetteApplication extends SpringBootServletInitializer {
 
     @PostConstruct
     void started() {
-      TimeZone.setDefault(TimeZone.getTimeZone("Europe/Stockholm"));
+      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     /**

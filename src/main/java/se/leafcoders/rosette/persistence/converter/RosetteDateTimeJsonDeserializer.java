@@ -19,8 +19,10 @@ public class RosetteDateTimeJsonDeserializer extends StdDeserializer<LocalDateTi
 
     @Override
     public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+        TimeZone home = TimeZone.getTimeZone("Europe/Stockholm");
+
         LocalDateTime clientDateTime = LocalDateTime.parse(parser.readValueAs(String.class));
-        ZonedDateTime timezoneDateTime = ZonedDateTime.of(clientDateTime, TimeZone.getDefault().toZoneId());
+        ZonedDateTime timezoneDateTime = ZonedDateTime.of(clientDateTime, home.toZoneId());
         ZonedDateTime utcDateTime = timezoneDateTime.withZoneSameInstant(ZoneOffset.UTC);
         return utcDateTime.toLocalDateTime();
     }

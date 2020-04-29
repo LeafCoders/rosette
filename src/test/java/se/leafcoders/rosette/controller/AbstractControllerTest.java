@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,7 +21,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Consumer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,8 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import se.leafcoders.rosette.IdResult;
@@ -87,10 +91,11 @@ abstract class AbstractControllerTest {
         deleteAllAssetFiles();
     }
 
-    protected String mapToJson(Function<Map<String, Object>, Map<String, Object>> func) throws JsonProcessingException {
+    protected String mapToJson(Consumer<Map<String, Object>> writer) throws JsonProcessingException {
         Map<String, Object> data = new HashMap<String, Object>();
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(func.apply(data));
+        writer.accept(data);
+        return mapper.writeValueAsString(data);
     }
 
     protected String json(Object o) throws IOException {

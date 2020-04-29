@@ -37,18 +37,18 @@ import se.leafcoders.rosette.controller.dto.EventsPublicOut;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
 import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.model.ResourceRequirement;
 import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.EventService;
 import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
 import se.leafcoders.rosette.persistence.service.ResourceService;
-import se.leafcoders.rosette.util.ServerTime;
 
 @Transactional
 @RestController
 @RequestMapping(value = "api/events", produces = "application/json")
-public class EventsController implements ServerTime {
+public class EventsController {
 
     @Autowired
     private EventService eventService;
@@ -72,13 +72,15 @@ public class EventsController implements ServerTime {
         @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime from,            
         @RequestParam(value = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime before
     ) {
+        from = ClientServerTime.clientToServer(from);
+        before = ClientServerTime.clientToServer(before);
         if (from == null && before == null) {
-            from = serverTimeNow();
+            from = ClientServerTime.serverTimeNow();
         }
         Optional<LocalDateTime> fromOptional = Optional.ofNullable(from);
         Optional<LocalDateTime> beforeOptional = Optional.ofNullable(before);
 
-        Sort sort = Sort.by("startTime").ascending();
+        final Sort sort = Sort.by("startTime").ascending().and(Sort.by("id").ascending());
         Specification<Event> spec = (root, query, cb) -> {
             // FETCH two levels deep and sort out duplicates (distinct)
             query.distinct(true);
@@ -165,10 +167,10 @@ public class EventsController implements ServerTime {
         LocalDateTime from;
         LocalDateTime before;
         if (rangeMode.toLowerCase().contains("week")) {
-            from = serverTimeNow().truncatedTo(ChronoUnit.DAYS).with(DayOfWeek.MONDAY).plusWeeks(rangeOffset);
+            from = ClientServerTime.serverTimeNow().truncatedTo(ChronoUnit.DAYS).with(DayOfWeek.MONDAY).plusWeeks(rangeOffset);
             before = from.plusDays(7);
         } else {
-            from = serverTimeNow().truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1).plusMonths(rangeOffset);
+            from = ClientServerTime.serverTimeNow().truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1).plusMonths(rangeOffset);
             before = from.plusMonths(1);
         }
         

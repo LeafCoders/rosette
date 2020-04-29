@@ -4,13 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
+
 public class TimeRange {
     
     private LocalDateTime start = null;
     private LocalDateTime end = null;
     
     private TimeRange(LocalDateTime start) {
-        this.start = start;
+        this.start = ClientServerTime.clientToServer(start);
     }
     
     public static TimeRange start(int weekDay, int hour, int minute) {

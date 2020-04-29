@@ -89,12 +89,7 @@ public class GroupsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         Group group = groupRepository.save(GroupData.admins());
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("name", "Super admins");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> data.put("name", "Super admins"));
 
         crt.allPutTests(user1, "groups:update", "/groups", group.getId(), jsonData)
             .andExpect(jsonPath("$.idAlias", is(group.getIdAlias())))

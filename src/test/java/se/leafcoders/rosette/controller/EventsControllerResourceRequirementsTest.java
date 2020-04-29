@@ -61,8 +61,8 @@ public class EventsControllerResourceRequirementsTest extends AbstractController
         user1 = givenUser(user1);
         Event event = eventRepository.save(EventData.existingEvent(eventType));
 
-        String jsonData1 = mapToJson(data -> { data.put("resourceTypeId", resourceType1.getId()); return data; });
-        String jsonData2 = mapToJson(data -> { data.put("resourceTypeId", resourceType2.getId()); return data; });
+        String jsonData1 = mapToJson(data -> data.put("resourceTypeId", resourceType1.getId()));
+        String jsonData2 = mapToJson(data -> data.put("resourceTypeId", resourceType2.getId()));
         
         crt.allAddChildTests(user1, "resourceTypes:read,events:read,events:update", "/events/" + event.getId() + "/resourceRequirements", null, jsonData1)
             .andExpect(jsonPath("$", hasSize(1)))

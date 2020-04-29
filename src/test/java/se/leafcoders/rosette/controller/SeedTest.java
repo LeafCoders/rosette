@@ -1,10 +1,12 @@
 package se.leafcoders.rosette.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import se.leafcoders.rosette.IdResult;
 import se.leafcoders.rosette.IdResultHandler;
 import se.leafcoders.rosette.TimeRange;
@@ -125,7 +127,6 @@ public class SeedTest extends AbstractControllerTest {
         connect(user1, "/eventTypes/" + gudstjanstET + "/resourceTypes/" + predikantRT);
         connect(user1, "/eventTypes/" + gudstjanstET + "/resourceTypes/" + musikRT);
         connect(user1, "/eventTypes/" + gudstjanstET + "/resourceTypes/" + ljudRT);
-
 
         // Events
         final Long event1 = post(user1, "/events", json(EventData.newEvent(gudstjanstET, "Gudstjänst 1", TimeRange.start(SUNDAY, 10, 0).weekOffset(0).endAfterMinutes(DURATION_60))));

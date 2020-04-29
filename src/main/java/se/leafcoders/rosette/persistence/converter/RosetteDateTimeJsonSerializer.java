@@ -2,7 +2,6 @@ package se.leafcoders.rosette.persistence.converter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,14 +25,18 @@ public class RosetteDateTimeJsonSerializer extends StdSerializer<LocalDateTime> 
     }
     
     public static LocalDateTime fromUtcToDefaultTimeZone(LocalDateTime utcTime) {
+        TimeZone home = TimeZone.getTimeZone("Europe/Stockholm");
+
         ZonedDateTime utcDateTime = utcTime.atZone(ZoneOffset.UTC);
-        ZonedDateTime timezoneDateTime = utcDateTime.withZoneSameInstant(TimeZone.getDefault().toZoneId());
+        ZonedDateTime timezoneDateTime = utcDateTime.withZoneSameInstant(home.toZoneId());
         LocalDateTime defaultDateTime = timezoneDateTime.toLocalDateTime();
         return defaultDateTime;
     }
     
     public static Date defaultTimeZoneAsDate(LocalDateTime defaultDateTime) {
-        return Date.from(defaultDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        TimeZone home = TimeZone.getTimeZone("Europe/Stockholm");
+
+        return Date.from(defaultDateTime.atZone(home.toZoneId()).toInstant());
     }
     
 }

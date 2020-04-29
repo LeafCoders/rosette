@@ -10,6 +10,7 @@ public class EventTypeData {
         eventType.setIdAlias("prayerMeeting");
         eventType.setName("Prayer meeting");
         eventType.setDescription("Any prayer meeting");
+        eventType.setIsPublic(true);
         return eventType;
     }
 
@@ -18,6 +19,7 @@ public class EventTypeData {
         eventType.setIdAlias("sermin");
         eventType.setName("Sermin");
         eventType.setDescription("Sunday sermon");
+        eventType.setIsPublic(true);
         return eventType;
     }
 
@@ -29,6 +31,7 @@ public class EventTypeData {
         EventTypeIn eventType = new EventTypeIn();
         eventType.setIdAlias("MustNotStartWithUpperCase");
         eventType.setName("");
+        eventType.setIsPublic(null);
         return eventType;
     }
 
@@ -36,6 +39,7 @@ public class EventTypeData {
         EventTypeIn eventType = new EventTypeIn();
         eventType.setIdAlias("bon");
         eventType.setName("Bön");
+        eventType.setIsPublic(true);
         return eventType;
     }
 
@@ -43,6 +47,7 @@ public class EventTypeData {
         EventTypeIn eventType = new EventTypeIn();
         eventType.setIdAlias(idAlias);
         eventType.setName(name);
+        eventType.setIsPublic(true);
         return eventType;
     }
 

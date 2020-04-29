@@ -81,10 +81,7 @@ public class AssetsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         Asset asset = assetRepository.save(AssetData.fileAsset());
 
-        String jsonData = mapToJson(data -> {
-            data.put("url", "http://new.url");
-            return data;
-        });
+        String jsonData = mapToJson(data -> data.put("url", "http://new.url"));
 
         crt.allPutTests(user1, "assets:update", "/assets", asset.getId(), jsonData)
             .andExpect(jsonPath("$.url", is("http://new.url")));

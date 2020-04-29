@@ -2,10 +2,13 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import se.leafcoders.rosette.controller.dto.ResourceIn;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
@@ -13,6 +16,7 @@ import se.leafcoders.rosette.controller.dto.UserRefOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.permission.PermissionType;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Resource;
 import se.leafcoders.rosette.persistence.model.ResourceType;
 import se.leafcoders.rosette.persistence.repository.ResourceRepository;
@@ -86,7 +90,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     
     public void updateUsage(Resource resource) {
         try {
-            repo().setLastUseTime(resource.getId(), serverTimeNow());
+            repo().setLastUseTime(resource.getId(), ClientServerTime.serverTimeNow());
         } catch (Exception ignore) {}
     }
 }

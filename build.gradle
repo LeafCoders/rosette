@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_14
 
 bootJar {
   archiveBaseName = "rosette"
-  archiveVersion =  "0.22-SNAPSHOT"
+  archiveVersion =  "0.23-SNAPSHOT"
 }
 
 repositories {

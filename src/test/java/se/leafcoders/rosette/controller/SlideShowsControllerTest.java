@@ -97,12 +97,7 @@ public class SlideShowsControllerTest extends AbstractControllerTest {
         user1 = givenUser(user1);
         SlideShow extern = slideShowRepository.save(SlideShowData.extern(assetFolder));
 
-        String jsonData = mapToJson(
-            data -> {
-                data.put("name", "Public slide show");
-                return data;
-            }
-        );
+        String jsonData = mapToJson(data -> data.put("name", "Public slide show"));
 
         crt.allPutTests(user1, "slideShows:update", "/slideShows", extern.getId(), jsonData)
             .andExpect(jsonPath("$.idAlias", is(extern.getIdAlias())))

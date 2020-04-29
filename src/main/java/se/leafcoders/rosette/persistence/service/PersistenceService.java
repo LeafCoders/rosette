@@ -8,17 +8,22 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
 import se.leafcoders.rosette.exception.NotFoundException;
@@ -28,9 +33,8 @@ import se.leafcoders.rosette.permission.PermissionValue;
 import se.leafcoders.rosette.persistence.model.Persistable;
 import se.leafcoders.rosette.persistence.repository.ModelRepository;
 import se.leafcoders.rosette.service.SecurityService;
-import se.leafcoders.rosette.util.ServerTime;
 
-abstract class PersistenceService<T extends Persistable, IN, OUT> implements ServerTime {
+abstract class PersistenceService<T extends Persistable, IN, OUT> {
 
     @Autowired
     SecurityService securityService;
@@ -147,7 +151,11 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> implements Ser
     public ResponseEntity<Void> delete(Long id, boolean checkPermissions) {
         checkPermissions(itemReadUpdateDeletePermissions(PermissionAction.DELETE, new PermissionId<T>(id)));
         securityService.checkNotReferenced(id, entityClass);
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException(entityClass, id);
+        }
         return ResponseEntity.noContent().build();
     }
 

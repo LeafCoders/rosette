@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import se.leafcoders.rosette.exception.ApiError;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Persistable;
 
 public class Matchers {
@@ -21,8 +22,9 @@ public class Matchers {
         return org.hamcrest.core.Is.<Integer>is(persistable.getId().intValue());
     }
 
-    public static org.hamcrest.Matcher<String> isDateTime(LocalDateTime dateTime) {
-        return org.hamcrest.core.Is.<String>is(dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    public static org.hamcrest.Matcher<String> isDateTime(LocalDateTime serverDateTime) {
+        LocalDateTime clientDateTime = ClientServerTime.serverToClient(serverDateTime);
+        return org.hamcrest.core.Is.<String>is(clientDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 
     public static org.hamcrest.Matcher<String> isApiError(ApiError error) {
