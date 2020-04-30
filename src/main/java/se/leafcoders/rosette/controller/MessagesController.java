@@ -1,10 +1,11 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.NotSupportedException;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,17 +16,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.MessageIn;
 import se.leafcoders.rosette.controller.dto.MessageOut;
 import se.leafcoders.rosette.persistence.service.MessageService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/messages", produces = "application/json")
 public class MessagesController {
 
-    @Autowired
-    private MessageService messageService;
+    private final MessageService messageService;
 
     @GetMapping(value = "/{id}")
     public MessageOut getMessage(@PathVariable Long id) {
@@ -41,7 +44,9 @@ public class MessagesController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<MessageOut> postMessage(@RequestBody MessageIn message) throws NotSupportedException {
         throw new NotSupportedException();
-        // TODO: return new ResponseEntity<MessageOut>(messageService.toOut(messageService.create(message, true)), HttpStatus.CREATED);
+        // TODO: return new
+        // ResponseEntity<MessageOut>(messageService.toOut(messageService.create(message,
+        // true)), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")

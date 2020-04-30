@@ -1,9 +1,10 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +17,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.AssetIn;
 import se.leafcoders.rosette.controller.dto.AssetOut;
 import se.leafcoders.rosette.persistence.service.AssetService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/assets", produces = "application/json")
 public class AssetsController {
 
-    @Autowired
-    private AssetService assetService;
+    private final AssetService assetService;
 
     @GetMapping(value = "/{id}")
     public AssetOut getAsset(@PathVariable Long id) {

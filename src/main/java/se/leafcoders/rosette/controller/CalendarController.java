@@ -9,7 +9,6 @@ import java.util.TimeZone;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,18 +24,19 @@ import biweekly.property.DateStart;
 import biweekly.property.Description;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
 import se.leafcoders.rosette.persistence.model.Event;
 import se.leafcoders.rosette.persistence.service.EventService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/calendar", produces = "application/json")
 public class CalendarController {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
     @GetMapping(value = "feed", produces = "text/calendar")
     public String getCalendarFeed(@RequestParam(required = true) List<Long> eventTypeId) {
@@ -83,23 +83,23 @@ public class CalendarController {
 
         vEvent.setSequence(event.getVersion());
 
-        LocalDateTime startTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getStartTime());
-        vEvent.setDateStart(new DateStart(RosetteDateTimeJsonSerializer.defaultTimeZoneAsDate(startTimeInDefaultTimeZone)));
+        LocalDateTime startTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer
+                .fromUtcToDefaultTimeZone(event.getStartTime());
+        vEvent.setDateStart(
+                new DateStart(RosetteDateTimeJsonSerializer.defaultTimeZoneAsDate(startTimeInDefaultTimeZone)));
         if (event.getEndTime() != null) {
-            LocalDateTime endTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getEndTime());
-            vEvent.setDateEnd(new DateEnd(RosetteDateTimeJsonSerializer.defaultTimeZoneAsDate(endTimeInDefaultTimeZone)));
+            LocalDateTime endTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer
+                    .fromUtcToDefaultTimeZone(event.getEndTime());
+            vEvent.setDateEnd(
+                    new DateEnd(RosetteDateTimeJsonSerializer.defaultTimeZoneAsDate(endTimeInDefaultTimeZone)));
         } else {
             vEvent.setDuration(Duration.fromMillis(60 * 60 * 1000));
         }
         /*
-        if (event.getLocation() != null) {
-            if (event.getLocation().hasRef()) {
-                vEvent.setLocation(event.getLocation().getRef().getName());
-            } else {
-                vEvent.setLocation(event.getLocation().getText());
-            }
-        }
-        */
+         * if (event.getLocation() != null) { if (event.getLocation().hasRef()) {
+         * vEvent.setLocation(event.getLocation().getRef().getName()); } else {
+         * vEvent.setLocation(event.getLocation().getText()); } }
+         */
         return vEvent;
     }
 }

@@ -2,9 +2,10 @@ package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.PodcastIn;
 import se.leafcoders.rosette.controller.dto.PodcastOut;
 import se.leafcoders.rosette.exception.NotFoundException;
@@ -25,19 +28,15 @@ import se.leafcoders.rosette.persistence.service.ArticleService;
 import se.leafcoders.rosette.persistence.service.PodcastService;
 import se.leafcoders.rosette.util.PodcastFeedGenerator;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/podcasts", produces = "application/json")
 public class PodcastsController {
 
-    @Autowired
-    private PodcastService podcastService;
-
-    @Autowired
-    private ArticleService articleService;
-    
-    @Autowired
-    private PodcastFeedGenerator podcastFeedGenerator;
+    private final PodcastService podcastService;
+    private final ArticleService articleService;
+    private final PodcastFeedGenerator podcastFeedGenerator;
 
     @GetMapping(value = "/{id}")
     public PodcastOut getPodcast(@PathVariable Long id) {
@@ -52,7 +51,8 @@ public class PodcastsController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<PodcastOut> postPodcast(@RequestBody PodcastIn podcast) {
-        return new ResponseEntity<PodcastOut>(podcastService.toOut(podcastService.create(podcast, true)), HttpStatus.CREATED);
+        return new ResponseEntity<PodcastOut>(podcastService.toOut(podcastService.create(podcast, true)),
+                HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -64,7 +64,7 @@ public class PodcastsController {
     public ResponseEntity<Void> deletePodcast(@PathVariable Long id) {
         return podcastService.delete(id, true);
     }
-    
+
     // Public
 
     @GetMapping(value = "/feed/{idAlias}", produces = "application/rss+xml; charset=UTF-8")
@@ -80,5 +80,4 @@ public class PodcastsController {
         return podcastFeedGenerator.getPodcastFeed(podcast, articles);
     }
 
-    
 }

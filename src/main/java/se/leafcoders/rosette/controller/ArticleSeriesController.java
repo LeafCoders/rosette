@@ -1,9 +1,10 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,17 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
 import se.leafcoders.rosette.controller.dto.ArticleSerieOut;
 import se.leafcoders.rosette.persistence.service.ArticleSerieService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/articleSeries", produces = "application/json")
 public class ArticleSeriesController {
 
-    @Autowired
-    private ArticleSerieService articleSerieService;
+    private final ArticleSerieService articleSerieService;
 
     @GetMapping(value = "/{id}")
     public ArticleSerieOut getArticleSerie(@PathVariable Long id) {
@@ -39,7 +42,8 @@ public class ArticleSeriesController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ArticleSerieOut> postArticleSerie(@RequestBody ArticleSerieIn articleSerie) {
-        return new ResponseEntity<ArticleSerieOut>(articleSerieService.toOut(articleSerieService.create(articleSerie, true)), HttpStatus.CREATED);
+        return new ResponseEntity<ArticleSerieOut>(
+                articleSerieService.toOut(articleSerieService.create(articleSerie, true)), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")

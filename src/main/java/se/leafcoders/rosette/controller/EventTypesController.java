@@ -1,9 +1,10 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,23 +15,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.EventTypeIn;
 import se.leafcoders.rosette.controller.dto.EventTypeOut;
 import se.leafcoders.rosette.controller.dto.ResourceTypeOut;
 import se.leafcoders.rosette.persistence.service.EventTypeService;
 import se.leafcoders.rosette.persistence.service.ResourceTypeService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/eventTypes", produces = "application/json")
 public class EventTypesController {
 
-    @Autowired
-    private EventTypeService eventTypeService;
+    private final EventTypeService eventTypeService;
+    private final ResourceTypeService resourceTypeService;
 
-    @Autowired
-    private ResourceTypeService resourceTypeService;
-    
     @GetMapping(value = "/{id}")
     public EventTypeOut getEventType(@PathVariable Long id) {
         return eventTypeService.toOut(eventTypeService.read(id, true));
@@ -43,7 +44,8 @@ public class EventTypesController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<EventTypeOut> postEventType(@RequestBody EventTypeIn eventType) {
-        return new ResponseEntity<EventTypeOut>(eventTypeService.toOut(eventTypeService.create(eventType, true)), HttpStatus.CREATED);
+        return new ResponseEntity<EventTypeOut>(eventTypeService.toOut(eventTypeService.create(eventType, true)),
+                HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -64,12 +66,14 @@ public class EventTypesController {
     }
 
     @PostMapping(value = "/{id}/resourceTypes/{resourceTypeId}", consumes = "application/json")
-    public Collection<ResourceTypeOut> addResourceTypeToResource(@PathVariable Long id, @PathVariable Long resourceTypeId) {
+    public Collection<ResourceTypeOut> addResourceTypeToResource(@PathVariable Long id,
+            @PathVariable Long resourceTypeId) {
         return resourceTypeService.toOut(eventTypeService.addResourceType(id, resourceTypeId));
     }
 
     @DeleteMapping(value = "/{id}/resourceTypes/{resourceTypeId}")
-    public Collection<ResourceTypeOut> removeResourceTypeFromResource(@PathVariable Long id, @PathVariable Long resourceTypeId) {
+    public Collection<ResourceTypeOut> removeResourceTypeFromResource(@PathVariable Long id,
+            @PathVariable Long resourceTypeId) {
         return resourceTypeService.toOut(eventTypeService.removeResourceType(id, resourceTypeId));
     }
 }

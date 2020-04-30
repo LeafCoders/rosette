@@ -1,9 +1,10 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,23 +16,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.ResourceOut;
 import se.leafcoders.rosette.controller.dto.ResourceTypeIn;
 import se.leafcoders.rosette.controller.dto.ResourceTypeOut;
 import se.leafcoders.rosette.persistence.service.ResourceService;
 import se.leafcoders.rosette.persistence.service.ResourceTypeService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/resourceTypes", produces = "application/json")
 public class ResourceTypesController {
 
-    @Autowired
-    private ResourceTypeService resourceTypeService;
+    private final ResourceTypeService resourceTypeService;
+    private final ResourceService resourceService;
 
-    @Autowired
-    private ResourceService resourceService;
-    
     @GetMapping(value = "/{id}")
     public ResourceTypeOut getResourceType(@PathVariable Long id) {
         return resourceTypeService.toOut(resourceTypeService.read(id, true));
@@ -44,7 +45,8 @@ public class ResourceTypesController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ResourceTypeOut> postResourceType(@RequestBody ResourceTypeIn resourceType) {
-        return new ResponseEntity<ResourceTypeOut>(resourceTypeService.toOut(resourceTypeService.create(resourceType, true)), HttpStatus.CREATED);
+        return new ResponseEntity<ResourceTypeOut>(
+                resourceTypeService.toOut(resourceTypeService.create(resourceType, true)), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -56,7 +58,7 @@ public class ResourceTypesController {
     public ResponseEntity<Void> deleteResourceType(@PathVariable Long id) {
         return resourceTypeService.delete(id, true);
     }
-    
+
     @PutMapping(value = "/{id}/moveTo/{toResourceTypeId}", consumes = "application/json")
     public Collection<ResourceTypeOut> moveResourceType(@PathVariable Long id, @PathVariable Long toResourceTypeId) {
         resourceTypeService.moveResourceType(id, toResourceTypeId);
@@ -67,7 +69,7 @@ public class ResourceTypesController {
         Sort sort = Sort.by("displayOrder").ascending();
         return resourceTypeService.toOut(resourceTypeService.readMany(sort, true));
     }
-    
+
     // Resources
 
     @GetMapping(value = "/{id}/resources")

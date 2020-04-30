@@ -1,9 +1,10 @@
 package se.leafcoders.rosette.controller;
 
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,22 +16,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.GroupIn;
 import se.leafcoders.rosette.controller.dto.GroupOut;
 import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.persistence.service.GroupService;
 import se.leafcoders.rosette.persistence.service.UserService;
 
+@RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/groups", produces = "application/json")
 public class GroupsController {
 
-    @Autowired
-    private GroupService groupService;
-
-    @Autowired
-    private UserService userService;
+    private final GroupService groupService;
+    private final UserService userService;
 
     @GetMapping(value = "/{id}")
     public GroupOut getGroup(@PathVariable Long id) {
