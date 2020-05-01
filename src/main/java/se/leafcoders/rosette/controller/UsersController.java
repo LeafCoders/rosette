@@ -24,8 +24,8 @@ import se.leafcoders.rosette.controller.dto.UserIn;
 import se.leafcoders.rosette.controller.dto.UserOut;
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.persistence.service.PermissionService;
 import se.leafcoders.rosette.persistence.service.UserService;
+import se.leafcoders.rosette.service.PermissionSumService;
 import se.leafcoders.rosette.service.SecurityService;
 
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ import se.leafcoders.rosette.service.SecurityService;
 public class UsersController {
 
     private final UserService userService;
-    private final PermissionService permissionService;
+    private final PermissionSumService permissionSumService;
     private final SecurityService securityService;
 
     @GetMapping(value = "/{id}")
@@ -79,7 +79,7 @@ public class UsersController {
     public List<String> getPermissionForUser(@PathVariable Long id) {
         final Long currentUser = securityService.requestUserId();
         if (id.equals(currentUser)) {
-            return permissionService.getForUser(currentUser);
+            return permissionSumService.getForUser(currentUser);
         }
         throw new ForbiddenException(ApiError.MISSING_PERMISSION, "Not your user");
     }

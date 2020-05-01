@@ -28,12 +28,13 @@ Starts MySQL, Rosette and Cordate.
 
 Rosette specific properties are descried here:
 
-- `baseUrl` - Must be a public accessible url to the Rosette application
-- `jwtSecretToken` - A secret token for JWT authentication. Must be at least 10 characters long
-- `defaultMailFrom` - Mail sent from Rosette will have this address in the from field 
-- `adminMailTo` - Mail address to administrator. Help request will be sent to this address. 
-- `filesPath` - Folder where all assets will be stored. Rosette must have write permissions to that folder
-- `cordateUrl` - Must be a public accessible url to the Cordate web application
+- `baseUrl` - Must be a public accessible url to the Rosette application,
+- `jwtSecretToken` - A secret token for JWT authentication. Must be at least 10 characters long.
+- `defaultMailFrom` - Mail sent from Rosette will have this address in the from field.
+- `adminMailTo` - Mail address to administrator. Help request will be sent to this address.
+- `filesPath` - Folder where all assets will be stored. Rosette must have write permissions to that folder.
+- `cordateUrl` - Must be a public accessible url to the Cordate web application.
+- `fileClientCacheMaxAge` - Number of seconds that files should be cached on client.
  
 
 Read more about other configuration properties in https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html

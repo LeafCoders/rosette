@@ -154,7 +154,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(entityClass, id);
+            throw notFoundException(id);
         }
         return ResponseEntity.noContent().build();
     }

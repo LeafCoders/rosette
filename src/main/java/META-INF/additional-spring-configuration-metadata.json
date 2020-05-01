@@ -1,32 +1,39 @@
-{"properties": [
-  {
-    "name": "rosette.base-url",
-    "type": "java.lang.String",
-    "description": "A description for 'rosette.base-url'"
-  },
-  {
-    "name": "rosette.api-version",
-    "type": "java.lang.String",
-    "description": "A description for 'rosette.api-version'"
-  },
-  {
-    "name": "rosette.jwt-secret-token",
-    "type": "java.lang.String",
-    "description": "A description for 'rosette.jwt-secret-token'"
-  },
-  {
-    "name": "rosette.default-mail-from",
-    "type": "java.lang.String",
-    "description": "A description for 'rosette.default-mail-from'"
-  },
-  {
-    "name": "rosette.files-path",
-    "type": "java.lang.String",
-    "description": "A description for 'rosette.files-path'"
-  },
-  {
-    "name": "rosette.file-client-cache-max-age",
-    "type": "java.lang.String",
-    "description": "A description for 'rosette.file-client-cache-max-age'"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "rosette.admin-mail-to",
+      "type": "java.lang.String",
+      "description": "Mail address to administrator. Help request will be sent to this address."
+    },
+    {
+      "name": "rosette.base-url",
+      "type": "java.lang.String",
+      "description": "Must be a public accessible url to the Rosette application"
+    },
+    {
+      "name": "rosette.cordate-url",
+      "type": "java.lang.String",
+      "description": "Must be a public accessible url to the Cordate web application."
+    },
+    {
+      "name": "rosette.default-mail-from",
+      "type": "java.lang.String",
+      "description": "Mail sent from Rosette will have this address in the from field."
+    },
+    {
+      "name": "rosette.jwt-secret-token",
+      "type": "java.lang.String",
+      "description": "A secret token for JWT authentication. Must be at least 10 characters long."
+    },
+    {
+      "name": "rosette.file-client-cache-max-age",
+      "type": "java.lang.Long",
+      "description": "Number of seconds that files should be cached on client."
+    },
+    {
+      "name": "rosette.files-path",
+      "type": "java.lang.String",
+      "description": "Folder where all assets will be stored. Rosette must have write permissions to that folder."
+    }
+  ]
+}
