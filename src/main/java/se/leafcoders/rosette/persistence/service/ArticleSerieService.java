@@ -17,10 +17,10 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
 
     @Autowired
     private ArticleTypeService articleTypeService;
-    
+
     @Autowired
     private AssetService assetService;
-    
+
     public ArticleSerieService(ArticleSerieRepository repository) {
         super(ArticleSerie.class, PermissionType::articleSeries, repository);
     }
@@ -30,14 +30,16 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
     }
 
     public List<ArticleSerie> findAllOfType(Long articleTypeId, boolean checkPermissions) {
-        return readManyCheckPermissions(repo().findByArticleTypeIdOrderByLastUseTimeDesc(articleTypeId), checkPermissions);
+        return readManyCheckPermissions(repo().findByArticleTypeIdOrderByLastUseTimeDesc(articleTypeId),
+                checkPermissions);
     }
-    
+
     @Override
     protected ArticleSerie convertFromInDTO(ArticleSerieIn dto, JsonNode rawIn, ArticleSerie item) {
         // Only set when create
         if (item.getArticleTypeId() == null) {
             item.setArticleType(articleTypeService.read(dto.getArticleTypeId(), true));
+            item.setLastUseTime(ClientServerTime.serverTimeNow());
         }
         if (rawIn == null || rawIn.has("idAlias")) {
             item.setIdAlias(dto.getIdAlias());
@@ -69,12 +71,13 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
         dto.setLastUseTime(item.getLastUseTime());
         return dto;
     }
-    
+
     public void updateUsage(ArticleSerie articleSerie) {
         if (articleSerie != null) {
             try {
                 repo().setLastUseTime(articleSerie.getId(), ClientServerTime.serverTimeNow());
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
     }
 
