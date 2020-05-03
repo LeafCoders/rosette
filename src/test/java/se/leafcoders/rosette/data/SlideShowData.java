@@ -28,6 +28,7 @@ public class SlideShowData {
 
     public static SlideShowIn invalidProperties() {
         SlideShowIn slideShow = new SlideShowIn();
+        slideShow.setAssetFolderId(1234L);
         slideShow.setIdAlias("MustNotStartWithUpperCase");
         slideShow.setName("");
         return slideShow;

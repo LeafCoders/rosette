@@ -45,6 +45,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.IdResult;
 import se.leafcoders.rosette.IdResultHandler;
 import se.leafcoders.rosette.RosetteSettings;
@@ -60,13 +61,15 @@ import se.leafcoders.rosette.persistence.repository.AssetRepository;
 import se.leafcoders.rosette.persistence.repository.PermissionRepository;
 import se.leafcoders.rosette.persistence.repository.UserRepository;
 
+@RequiredArgsConstructor
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 @Sql("/setupBeforeEachTest.sql")
 abstract class AbstractControllerTest {
 
-    public static final MediaType CONTENT_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype());
+    public static final MediaType CONTENT_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype());
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -80,14 +83,16 @@ abstract class AbstractControllerTest {
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
-        this.mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) Arrays.asList(converters).stream()
-            .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().orElse(null);
+        this.mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) Arrays.asList(converters)
+                .stream()
+                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().orElse(null);
 
         assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
     }
 
     protected void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).apply(SecurityMockMvcConfigurers.springSecurity()).build();
+        this.mockMvc = webAppContextSetup(webApplicationContext).apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
         deleteAllAssetFiles();
     }
 
@@ -109,25 +114,27 @@ abstract class AbstractControllerTest {
 
     protected String xAuthToken(User user) {
         final String jwtSecret = "developmentSimpleJwtSecretToken";
-        return Jwts.builder().setSubject(user.getId().toString()).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+        return Jwts.builder().setSubject(user.getId().toString()).signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 
     protected ResultActions withUser(User user, MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder.header("X-AUTH-TOKEN", xAuthToken(user))).andDo(print());
     }
-    
+
     protected ResultActions withUserPrint(User user, MockHttpServletRequestBuilder builder) throws Exception {
         return withUser(user, builder);
     }
 
-    protected MockHttpServletRequestBuilder uploadFile(Long folderId, String fileName, String asFileName, String mimeType) throws IOException {
+    protected MockHttpServletRequestBuilder uploadFile(Long folderId, String fileName, String asFileName,
+            String mimeType) throws IOException {
         File file = new File("src/test/resources/" + fileName);
         FileInputStream fis = new FileInputStream(file);
         MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), mimeType, fis);
         return multipart("/api/files")
-            .file(multipartFile)
-            .param("folderId", folderId.toString())
-            .param("fileName", asFileName);
+                .file(multipartFile)
+                .param("folderId", folderId.toString())
+                .param("fileName", asFileName);
     }
 
     // ---------------------------------
@@ -143,7 +150,7 @@ abstract class AbstractControllerTest {
 
     @Autowired
     protected AssetRepository assetRepository;
-    
+
     protected User user1 = UserData.user1();
     protected User user2 = UserData.user2();
 
@@ -152,7 +159,8 @@ abstract class AbstractControllerTest {
     }
 
     protected Permission givenPermissionForUser(User user, String patterns) {
-        return permissionRepository.save(new Permission("For user: " + user.getFullName(), Permission.LEVEL_USER, user.getId(), patterns));
+        return permissionRepository
+                .save(new Permission("For user: " + user.getFullName(), Permission.LEVEL_USER, user.getId(), patterns));
     }
 
     protected Permission givenPermissionForAllUsers(String patterns) {
@@ -185,7 +193,7 @@ abstract class AbstractControllerTest {
     }
 
     // UPLOAD USER
-    
+
     private User uploadUser = null;
 
     private void createUploadUser() {
@@ -195,7 +203,6 @@ abstract class AbstractControllerTest {
         }
     }
 
-
     private void deleteAllAssetFiles() {
         String path = rosetteSettings.getFilesPath();
         if (path != null && path.length() > 10) {
@@ -203,12 +210,13 @@ abstract class AbstractControllerTest {
                 Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach((p) -> {
                     if (p.toFile().isFile()) {
                         String fn = p.getFileName().toString();
-                        if (fn.contains(".java") || fn.contains(".groovy") || fn.contains(".txt") || fn.contains(".sql") || fn.contains(".zip")) {
+                        if (fn.contains(".java") || fn.contains(".groovy") || fn.contains(".txt") || fn.contains(".sql")
+                                || fn.contains(".zip")) {
                             fail("Will not delete folder. It contains development files.");
                         }
                     }
                 });
-    
+
                 // Delete the files
                 final Path directory = Paths.get(path);
                 Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
@@ -217,7 +225,7 @@ abstract class AbstractControllerTest {
                         Files.delete(file);
                         return FileVisitResult.CONTINUE;
                     }
-    
+
                     @Override
                     public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                         if (dir.compareTo(directory) != 0) {

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.controller.dto.ResourceIn;
@@ -58,7 +57,8 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
         dto.setId(item.getId());
         dto.setName(item.getName());
         dto.setDescription(item.getDescription());
-        dto.setResourceTypes(item.getResourceTypes().stream().map(resourceType -> new ResourceTypeRefOut(resourceType)).collect(Collectors.toList()));
+        dto.setResourceTypes(item.getResourceTypes().stream().map(resourceType -> new ResourceTypeRefOut(resourceType))
+                .collect(Collectors.toList()));
         dto.setUser(item.getUser() != null ? new UserRefOut(item.getUser()) : null);
         dto.setLastUseTime(item.getLastUseTime());
         return dto;
@@ -70,14 +70,13 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
 
     public List<ResourceType> addResourceType(Long resourceId, Long resourceTypeId) {
         checkPermission(PermissionType.resources().update().forId(resourceId));
+        if (repo().isResourceTypeInResource(resourceTypeId, resourceId)) {
+            throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
+        }
         Resource resource = read(resourceId, true);
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
         resource.addResourceType(resourceType);
-        try {
-            return repository.save(resource).getResourceTypes();
-        } catch (DataIntegrityViolationException ignore) {
-            throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
-        }
+        return repository.save(resource).getResourceTypes();
     }
 
     public List<ResourceType> removeResourceType(Long resourceId, Long resourceTypeId) {
@@ -87,10 +86,11 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
         resource.removeResourceType(resourceType);
         return repository.save(resource).getResourceTypes();
     }
-    
+
     public void updateUsage(Resource resource) {
         try {
             repo().setLastUseTime(resource.getId(), ClientServerTime.serverTimeNow());
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 }

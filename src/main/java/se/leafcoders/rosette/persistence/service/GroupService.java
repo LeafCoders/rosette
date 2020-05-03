@@ -2,10 +2,13 @@ package se.leafcoders.rosette.persistence.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import lombok.NonNull;
 import se.leafcoders.rosette.controller.dto.GroupIn;
 import se.leafcoders.rosette.controller.dto.GroupOut;
 import se.leafcoders.rosette.controller.dto.UserRefOut;
@@ -24,6 +27,11 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
 
     public GroupService(GroupRepository repository) {
         super(Group.class, PermissionType::groups, repository);
+    }
+
+    @NonNull
+    private GroupRepository repo() {
+        return (GroupRepository) repository;
     }
 
     @Override
@@ -57,14 +65,13 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
 
     public List<User> addUser(Long groupId, Long userId) {
         checkPermission(PermissionType.groups().update().forId(groupId));
+        if (repo().isUserInGroup(userId, groupId)) {
+            throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
+        }
         Group group = read(groupId, true);
         User user = userService.read(userId, true);
         group.addUser(user);
-        try {
-            return repository.save(group).getUsers();
-        } catch (DataIntegrityViolationException ignore) {
-            throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
-        }
+        return repository.save(group).getUsers();
     }
 
     public List<User> removeUser(Long groupId, Long userId) {
@@ -72,6 +79,6 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
         Group group = read(groupId, true);
         User user = userService.read(userId, true);
         group.removeUser(user);
-        return repository.save(group).getUsers();
+        return repo().save(group).getUsers();
     }
 }

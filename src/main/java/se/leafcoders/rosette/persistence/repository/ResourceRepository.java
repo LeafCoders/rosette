@@ -15,4 +15,8 @@ public interface ResourceRepository extends ModelRepository<Resource> {
     @Modifying
     @Query("UPDATE Resource r SET r.lastUseTime = :time WHERE r.id = :id")
     int setLastUseTime(@Param("id") Long id, @Param("time") LocalDateTime time);
+
+    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Resource r INNER JOIN r.resourceTypes rt WHERE rt.id = :resourceTypeId and r.id = :resourceId")
+    boolean isResourceTypeInResource(@Param("resourceTypeId") Long resourceTypeId,
+            @Param("resourceId") Long resourceId);
 }

@@ -10,6 +10,7 @@ public class ResourceTypeData {
         resourceType.setIdAlias("sound");
         resourceType.setName("Sound");
         resourceType.setDescription("Sound description");
+        resourceType.setDisplayOrder(1L);
         return resourceType;
     }
 
@@ -18,6 +19,7 @@ public class ResourceTypeData {
         resourceType.setIdAlias("preacher");
         resourceType.setName("Preacher");
         resourceType.setDescription("Preacher description");
+        resourceType.setDisplayOrder(2L);
         return resourceType;
     }
 
@@ -35,7 +37,7 @@ public class ResourceTypeData {
     public static ResourceTypeIn newResourceType() {
         return ResourceTypeData.newResourceType("idResourceType", "Resource type");
     }
-    
+
     public static ResourceTypeIn newResourceType(String idAlias, String name) {
         ResourceTypeIn resourceType = new ResourceTypeIn();
         resourceType.setIdAlias(idAlias);

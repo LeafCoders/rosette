@@ -32,28 +32,30 @@ public class CommonRequestTests {
 
     public ResultActions getOneExpectForbidden(User authUser, String controllerUrl, Long id) throws Exception {
         return act.withUser(authUser, get(controllerUrl + "/" + id))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
-            .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
+                .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
     }
 
     public ResultActions getOneExpectNotFound(User authUser, String controllerUrl, Long id) throws Exception {
         return act.withUser(authUser, get(controllerUrl + "/" + id))
-            .andExpect(status().isNotFound())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.NOT_FOUND)))
-            .andExpect(jsonPath("$.reason", is("Id (" + id + ") of resource type (" + modelName + ") was not found.")));
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.NOT_FOUND)))
+                .andExpect(jsonPath("$.reason",
+                        is("Id (" + id + ") of resource type (" + modelName + ") was not found.")));
     }
 
     public ResultActions getOneSuccess(User authUser, String controllerUrl, Long id) throws Exception {
         return act.withUserPrint(authUser, get(controllerUrl + "/" + id))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.id", is(id.intValue())));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.id", is(id.intValue())));
     }
 
-    public ResultActions allGetOneTests(User authUser, String permission, String controllerUrl, Long id) throws Exception {
+    public ResultActions allGetOneTests(User authUser, String permission, String controllerUrl, Long id)
+            throws Exception {
         // No permission
         getOneExpectForbidden(authUser, controllerUrl, id);
 
@@ -70,22 +72,22 @@ public class CommonRequestTests {
 
     public ResultActions getManySuccess(User authUser, String controllerUrl) throws Exception {
         return act.withUser(authUser, get(controllerUrl))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
     }
 
     public ResultActions getManyExpectForbidden(User authUser, String controllerUrl) throws Exception {
         return act.withUser(authUser, get(controllerUrl))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
-            .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
+                .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
     }
 
     public ResultActions allGetManyTests(User authUser, String permission, String controllerUrl) throws Exception {
         // No permission
         getManySuccess(authUser, controllerUrl)
-            .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(0)));
 
         act.givenPermissionForUser(authUser, permission);
 
@@ -95,42 +97,55 @@ public class CommonRequestTests {
 
     // POST ----------------------
 
-    public ResultActions postExpectMissingPermission(User authUser, String controllerUrl, String jsonString) throws Exception {
-        return act.withUser(authUser, post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
-            .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
+    public ResultActions postExpectMissingPermission(User authUser, String controllerUrl, String jsonString)
+            throws Exception {
+        return act
+                .withUser(authUser,
+                        post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
+                .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
     }
 
-    public ResultActions postExpectForbidden(ApiError reason, User authUser, String controllerUrl, String jsonString) throws Exception {
-        return act.withUser(authUser, post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
-            .andExpect(jsonPath("$.reason", isApiError(reason)));
+    public ResultActions postExpectForbidden(ApiError reason, User authUser, String controllerUrl, String jsonString)
+            throws Exception {
+        return act
+                .withUser(authUser,
+                        post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
+                .andExpect(jsonPath("$.reason", isApiError(reason)));
     }
 
     public ResultActions postExpectBadRequest(User authUser, String controllerUrl, String jsonString) throws Exception {
-        return act.withUser(authUser, post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
+        return act
+                .withUser(authUser,
+                        post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
     }
 
     public ResultActions postSuccess(User authUser, String controllerUrl, String jsonString) throws Exception {
-        return act.withUser(authUser, post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.id", anything()));
+        return act
+                .withUser(authUser,
+                        post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.id", anything()));
     }
 
     public ResultActions postSuccessWithOk(User authUser, String controllerUrl, String jsonString) throws Exception {
-        return act.withUser(authUser, post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
+        return act
+                .withUser(authUser,
+                        post(controllerUrl).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
     }
 
-    public ResultActions allPostTests(User authUser, String permission, String controllerUrl, String jsonString) throws Exception {
+    public ResultActions allPostTests(User authUser, String permission, String controllerUrl, String jsonString)
+            throws Exception {
         // No permission
         postExpectMissingPermission(authUser, controllerUrl, jsonString);
 
@@ -142,30 +157,43 @@ public class CommonRequestTests {
 
     // PUT ----------------------
 
-    public ResultActions putExpectNotFound(User authUser, String controllerUrl, Long id, String jsonString) throws Exception {
-        return act.withUser(authUser, put(controllerUrl + "/" + id).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isNotFound())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.NOT_FOUND)))
-            .andExpect(jsonPath("$.reason", is("Id (" + id + ") of resource type (" + modelName + ") was not found.")));
+    public ResultActions putExpectNotFound(User authUser, String controllerUrl, Long id, String jsonString)
+            throws Exception {
+        return act
+                .withUser(authUser,
+                        put(controllerUrl + "/" + id).content(jsonString)
+                                .contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.NOT_FOUND)))
+                .andExpect(jsonPath("$.reason",
+                        is("Id (" + id + ") of resource type (" + modelName + ") was not found.")));
     }
 
-    public ResultActions putExpectForbidden(User authUser, String controllerUrl, Long id, String jsonString) throws Exception {
-        return act.withUser(authUser, put(controllerUrl + "/" + id).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
-            .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
+    public ResultActions putExpectForbidden(User authUser, String controllerUrl, Long id, String jsonString)
+            throws Exception {
+        return act
+                .withUser(authUser,
+                        put(controllerUrl + "/" + id).content(jsonString)
+                                .contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
+                .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
     }
 
     public ResultActions putSuccess(User authUser, String controllerUrl, Long id, String jsonString) throws Exception {
-        return act.withUser(authUser, put(controllerUrl + "/" + id).content(jsonString).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.id", anything()));
+        return act
+                .withUser(authUser,
+                        put(controllerUrl + "/" + id).content(jsonString)
+                                .contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.id", anything()));
     }
 
-    public ResultActions allPutTests(User authUser, String permission, String controllerUrl, Long id, String jsonString) throws Exception {
+    public ResultActions allPutTests(User authUser, String permission, String controllerUrl, Long id, String jsonString)
+            throws Exception {
         // No permission
         putExpectForbidden(authUser, controllerUrl, id, jsonString);
 
@@ -182,23 +210,24 @@ public class CommonRequestTests {
 
     public ResultActions deleteExpectNotFound(User authUser, String controllerUrl, Long id) throws Exception {
         return act.withUser(authUser, delete(controllerUrl + "/" + id))
-            .andExpect(status().isNotFound())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.NOT_FOUND)))
-            .andExpect(jsonPath("$.reason", is("Id (" + id + ") of resource type (" + modelName + ") was not found.")));
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.NOT_FOUND)))
+                .andExpect(jsonPath("$.reason",
+                        is("Id (" + id + ") of resource type (" + modelName + ") was not found.")));
     }
 
     public ResultActions deleteExpectForbidden(User authUser, String controllerUrl, Long id) throws Exception {
         return act.withUser(authUser, delete(controllerUrl + "/" + id))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
-            .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                .andExpect(jsonPath("$.error", isApiError(ApiError.FORBIDDEN)))
+                .andExpect(jsonPath("$.reason", isApiError(ApiError.MISSING_PERMISSION)));
     }
 
     public ResultActions deleteSuccess(User authUser, String controllerUrl, Long id) throws Exception {
         return act.withUser(authUser, delete(controllerUrl + "/" + id))
-            .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent());
     }
 
     public void allDeleteTests(User authUser, String permission, String controllerUrl, Long id) throws Exception {
@@ -215,7 +244,8 @@ public class CommonRequestTests {
 
     // ADD CHILD -----------------
 
-    public ResultActions allAddChildTests(User authUser, String permission, String controllerUrl, Long childId, String jsonString) throws Exception {
+    public ResultActions allAddChildTests(User authUser, String permission, String controllerUrl, Long childId,
+            String jsonString) throws Exception {
         // No permission
         postExpectMissingPermission(authUser, controllerUrl + (childId != null ? "/" + childId : ""), jsonString);
 
@@ -239,7 +269,8 @@ public class CommonRequestTests {
 
     // REMOVE CHILD ---------------
 
-    public ResultActions allRemoveChildTests(User authUser, String permission, String controllerUrl, Long childId) throws Exception {
+    public ResultActions allRemoveChildTests(User authUser, String permission, String controllerUrl, Long childId)
+            throws Exception {
         // No permission
         deleteExpectForbidden(authUser, controllerUrl, childId);
 
@@ -247,7 +278,7 @@ public class CommonRequestTests {
 
         // With permission
         return act.withUser(authUser, delete(controllerUrl + "/" + childId))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
 }

@@ -16,6 +16,7 @@ public class SlideData {
         slide.setEndTime(LocalDateTime.now().plusHours(2));
         slide.setDuration(10);
         slide.setImage(image);
+        slide.setDisplayOrder(0L);
         return slide;
     }
 

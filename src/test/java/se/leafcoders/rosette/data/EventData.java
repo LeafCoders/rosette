@@ -1,8 +1,12 @@
 package se.leafcoders.rosette.data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
+import lombok.NonNull;
 import se.leafcoders.rosette.TimeRange;
 import se.leafcoders.rosette.controller.dto.EventIn;
 import se.leafcoders.rosette.persistence.model.Event;
@@ -10,15 +14,20 @@ import se.leafcoders.rosette.persistence.model.EventType;
 
 public class EventData {
 
-    public static Event existingEvent(EventType eventType) {
+    public static Event existingEvent(EventType eventType, @NonNull String utcStartTime, long durationMinutes) {
         Event event = new Event();
-        event.setStartTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        event.setEndTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusHours(2));
+        event.setStartTime(LocalDateTime.parse(utcStartTime));
+        event.setEndTime(LocalDateTime.parse(utcStartTime).plusMinutes(durationMinutes));
         event.setTitle("Event title");
         event.setDescription("An event");
         event.setEventType(eventType);
         event.setIsPublic(true);
         return event;
+    }
+
+    public static Event existingEvent(EventType eventType) {
+        return existingEvent(eventType,
+                LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), 60);
     }
 
     public static EventIn missingAllProperties() {
@@ -34,16 +43,16 @@ public class EventData {
         return event;
     }
 
-    public static EventIn newEvent(EventType eventType) {
-        EventIn event = new EventIn();
-        event.setStartTime(LocalDateTime.now());
-        event.setEndTime(LocalDateTime.now().plusHours(2));
-        event.setTitle("Event title");
-        event.setDescription("An event");
-        event.setEventTypeId(eventType.getId());
-        return event;
+    public static Map<String, Object> newEvent(long eventTypeId, @NonNull String startTime, @NonNull String endTime) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("eventTypId", eventTypeId);
+        data.put("startTime", startTime);
+        data.put("endTime", endTime);
+        data.put("title", "Event title");
+        data.put("description", "An event");
+        return data;
     }
-    
+
     public static EventIn newEvent(Long eventTypeId, String title, TimeRange timeRange) {
         EventIn event = new EventIn();
         event.setStartTime(timeRange.getStart());

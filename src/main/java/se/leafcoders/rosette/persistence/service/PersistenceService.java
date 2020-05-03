@@ -1,6 +1,7 @@
 package se.leafcoders.rosette.persistence.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -76,7 +77,6 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
             beforeValidate.accept(item);
         }
         securityService.validate(item, null);
-        extraValidation(item, itemIn);
         try {
             return repository.save(item);
         } catch (org.springframework.dao.DuplicateKeyException ignore) {
@@ -133,14 +133,10 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
             JsonNode rawData = objectMapper.readTree(request.getReader());
             IN itemIn = objectMapper.treeToValue(rawData, inClass);
 
-            // Kanske inte funkar med denna???? securityService.validate(itemIn, rawData);
             fromIn(itemIn, rawData, itemInDb);
             securityService.validate(itemInDb, null);
-            extraValidation(itemInDb, itemIn);
             return repository.save(itemInDb);
         } catch (JsonProcessingException exception) {
-            // TODO: Invalid content might cause this exception
-            exception.printStackTrace(System.err);
             throw notFoundException(id);
         } catch (IOException exception) {
             exception.printStackTrace(System.err);
@@ -159,9 +155,6 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         return ResponseEntity.noContent().build();
     }
 
-    protected void extraValidation(T itemToValidate, IN itemChanges) {
-    }
-
     protected abstract T convertFromInDTO(IN itemIn, JsonNode rawIn, T itemToUpdate);
 
     protected abstract OUT convertToOutDTO(T item);
@@ -169,11 +162,10 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
     public T fromIn(IN itemIn) {
         try {
             return itemIn != null ? fromIn(itemIn, null, entityClass.getDeclaredConstructor().newInstance()) : null;
-        } catch (Exception ignore) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            throw new InternalError(String.format("Class of type %s doesn't exist or is invalid.", entityClass), e);
         }
-        // TOOD: Throw some internal exception 500 when newInstance() throws or
-        // when itemIn is null
-        return null;
     }
 
     public T fromIn(IN itemIn, JsonNode rawIn, T itemToUpdate) {

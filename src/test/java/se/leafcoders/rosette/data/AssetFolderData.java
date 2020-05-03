@@ -1,12 +1,11 @@
 package se.leafcoders.rosette.data;
 
 import se.leafcoders.rosette.controller.dto.AssetFolderIn;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
 
 public class AssetFolderData {
 
-    public static AssetFolder image() {
-        AssetFolder assetFolder = new AssetFolder();
+    public static AssetFolderIn image() {
+        AssetFolderIn assetFolder = new AssetFolderIn();
         assetFolder.setIdAlias("image");
         assetFolder.setName("Image");
         assetFolder.setDescription("Image files");
@@ -14,15 +13,25 @@ public class AssetFolderData {
         return assetFolder;
     }
 
-    public static AssetFolder audio() {
-        AssetFolder assetFolder = new AssetFolder();
+    public static AssetFolderIn audio() {
+        AssetFolderIn assetFolder = new AssetFolderIn();
         assetFolder.setIdAlias("audio");
         assetFolder.setName("Audio");
         assetFolder.setDescription("Audio files");
         assetFolder.setAllowedMimeTypes("audio/");
         return assetFolder;
     }
-    
+
+    public static AssetFolderIn staticFileKey() {
+        AssetFolderIn assetFolder = new AssetFolderIn();
+        assetFolder.setIdAlias("staticFileKey");
+        assetFolder.setName("Static file path");
+        assetFolder.setDescription("Any files");
+        assetFolder.setAllowedMimeTypes("");
+        assetFolder.setStaticFileKey(true);
+        return assetFolder;
+    }
+
     public static AssetFolderIn missingAllProperties() {
         return new AssetFolderIn();
     }
@@ -45,5 +54,11 @@ public class AssetFolderData {
         assetFolder.setAllowedMimeTypes(allowedMimeTypes);
         return assetFolder;
     }
-    
+
+    public static AssetFolderIn newAssetFolderForStaticFileKey(String idAlias, String name, String allowedMimeTypes) {
+        AssetFolderIn assetFolder = newAssetFolder(idAlias, name, allowedMimeTypes);
+        assetFolder.setStaticFileKey(true);
+        return assetFolder;
+    }
+
 }

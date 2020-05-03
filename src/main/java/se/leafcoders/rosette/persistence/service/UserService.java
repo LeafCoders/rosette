@@ -32,10 +32,10 @@ import se.leafcoders.rosette.service.EmailTemplateService;
 public class UserService extends PersistenceService<User, UserIn, UserOut> {
 
     static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    
+
     @Autowired
     private ConsentRepository consentRepository;
-    
+
     @Autowired
     private EmailTemplateService emailTemplateService;
 
@@ -45,6 +45,9 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
 
     @Override
     protected User convertFromInDTO(UserIn dto, JsonNode rawIn, User item) {
+        checkChangeOfEmail(dto);
+        checkChangeOfIsActive(dto);
+
         if (rawIn == null || rawIn.has("email")) {
             item.setEmail(dto.getEmail());
         }
@@ -93,12 +96,6 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
     }
 
     @Override
-    protected void extraValidation(User user, UserIn userIn) {
-        checkChangeOfEmail(userIn);
-        checkChangeOfIsActive(userIn);
-    }
-
-    @Override
     public User update(Long id, Class<UserIn> inClass, HttpServletRequest request, boolean checkPermissions) {
         boolean isActive = repo().isActive(id);
         User updatedUser = super.update(id, inClass, request, checkPermissions);
@@ -127,7 +124,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
         securityService.validate(user, null);
         return user;
     }
-    
+
     public User createSignupUser(SignupUserIn signupUserIn) {
         UserIn userIn = new UserIn(signupUserIn);
         User user = create(userIn, false);
@@ -142,7 +139,8 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
             signupConsent.setConsentText(signupUserIn.getConsentText());
             consentRepository.save(signupConsent);
         } catch (Exception exception) {
-            logger.error(MessageFormat.format("Failed to save signup consent due to: {0}", exception.getMessage()), exception);
+            logger.error(MessageFormat.format("Failed to save signup consent due to: {0}", exception.getMessage()),
+                    exception);
         }
 
         // Send welcome email and activate email

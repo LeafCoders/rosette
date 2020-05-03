@@ -28,7 +28,7 @@ public class SlideShowsControllerSlidesTest extends AbstractControllerTest {
     @Autowired
     private SlideShowRepository slideShowRepository;
 
-    private CommonRequestTests crt = new CommonRequestTests(this, Slide.class);
+    private final CommonRequestTests crt = new CommonRequestTests(this, Slide.class);
 
     private SlideShow extern;
     private Asset uploadImage1;
@@ -38,18 +38,14 @@ public class SlideShowsControllerSlidesTest extends AbstractControllerTest {
         super.setup();
 
         user1 = givenUser(user1);
-        final AssetFolder assetFolder = givenAssetFolder(AssetFolderData.newAssetFolder());
+        final AssetFolder assetFolder = givenAssetFolder(AssetFolderData.image());
         uploadImage1 = givenAssetInFolder(assetFolder.getId(), "image.png", "image.png", "image/png");
 
         extern = slideShowRepository.save(SlideShowData.extern(assetFolder));
     }
 
     private String url(SlideShow slideShow) {
-        return "/slideShows/" + slideShow.getId() + "/slides";
-    }
-
-    private String permission(SlideShow slideShow, String action) {
-        return "slideShows:" + action + ":" + slideShow.getId() + ":slides";
+        return "/api/slideShows/" + slideShow.getId() + "/slides";
     }
 
     @Test
@@ -59,33 +55,34 @@ public class SlideShowsControllerSlidesTest extends AbstractControllerTest {
         extern = slideShowRepository.save(extern);
         slide = extern.getSlides().iterator().next();
 
-        crt.allGetManyTests(user1, permission(extern, "read"), url(extern))
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].id", isIdOf(slide)))
-            .andExpect(jsonPath("$[0].title", is(slide.getTitle())))
-            .andExpect(jsonPath("$[0].image.id", isIdOf(slide.getImage())));
+        crt.allGetManyTests(user1, "slideShows:readSlides:" + extern.getId(), url(extern))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", isIdOf(slide)))
+                .andExpect(jsonPath("$[0].title", is(slide.getTitle())))
+                .andExpect(jsonPath("$[0].image.id", isIdOf(slide.getImage())));
     }
 
     @Test
     public void addSlideToSlideShow() throws Exception {
-        SlideIn slide = SlideData.newSlide(uploadImage1, TimeRange.start(1, 12, 30).weekOffset(-1).endAfterDays(20));
+        final SlideIn slide = SlideData.newSlide(uploadImage1,
+                TimeRange.start(1, 12, 30).weekOffset(-1).endAfterDays(20));
 
-        crt.allPostTests(user1, permission(extern, "create") + ",assets:read", url(extern), json(slide))
-            .andExpect(jsonPath("$.title", is(slide.getTitle())))
-            .andExpect(jsonPath("$.image.id", is(slide.getImageId().intValue())));
+        crt.allPostTests(user1, "slideShows:createSlides:" + extern.getId() + ",assets:read", url(extern), json(slide))
+                .andExpect(jsonPath("$.title", is(slide.getTitle())))
+                .andExpect(jsonPath("$.image.id", is(slide.getImageId().intValue())));
 
         // Check missing properties
         crt.postExpectBadRequest(user1, url(extern), json(SlideData.missingAllProperties()))
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0]", isValidationError("imageId", ApiString.NOT_NULL)))
-            .andExpect(jsonPath("$[1]", isValidationError("title", ApiString.STRING_NOT_EMPTY)));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0]", isValidationError("imageId", ApiString.NOT_NULL)))
+                .andExpect(jsonPath("$[1]", isValidationError("title", ApiString.STRING_NOT_EMPTY)));
 
         // Check invalid properties
         crt.postExpectBadRequest(user1, url(extern), json(SlideData.invalidProperties(uploadImage1)))
-            .andExpect(jsonPath("$", hasSize(3)))
-            .andExpect(jsonPath("$[0]", isValidationError("duration", ApiString.DURATION_TOO_SHORT)))
-            .andExpect(jsonPath("$[1]", isValidationError("endTime", ApiString.DATETIME_MUST_BE_AFTER)))
-            .andExpect(jsonPath("$[2]", isValidationError("title", ApiString.STRING_NOT_EMPTY)));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0]", isValidationError("duration", ApiString.DURATION_TOO_SHORT)))
+                .andExpect(jsonPath("$[1]", isValidationError("endTime", ApiString.DATETIME_MUST_BE_AFTER)))
+                .andExpect(jsonPath("$[2]", isValidationError("title", ApiString.STRING_NOT_EMPTY)));
     }
 
     @Test
@@ -104,12 +101,12 @@ public class SlideShowsControllerSlidesTest extends AbstractControllerTest {
             data.put("endTime", newEndTime);
         });
 
-        crt.allPutTests(user1, permission(extern, "update"), url(extern), slide.getId(), jsonData)
-            .andExpect(jsonPath("$.id", isIdOf(slide)))
-            .andExpect(jsonPath("$.title", is("The only slide")))
-            .andExpect(jsonPath("$.duration", is(34)))
-            .andExpect(jsonPath("$.startTime", is(newStartTime)))
-            .andExpect(jsonPath("$.endTime", is(newEndTime)));
+        crt.allPutTests(user1, "slideShows:updateSlides:" + extern.getId(), url(extern), slide.getId(), jsonData)
+                .andExpect(jsonPath("$.id", isIdOf(slide)))
+                .andExpect(jsonPath("$.title", is("The only slide")))
+                .andExpect(jsonPath("$.duration", is(34)))
+                .andExpect(jsonPath("$.startTime", is(newStartTime)))
+                .andExpect(jsonPath("$.endTime", is(newEndTime)));
     }
 
     @Test
@@ -119,6 +116,6 @@ public class SlideShowsControllerSlidesTest extends AbstractControllerTest {
         extern = slideShowRepository.save(extern);
         slide = extern.getSlides().iterator().next();
 
-        crt.allDeleteTests(user1, permission(extern, "delete"), url(extern), slide.getId());
+        crt.allDeleteTests(user1, "slideShows:deleteSlides:" + extern.getId(), url(extern), slide.getId());
     }
 }

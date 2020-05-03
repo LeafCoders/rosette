@@ -79,9 +79,6 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         }
     }
 
-    protected void extraValidation(Asset item) {
-    }
-
     @Override
     protected Asset convertFromInDTO(AssetIn dto, JsonNode rawIn, Asset item) {
         // Only set when create
