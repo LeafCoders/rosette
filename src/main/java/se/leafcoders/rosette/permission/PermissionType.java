@@ -25,11 +25,11 @@ public class PermissionType {
     public static PermissionValueEvents events() {
         return new PermissionValueEvents();
     }
-    
+
     public static PermissionValueEventTypes eventTypes() {
         return new PermissionValueEventTypes();
     }
-    
+
     public static PermissionValueGroups groups() {
         return new PermissionValueGroups();
     }
@@ -40,6 +40,10 @@ public class PermissionType {
 
     public static PermissionValuePermissions permissions() {
         return new PermissionValuePermissions();
+    }
+
+    public static PermissionValuePermissionSets permissionSets() {
+        return new PermissionValuePermissionSets();
     }
 
     public static PermissionValuePodcasts podcasts() {

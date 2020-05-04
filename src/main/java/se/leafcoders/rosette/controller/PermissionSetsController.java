@@ -1,0 +1,60 @@
+package se.leafcoders.rosette.controller;
+
+import java.util.Collection;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+import se.leafcoders.rosette.controller.dto.PermissionSetIn;
+import se.leafcoders.rosette.controller.dto.PermissionSetOut;
+import se.leafcoders.rosette.persistence.service.PermissionSetService;
+
+@RequiredArgsConstructor
+@Transactional
+@RestController
+@RequestMapping(value = "api/permissionSets", produces = "application/json")
+public class PermissionSetsController {
+
+    private final PermissionSetService permissionsetService;
+
+    @GetMapping(value = "/{id}")
+    public PermissionSetOut getPermissionSet(@PathVariable Long id) {
+        return permissionsetService.toOut(permissionsetService.read(id, true));
+    }
+
+    @GetMapping
+    public Collection<PermissionSetOut> getPermissionSets(HttpServletRequest request) {
+        Sort sort = Sort.by("name").ascending();
+        return permissionsetService.toOut(permissionsetService.readMany(sort, true));
+    }
+
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<PermissionSetOut> postPermissionSet(@RequestBody PermissionSetIn permissionset) {
+        return new ResponseEntity<PermissionSetOut>(
+                permissionsetService.toOut(permissionsetService.create(permissionset, true)),
+                HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}", consumes = "application/json")
+    public PermissionSetOut putPermissionSet(@PathVariable Long id, HttpServletRequest request) {
+        return permissionsetService.toOut(permissionsetService.update(id, PermissionSetIn.class, request, true));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletePermissionSet(@PathVariable Long id) {
+        return permissionsetService.delete(id, true);
+    }
+}

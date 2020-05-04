@@ -27,6 +27,7 @@ delete from eventtypes;
 delete from resourcetypes;
 
 delete from permissions;
+delete from permissionsets;
 
 delete from group_users;
 delete from groups;
