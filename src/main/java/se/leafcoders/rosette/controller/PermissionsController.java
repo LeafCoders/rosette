@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.controller.dto.PermissionIn;
 import se.leafcoders.rosette.controller.dto.PermissionOut;
+import se.leafcoders.rosette.controller.dto.PermissionSetOut;
 import se.leafcoders.rosette.persistence.service.PermissionService;
+import se.leafcoders.rosette.persistence.service.PermissionSetService;
 
 @RequiredArgsConstructor
 @Transactional
@@ -28,6 +30,7 @@ import se.leafcoders.rosette.persistence.service.PermissionService;
 public class PermissionsController {
 
     private final PermissionService permissionService;
+    private final PermissionSetService permissionSetService;
 
     @GetMapping(value = "/{id}")
     public PermissionOut getPermission(@PathVariable Long id) {
@@ -53,5 +56,24 @@ public class PermissionsController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletePermission(@PathVariable Long id) {
         return permissionService.delete(id, true);
+    }
+
+    // PermissionSet
+
+    @GetMapping(value = "/{id}/permissionSets")
+    public Collection<PermissionSetOut> getPermissionSetOfPermission(@PathVariable Long id) {
+        return permissionSetService.toOut(permissionService.getPermissionSets(id));
+    }
+
+    @PostMapping(value = "/{id}/permissionSets/{permissionSetId}", consumes = "application/json")
+    public Collection<PermissionSetOut> addPermissionSetToPermission(@PathVariable Long id,
+            @PathVariable Long permissionSetId) {
+        return permissionSetService.toOut(permissionService.addPermissionSet(id, permissionSetId));
+    }
+
+    @DeleteMapping(value = "/{id}/permissionSets/{permissionSetId}")
+    public Collection<PermissionSetOut> removePermissionSetFromPermission(@PathVariable Long id,
+            @PathVariable Long permissionSetId) {
+        return permissionSetService.toOut(permissionService.removePermissionSet(id, permissionSetId));
     }
 }

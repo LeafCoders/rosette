@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.persistence.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,8 +8,13 @@ import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -52,6 +58,13 @@ public class Permission extends Persistable {
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String patterns;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "permission_permissionsets", joinColumns = {
+            @JoinColumn(name = "permission_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "permissionset_id") }, uniqueConstraints = {
+                            @UniqueConstraint(columnNames = { "permission_id", "permissionset_id" }) })
+    private List<PermissionSet> permissionSets = new ArrayList<>();
+
     public Permission(String name, Integer level, Long entityId, String patterns) {
         this.name = name;
         this.level = level;
@@ -71,14 +84,31 @@ public class Permission extends Persistable {
 
     @Transient
     public List<String> getEachPattern() {
-        return patterns != null ? Arrays.asList(patterns.split(PermissionTreeHelper.PERMISSION_DIVIDER)) : new LinkedList<String>();
+        return patterns != null ? Arrays.asList(patterns.split(PermissionTreeHelper.PERMISSION_DIVIDER))
+                : new LinkedList<String>();
     }
 
     private String cleanPatterns(String patternsToClean) {
         if (patternsToClean != null) {
-            patternsToClean = Arrays.stream(patternsToClean.split(",")).filter(p -> !p.isEmpty()).collect(Collectors.joining(","));
+            patternsToClean = Arrays.stream(patternsToClean.split(",")).filter(p -> !p.isEmpty())
+                    .collect(Collectors.joining(","));
         }
         return patternsToClean;
+    }
+
+    public List<PermissionSet> getPermissionSets() {
+        if (permissionSets == null) {
+            permissionSets = new ArrayList<>();
+        }
+        return permissionSets;
+    }
+
+    public void addPermissionSet(PermissionSet permissionSet) {
+        getPermissionSets().add(permissionSet);
+    }
+
+    public void removePermissionSet(PermissionSet permissionSet) {
+        getPermissionSets().remove(permissionSet);
     }
 
 }

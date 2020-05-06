@@ -15,7 +15,7 @@ public class UserData {
         user.setIsActive(true);
         return user;
     }
-    
+
     public static User user1() {
         User user = new User();
         user.setEmail("u1@ser.se");
@@ -25,7 +25,7 @@ public class UserData {
         user.setIsActive(true);
         return user;
     }
-    
+
     public static User upload() {
         User user = new User();
         user.setEmail("test@uploaduser.se");
@@ -35,7 +35,7 @@ public class UserData {
         user.setIsActive(true);
         return user;
     }
-    
+
     public static User user2() {
         User user = new User();
         user.setEmail("u2@ser.se");
@@ -67,7 +67,7 @@ public class UserData {
         user.setPassword("password");
         return user;
     }
-    
+
     public static UserIn newUser(String firstName, String lastName) {
         UserIn user = new UserIn();
         user.setEmail((firstName + "@" + lastName + ".se").toLowerCase());
@@ -76,13 +76,13 @@ public class UserData {
         user.setPassword("password");
         return user;
     }
-    
+
     public static UserIn newActiveUser(String firstName, String lastName) {
         UserIn user = newUser(firstName, lastName);
         user.setIsActive(true);
         return user;
     }
-    
+
     private static String cryptPasword(String password) {
         return new BCryptPasswordEncoder().encode(password);
     }
