@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.data;
 
+import lombok.NonNull;
 import se.leafcoders.rosette.controller.dto.PermissionIn;
 import se.leafcoders.rosette.persistence.model.Permission;
 
@@ -27,6 +28,32 @@ public class PermissionData {
         permission.setName("Manage users");
         permission.setLevel(Permission.LEVEL_ALL_USERS);
         permission.setPatterns("groups:*");
+        return permission;
+    }
+
+    public static Permission forUser(@NonNull Long userId, @NonNull String patterns) {
+        Permission permission = new Permission();
+        permission.setName(patterns);
+        permission.setLevel(Permission.LEVEL_USER);
+        permission.setEntityId(userId);
+        permission.setPatterns(patterns);
+        return permission;
+    }
+
+    public static Permission forGroup(@NonNull Long groupId, @NonNull String patterns) {
+        Permission permission = new Permission();
+        permission.setName(patterns);
+        permission.setLevel(Permission.LEVEL_GROUP);
+        permission.setEntityId(groupId);
+        permission.setPatterns(patterns);
+        return permission;
+    }
+
+    public static Permission forAllUsers(@NonNull String patterns) {
+        Permission permission = new Permission();
+        permission.setName(patterns);
+        permission.setLevel(Permission.LEVEL_ALL_USERS);
+        permission.setPatterns(patterns);
         return permission;
     }
 

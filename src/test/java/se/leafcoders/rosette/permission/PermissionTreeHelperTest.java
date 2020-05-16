@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -55,9 +54,9 @@ public class PermissionTreeHelperTest {
         permissionObject.create(permissions);
 
         String expectedData = "{" +
-            "\"*\": { \"read\": null }," +
-            "\"events\": { \"read\": { \"12\": null }, \"update\": null, \"delete\": null, \"create\": null }" +
-        "}";
+                "\"*\": { \"read\": null }," +
+                "\"events\": { \"read\": { \"12\": null }, \"update\": null, \"delete\": null, \"create\": null }" +
+                "}";
         TestUtil.assertJsonEquals(expectedData, toJSON(permissionObject.getTree()));
     }
 
@@ -75,7 +74,8 @@ public class PermissionTreeHelperTest {
         isPermitted("events:update:resourceTypes:posters", when("events:update:resourceTypes:posters:*"));
         isPermitted("events:update:resourceTypes:posters", when("events:*:*:*"));
 
-        isPermitted("events:update:12", when("*:read", "*:delete:12", "events:*:19", "events:delete", "events:read:12", "events:update:*"));
+        isPermitted("events:update:12",
+                when("*:read", "*:delete:12", "events:*:19", "events:delete", "events:read:12", "events:update:*"));
     }
 
     @Test
@@ -85,15 +85,15 @@ public class PermissionTreeHelperTest {
         isNotPermitted("bookings:read", when("bookings:*:13"));
     }
 
-    private void isPermitted(String permission, HashMap<String, Object> permissionTree) {
+    private void isPermitted(String permission, PermissionTree permissionTree) {
         assertTrue(PermissionTreeHelper.checkPermission(permissionTree, permission));
     }
 
-    private void isNotPermitted(String permission, HashMap<String, Object> permissionTree) {
+    private void isNotPermitted(String permission, PermissionTree permissionTree) {
         assertFalse(PermissionTreeHelper.checkPermission(permissionTree, permission));
     }
 
-    private HashMap<String, Object> when(String... permissions) {
+    private PermissionTree when(String... permissions) {
         PermissionTreeHelper permissionObject = new PermissionTreeHelper();
         permissionObject.create(Arrays.asList(permissions));
         return permissionObject.getTree();

@@ -13,7 +13,7 @@ import se.leafcoders.rosette.data.UserData;
 import se.leafcoders.rosette.exception.ApiString;
 import se.leafcoders.rosette.persistence.model.User;
 
-public class UsersControllerTests extends AbstractControllerTest {
+public class UsersControllerTest extends AbstractControllerTest {
 
     private final CommonRequestTests crt = new CommonRequestTests(this, User.class);
 

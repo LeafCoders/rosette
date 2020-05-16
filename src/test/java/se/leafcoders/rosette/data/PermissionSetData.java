@@ -1,5 +1,6 @@
 package se.leafcoders.rosette.data;
 
+import lombok.NonNull;
 import se.leafcoders.rosette.controller.dto.PermissionSetIn;
 import se.leafcoders.rosette.persistence.model.PermissionSet;
 
@@ -16,6 +17,13 @@ public class PermissionSetData {
         PermissionSet permissionSet = new PermissionSet();
         permissionSet.setName("Read all events");
         permissionSet.setPatterns("events:read");
+        return permissionSet;
+    }
+
+    public static PermissionSet ofPatterns(@NonNull String patterns) {
+        PermissionSet permissionSet = new PermissionSet();
+        permissionSet.setName(patterns);
+        permissionSet.setPatterns(patterns);
         return permissionSet;
     }
 

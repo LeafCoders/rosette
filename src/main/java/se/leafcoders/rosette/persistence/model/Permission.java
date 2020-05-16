@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.Column;
@@ -84,8 +85,11 @@ public class Permission extends Persistable {
 
     @Transient
     public List<String> getEachPattern() {
-        return patterns != null ? Arrays.asList(patterns.split(PermissionTreeHelper.PERMISSION_DIVIDER))
-                : new LinkedList<String>();
+        LinkedList<String> list = new LinkedList<>();
+        Optional.ofNullable(getPatterns())
+                .ifPresent(p -> list.addAll(Arrays.asList(patterns.split(PermissionTreeHelper.PERMISSION_DIVIDER))));
+        getPermissionSets().forEach(ps -> list.addAll(ps.getEachPattern()));
+        return list;
     }
 
     private String cleanPatterns(String patternsToClean) {

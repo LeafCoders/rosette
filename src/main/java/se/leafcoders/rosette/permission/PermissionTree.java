@@ -2,21 +2,7 @@ package se.leafcoders.rosette.permission;
 
 import java.util.HashMap;
 
-public class PermissionTree {
+public class PermissionTree extends HashMap<String, PermissionTree> {
 
-    private HashMap<String, Object> tree;
-
-    public PermissionTree(HashMap<String, Object> tree) {
-        this.tree = tree;
-    }
-    
-    // Getters and setters
-
-    public HashMap<String, Object> getTree() {
-        return tree;
-    }
-
-    public void setTree(HashMap<String, Object> tree) {
-        this.tree = tree;
-    }
+    private static final long serialVersionUID = -2986367820346812984L;
 }

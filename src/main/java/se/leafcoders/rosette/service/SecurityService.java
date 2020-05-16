@@ -1,6 +1,5 @@
 package se.leafcoders.rosette.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.exception.MultipleValidationException;
@@ -53,15 +53,15 @@ public class SecurityService {
     }
 
     private boolean isPermitted(String permission) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Object> permissionTree = new HashMap<>();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PermissionTree permissionTree = new PermissionTree();
         if (authentication instanceof CurrentUserAuthentication) {
             PermissionTree pt = ((CurrentUserAuthentication) authentication).getPermissionTree();
             if (pt != null) {
-                permissionTree = pt.getTree();
+                permissionTree = pt;
             } else {
                 permissionTree = getPermissionTree((CurrentUserAuthentication) authentication);
-                ((CurrentUserAuthentication) authentication).setPermissionTree(new PermissionTree(permissionTree));
+                ((CurrentUserAuthentication) authentication).setPermissionTree(permissionTree);
             }
         } else {
             permissionTree = getPermissionTree(null);
@@ -92,8 +92,9 @@ public class SecurityService {
         return null;
     }
 
-    private HashMap<String, Object> getPermissionTree(CurrentUserAuthentication authentication) {
-        PermissionTreeHelper pth = new PermissionTreeHelper();
+    @NonNull
+    private PermissionTree getPermissionTree(CurrentUserAuthentication authentication) {
+        final PermissionTreeHelper pth = new PermissionTreeHelper();
         if (authentication == null) {
             pth.create(permissionSumService.getForPublic());
         } else {

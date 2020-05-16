@@ -2,8 +2,9 @@ package se.leafcoders.rosette.permission;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+
+import lombok.NonNull;
 
 /**
  * Permission tree builder for efficient permission checks. A permission
@@ -15,15 +16,8 @@ import java.util.List;
  * 
  * Here are some examples:
  * 
- * events:read
- * events:read/update:12
- * events:*:12
- * *:read
- * *:view,*update
- *
+ * events:read events:read/update:12 events:*:12 *:read *:view,*update
  */
-
-@SuppressWarnings("unchecked")
 public class PermissionTreeHelper {
 
     public static final String PERMISSION_DIVIDER = ",";
@@ -31,18 +25,16 @@ public class PermissionTreeHelper {
     private static final String LEVEL_DIVIDER = ":";
     private static final String ANY_VALUE = "*";
 
-    private HashMap<String, Object> permissionTree = new HashMap<String, Object>();
+    private PermissionTree permissionTree = new PermissionTree();
 
     public void create(List<String> permissions) {
-        permissions.forEach(
-            (String permission) -> {
-                permission = trimEndOfPermissionString(permission);
-                if (!permission.isEmpty()) {
-                    String[] levels = permission.split(LEVEL_DIVIDER);
-                    addPermissionLevel(levels, 0, permissionTree);
-                }
+        permissions.forEach((String permission) -> {
+            permission = trimEndOfPermissionString(permission);
+            if (!permission.isEmpty()) {
+                String[] levels = permission.split(LEVEL_DIVIDER);
+                addPermissionLevel(levels, 0, permissionTree);
             }
-        );
+        });
 
         permissionTree = cleanUpPermissionTree(permissionTree);
     }
@@ -54,54 +46,51 @@ public class PermissionTreeHelper {
         return permission;
     }
 
-    private void addPermissionLevel(String[] permissionLevels, final int levelIndex, HashMap<String, Object> treeNode) {
+    private void addPermissionLevel(String[] permissionLevels, final int levelIndex, PermissionTree treeNode) {
         if (levelIndex < permissionLevels.length) {
             final boolean isLastLevel = levelIndex + 1 == permissionLevels.length;
-            String permission = permissionLevels[levelIndex];
+            final String permission = permissionLevels[levelIndex];
 
             ArrayList<String> permissionNames = new ArrayList<String>(Arrays.asList(permission.split(VALUE_DIVIDER)));
-            permissionNames.forEach(
-                (String permissionName) -> {
-                    if (treeNode.containsKey(permissionName)) {
-                        if (isLastLevel) {
-                            HashMap<String, Object> subTreeNode = new HashMap<String, Object>();
-                            subTreeNode.put(ANY_VALUE, new HashMap<String, Object>());
-                            treeNode.put(permissionName, subTreeNode);
-                        } else {
-                            addPermissionLevel(permissionLevels, levelIndex + 1, (HashMap<String, Object>) treeNode.get(permissionName));
-                        }
-                    } else {
-                        HashMap<String, Object> subTreeNode = new HashMap<String, Object>();
-                        if (isLastLevel) {
-                            subTreeNode.put(ANY_VALUE, new HashMap<String, Object>());
-                        }
+            permissionNames.forEach((String permissionName) -> {
+                if (treeNode.containsKey(permissionName)) {
+                    if (isLastLevel) {
+                        final PermissionTree subTreeNode = new PermissionTree();
+                        subTreeNode.put(ANY_VALUE, new PermissionTree());
                         treeNode.put(permissionName, subTreeNode);
-                        addPermissionLevel(permissionLevels, levelIndex + 1, subTreeNode);
+                    } else {
+                        addPermissionLevel(permissionLevels, levelIndex + 1, treeNode.get(permissionName));
                     }
+                } else {
+                    final PermissionTree subTreeNode = new PermissionTree();
+                    if (isLastLevel) {
+                        subTreeNode.put(ANY_VALUE, new PermissionTree());
+                    }
+                    treeNode.put(permissionName, subTreeNode);
+                    addPermissionLevel(permissionLevels, levelIndex + 1, subTreeNode);
                 }
-            );
+            });
         }
     }
 
-    private HashMap<String, Object> cleanUpPermissionTree(HashMap<String, Object> treeNode) {
-        HashMap<String, Object> allNode = (HashMap<String, Object>) treeNode.get(ANY_VALUE);
+    private PermissionTree cleanUpPermissionTree(@NonNull PermissionTree treeNode) {
+        final PermissionTree allNode = treeNode.get(ANY_VALUE);
         if (allNode != null && allNode.isEmpty()) {
             return null;
         } else {
-            treeNode.forEach(
-                (String permissionName, Object subTreeNode) -> {
-                    treeNode.put(permissionName, cleanUpPermissionTree((HashMap<String, Object>) subTreeNode));
-                }
-            );
+            treeNode.forEach((String permissionName, PermissionTree subTreeNode) -> {
+                treeNode.put(permissionName, cleanUpPermissionTree(subTreeNode));
+            });
             return treeNode;
         }
     }
 
-    public HashMap<String, Object> getTree() {
+    @NonNull
+    public PermissionTree getTree() {
         return permissionTree;
     }
 
-    public static boolean checkPermission(HashMap<String, Object> treeRootNode, String permission) {
+    public static boolean checkPermission(PermissionTree treeRootNode, String permission) {
         if (treeRootNode != null) {
             String[] levels = permission.split(LEVEL_DIVIDER);
             return checkPermissionLevel(levels, 0, treeRootNode);
@@ -110,12 +99,13 @@ public class PermissionTreeHelper {
         }
     }
 
-    private static boolean checkPermissionLevel(String[] permissionLevels, final int levelIndex, HashMap<String, Object> treeNode) {
+    private static boolean checkPermissionLevel(String[] permissionLevels, final int levelIndex,
+            PermissionTree treeNode) {
         if (permissionLevels.length == levelIndex) {
             return false;
         }
         if (treeNode.containsKey(ANY_VALUE)) {
-            HashMap<String, Object> allNode = (HashMap<String, Object>) treeNode.get(ANY_VALUE);
+            final PermissionTree allNode = treeNode.get(ANY_VALUE);
             if (allNode == null) {
                 return true;
             }
@@ -125,7 +115,7 @@ public class PermissionTreeHelper {
         }
 
         if (treeNode.containsKey(permissionLevels[levelIndex])) {
-            HashMap<String, Object> levelNode = (HashMap<String, Object>) treeNode.get(permissionLevels[levelIndex]);
+            final PermissionTree levelNode = treeNode.get(permissionLevels[levelIndex]);
             if (levelNode == null) {
                 return true;
             }
@@ -139,13 +129,14 @@ public class PermissionTreeHelper {
 
     public static boolean hasValidPermissionFormat(final String permission) {
         if (permission != null) {
-            // Don't allow character that is not a-z, A-Z, 0-9, ':', '*' and '/'  
+            // Don't allow character that is not a-z, A-Z, 0-9, ':', '*' and '/'
             if (permission.contains(PERMISSION_DIVIDER) || permission.matches(".*[^a-zA-Z0-9:\\*\\/].*")) {
                 return false;
             }
             boolean lastCharIsDivider = false;
             for (int i = 0; i < permission.length(); ++i) {
-                boolean currentCharIsDivider = permission.charAt(i) == LEVEL_DIVIDER.charAt(0) || permission.charAt(i) == VALUE_DIVIDER.charAt(0);
+                boolean currentCharIsDivider = permission.charAt(i) == LEVEL_DIVIDER.charAt(0)
+                        || permission.charAt(i) == VALUE_DIVIDER.charAt(0);
                 boolean currentCharIsAny = permission.charAt(i) == ANY_VALUE.charAt(0);
 
                 if (permission.charAt(i) == ' ') {
