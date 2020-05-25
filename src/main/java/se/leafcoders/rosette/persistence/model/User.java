@@ -57,11 +57,14 @@ public class User extends Persistable {
 
     @NotNull
     private Boolean isActive;
-    
+
+    @NotNull
+    private Boolean isSuperAdmin = false;
+
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime lastLoginTime;
-    
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
     private List<Group> groups = new ArrayList<>();
 

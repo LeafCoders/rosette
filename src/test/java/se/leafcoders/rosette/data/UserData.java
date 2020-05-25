@@ -6,6 +6,17 @@ import se.leafcoders.rosette.persistence.model.User;
 
 public class UserData {
 
+    public static User superAdmin() {
+        User user = new User();
+        user.setEmail("super@admin.se");
+        user.setFirstName("Super");
+        user.setLastName("Admin");
+        user.setPassword(cryptPasword("password"));
+        user.setIsActive(true);
+        user.setIsSuperAdmin(true);
+        return user;
+    }
+
     public static User admin() {
         User user = new User();
         user.setEmail("admin@admin.se");

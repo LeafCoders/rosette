@@ -1,6 +1,7 @@
 package se.leafcoders.rosette;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import se.leafcoders.rosette.auth.CurrentUserService;
+import se.leafcoders.rosette.auth.RosetteAuthority;
 import se.leafcoders.rosette.auth.RosetteAnonymousAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
@@ -26,7 +28,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private RosetteSettings rosetteSettings;
-    
+
     private final CurrentUserService userDetailsService;
     private JwtAuthenticationService tokenAuthenticationService = null;
 
@@ -43,12 +45,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 // TODO: Describe why!
                 .exceptionHandling().and()
 
-                // Anonymous users will be represented with an org.springframework.security.authentication.AnonymousAuthenticationToken
+                // Anonymous users will be represented with an
+                // org.springframework.security.authentication.AnonymousAuthenticationToken
                 .anonymous().and()
 
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                
+
                 // TODO: Describe why!
                 .servletApi().and()
                 // TODO: Use this??? .securityContext().and()
@@ -57,16 +60,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().cacheControl().and().and()
 
                 .authorizeRequests()
-                    // Allow anonymous logins
-                    .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                    // All other request need to be authenticated
-                    .anyRequest().authenticated().and()
+                // Allow anonymous logins
+                .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(RosetteAuthority.SUPER_ADMIN)
+                // All other request need to be authenticated
+                .anyRequest().authenticated().and()
 
                 // Anonymous authentication will be added to requests without valid JWT token
                 .addFilterBefore(new RosetteAnonymousAuthenticationFilter(), AnonymousAuthenticationFilter.class)
-                    
+
                 // Existing user authentication will be added to requests with valid JWT token
-                .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService()), RosetteAnonymousAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenAuthenticationService()),
+                        RosetteAnonymousAuthenticationFilter.class);
     }
 
     @Override
@@ -91,7 +96,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationService tokenAuthenticationService() {
         if (tokenAuthenticationService == null) {
             try {
-                tokenAuthenticationService = new JwtAuthenticationService(rosetteSettings.getJwtSecretToken(), userDetailsService);
+                tokenAuthenticationService = new JwtAuthenticationService(rosetteSettings.getJwtSecretToken(),
+                        userDetailsService);
             } catch (Exception exception) {
                 System.err.println(exception.getMessage());
                 System.exit(0);

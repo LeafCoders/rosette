@@ -27,6 +27,21 @@ spring.jackson:
 spring.flyway:
   enabled: true
 
+# Actuator configuration
+management:
+  endpoints:
+    enabled-by-default: false
+    web.exposure.include: "*" # Enable http enpoints for Actuator
+    jmx.exposure.exclude: "*" # Disable JMX enpoints for Actuator
+  endpoint:
+    info.enabled: true
+    flyway.enabled: true
+    health.enabled: true
+    logfile.enabled: true
+    loggers.enabled: true
+    metrics.enabled: true
+    scheduledtasks.enabled: true
+
 
 ---
 spring:
@@ -104,6 +119,8 @@ rosette:
 spring:
   profiles: development
 
+logging.file: 'logfile.log'
+
 logging.level:
   org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
@@ -117,11 +134,3 @@ logging.level:
 
 spring.jpa:
   show-sql: true # Show log for each sql query
-
-
-# docker run -d  --name rosette-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=test -e MYSQL_USER=root -e MYSQL_PASSWORD=root mysql:latest  
-
-
-# docker run -d -p 2012:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=test -e MYSQL_USER=app_user -e MYSQL_PASSWORD=app_password mysql:latest
-
-# docker run -d --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=test -e MYSQL_USER=app_user -e MYSQL_PASSWORD=app_password mysql:latest

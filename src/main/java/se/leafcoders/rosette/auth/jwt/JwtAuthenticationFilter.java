@@ -12,23 +12,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.google.common.base.Preconditions;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 
+@RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
+    @NonNull
     private final JwtAuthenticationService jwtAuthenticationService;
 
-    public JwtAuthenticationFilter(JwtAuthenticationService jwtAuthenticationService) {
-        this.jwtAuthenticationService = Preconditions.checkNotNull(jwtAuthenticationService);
-    }
-
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-
-        CurrentUserAuthentication authentication = jwtAuthenticationService.createAuthentication((HttpServletRequest) request);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
+        CurrentUserAuthentication authentication = jwtAuthenticationService
+                .createAuthentication((HttpServletRequest) request);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);

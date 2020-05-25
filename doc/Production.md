@@ -43,3 +43,21 @@ Read more about other configuration properties in https://docs.spring.io/spring-
 ## Migrate data
 
 Rosette Manager is a static web application that can be used to import data from other system. It's located in `setup/manager`
+
+
+## Access metrics and logs during runtime
+
+Only super admins can access metrics and logs. An user can only be set as super admin via sql:
+
+`update users set is_super_admin = 1 where id = ?;`
+
+The following urls are available:
+
+- `https://rosette.url/actuator?X-AUTH-TOKEN=<jwt-of-super-admin-user>` - To see all available endpoints
+- `https://rosette.url/actuator/info?X-AUTH-TOKEN=<jwt-of-super-admin-user>`
+- `https://rosette.url/actuator/flyway?X-AUTH-TOKEN=<jwt-of-super-admin-user>`
+- `https://rosette.url/actuator/health?X-AUTH-TOKEN=<jwt-of-super-admin-user>`
+- `https://rosette.url/actuator/logfile?X-AUTH-TOKEN=<jwt-of-super-admin-user>` - Requires `logging.file` property to be specified
+- `https://rosette.url/actuator/loggers?X-AUTH-TOKEN=<jwt-of-super-admin-user>`
+- `https://rosette.url/actuator/metrics?X-AUTH-TOKEN=<jwt-of-super-admin-user>`
+- `https://rosette.url/actuator/scheduledtasks?X-AUTH-TOKEN=<jwt-of-super-admin-user>`

@@ -12,12 +12,9 @@ import org.springframework.web.filter.GenericFilterBean;
 
 public class RosetteAnonymousAuthenticationFilter extends GenericFilterBean {
 
-    public RosetteAnonymousAuthenticationFilter() {
-    }
-
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             SecurityContextHolder.getContext().setAuthentication(new CurrentUserAuthentication());
         }

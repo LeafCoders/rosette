@@ -67,6 +67,9 @@ public class LoginController extends AuthController {
         }
 
         if (userToLogin != null) {
+            if (userToLogin.isSuperAdmin()) {
+                throw new ForbiddenException(ApiError.AUTH_USER_IS_SUPER_ADMIN, userId.toString());
+            }
             jwtAuthenticationService.addAuthenticationHeader(response, new CurrentUserAuthentication(userToLogin));
             response.setStatus(HttpServletResponse.SC_OK);
             return successData(userToLogin);
