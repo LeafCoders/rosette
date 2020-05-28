@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -43,8 +43,9 @@ public class AssetsController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<AssetOut> postAsset(@RequestBody AssetIn asset) {
-        return new ResponseEntity<AssetOut>(assetService.toOut(assetService.create(asset, true)), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public AssetOut postAsset(@RequestBody AssetIn asset) {
+        return assetService.toOut(assetService.create(asset, true));
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -53,7 +54,8 @@ public class AssetsController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteAsset(@PathVariable Long id) {
-        return assetService.delete(id, true);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAsset(@PathVariable Long id) {
+        assetService.delete(id, true);
     }
 }

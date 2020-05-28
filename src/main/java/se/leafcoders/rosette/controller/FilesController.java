@@ -5,12 +5,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -34,7 +34,8 @@ public class FilesController {
     // Upload file
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<AssetOut> createFile(@RequestParam(value = "folderId", required = true) Long folderId,
+    @ResponseStatus(HttpStatus.CREATED)
+    public AssetOut createFile(@RequestParam(value = "folderId", required = true) Long folderId,
             @RequestParam(value = "fileName", required = true) String fileName,
             @RequestParam(value = "file", required = true) MultipartFile file, HttpServletResponse response,
             MultipartHttpServletRequest defaultMultipartHttpServletRequest) {
@@ -42,17 +43,17 @@ public class FilesController {
         item.setFolderId(folderId);
         item.setFileName(fileName);
         item.setFile(file);
-
-        return new ResponseEntity<AssetOut>(assetService.toOut(assetService.createFile(item)), HttpStatus.CREATED);
+        return assetService.toOut(assetService.createFile(item));
     }
 
     // Update file
 
     @PostMapping(value = "/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<AssetOut> updateFile(@PathVariable Long id,
+    @ResponseStatus(HttpStatus.CREATED)
+    public AssetOut updateFile(@PathVariable Long id,
             @RequestParam(value = "file", required = true) MultipartFile file, HttpServletResponse response,
             MultipartHttpServletRequest defaultMultipartHttpServletRequest) {
-        return new ResponseEntity<AssetOut>(assetService.toOut(assetService.updateFile(id, file)), HttpStatus.CREATED);
+        return assetService.toOut(assetService.updateFile(id, file));
     }
 
     // Download file

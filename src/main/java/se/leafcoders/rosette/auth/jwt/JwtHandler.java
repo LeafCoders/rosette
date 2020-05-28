@@ -17,7 +17,8 @@ public final class JwtHandler {
     private final CurrentUserService userService;
 
     public JwtHandler(String jwtSecret, CurrentUserService userService) throws IllegalArgumentException {
-        Preconditions.checkArgument(jwtSecret != null && jwtSecret.trim().length() > 10, "JwtToken: Invalid or too short token");
+        Preconditions.checkArgument(jwtSecret != null && jwtSecret.trim().length() > 10,
+                "JwtToken: Invalid or too short token");
         this.jwtSecret = jwtSecret;
         this.userService = Preconditions.checkNotNull(userService);
     }
@@ -28,7 +29,7 @@ public final class JwtHandler {
             if (userId != null) {
                 return userService.loadUserById(Long.parseLong(userId));
             }
-        } catch (io.jsonwebtoken.SignatureException ignore) {
+        } catch (io.jsonwebtoken.SignatureException | io.jsonwebtoken.MalformedJwtException ignore) {
         }
         return null;
     }
@@ -44,7 +45,7 @@ public final class JwtHandler {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-    
+
     public String createTokenForForgottenPassword(String nameOfUser) {
         return Jwts.builder()
                 .setSubject(nameOfUser)

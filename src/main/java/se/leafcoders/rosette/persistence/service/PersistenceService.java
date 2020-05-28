@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 
 import se.leafcoders.rosette.exception.ApiError;
 import se.leafcoders.rosette.exception.ForbiddenException;
@@ -144,7 +143,7 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         }
     }
 
-    public ResponseEntity<Void> delete(Long id, boolean checkPermissions) {
+    public void delete(Long id, boolean checkPermissions) {
         checkPermissions(itemReadUpdateDeletePermissions(PermissionAction.DELETE, new PermissionId<T>(id)));
         securityService.checkNotReferenced(id, entityClass);
         try {
@@ -152,7 +151,6 @@ abstract class PersistenceService<T extends Persistable, IN, OUT> {
         } catch (EmptyResultDataAccessException e) {
             throw notFoundException(id);
         }
-        return ResponseEntity.noContent().build();
     }
 
     protected abstract T convertFromInDTO(IN itemIn, JsonNode rawIn, T itemToUpdate);

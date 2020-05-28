@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.controller.dto.PermissionIn;
@@ -70,10 +69,9 @@ public class PermissionService extends PersistenceService<Permission, Permission
     }
 
     @Override
-    public ResponseEntity<Void> delete(Long id, boolean checkPermissions) {
-        ResponseEntity<Void> re = super.delete(id, checkPermissions);
+    public void delete(Long id, boolean checkPermissions) {
+        super.delete(id, checkPermissions);
         securityService.resetPermissionCache();
-        return re;
     }
 
     public List<PermissionSet> getPermissionSets(Long permissionId) {

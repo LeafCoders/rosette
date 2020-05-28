@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -44,9 +44,9 @@ public class ResourceTypesController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<ResourceTypeOut> postResourceType(@RequestBody ResourceTypeIn resourceType) {
-        return new ResponseEntity<ResourceTypeOut>(
-                resourceTypeService.toOut(resourceTypeService.create(resourceType, true)), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResourceTypeOut postResourceType(@RequestBody ResourceTypeIn resourceType) {
+        return resourceTypeService.toOut(resourceTypeService.create(resourceType, true));
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -55,8 +55,9 @@ public class ResourceTypesController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteResourceType(@PathVariable Long id) {
-        return resourceTypeService.delete(id, true);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteResourceType(@PathVariable Long id) {
+        resourceTypeService.delete(id, true);
     }
 
     @PutMapping(value = "/{id}/moveTo/{toResourceTypeId}", consumes = "application/json")

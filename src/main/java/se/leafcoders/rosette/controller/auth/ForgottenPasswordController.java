@@ -1,10 +1,10 @@
 package se.leafcoders.rosette.controller.auth;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -17,16 +17,16 @@ public class ForgottenPasswordController extends AuthController {
     private final ForgottenPasswordService forgottenPasswordService;
 
     @PostMapping(value = "forgottenPassword")
-    public ResponseEntity<Void> createForgottenPassword(@RequestParam(required = true) String email) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createForgottenPassword(@RequestParam(required = true) String email) {
         forgottenPasswordService.create(email);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "forgottenPassword")
-    public ResponseEntity<Void> applyForgottenPassword(@RequestParam(required = true) String token,
+    @ResponseStatus(HttpStatus.OK)
+    public void applyForgottenPassword(@RequestParam(required = true) String token,
             @RequestParam(required = true) String password) {
         forgottenPasswordService.apply(token, password);
-        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
 }

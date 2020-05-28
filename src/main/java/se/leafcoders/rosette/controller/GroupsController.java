@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -45,8 +45,9 @@ public class GroupsController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<GroupOut> postGroup(@RequestBody GroupIn group) {
-        return new ResponseEntity<GroupOut>(groupService.toOut(groupService.create(group, true)), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public GroupOut postGroup(@RequestBody GroupIn group) {
+        return groupService.toOut(groupService.create(group, true));
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -55,8 +56,9 @@ public class GroupsController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-        return groupService.delete(id, true);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGroup(@PathVariable Long id) {
+        groupService.delete(id, true);
     }
 
     @GetMapping(value = "/{id}/users")

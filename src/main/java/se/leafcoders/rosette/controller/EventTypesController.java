@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -43,9 +43,9 @@ public class EventTypesController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<EventTypeOut> postEventType(@RequestBody EventTypeIn eventType) {
-        return new ResponseEntity<EventTypeOut>(eventTypeService.toOut(eventTypeService.create(eventType, true)),
-                HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventTypeOut postEventType(@RequestBody EventTypeIn eventType) {
+        return eventTypeService.toOut(eventTypeService.create(eventType, true));
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -54,8 +54,9 @@ public class EventTypesController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteEventType(@PathVariable Long id) {
-        return eventTypeService.delete(id, true);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEventType(@PathVariable Long id) {
+        eventTypeService.delete(id, true);
     }
 
     // ResourceTypes

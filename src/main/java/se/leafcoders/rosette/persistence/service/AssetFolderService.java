@@ -3,7 +3,6 @@ package se.leafcoders.rosette.persistence.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import se.leafcoders.rosette.controller.dto.AssetFolderIn;
@@ -19,7 +18,7 @@ import se.leafcoders.rosette.persistence.repository.AssetRepository;
 public class AssetFolderService extends PersistenceService<AssetFolder, AssetFolderIn, AssetFolderOut> {
 
     static final Logger logger = LoggerFactory.getLogger(AssetFolderService.class);
-    
+
     @Autowired
     private FileStorageService fileStorageService;
 
@@ -38,9 +37,9 @@ public class AssetFolderService extends PersistenceService<AssetFolder, AssetFol
     }
 
     @Override
-    public ResponseEntity<Void> delete(Long id, boolean checkPermissions) {
+    public void delete(Long id, boolean checkPermissions) {
         validateFolderIsEmpty(id);
-        return super.delete(id, checkPermissions);
+        super.delete(id, checkPermissions);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class AssetFolderService extends PersistenceService<AssetFolder, AssetFol
         }
         return true;
     }
-    
+
     private void validateFolderIsEmpty(Long folderId) {
         if (assetRepository.existsByFolderId(folderId)) {
             throw new ForbiddenException(ApiError.UNKNOWN_REASON, "katalogen har filer, kan inte ta bort katalogen.");

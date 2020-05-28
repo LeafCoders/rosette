@@ -4,11 +4,13 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class LoginController extends AuthController {
     private final SecurityService securityService;
 
     @PostMapping(value = "login")
+    @ResponseStatus(HttpStatus.OK)
     public Object login(@RequestBody Login login, HttpServletResponse response) {
         CurrentUser userToLogin = null;
         try {
@@ -56,6 +59,7 @@ public class LoginController extends AuthController {
     }
 
     @PostMapping(value = "loginAs/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public Object loginAs(@PathVariable Long userId, HttpServletResponse response) {
         securityService.checkPermission(PermissionType.users().loginAs().forId(userId));
 

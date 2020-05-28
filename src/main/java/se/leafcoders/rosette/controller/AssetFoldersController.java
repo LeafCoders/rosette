@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -40,9 +40,9 @@ public class AssetFoldersController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<AssetFolderOut> postAssetFolder(@RequestBody AssetFolderIn assetFolder) {
-        return new ResponseEntity<AssetFolderOut>(
-                assetFolderService.toOut(assetFolderService.create(assetFolder, true)), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public AssetFolderOut postAssetFolder(@RequestBody AssetFolderIn assetFolder) {
+        return assetFolderService.toOut(assetFolderService.create(assetFolder, true));
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
@@ -51,7 +51,8 @@ public class AssetFoldersController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteAssetFolder(@PathVariable Long id) {
-        return assetFolderService.delete(id, true);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAssetFolder(@PathVariable Long id) {
+        assetFolderService.delete(id, true);
     }
 }
