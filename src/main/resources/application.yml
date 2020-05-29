@@ -122,7 +122,8 @@ rosette:
 spring:
   profiles: development
 
-logging.file: 'logfile.log'
+spring.output.ansi.enabled: ALWAYS # Enablecolor log output
+logging.file: "logfile.log"
 
 logging.level:
   org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
