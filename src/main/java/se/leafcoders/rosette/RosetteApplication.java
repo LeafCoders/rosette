@@ -2,9 +2,11 @@ package se.leafcoders.rosette;
 
 import java.util.Arrays;
 import java.util.TimeZone;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
+
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,7 +40,7 @@ public class RosetteApplication extends SpringBootServletInitializer {
 
     @PostConstruct
     void started() {
-      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     /**

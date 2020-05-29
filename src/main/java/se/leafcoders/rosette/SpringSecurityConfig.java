@@ -1,6 +1,5 @@
 package se.leafcoders.rosette;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +14,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+
 import se.leafcoders.rosette.auth.CurrentUserService;
-import se.leafcoders.rosette.auth.RosetteAuthority;
 import se.leafcoders.rosette.auth.RosetteAnonymousAuthenticationFilter;
+import se.leafcoders.rosette.auth.RosetteAuthority;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationFilter;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 
@@ -26,16 +26,14 @@ import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 @Order(2)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private RosetteSettings rosetteSettings;
-
+    private final RosetteSettings rosetteSettings;
     private final CurrentUserService userDetailsService;
     private JwtAuthenticationService tokenAuthenticationService = null;
 
-    public SpringSecurityConfig() {
+    public SpringSecurityConfig(RosetteSettings rosetteSettings) {
         // Disable default Spring security configuration
         super(true);
-
+        this.rosetteSettings = rosetteSettings;
         this.userDetailsService = new CurrentUserService();
     }
 

@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
   id "org.springframework.boot" version "2.2.6.RELEASE"
   id "io.spring.dependency-management" version "1.0.9.RELEASE"
@@ -10,7 +12,7 @@ targetCompatibility = JavaVersion.VERSION_14
 
 bootJar {
   archiveBaseName = "rosette"
-  archiveVersion =  "0.23-SNAPSHOT"
+  archiveVersion =  "${project.version}-SNAPSHOT"
 }
 
 repositories {
@@ -51,6 +53,34 @@ dependencies {
 
   // MP3 audio support
   implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")
+}
+
+processResources {
+  with copySpec {
+    from 'src/main/resources'
+    include '**/application*.yml'
+    project.properties.findAll().each { prop ->
+      if (prop.value != null) {
+        filter(ReplaceTokens, tokens: [ ('project.' + prop.key): (String) prop.value ], beginToken: '\"@', endToken: '@\"')
+      }
+    }
+  }  
+}
+
+task buildImage() {
+  group "docker"
+  description "Builds a docker image of the current version."
+
+  dependsOn clean
+  dependsOn bootJar
+  tasks.findByName('bootJar').mustRunAfter('clean')
+
+  doLast {
+    exec {
+      executable "docker"
+      args "build", "--build-arg", "JAR_VERSION=${project.version}", "-t", "leafcoders/rosette:${project.version}", "."
+    }
+  }
 }
 
 wrapper {
