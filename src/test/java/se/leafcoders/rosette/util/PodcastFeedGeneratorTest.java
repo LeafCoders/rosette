@@ -5,11 +5,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.model.ArticleType;
@@ -36,13 +37,13 @@ public class PodcastFeedGeneratorTest {
 
         ArticleType articleType = mock(ArticleType.class);
         ArticleSerie articleSerie = mock(ArticleSerie.class);
-        
+
         Asset image = mock(Asset.class);
         Asset recording = mock(Asset.class);
 
         Resource author = new Resource();
         author.setName("Author");
-        
+
         articleContent = new HtmlContent();
         articleContent.setContentHtml("<p>ContentHtml</p>");
         articleContent.setContentRaw("ContentRaw");
@@ -62,15 +63,15 @@ public class PodcastFeedGeneratorTest {
         podcast.setLanguage("sv-SE");
         podcast.setArticlesLink("https://my.com/articles");
         podcast.setImage(image);
-        podcast.setChangedDate(LocalDateTime.now());
+        podcast.setChangedDate(ClientServerTime.serverTimeNow());
 
         article = new Article();
         article.setId(1l);
         article.setArticleType(articleType);
         article.setArticleSerie(articleSerie);
         article.setEvent(null);
-        article.setLastModifiedTime(LocalDateTime.now());
-        article.setTime(LocalDateTime.now());
+        article.setLastModifiedTime(ClientServerTime.serverTimeNow().minusMinutes(45));
+        article.setTime(ClientServerTime.serverTimeNow().minusMinutes(30));
         article.setAuthors(Arrays.asList(author));
         article.setTitle("Title1");
         article.setContent(articleContent);
@@ -82,19 +83,19 @@ public class PodcastFeedGeneratorTest {
         article2.setArticleType(articleType);
         article2.setArticleSerie(articleSerie);
         article2.setEvent(null);
-        article2.setLastModifiedTime(LocalDateTime.now());
-        article2.setTime(LocalDateTime.now());
+        article2.setLastModifiedTime(ClientServerTime.serverTimeNow().minusMinutes(145));
+        article2.setTime(ClientServerTime.serverTimeNow().minusMinutes(130));
         article2.setAuthors(Arrays.asList(author));
         article2.setTitle("Title2");
         article2.setContent(articleContent);
         article2.setRecording(recording);
         article2.setRecordingStatus(RecordingStatus.EXPECTING_RECORDING);
-        
+
         when(articleSerie.getImage()).thenReturn(image);
         when(assetService.urlOfAsset(image)).thenReturn("https://my.com/image.png");
         when(assetService.urlOfAsset(null)).thenReturn(null);
     }
-    
+
     @Test
     public void whenAllDataIsSpeicfied() throws JsonProcessingException, IOException {
         assertFalse(generator.getPodcastFeed(podcast, Arrays.asList(article)).isEmpty());
@@ -107,10 +108,10 @@ public class PodcastFeedGeneratorTest {
 
         podcast.setArticleType(null);
         assertFalse(generator.getPodcastFeed(podcast, Arrays.asList(article)).isEmpty());
-        
+
         podcast.setImage(null);
         assertFalse(generator.getPodcastFeed(podcast, Arrays.asList(article)).isEmpty());
-        
+
         podcast.setTitle(null);
         assertFalse(generator.getPodcastFeed(podcast, Arrays.asList(article)).isEmpty());
     }
@@ -120,7 +121,7 @@ public class PodcastFeedGeneratorTest {
         articleContent.setContentHtml(null);
         articleContent.setContentRaw(null);
         assertTrue(generator.getPodcastFeed(podcast, Arrays.asList(article)).contains("<item>"));
-        
+
         article.setContent(null);
         assertTrue(generator.getPodcastFeed(podcast, Arrays.asList(article)).contains("<item>"));
 
@@ -135,28 +136,45 @@ public class PodcastFeedGeneratorTest {
     }
 
     @Test
-    public void skippArticleWhenNoRecording() throws JsonProcessingException, IOException {
+    public void skipArticleWhenNoRecording() throws JsonProcessingException, IOException {
         assertTrue(generator.getPodcastFeed(podcast, Arrays.asList(article)).contains("<item>"));
 
         article.setRecording(null);
         assertFalse(generator.getPodcastFeed(podcast, Arrays.asList(article)).contains("<item>"));
     }
-    
+
     @Test
-    public void skippArticleWhenNoTime() throws JsonProcessingException, IOException {
+    public void skipArticleWhenNoTime() throws JsonProcessingException, IOException {
+        final String result1 = generator.getPodcastFeed(podcast, Arrays.asList(article, article2));
+        assertTrue(result1.contains(article.getTitle()));
+        assertTrue(result1.contains(article2.getTitle()));
+
+        article.setTime(ClientServerTime.serverTimeNow().plusMinutes(30));
+        final String result2 = generator.getPodcastFeed(podcast, Arrays.asList(article, article2));
+        assertFalse(result2.contains(article.getTitle()));
+        assertTrue(result2.contains(article2.getTitle()));
+
+        article2.setTime(ClientServerTime.serverTimeNow().plusMinutes(30));
+        final String result3 = generator.getPodcastFeed(podcast, Arrays.asList(article, article2));
+        assertFalse(result3.contains(article.getTitle()));
+        assertFalse(result3.contains(article2.getTitle()));
+    }
+
+    @Test
+    public void skipArticlesBeforeStartTime() throws JsonProcessingException, IOException {
         assertTrue(generator.getPodcastFeed(podcast, Arrays.asList(article)).contains("<item>"));
-        
-        article.setTime(null);
+
+        article.setTime(ClientServerTime.serverTimeNow().plusMinutes(30));
         assertFalse(generator.getPodcastFeed(podcast, Arrays.asList(article)).contains("<item>"));
     }
-    
+
     @Test
     public void sortArticlesWithLatestFirst() throws JsonProcessingException, IOException {
-        article2.setTime(LocalDateTime.now().plusDays(1));
+        article2.setTime(ClientServerTime.serverTimeNow().plusDays(1));
         String result = generator.getPodcastFeed(podcast, Arrays.asList(article, article2));
         assertTrue(result.indexOf("Title1") > result.indexOf("Title2"));
 
-        article2.setTime(LocalDateTime.now().minusDays(1));
+        article2.setTime(ClientServerTime.serverTimeNow().minusDays(1));
         result = generator.getPodcastFeed(podcast, Arrays.asList(article, article2));
         assertTrue(result.indexOf("Title1") < result.indexOf("Title2"));
     }

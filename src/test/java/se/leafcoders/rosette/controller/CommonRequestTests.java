@@ -83,6 +83,12 @@ public class CommonRequestTests {
                 .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON));
     }
 
+    public ResultActions getManySuccessRssXml(User authUser, String controllerUrl) throws Exception {
+        return act.withUser(authUser, get(controllerUrl))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(AbstractControllerTest.CONTENT_RSSXML));
+    }
+
     public ResultActions getManyExpectForbidden(User authUser, String controllerUrl) throws Exception {
         return act.withUser(authUser, get(controllerUrl))
                 .andExpect(status().isForbidden())

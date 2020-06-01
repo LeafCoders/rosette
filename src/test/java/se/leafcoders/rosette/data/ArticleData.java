@@ -3,6 +3,7 @@ package se.leafcoders.rosette.data;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import se.leafcoders.rosette.controller.dto.ArticleIn;
+import se.leafcoders.rosette.persistence.converter.ClientServerTime;
 import se.leafcoders.rosette.persistence.model.Article;
 import se.leafcoders.rosette.persistence.model.ArticleSerie;
 import se.leafcoders.rosette.persistence.model.ArticleType;
@@ -13,7 +14,8 @@ import se.leafcoders.rosette.persistence.model.Resource;
 
 public class ArticleData {
 
-    public static Article existingArticle(ArticleType articleType, ArticleSerie articleSerie, LocalDateTime time, String title, Resource author, Asset recording) {
+    public static Article existingArticle(ArticleType articleType, ArticleSerie articleSerie, LocalDateTime time,
+            String title, Resource author, Asset recording) {
         Article article = new Article();
         article.setArticleType(articleType);
         article.setArticleSerie(articleSerie);
@@ -23,6 +25,7 @@ public class ArticleData {
         article.setContent(new HtmlContent("Innehåll...", "Innehåll..."));
         article.setRecording(recording);
         article.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING);
+        article.setLastModifiedTime(ClientServerTime.serverTimeNow());
         return article;
     }
 
@@ -36,7 +39,8 @@ public class ArticleData {
         return article;
     }
 
-    public static ArticleIn newArticle(Long articleTypeId, Long articleSerieId, LocalDateTime time, String title, Long authorId, Long recordingId) {
+    public static ArticleIn newArticle(Long articleTypeId, Long articleSerieId, LocalDateTime time, String title,
+            Long authorId, Long recordingId) {
         ArticleIn article = new ArticleIn();
         article.setArticleTypeId(articleTypeId);
         article.setArticleSerieId(articleSerieId);
@@ -49,8 +53,9 @@ public class ArticleData {
         article.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING.name());
         return article;
     }
-    
-    public static ArticleIn newArticleFromEvent(Long articleTypeId, Long articleSerieId, Event event, Long authorId, Long recordingId) {
+
+    public static ArticleIn newArticleFromEvent(Long articleTypeId, Long articleSerieId, Event event, Long authorId,
+            Long recordingId) {
         HtmlContent content = htmlContent("The title", "Some content...");
         ArticleIn article = new ArticleIn();
         article.setArticleTypeId(articleTypeId);
@@ -67,7 +72,8 @@ public class ArticleData {
     }
 
     private static HtmlContent htmlContent(String header, String content) {
-        String raw = "{\"ops\":[{\"insert\":\"" + header + "\"},{\"attributes\":{\"header\":1},\"insert\":\"\\n\"},{\"insert\":\"" + content + "\\n\"}]}";
+        String raw = "{\"ops\":[{\"insert\":\"" + header
+                + "\"},{\"attributes\":{\"header\":1},\"insert\":\"\\n\"},{\"insert\":\"" + content + "\\n\"}]}";
         String html = "<h1>" + header + "</h1><p>" + content + "</p>";
         return new HtmlContent(raw, html);
     }

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,6 +71,8 @@ abstract class AbstractControllerTest {
 
     public static final MediaType CONTENT_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype());
+    public static final MediaType CONTENT_RSSXML = new MediaType(MediaType.APPLICATION_RSS_XML.getType(),
+            MediaType.APPLICATION_RSS_XML.getSubtype(), Charset.forName("utf8"));
 
     @Autowired
     private WebApplicationContext webApplicationContext;
