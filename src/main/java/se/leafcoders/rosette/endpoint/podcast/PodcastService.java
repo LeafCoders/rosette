@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.articletype.ArticleTypeRefOut;
 import se.leafcoders.rosette.endpoint.articletype.ArticleTypeService;
@@ -21,7 +20,7 @@ public class PodcastService extends PersistenceService<Podcast, PodcastIn, Podca
     private AssetService assetService;
     
     public PodcastService(PodcastRepository repository) {
-        super(Podcast.class, PermissionType::podcasts, repository);
+        super(Podcast.class, PodcastPermissionValue::new, repository);
     }
     
     private PodcastRepository repo() {

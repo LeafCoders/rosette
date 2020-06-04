@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.core.exception.ApiError;
 import se.leafcoders.rosette.core.exception.ForbiddenException;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.asset.AssetRepository;
 import se.leafcoders.rosette.endpoint.file.FileStorageService;
@@ -26,7 +25,7 @@ public class AssetFolderService extends PersistenceService<AssetFolder, AssetFol
     private AssetRepository assetRepository;
 
     public AssetFolderService(AssetFolderRepository repository) {
-        super(AssetFolder.class, PermissionType::assetFolders, repository);
+        super(AssetFolder.class, AssetFolderPermissionValue::new, repository);
     }
 
     @Override

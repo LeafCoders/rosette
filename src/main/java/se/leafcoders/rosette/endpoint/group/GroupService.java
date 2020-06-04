@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import lombok.NonNull;
 import se.leafcoders.rosette.core.exception.ApiError;
 import se.leafcoders.rosette.core.exception.ForbiddenException;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.user.User;
 import se.leafcoders.rosette.endpoint.user.UserRefOut;
@@ -24,7 +23,7 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
     UserService userService;
 
     public GroupService(GroupRepository repository) {
-        super(Group.class, PermissionType::groups, repository);
+        super(Group.class, GroupPermissionValue::new, repository);
     }
 
     @NonNull
@@ -62,7 +61,7 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
     }
 
     public List<User> addUser(Long groupId, Long userId) {
-        checkPermission(PermissionType.groups().update().forId(groupId));
+        checkPermission(new GroupPermissionValue().update().forId(groupId));
         if (repo().isUserInGroup(userId, groupId)) {
             throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
         }
@@ -73,7 +72,7 @@ public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {
     }
 
     public List<User> removeUser(Long groupId, Long userId) {
-        checkPermission(PermissionType.groups().update().forId(groupId));
+        checkPermission(new GroupPermissionValue().update().forId(groupId));
         Group group = read(groupId, true);
         User user = userService.read(userId, true);
         group.removeUser(user);

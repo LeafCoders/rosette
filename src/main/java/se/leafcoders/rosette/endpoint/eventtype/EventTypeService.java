@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.ConnectedCrud;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
@@ -44,7 +43,7 @@ public class EventTypeService extends PersistenceService<EventType, EventTypeIn,
     };
 
     public EventTypeService(EventTypeRepository repository) {
-        super(EventType.class, PermissionType::eventTypes, repository);
+        super(EventType.class, EventTypePermissionValue::new, repository);
     }
 
     @Override

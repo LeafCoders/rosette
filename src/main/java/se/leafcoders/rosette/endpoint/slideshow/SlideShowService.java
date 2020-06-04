@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.core.permission.PermissionAction;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.permission.PermissionValue;
 import se.leafcoders.rosette.core.persistable.ChildCrud;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
@@ -40,16 +39,16 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
             PermissionValue permissionValue = null;
             switch (action) {
             case CREATE:
-                permissionValue = PermissionType.slideShows().createSlides().forPersistable(slideShow);
+                permissionValue = new SlideShowPermissionValue().createSlides().forPersistable(slideShow);
                 break;
             case READ:
-                permissionValue = PermissionType.slideShows().readSlides().forPersistable(slideShow);
+                permissionValue = new SlideShowPermissionValue().readSlides().forPersistable(slideShow);
                 break;
             case UPDATE:
-                permissionValue = PermissionType.slideShows().updateSlides().forPersistable(slideShow);
+                permissionValue = new SlideShowPermissionValue().updateSlides().forPersistable(slideShow);
                 break;
             case DELETE:
-                permissionValue = PermissionType.slideShows().deleteSlides().forPersistable(slideShow);
+                permissionValue = new SlideShowPermissionValue().deleteSlides().forPersistable(slideShow);
                 break;
             default:
                 break;
@@ -79,7 +78,7 @@ public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn,
     private SlideService slideService;
 
     public SlideShowService(SlideShowRepository repository, SlideService slideService, SlideRepository slideRepository) {
-        super(SlideShow.class, PermissionType::slideShows, repository);
+        super(SlideShow.class, SlideShowPermissionValue::new, repository);
         slideCrud = new SlideCrud(this, slideService, slideRepository);
         this.slideService = slideService;
     }

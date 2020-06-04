@@ -21,17 +21,18 @@ import se.leafcoders.rosette.core.exception.ForbiddenException;
 import se.leafcoders.rosette.core.exception.NotFoundException;
 import se.leafcoders.rosette.core.permission.PermissionAction;
 import se.leafcoders.rosette.core.permission.PermissionId;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.permission.PermissionValue;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.core.service.SseService;
 import se.leafcoders.rosette.endpoint.article.Article;
 import se.leafcoders.rosette.endpoint.article.ArticleRepository;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypePermissionValue;
 import se.leafcoders.rosette.endpoint.eventtype.EventTypeRefOut;
 import se.leafcoders.rosette.endpoint.eventtype.EventTypeService;
 import se.leafcoders.rosette.endpoint.resource.Resource;
 import se.leafcoders.rosette.endpoint.resource.ResourceService;
 import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypePermissionValue;
 import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeService;
 
 @Service
@@ -59,7 +60,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     private SseService sseService;
 
     public EventService(EventRepository repository) {
-        super(Event.class, PermissionType::events, repository);
+        super(Event.class, EventPermissionValue::new, repository);
     }
 
     private EventRepository repo() {
@@ -69,7 +70,7 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     @Override
     public List<PermissionValue> itemCreatePermissions(EventIn eventIn) {
         List<PermissionValue> permissions = super.itemCreatePermissions(eventIn);
-        permissions.add(PermissionType.eventTypes().createEvents().forId(eventIn.getEventTypeId()));
+        permissions.add(new EventTypePermissionValue().createEvents().forId(eventIn.getEventTypeId()));
         return permissions;
     }
 
@@ -80,20 +81,20 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
         Long eventTypeId = event != null ? event.getEventTypeId() : null;
 
         List<PermissionValue> permissions = new ArrayList<>();
-        permissions.add(PermissionType.events().action(permissionAction).forId(permissionId.getId()));
+        permissions.add(new EventPermissionValue().action(permissionAction).forId(permissionId.getId()));
 
         if (permissionAction == PermissionAction.CREATE) {
-            permissions.add(PermissionType.eventTypes().createEvents().forId(eventTypeId));
+            permissions.add(new EventTypePermissionValue().createEvents().forId(eventTypeId));
         } else if (permissionAction == PermissionAction.READ) {
             List<ResourceType> resourceTypes = event != null ? event.getResourceRequirements().stream()
                     .map(rr -> rr.getResourceType()).collect(Collectors.toList()) : null;
-            permissions.add(PermissionType.eventTypes().readEvents().forId(eventTypeId));
-            permissions.add(PermissionType.resourceTypes().readEvents().forPersistables(resourceTypes));
-            permissions.add(PermissionType.resourceTypes().assignEventResources().forPersistables(resourceTypes));
+            permissions.add(new EventTypePermissionValue().readEvents().forId(eventTypeId));
+            permissions.add(new ResourceTypePermissionValue().readEvents().forPersistables(resourceTypes));
+            permissions.add(new ResourceTypePermissionValue().assignEventResources().forPersistables(resourceTypes));
         } else if (permissionAction == PermissionAction.UPDATE) {
-            permissions.add(PermissionType.eventTypes().updateEvents().forId(eventTypeId));
+            permissions.add(new EventTypePermissionValue().updateEvents().forId(eventTypeId));
         } else if (permissionAction == PermissionAction.DELETE) {
-            permissions.add(PermissionType.eventTypes().deleteEvents().forId(eventTypeId));
+            permissions.add(new EventTypePermissionValue().deleteEvents().forId(eventTypeId));
         }
         return permissions;
     }
@@ -199,17 +200,17 @@ public class EventService extends PersistenceService<Event, EventIn, EventOut> {
     }
 
     private void checkModifyResourceRequirementPermission(Event event, Long resourceTypeId) {
-        checkAnyPermission(PermissionType.events().update().forPersistable(event),
-                PermissionType.eventTypes().updateEvents().forId(event.getEventTypeId()),
-                PermissionType.eventTypes().modifyEventResourceRequirements().forId(event.getEventTypeId()),
-                PermissionType.resourceTypes().modifyEventResourceRequirement().forId(resourceTypeId));
+        checkAnyPermission(new EventPermissionValue().update().forPersistable(event),
+                new EventTypePermissionValue().updateEvents().forId(event.getEventTypeId()),
+                new EventTypePermissionValue().modifyEventResourceRequirements().forId(event.getEventTypeId()),
+                new ResourceTypePermissionValue().modifyEventResourceRequirement().forId(resourceTypeId));
     }
 
     private void checkAssignResourceRequirementPermission(Event event, Long resourceTypeId) {
-        checkAnyPermission(PermissionType.events().update().forPersistable(event),
-                PermissionType.eventTypes().updateEvents().forId(event.getEventTypeId()),
-                PermissionType.eventTypes().assignEventResources().forId(event.getEventTypeId()),
-                PermissionType.resourceTypes().assignEventResources().forId(resourceTypeId));
+        checkAnyPermission(new EventPermissionValue().update().forPersistable(event),
+                new EventTypePermissionValue().updateEvents().forId(event.getEventTypeId()),
+                new EventTypePermissionValue().assignEventResources().forId(event.getEventTypeId()),
+                new ResourceTypePermissionValue().assignEventResources().forId(resourceTypeId));
     }
 
     private ResourceRequirement getResourceRequirement(Long eventId, Long resourceRequirementId) {

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import se.leafcoders.rosette.core.exception.ApiString;
 import se.leafcoders.rosette.core.exception.SingleValidationException;
 import se.leafcoders.rosette.core.exception.ValidationError;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.core.service.EmailTemplateService;
 import se.leafcoders.rosette.endpoint.auth.Consent;
@@ -37,7 +36,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
     private EmailTemplateService emailTemplateService;
 
     public UserService(UserRepository repository) {
-        super(User.class, PermissionType::users, repository);
+        super(User.class, UserPermissionValue::new, repository);
     }
 
     @Override
@@ -104,7 +103,7 @@ public class UserService extends PersistenceService<User, UserIn, UserOut> {
 
     private void checkChangeOfIsActive(UserIn userIn) {
         if (userIn.getIsActive() != null) {
-            checkPermission(PermissionType.users().activate());
+            checkPermission(new UserPermissionValue().activate());
         }
     }
 

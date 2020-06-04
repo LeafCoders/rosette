@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 
 @Service
 public class PermissionSetService extends PersistenceService<PermissionSet, PermissionSetIn, PermissionSetOut> {
 
     public PermissionSetService(PermissionSetRepository repository) {
-        super(PermissionSet.class, PermissionType::permissionSets, repository);
+        super(PermissionSet.class, PermissionSetPermissionValue::new, repository);
     }
 
     @Override

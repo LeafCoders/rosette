@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.HtmlContent;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.articletype.ArticleTypeService;
@@ -24,7 +23,7 @@ public class ArticleSerieService extends PersistenceService<ArticleSerie, Articl
     private AssetService assetService;
 
     public ArticleSerieService(ArticleSerieRepository repository) {
-        super(ArticleSerie.class, PermissionType::articleSeries, repository);
+        super(ArticleSerie.class, ArticleSeriePermissionValue::new, repository);
     }
 
     protected ArticleSerieRepository repo() {

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.endpoint.group.Group;
 import se.leafcoders.rosette.endpoint.permission.Permission;
 import se.leafcoders.rosette.endpoint.permission.PermissionRepository;
 import se.leafcoders.rosette.endpoint.user.User;
+import se.leafcoders.rosette.endpoint.user.UserPermissionValue;
 import se.leafcoders.rosette.endpoint.user.UserRepository;
 
 @RequiredArgsConstructor
@@ -63,8 +63,8 @@ public class PermissionSumService {
         final List<String> permissions = new ArrayList<>();
 
         // Add read/update permissions for own user
-        permissions.add(PermissionType.users().read().forPersistable(user).toString());
-        permissions.add(PermissionType.users().update().forPersistable(user).toString());
+        permissions.add(new UserPermissionValue().read().forPersistable(user).toString());
+        permissions.add(new UserPermissionValue().update().forPersistable(user).toString());
 
         // Adding permissions specific for this user
         List<Permission> userPermissions = permissionRepository.findByLevelAndEntityId(Permission.LEVEL_USER,
@@ -90,13 +90,13 @@ public class PermissionSumService {
 
             // Add read permission for each user in groups
             Optional.ofNullable(userRepository.findUsersInGroups(groups)).ifPresent(users -> {
-                users.forEach(u -> permissions.add(PermissionType.users().read().forPersistable(u).toString()));
+                users.forEach(u -> permissions.add(new UserPermissionValue().read().forPersistable(u).toString()));
             });
 
             List<User> usersInGroups = userRepository.findUsersInGroups(groups);
             if (usersInGroups != null && !usersInGroups.isEmpty()) {
                 permissions.addAll(
-                        usersInGroups.stream().map(u -> PermissionType.users().read().forPersistable(user).toString())
+                        usersInGroups.stream().map(u -> new UserPermissionValue().read().forPersistable(user).toString())
                                 .collect(Collectors.toList()));
             }
         }

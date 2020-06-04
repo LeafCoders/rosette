@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.resource.Resource;
 import se.leafcoders.rosette.endpoint.resource.ResourceService;
@@ -20,9 +19,9 @@ public class ResourceTypeService extends PersistenceService<ResourceType, Resour
     ResourceService resourceService;
 
     public ResourceTypeService(ResourceTypeRepository repository) {
-        super(ResourceType.class, PermissionType::resourceTypes, repository);
+        super(ResourceType.class, ResourceTypePermissionValue::new, repository);
     }
-    
+
     private ResourceTypeRepository repo() {
         return (ResourceTypeRepository) repository;
     }
@@ -54,7 +53,8 @@ public class ResourceTypeService extends PersistenceService<ResourceType, Resour
 
     public ResourceType create(ResourceTypeIn resourceTypeIn, boolean checkPermissions) {
         return super.create(resourceTypeIn, checkPermissions, (ResourceType resourceType) -> {
-            resourceType.setDisplayOrder(Optional.ofNullable(repo().getHighestDisplayOrder()).map(i -> i + 1L).orElse(1L));
+            resourceType
+                    .setDisplayOrder(Optional.ofNullable(repo().getHighestDisplayOrder()).map(i -> i + 1L).orElse(1L));
         });
     }
 

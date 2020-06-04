@@ -20,8 +20,8 @@ import se.leafcoders.rosette.auth.CurrentUserService;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
 import se.leafcoders.rosette.core.exception.ApiError;
 import se.leafcoders.rosette.core.exception.ForbiddenException;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.service.SecurityService;
+import se.leafcoders.rosette.endpoint.user.UserPermissionValue;
 import se.leafcoders.rosette.endpoint.user.UserRepository;
 import se.leafcoders.rosette.util.ClientServerTime;
 
@@ -61,7 +61,7 @@ public class LoginController extends AuthController {
     @PostMapping(value = "loginAs/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public Object loginAs(@PathVariable Long userId, HttpServletResponse response) {
-        securityService.checkPermission(PermissionType.users().loginAs().forId(userId));
+        securityService.checkPermission(new UserPermissionValue().loginAs().forId(userId));
 
         CurrentUser userToLogin = null;
         try {

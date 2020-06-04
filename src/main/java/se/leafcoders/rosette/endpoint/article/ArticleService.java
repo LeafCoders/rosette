@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.core.exception.ApiError;
 import se.leafcoders.rosette.core.exception.ForbiddenException;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.HtmlContent;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.articleserie.ArticleSerieRefOut;
@@ -47,7 +46,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     AssetService assetService;
 
     public ArticleService(ArticleRepository repository) {
-        super(Article.class, PermissionType::articles, repository);
+        super(Article.class, ArticlePermissionValue::new, repository);
     }
 
     protected ArticleRepository repo() {
@@ -102,7 +101,8 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
             item.setRecordingStatus(ArticleType.RecordingStatus.HAS_RECORDING);
         }
         // Force set recoding status if recording doesn't exist
-        if (item.getRecording() == null && ArticleType.RecordingStatus.HAS_RECORDING.equals(item.getRecordingStatus())) {
+        if (item.getRecording() == null
+                && ArticleType.RecordingStatus.HAS_RECORDING.equals(item.getRecordingStatus())) {
             item.setRecordingStatus(item.getArticleType().getDefaultRecordingStatus());
         }
         return item;
@@ -117,7 +117,8 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
         dto.setArticleSerie(articleSerieService.toOutRef(item.getArticleSerie(), ArticleSerieRefOut::new));
         dto.setEvent(eventService.toOutRef(item.getEvent(), EventRefOut::new));
         dto.setTime(item.getTime());
-        dto.setAuthors(item.getAuthors().stream().map(author -> new ResourceRefOut(author)).collect(Collectors.toList()));
+        dto.setAuthors(
+                item.getAuthors().stream().map(author -> new ResourceRefOut(author)).collect(Collectors.toList()));
         dto.setTitle(item.getTitle());
         if (item.getContent() != null) {
             dto.setContentRaw(item.getContent().getContentRaw());
@@ -133,7 +134,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     }
 
     public List<Resource> addAuthor(Long articleId, Long resourceId) {
-        checkPermission(PermissionType.articles().update().forId(articleId));
+        checkPermission(new ArticlePermissionValue().update().forId(articleId));
         Article article = read(articleId, true);
         Resource resource = resourceService.read(resourceId, true);
         article.addAuthor(resource);
@@ -146,7 +147,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
     }
 
     public List<Resource> removeAuthor(Long articleId, Long resourceId) {
-        checkPermission(PermissionType.articles().update().forId(articleId));
+        checkPermission(new ArticlePermissionValue().update().forId(articleId));
         Article article = read(articleId, true);
         Resource resource = resourceService.read(resourceId, true);
         article.removeAuthor(resource);
@@ -155,7 +156,7 @@ public class ArticleService extends PersistenceService<Article, ArticleIn, Artic
 
     @Override
     public Article create(ArticleIn articleIn, boolean checkPermissions) {
-        Article createdArticle = super.create(articleIn, checkPermissions); 
+        Article createdArticle = super.create(articleIn, checkPermissions);
         updateResourceUsage(createdArticle);
         articleSerieService.updateUsage(createdArticle.getArticleSerie());
         return createdArticle;

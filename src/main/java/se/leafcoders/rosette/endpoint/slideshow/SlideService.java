@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.asset.AssetService;
 
@@ -16,7 +15,7 @@ public class SlideService extends PersistenceService<Slide, SlideIn, SlideOut> {
     AssetService assetService;
 
     public SlideService(SlideRepository repository) {
-        super(Slide.class, PermissionType::slides, repository);
+        super(Slide.class, SlidePermissionValue::new, repository);
     }
 
     private SlideRepository repo() {

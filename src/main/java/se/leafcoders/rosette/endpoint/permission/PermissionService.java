@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.core.exception.ApiError;
 import se.leafcoders.rosette.core.exception.ForbiddenException;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.permissionset.PermissionSet;
 import se.leafcoders.rosette.endpoint.permissionset.PermissionSetOut;
@@ -23,7 +22,7 @@ public class PermissionService extends PersistenceService<Permission, Permission
     private PermissionSetService permissionSetService;
 
     public PermissionService(PermissionRepository repository) {
-        super(Permission.class, PermissionType::permissions, repository);
+        super(Permission.class, PermissionPermissionValue::new, repository);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class PermissionService extends PersistenceService<Permission, Permission
     }
 
     public List<PermissionSet> addPermissionSet(Long permissionId, Long permissionSetId) {
-        checkPermission(PermissionType.permissions().update().forId(permissionId));
+        checkPermission(new PermissionPermissionValue().update().forId(permissionId));
         if (repo().isPermissionSetInPermission(permissionSetId, permissionId)) {
             throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
         }
@@ -88,7 +87,7 @@ public class PermissionService extends PersistenceService<Permission, Permission
     }
 
     public List<PermissionSet> removePermissionSet(Long permissionId, Long permissionSetId) {
-        checkPermission(PermissionType.permissions().update().forId(permissionId));
+        checkPermission(new PermissionPermissionValue().update().forId(permissionId));
         Permission permission = read(permissionId, true);
         PermissionSet permissionSet = permissionSetService.read(permissionSetId, true);
         permission.removePermissionSet(permissionSet);

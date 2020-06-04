@@ -22,10 +22,10 @@ import se.leafcoders.rosette.core.exception.SingleValidationException;
 import se.leafcoders.rosette.core.exception.ValidationError;
 import se.leafcoders.rosette.core.permission.PermissionAction;
 import se.leafcoders.rosette.core.permission.PermissionId;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.asset.Asset.AssetType;
 import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderPermissionValue;
 import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderService;
 import se.leafcoders.rosette.endpoint.file.FileStorageService;
 import se.leafcoders.rosette.util.FileMetadataReader;
@@ -45,7 +45,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
     private FileStorageService fileStorageService;
 
     public AssetService(AssetRepository repository) {
-        super(Asset.class, PermissionType::assets, repository);
+        super(Asset.class, AssetPermissionValue::new, repository);
     }
 
     private AssetRepository repo() {
@@ -131,8 +131,8 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         final String mimeType = file.getContentType();
 
         checkAnyPermission(
-                PermissionType.assets().create(),
-                PermissionType.assetFolders().manageAssets().forId(folderId));
+                new AssetPermissionValue().create(),
+                new AssetFolderPermissionValue().manageAssets().forId(folderId));
 
         AssetFolder folder = assetFolderService.read(folderId, false);
         validateFolderExist(folder);
@@ -174,8 +174,8 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         final String mimeType = file.getContentType();
 
         checkAnyPermission(
-                PermissionType.assets().update(),
-                PermissionType.assetFolders().manageAssets().forId(folderId));
+                new AssetPermissionValue().update(),
+                new AssetFolderPermissionValue().manageAssets().forId(folderId));
 
         if (!existingAsset.isTextFile()) {
             throw new SingleValidationException(

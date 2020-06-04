@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 
 @Service
@@ -20,7 +19,7 @@ public class MessageService extends PersistenceService<Message, MessageIn, Messa
     private ConcurrentHashMap<String, String> messageCache = new ConcurrentHashMap<>();
 
     public MessageService(MessageRepository repository) {
-        super(Message.class, PermissionType::messages, repository);
+        super(Message.class, MessagePermissionValue::new, repository);
     }
 
     private String getMessage(String key) {

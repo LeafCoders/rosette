@@ -4,20 +4,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.NonNull;
 import se.leafcoders.rosette.core.persistable.Persistable;
 
-public class PermissionValue {
+public abstract class PermissionValue {
 
     private final String type;
     private String action = null;
     private List<Long> ids = Collections.emptyList();
 
-    public PermissionValue(String type) {
+    protected PermissionValue(@NonNull String type) {
         this.type = type;
     }
 
     @SuppressWarnings("unchecked")
-    public <TYPE> TYPE withAction(String action) {
+    public <TYPE> TYPE withAction(@NonNull String action) {
         this.action = action;
         return (TYPE) this;
     }

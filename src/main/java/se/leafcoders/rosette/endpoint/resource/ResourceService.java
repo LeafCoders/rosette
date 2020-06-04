@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import se.leafcoders.rosette.core.exception.ApiError;
 import se.leafcoders.rosette.core.exception.ForbiddenException;
-import se.leafcoders.rosette.core.permission.PermissionType;
 import se.leafcoders.rosette.core.persistable.PersistenceService;
 import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
 import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRefOut;
@@ -29,7 +28,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     ResourceTypeService resourceTypeService;
 
     public ResourceService(ResourceRepository repository) {
-        super(Resource.class, PermissionType::resources, repository);
+        super(Resource.class, ResourcePermissionValue::new, repository);
     }
 
     private ResourceRepository repo() {
@@ -68,7 +67,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     }
 
     public List<ResourceType> addResourceType(Long resourceId, Long resourceTypeId) {
-        checkPermission(PermissionType.resources().update().forId(resourceId));
+        checkPermission(new ResourcePermissionValue().update().forId(resourceId));
         if (repo().isResourceTypeInResource(resourceTypeId, resourceId)) {
             throw new ForbiddenException(ApiError.CHILD_ALREADY_EXIST);
         }
@@ -79,7 +78,7 @@ public class ResourceService extends PersistenceService<Resource, ResourceIn, Re
     }
 
     public List<ResourceType> removeResourceType(Long resourceId, Long resourceTypeId) {
-        checkPermission(PermissionType.resources().update().forId(resourceId));
+        checkPermission(new ResourcePermissionValue().update().forId(resourceId));
         Resource resource = read(resourceId, true);
         ResourceType resourceType = resourceTypeService.read(resourceTypeId, true);
         resource.removeResourceType(resourceType);
