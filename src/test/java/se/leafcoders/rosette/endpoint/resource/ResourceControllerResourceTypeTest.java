@@ -1,25 +1,24 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.resource;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.data.ResourceData;
-import se.leafcoders.rosette.data.ResourceTypeData;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.ResourceRepository;
-import se.leafcoders.rosette.persistence.repository.ResourceTypeRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeData;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRepository;
 
-public class ResourcesControllerResourceTypesTest extends AbstractControllerTest {
+public class ResourceControllerResourceTypeTest extends AbstractControllerTest {
 
     @Autowired
     private ResourceRepository resourceRepository;
@@ -50,7 +49,8 @@ public class ResourcesControllerResourceTypesTest extends AbstractControllerTest
                 .andExpect(jsonPath("$[0]", RESOURCE_TYPE_PARAMS));
 
         // Add another resource type
-        crt.postSuccessWithOk(user1, "/api/resources/" + resource.getId() + "/resourceTypes/" + resourceType2.getId(),
+        crt.postSuccessWithOk(user1,
+                "/api/resources/" + resource.getId() + "/resourceTypes/" + resourceType2.getId(),
                 "")
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", isIdOf(resourceType1)))

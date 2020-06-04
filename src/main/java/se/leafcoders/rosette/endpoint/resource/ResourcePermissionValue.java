@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.resource;
 
-public class PermissionValueResources extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
-    public PermissionValueResources() {
+public class ResourcePermissionValue extends PermissionValue {
+
+    public ResourcePermissionValue() {
         super("resources");
     }
 }

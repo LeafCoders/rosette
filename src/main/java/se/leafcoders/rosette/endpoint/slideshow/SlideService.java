@@ -1,13 +1,13 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.slideshow;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.SlideIn;
-import se.leafcoders.rosette.controller.dto.SlideOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Slide;
-import se.leafcoders.rosette.persistence.repository.SlideRepository;
+
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
 
 @Service
 public class SlideService extends PersistenceService<Slide, SlideIn, SlideOut> {

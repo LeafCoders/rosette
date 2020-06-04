@@ -1,13 +1,13 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
-import se.leafcoders.rosette.persistence.model.Event;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
 
 @Data
 public class EventRefOut {

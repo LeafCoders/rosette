@@ -1,8 +1,6 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.permission;
 
 import lombok.NonNull;
-import se.leafcoders.rosette.controller.dto.PermissionIn;
-import se.leafcoders.rosette.persistence.model.Permission;
 
 public class PermissionData {
 

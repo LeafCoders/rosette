@@ -1,20 +1,23 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.core.persistable;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.http.ResponseEntity;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.permission.PermissionAction;
-import se.leafcoders.rosette.permission.PermissionValue;
-import se.leafcoders.rosette.persistence.model.Persistable;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.http.ResponseEntity;
+
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.core.permission.PermissionAction;
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
 public abstract class ChildCrud<P extends Persistable, C extends Persistable, CIN> {
 
@@ -24,8 +27,9 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
     private final Class<P> parentClass;
     private final Class<C> childClass;
 
-    public ChildCrud(PersistenceService<P, ?, ?> parentService, Class<P> parentClass, PersistenceService<C, CIN, ?> childService,
-        CrudRepository<C, Long> childRepository, Class<C> childClass) {
+    public ChildCrud(PersistenceService<P, ?, ?> parentService, Class<P> parentClass,
+            PersistenceService<C, CIN, ?> childService,
+            CrudRepository<C, Long> childRepository, Class<C> childClass) {
         this.parentService = parentService;
         this.childService = childService;
         this.childRepository = childRepository;
@@ -36,7 +40,7 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
     private List<PermissionValue> parentItemPermissions(PermissionAction action, P parent) {
         return getPermissionValuesForAction(action, parent);
     }
-    
+
     public List<C> readAll(Long parentId) {
         P parent = parentService.read(parentId, false);
         if (parentService.isPermitted(parentItemPermissions(PermissionAction.READ, parent))) {
@@ -76,7 +80,7 @@ public abstract class ChildCrud<P extends Persistable, C extends Persistable, CI
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rawData = objectMapper.readTree(request.getReader());
             CIN itemIn = objectMapper.treeToValue(rawData, itemInClass);
-            
+
             parentService.securityService.validate(itemIn, rawData);
             childService.fromIn(itemIn, rawData, itemInDb);
             childService.securityService.validate(itemInDb, null);

@@ -1,7 +1,8 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.eventtype;
 
 import org.springframework.stereotype.Repository;
-import se.leafcoders.rosette.persistence.model.EventType;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface EventTypeRepository extends ModelRepository<EventType> {

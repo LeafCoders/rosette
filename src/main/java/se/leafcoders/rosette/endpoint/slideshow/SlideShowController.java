@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,22 +18,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.SlideIn;
-import se.leafcoders.rosette.controller.dto.SlideOut;
-import se.leafcoders.rosette.controller.dto.SlideShowIn;
-import se.leafcoders.rosette.controller.dto.SlideShowOut;
-import se.leafcoders.rosette.controller.dto.SlideShowPublicOut;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.persistence.model.Slide;
-import se.leafcoders.rosette.persistence.model.SlideShow;
-import se.leafcoders.rosette.persistence.service.SlideService;
-import se.leafcoders.rosette.persistence.service.SlideShowService;
+import se.leafcoders.rosette.core.exception.NotFoundException;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/slideShows", produces = "application/json")
-public class SlideShowsController {
+public class SlideShowController {
 
     private final SlideService slideService;
     private final SlideShowService slideShowService;

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.articletype;
 
 import java.util.Collection;
 
@@ -17,15 +17,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.ArticleTypeIn;
-import se.leafcoders.rosette.controller.dto.ArticleTypeOut;
-import se.leafcoders.rosette.persistence.service.ArticleTypeService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/articleTypes", produces = "application/json")
-public class ArticleTypesController {
+public class ArticleTypeController {
 
     private final ArticleTypeService articleTypeService;
 

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.message;
 
 import java.util.Collection;
 
@@ -19,15 +19,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.MessageIn;
-import se.leafcoders.rosette.controller.dto.MessageOut;
-import se.leafcoders.rosette.persistence.service.MessageService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/messages", produces = "application/json")
-public class MessagesController {
+public class MessageController {
 
     private final MessageService messageService;
 

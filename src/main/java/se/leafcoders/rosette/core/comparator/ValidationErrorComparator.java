@@ -1,8 +1,8 @@
-package se.leafcoders.rosette.comparator;
+package se.leafcoders.rosette.core.comparator;
 
 import java.util.Comparator;
 
-import se.leafcoders.rosette.exception.ValidationError;
+import se.leafcoders.rosette.core.exception.ValidationError;
 
 public class ValidationErrorComparator implements Comparator<ValidationError> {
 

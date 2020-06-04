@@ -1,9 +1,7 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.podcast;
 
-import se.leafcoders.rosette.controller.dto.PodcastIn;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.Podcast;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
+import se.leafcoders.rosette.endpoint.asset.Asset;
 
 public class PodcastData {
 

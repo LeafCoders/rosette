@@ -1,12 +1,14 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import se.leafcoders.rosette.persistence.model.Event;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface EventRepository extends ModelRepository<Event> {

@@ -1,72 +1,90 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.core.permission;
+
+import se.leafcoders.rosette.endpoint.article.ArticlePermissionValue;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSeriePermissionValue;
+import se.leafcoders.rosette.endpoint.articletype.ArticleTypePermissionValue;
+import se.leafcoders.rosette.endpoint.asset.AssetPermissionValue;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderPermissionValue;
+import se.leafcoders.rosette.endpoint.event.EventPermissionValue;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypePermissionValue;
+import se.leafcoders.rosette.endpoint.group.GroupPermissionValue;
+import se.leafcoders.rosette.endpoint.message.MessagePermissionValue;
+import se.leafcoders.rosette.endpoint.permission.PermissionPermissionValue;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetPermissionValue;
+import se.leafcoders.rosette.endpoint.podcast.PodcastPermissionValue;
+import se.leafcoders.rosette.endpoint.resource.ResourcePermissionValue;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypePermissionValue;
+import se.leafcoders.rosette.endpoint.slideshow.SlidePermissionValue;
+import se.leafcoders.rosette.endpoint.slideshow.SlideShowPermissionValue;
+import se.leafcoders.rosette.endpoint.user.UserPermissionValue;
 
 public class PermissionType {
 
-    public static PermissionValueArticleSeries articleSeries() {
-        return new PermissionValueArticleSeries();
+    public static ArticleSeriePermissionValue articleSeries() {
+        return new ArticleSeriePermissionValue();
     }
 
-    public static PermissionValueArticles articles() {
-        return new PermissionValueArticles();
+    public static ArticlePermissionValue articles() {
+        return new ArticlePermissionValue();
     }
 
-    public static PermissionValueArticleTypes articleTypes() {
-        return new PermissionValueArticleTypes();
+    public static ArticleTypePermissionValue articleTypes() {
+        return new ArticleTypePermissionValue();
     }
 
-    public static PermissionValueAssetFolders assetFolders() {
-        return new PermissionValueAssetFolders();
+    public static AssetFolderPermissionValue assetFolders() {
+        return new AssetFolderPermissionValue();
     }
 
-    public static PermissionValueAssets assets() {
-        return new PermissionValueAssets();
+    public static AssetPermissionValue assets() {
+        return new AssetPermissionValue();
     }
 
-    public static PermissionValueEvents events() {
-        return new PermissionValueEvents();
+    public static EventPermissionValue events() {
+        return new EventPermissionValue();
     }
 
-    public static PermissionValueEventTypes eventTypes() {
-        return new PermissionValueEventTypes();
+    public static EventTypePermissionValue eventTypes() {
+        return new EventTypePermissionValue();
     }
 
-    public static PermissionValueGroups groups() {
-        return new PermissionValueGroups();
+    public static GroupPermissionValue groups() {
+        return new GroupPermissionValue();
     }
 
-    public static PermissionValueMessages messages() {
-        return new PermissionValueMessages();
+    public static MessagePermissionValue messages() {
+        return new MessagePermissionValue();
     }
 
-    public static PermissionValuePermissions permissions() {
-        return new PermissionValuePermissions();
+    public static PermissionPermissionValue permissions() {
+        return new PermissionPermissionValue();
     }
 
-    public static PermissionValuePermissionSets permissionSets() {
-        return new PermissionValuePermissionSets();
+    public static PermissionSetPermissionValue permissionSets() {
+        return new PermissionSetPermissionValue();
     }
 
-    public static PermissionValuePodcasts podcasts() {
-        return new PermissionValuePodcasts();
+    public static PodcastPermissionValue podcasts() {
+        return new PodcastPermissionValue();
     }
 
-    public static PermissionValueResources resources() {
-        return new PermissionValueResources();
+    public static ResourcePermissionValue resources() {
+        return new ResourcePermissionValue();
     }
 
-    public static PermissionValueResourceTypes resourceTypes() {
-        return new PermissionValueResourceTypes();
+    public static ResourceTypePermissionValue resourceTypes() {
+        return new ResourceTypePermissionValue();
     }
 
-    public static PermissionValueSlides slides() {
-        return new PermissionValueSlides();
+    public static SlidePermissionValue slides() {
+        return new SlidePermissionValue();
     }
 
-    public static PermissionValueSlideShows slideShows() {
-        return new PermissionValueSlideShows();
+    public static SlideShowPermissionValue slideShows() {
+        return new SlideShowPermissionValue();
     }
 
-    public static PermissionValueUsers users() {
-        return new PermissionValueUsers();
+    public static UserPermissionValue users() {
+        return new UserPermissionValue();
     }
 }

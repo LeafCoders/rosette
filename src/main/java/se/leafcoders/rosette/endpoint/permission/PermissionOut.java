@@ -1,8 +1,9 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.permission;
 
 import java.util.List;
 
 import lombok.Data;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetOut;
 
 @Data
 public class PermissionOut {

@@ -1,24 +1,24 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.SlideIn;
-import se.leafcoders.rosette.controller.dto.SlideShowIn;
-import se.leafcoders.rosette.controller.dto.SlideShowOut;
-import se.leafcoders.rosette.permission.PermissionAction;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.permission.PermissionValue;
-import se.leafcoders.rosette.persistence.model.Slide;
-import se.leafcoders.rosette.persistence.model.SlideShow;
-import se.leafcoders.rosette.persistence.repository.SlideRepository;
-import se.leafcoders.rosette.persistence.repository.SlideShowRepository;
+
+import se.leafcoders.rosette.core.permission.PermissionAction;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.permission.PermissionValue;
+import se.leafcoders.rosette.core.persistable.ChildCrud;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderService;
 
 @Service
 public class SlideShowService extends PersistenceService<SlideShow, SlideShowIn, SlideShowOut> {

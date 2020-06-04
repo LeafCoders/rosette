@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.anything;
@@ -10,13 +10,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static se.leafcoders.rosette.matcher.Matchers.*;
+import static se.leafcoders.rosette.test.matcher.Matchers.*;
 
 import org.springframework.test.web.servlet.ResultActions;
 
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.persistence.model.Persistable;
-import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.endpoint.user.User;
 
 public class CommonRequestTests {
 

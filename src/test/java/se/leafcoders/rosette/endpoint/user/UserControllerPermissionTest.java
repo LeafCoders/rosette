@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.user;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -7,18 +7,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.data.GroupData;
-import se.leafcoders.rosette.data.PermissionData;
-import se.leafcoders.rosette.data.PermissionSetData;
-import se.leafcoders.rosette.persistence.model.Group;
-import se.leafcoders.rosette.persistence.model.Permission;
-import se.leafcoders.rosette.persistence.model.PermissionSet;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.repository.GroupRepository;
-import se.leafcoders.rosette.persistence.repository.PermissionRepository;
-import se.leafcoders.rosette.persistence.repository.PermissionSetRepository;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.group.Group;
+import se.leafcoders.rosette.endpoint.group.GroupData;
+import se.leafcoders.rosette.endpoint.group.GroupRepository;
+import se.leafcoders.rosette.endpoint.permission.Permission;
+import se.leafcoders.rosette.endpoint.permission.PermissionData;
+import se.leafcoders.rosette.endpoint.permission.PermissionRepository;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSet;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetData;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetRepository;
 
-public class UsersControllerPermissionsTest extends AbstractControllerTest {
+public class UserControllerPermissionTest extends AbstractControllerTest {
 
     @Autowired
     private GroupRepository groupRepository;

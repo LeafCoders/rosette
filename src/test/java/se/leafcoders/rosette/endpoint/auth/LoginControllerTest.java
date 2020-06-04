@@ -1,15 +1,17 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.auth;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import se.leafcoders.rosette.data.UserData;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.user.User;
+import se.leafcoders.rosette.endpoint.user.UserData;
 
 public class LoginControllerTest extends AbstractControllerTest {
 

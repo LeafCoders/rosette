@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.message;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,8 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.persistable.Persistable;
 
 @Getter
 @Setter

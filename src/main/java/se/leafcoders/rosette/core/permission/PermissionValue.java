@@ -1,9 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.core.permission;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.leafcoders.rosette.persistence.model.Persistable;
+
+import se.leafcoders.rosette.core.persistable.Persistable;
 
 public class PermissionValue {
 
@@ -11,50 +12,51 @@ public class PermissionValue {
     private String action = null;
     private List<Long> ids = Collections.emptyList();
 
-    PermissionValue(String type) {
+    public PermissionValue(String type) {
         this.type = type;
     }
 
     @SuppressWarnings("unchecked")
-    <TYPE> TYPE withAction(String action) {
+    public <TYPE> TYPE withAction(String action) {
         this.action = action;
         return (TYPE) this;
     }
-    
+
     public PermissionValue action(PermissionAction action) {
-        return withAction(action.toString()); 
+        return withAction(action.toString());
     }
-    
+
     public PermissionValue create() {
-        return withAction(PermissionAction.CREATE.toString()); 
+        return withAction(PermissionAction.CREATE.toString());
     }
-    
+
     public PermissionValue read() {
-        return withAction(PermissionAction.READ.toString()); 
+        return withAction(PermissionAction.READ.toString());
     }
-    
+
     public PermissionValue update() {
-        return withAction(PermissionAction.UPDATE.toString()); 
+        return withAction(PermissionAction.UPDATE.toString());
     }
-    
+
     public PermissionValue delete() {
-        return withAction(PermissionAction.DELETE.toString()); 
+        return withAction(PermissionAction.DELETE.toString());
     }
-    
+
     public PermissionValue publicPermission() {
-        return withAction(PermissionAction.PUBLIC.toString()); 
+        return withAction(PermissionAction.PUBLIC.toString());
     }
-    
+
     public PermissionValue forPersistable(Persistable persistable) {
         this.ids = persistable != null ? Collections.singletonList(persistable.getId()) : Collections.emptyList();
         return this;
     }
 
     public PermissionValue forPersistables(List<? extends Persistable> persistables) {
-        this.ids = persistables != null ? persistables.stream().map(p -> p.getId()).collect(Collectors.toList()) : Collections.emptyList();
+        this.ids = persistables != null ? persistables.stream().map(p -> p.getId()).collect(Collectors.toList())
+                : Collections.emptyList();
         return this;
     }
-    
+
     public PermissionValue forId(Long id) {
         this.ids = id != null ? Collections.singletonList(id) : Collections.emptyList();
         return this;

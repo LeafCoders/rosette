@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.user;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,20 +19,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.SignupUserIn;
-import se.leafcoders.rosette.controller.dto.UserIn;
-import se.leafcoders.rosette.controller.dto.UserOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.persistence.service.UserService;
-import se.leafcoders.rosette.service.PermissionSumService;
-import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.service.PermissionSumService;
+import se.leafcoders.rosette.core.service.SecurityService;
+import se.leafcoders.rosette.endpoint.auth.SignupUserIn;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/users", produces = "application/json")
-public class UsersController {
+public class UserController {
 
     private final UserService userService;
     private final PermissionSumService permissionSumService;

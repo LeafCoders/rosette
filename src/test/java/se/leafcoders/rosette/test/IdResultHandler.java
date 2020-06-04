@@ -1,4 +1,4 @@
-package se.leafcoders.rosette;
+package se.leafcoders.rosette.test;
 
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultHandler;

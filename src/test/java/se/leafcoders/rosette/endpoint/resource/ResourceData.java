@@ -1,7 +1,4 @@
-package se.leafcoders.rosette.data;
-
-import se.leafcoders.rosette.controller.dto.ResourceIn;
-import se.leafcoders.rosette.persistence.model.Resource;
+package se.leafcoders.rosette.endpoint.resource;
 
 public class ResourceData {
 

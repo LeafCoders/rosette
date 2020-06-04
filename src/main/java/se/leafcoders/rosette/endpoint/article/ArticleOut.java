@@ -1,13 +1,18 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.article;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSerieRefOut;
+import se.leafcoders.rosette.endpoint.asset.AssetOut;
+import se.leafcoders.rosette.endpoint.event.EventRefOut;
+import se.leafcoders.rosette.endpoint.resource.ResourceRefOut;
 
 @Data
 public class ArticleOut {

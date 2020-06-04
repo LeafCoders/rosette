@@ -1,11 +1,12 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import se.leafcoders.rosette.persistence.model.Slide;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface SlideRepository extends ModelRepository<Slide> {

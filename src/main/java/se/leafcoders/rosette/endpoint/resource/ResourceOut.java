@@ -1,11 +1,14 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.resource;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRefOut;
+import se.leafcoders.rosette.endpoint.user.UserRefOut;
 
 @Data
 public class ResourceOut {

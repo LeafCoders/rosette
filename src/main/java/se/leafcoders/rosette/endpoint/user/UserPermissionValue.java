@@ -1,19 +1,21 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.user;
 
-public class PermissionValueUsers extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
+
+public class UserPermissionValue extends PermissionValue {
 
     private static final String ACTION_ACTIVATE = "activate";
     private static final String ACTION_LOGIN_AS = "loginAs";
 
-    public PermissionValueUsers() {
+    public UserPermissionValue() {
         super("users");
     }
 
-    public PermissionValueUsers activate() {
+    public UserPermissionValue activate() {
         return withAction(ACTION_ACTIVATE);
     }
 
-    public PermissionValueUsers loginAs() {
+    public UserPermissionValue loginAs() {
         return withAction(ACTION_LOGIN_AS);
     }
 }

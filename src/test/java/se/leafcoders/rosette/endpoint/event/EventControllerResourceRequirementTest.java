@@ -1,31 +1,27 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.event;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.data.EventData;
-import se.leafcoders.rosette.data.EventTypeData;
-import se.leafcoders.rosette.data.ResourceRequirementData;
-import se.leafcoders.rosette.data.ResourceTypeData;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.EventType;
-import se.leafcoders.rosette.persistence.model.ResourceRequirement;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.EventRepository;
-import se.leafcoders.rosette.persistence.repository.EventTypeRepository;
-import se.leafcoders.rosette.persistence.repository.ResourceRequirementRepository;
-import se.leafcoders.rosette.persistence.repository.ResourceTypeRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.eventtype.EventType;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypeData;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypeRepository;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeData;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRepository;
 
-public class EventsControllerResourceRequirementsTest extends AbstractControllerTest {
+public class EventControllerResourceRequirementTest extends AbstractControllerTest {
 
     @Autowired
     private EventRepository eventRepository;

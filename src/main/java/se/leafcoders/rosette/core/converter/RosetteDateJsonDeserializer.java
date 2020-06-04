@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.converter;
+package se.leafcoders.rosette.core.converter;
 
 import java.io.IOException;
 import java.time.LocalDate;

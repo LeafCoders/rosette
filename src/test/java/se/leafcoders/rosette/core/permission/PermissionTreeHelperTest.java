@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.core.permission;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import se.leafcoders.rosette.TestUtil;
+import org.junit.Test;
+
+import se.leafcoders.rosette.test.TestUtil;
 
 public class PermissionTreeHelperTest {
 

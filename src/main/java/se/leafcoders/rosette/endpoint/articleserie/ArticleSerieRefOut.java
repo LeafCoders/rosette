@@ -1,7 +1,6 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.articleserie;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
 
 @Data
 public class ArticleSerieRefOut {

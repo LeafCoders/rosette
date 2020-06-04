@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.validator;
+package se.leafcoders.rosette.core.validator;
 
 import java.time.LocalDateTime;
 

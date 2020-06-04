@@ -1,4 +1,5 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.article;
+
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -6,9 +7,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.service.AssetService;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
+import se.leafcoders.rosette.endpoint.resource.ResourceRefPublicOut;
 import se.leafcoders.rosette.util.IdToSlugConverter;
 
 @Data

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,8 +7,7 @@ import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
-import se.leafcoders.rosette.persistence.model.Event;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
 
 public class EventsPublicOut {
 
@@ -17,17 +16,17 @@ public class EventsPublicOut {
     private String fromDate;
     private String untilDate;
     private List<DayData> days = new ArrayList<>();
-    
+
     private static class DayData {
         private String date;
         private Integer weekDay;
         private List<EventData> events = new ArrayList<>();
-        
+
         public DayData(LocalDateTime date) {
             this.date = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
             weekDay = date.getDayOfWeek().getValue();
         }
-        
+
         public void addEvent(Event event) {
             events.add(new EventData(event));
         }
@@ -47,22 +46,24 @@ public class EventsPublicOut {
             return events;
         }
     }
-    
+
     private static class EventData {
         private String title;
         private String description;
         private String startTime;
         private String endTime;
-        
+
         public EventData(Event event) {
             title = event.getTitle();
             description = event.getDescription();
             if (event.getStartTime() != null) {
-                LocalDateTime startTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getStartTime());
+                LocalDateTime startTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer
+                        .fromUtcToDefaultTimeZone(event.getStartTime());
                 startTime = startTimeInDefaultTimeZone.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
             }
             if (event.getEndTime() != null) {
-                LocalDateTime endTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer.fromUtcToDefaultTimeZone(event.getEndTime());
+                LocalDateTime endTimeInDefaultTimeZone = RosetteDateTimeJsonSerializer
+                        .fromUtcToDefaultTimeZone(event.getEndTime());
                 endTime = endTimeInDefaultTimeZone.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
             }
         }
@@ -88,26 +89,24 @@ public class EventsPublicOut {
         }
     }
 
-
     public EventsPublicOut(LocalDateTime from, LocalDateTime before, List<Event> events) {
         year = from.getYear();
         week = from.get(WeekFields.ISO.weekOfWeekBasedYear());
         fromDate = from.format(DateTimeFormatter.ISO_LOCAL_DATE);
         untilDate = before.minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
-        
+
         createDays(from, before, events);
     }
 
-    
-    private void createDays(LocalDateTime from, LocalDateTime before, List<se.leafcoders.rosette.persistence.model.Event> events) {
+    private void createDays(LocalDateTime from, LocalDateTime before,
+            List<se.leafcoders.rosette.endpoint.event.Event> events) {
         for (int i = 0; from.plusDays(i).isBefore(before); i++) {
             days.add(new DayData(from.plusDays(i)));
         }
-        events.forEach((se.leafcoders.rosette.persistence.model.Event event) -> {
+        events.forEach((se.leafcoders.rosette.endpoint.event.Event event) -> {
             days.get((int) from.until(event.getStartTime(), ChronoUnit.DAYS)).addEvent(event);
         });
     }
-
 
     // Getters and setters
 

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.message;
 
 import lombok.Data;
 

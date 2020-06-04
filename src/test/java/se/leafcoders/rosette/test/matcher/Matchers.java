@@ -1,10 +1,10 @@
-package se.leafcoders.rosette.matcher;
+package se.leafcoders.rosette.test.matcher;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.persistence.model.Persistable;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.persistable.Persistable;
 
 public class Matchers {
 

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.permission;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,15 +8,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.controller.dto.PermissionIn;
-import se.leafcoders.rosette.controller.dto.PermissionOut;
-import se.leafcoders.rosette.controller.dto.PermissionSetOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Permission;
-import se.leafcoders.rosette.persistence.model.PermissionSet;
-import se.leafcoders.rosette.persistence.repository.PermissionRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSet;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetOut;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetService;
 
 @Service
 public class PermissionService extends PersistenceService<Permission, PermissionIn, PermissionOut> {

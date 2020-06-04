@@ -1,4 +1,4 @@
-package se.leafcoders.rosette;
+package se.leafcoders.rosette.test;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,25 +1,27 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.resourcetype;
 
-public class PermissionValueResourceTypes extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
+
+public class ResourceTypePermissionValue extends PermissionValue {
 
     private final static String ACTION_READ_EVENTS = "readEvents";
     private final static String ACTION_MODIFY_EVENT_RESOURCE_REQUIREMENT = "modifyEventResourceRequirement";
     private final static String ACTION_ASSIGN_EVENT_RESOURCES = "assignEventResources";
 
-    public PermissionValueResourceTypes() {
+    public ResourceTypePermissionValue() {
         super("resourceTypes");
     }
 
-    public PermissionValueResourceTypes readEvents() {
+    public ResourceTypePermissionValue readEvents() {
         return withAction(ACTION_READ_EVENTS);
     }
-    
-    public PermissionValueResourceTypes modifyEventResourceRequirement() {
+
+    public ResourceTypePermissionValue modifyEventResourceRequirement() {
         return withAction(ACTION_MODIFY_EVENT_RESOURCE_REQUIREMENT);
     }
-    
-    public PermissionValueResourceTypes assignEventResources() {
+
+    public ResourceTypePermissionValue assignEventResources() {
         return withAction(ACTION_ASSIGN_EVENT_RESOURCES);
     }
-    
+
 }

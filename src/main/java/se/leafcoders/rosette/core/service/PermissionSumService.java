@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.service;
+package se.leafcoders.rosette.core.service;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Group;
-import se.leafcoders.rosette.persistence.model.Permission;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.repository.PermissionRepository;
-import se.leafcoders.rosette.persistence.repository.UserRepository;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.endpoint.group.Group;
+import se.leafcoders.rosette.endpoint.permission.Permission;
+import se.leafcoders.rosette.endpoint.permission.PermissionRepository;
+import se.leafcoders.rosette.endpoint.user.User;
+import se.leafcoders.rosette.endpoint.user.UserRepository;
 
 @RequiredArgsConstructor
 @Service

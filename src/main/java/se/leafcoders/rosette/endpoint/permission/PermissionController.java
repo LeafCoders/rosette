@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.permission;
 
 import java.util.Collection;
 
@@ -17,17 +17,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.PermissionIn;
-import se.leafcoders.rosette.controller.dto.PermissionOut;
-import se.leafcoders.rosette.controller.dto.PermissionSetOut;
-import se.leafcoders.rosette.persistence.service.PermissionService;
-import se.leafcoders.rosette.persistence.service.PermissionSetService;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetOut;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/permissions", produces = "application/json")
-public class PermissionsController {
+public class PermissionController {
 
     private final PermissionService permissionService;
     private final PermissionSetService permissionSetService;

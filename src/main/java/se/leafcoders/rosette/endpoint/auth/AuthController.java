@@ -1,6 +1,7 @@
-package se.leafcoders.rosette.controller.auth;
+package se.leafcoders.rosette.endpoint.auth;
 
 import javax.transaction.Transactional;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

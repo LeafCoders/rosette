@@ -1,16 +1,15 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.article;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import se.leafcoders.rosette.controller.dto.ArticleIn;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.HtmlContent;
-import se.leafcoders.rosette.persistence.model.Resource;
+
+import se.leafcoders.rosette.core.persistable.HtmlContent;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSerie;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.event.Event;
+import se.leafcoders.rosette.endpoint.resource.Resource;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 public class ArticleData {
 

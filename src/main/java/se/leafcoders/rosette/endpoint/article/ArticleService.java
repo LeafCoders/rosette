@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.article;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,20 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.controller.dto.ArticleIn;
-import se.leafcoders.rosette.controller.dto.ArticleOut;
-import se.leafcoders.rosette.controller.dto.ArticleSerieRefOut;
-import se.leafcoders.rosette.controller.dto.EventRefOut;
-import se.leafcoders.rosette.controller.dto.ResourceRefOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.model.HtmlContent;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.repository.ArticleRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.HtmlContent;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSerieRefOut;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSerieService;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
+import se.leafcoders.rosette.endpoint.articletype.ArticleTypeService;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
+import se.leafcoders.rosette.endpoint.event.EventRefOut;
+import se.leafcoders.rosette.endpoint.event.EventService;
+import se.leafcoders.rosette.endpoint.resource.Resource;
+import se.leafcoders.rosette.endpoint.resource.ResourceRefOut;
+import se.leafcoders.rosette.endpoint.resource.ResourceService;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @Service
 public class ArticleService extends PersistenceService<Article, ArticleIn, ArticleOut> {

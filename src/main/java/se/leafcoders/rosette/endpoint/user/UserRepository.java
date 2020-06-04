@@ -1,15 +1,17 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.user;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import se.leafcoders.rosette.persistence.model.Group;
-import se.leafcoders.rosette.persistence.model.User;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
+import se.leafcoders.rosette.endpoint.group.Group;
 
 @Repository
 public interface UserRepository extends ModelRepository<User> {

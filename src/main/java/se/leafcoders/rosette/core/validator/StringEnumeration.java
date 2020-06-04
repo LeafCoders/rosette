@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.validator;
+package se.leafcoders.rosette.core.validator;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.core.exception.ApiString;
 
 @Documented
 @Constraint(validatedBy = StringEnumerationValidator.class)

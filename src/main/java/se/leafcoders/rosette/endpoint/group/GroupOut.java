@@ -1,8 +1,9 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.group;
 
 import java.util.List;
 
 import lombok.Data;
+import se.leafcoders.rosette.endpoint.user.UserRefOut;
 
 @Data
 public class GroupOut {

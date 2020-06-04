@@ -1,28 +1,24 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
-import static se.leafcoders.rosette.matcher.Matchers.isValidationError;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isValidationError;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.controller.dto.SlideShowIn;
-import se.leafcoders.rosette.data.AssetFolderData;
-import se.leafcoders.rosette.data.SlideData;
-import se.leafcoders.rosette.data.SlideShowData;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
-import se.leafcoders.rosette.persistence.model.Slide;
-import se.leafcoders.rosette.persistence.model.SlideShow;
-import se.leafcoders.rosette.persistence.repository.SlideShowRepository;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderData;
 
-public class SlideShowsControllerTest extends AbstractControllerTest {
+public class SlideShowControllerTest extends AbstractControllerTest {
 
     @Autowired
     private SlideShowRepository slideShowRepository;

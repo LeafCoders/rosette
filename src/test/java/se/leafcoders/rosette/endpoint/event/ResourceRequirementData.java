@@ -1,9 +1,6 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.event;
 
-import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.ResourceRequirement;
-import se.leafcoders.rosette.persistence.model.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
 
 public class ResourceRequirementData {
 

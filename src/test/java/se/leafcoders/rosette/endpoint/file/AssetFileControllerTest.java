@@ -1,17 +1,18 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.file;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static se.leafcoders.rosette.matcher.Matchers.isValidationError;
+import static se.leafcoders.rosette.test.matcher.Matchers.isValidationError;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import se.leafcoders.rosette.data.AssetFolderData;
-import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderData;
 
-public class AssetFilesControllerTest extends AbstractControllerTest {
+public class AssetFileControllerTest extends AbstractControllerTest {
 
     @Before
     public void setup() throws Exception {

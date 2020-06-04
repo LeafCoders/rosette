@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.exception;
+package se.leafcoders.rosette.core.exception;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
-import se.leafcoders.rosette.comparator.ValidationErrorComparator;
+import se.leafcoders.rosette.core.comparator.ValidationErrorComparator;
 
 public class MultipleValidationException extends RuntimeException {
     private static final long serialVersionUID = 1L;
@@ -34,6 +34,7 @@ public class MultipleValidationException extends RuntimeException {
     }
 
     public String toString() {
-        return getValidationErrors().stream().map(error -> error.getProperty() + ":" + error.getMessage()).collect(Collectors.joining(", "));
+        return getValidationErrors().stream().map(error -> error.getProperty() + ":" + error.getMessage())
+                .collect(Collectors.joining(", "));
     }
 }

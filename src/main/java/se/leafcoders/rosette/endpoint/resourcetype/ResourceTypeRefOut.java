@@ -1,7 +1,6 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.resourcetype;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.model.ResourceType;
 
 @Data
 public class ResourceTypeRefOut {

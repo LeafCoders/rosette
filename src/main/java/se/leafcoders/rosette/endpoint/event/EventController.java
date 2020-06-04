@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -30,26 +30,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.ArticleOut;
-import se.leafcoders.rosette.controller.dto.EventIn;
-import se.leafcoders.rosette.controller.dto.EventOut;
-import se.leafcoders.rosette.controller.dto.EventsPublicOut;
-import se.leafcoders.rosette.controller.dto.ResourceOut;
-import se.leafcoders.rosette.controller.dto.ResourceRequirementIn;
-import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.ResourceRequirement;
-import se.leafcoders.rosette.persistence.service.ArticleService;
-import se.leafcoders.rosette.persistence.service.EventService;
-import se.leafcoders.rosette.persistence.service.ResourceRequirementService;
-import se.leafcoders.rosette.persistence.service.ResourceService;
+import se.leafcoders.rosette.endpoint.article.ArticleOut;
+import se.leafcoders.rosette.endpoint.article.ArticleService;
+import se.leafcoders.rosette.endpoint.resource.ResourceOut;
+import se.leafcoders.rosette.endpoint.resource.ResourceService;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/events", produces = "application/json")
-public class EventsController {
+public class EventController {
 
     private final EventService eventService;
     private final ResourceRequirementService resourceRequirementService;

@@ -1,14 +1,14 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.persistence.model.ForgottenPassword;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.repository.ForgottenPasswordRepository;
-import se.leafcoders.rosette.persistence.repository.UserRepository;
-import se.leafcoders.rosette.service.EmailTemplateService;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.core.service.EmailTemplateService;
+import se.leafcoders.rosette.endpoint.user.User;
+import se.leafcoders.rosette.endpoint.user.UserRepository;
+import se.leafcoders.rosette.endpoint.user.UserService;
 
 @Service
 public class ForgottenPasswordService {

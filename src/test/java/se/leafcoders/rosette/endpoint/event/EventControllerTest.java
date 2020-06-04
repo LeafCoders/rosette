@@ -1,24 +1,23 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.event;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
-import static se.leafcoders.rosette.matcher.Matchers.isValidationError;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isValidationError;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.data.EventData;
-import se.leafcoders.rosette.data.EventTypeData;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.EventType;
-import se.leafcoders.rosette.persistence.repository.EventRepository;
-import se.leafcoders.rosette.persistence.repository.EventTypeRepository;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.eventtype.EventType;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypeData;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypeRepository;
 
-public class EventsControllerTest extends AbstractControllerTest {
+public class EventControllerTest extends AbstractControllerTest {
 
     @Autowired
     private EventRepository eventRepository;

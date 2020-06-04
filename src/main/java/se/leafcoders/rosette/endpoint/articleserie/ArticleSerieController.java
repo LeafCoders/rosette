@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.articleserie;
 
 import java.util.Collection;
 
@@ -18,15 +18,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
-import se.leafcoders.rosette.controller.dto.ArticleSerieOut;
-import se.leafcoders.rosette.persistence.service.ArticleSerieService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/articleSeries", produces = "application/json")
-public class ArticleSeriesController {
+public class ArticleSerieController {
 
     private final ArticleSerieService articleSerieService;
 

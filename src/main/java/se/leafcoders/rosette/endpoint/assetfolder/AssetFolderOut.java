@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.assetfolder;
 
 import lombok.Data;
 

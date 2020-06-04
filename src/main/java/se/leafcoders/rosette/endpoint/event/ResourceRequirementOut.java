@@ -1,9 +1,11 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Data;
+import se.leafcoders.rosette.endpoint.resource.ResourceRefOut;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRefOut;
 
 @Data
 public class ResourceRequirementOut {

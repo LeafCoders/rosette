@@ -1,16 +1,17 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.resourcetype;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.ResourceTypeIn;
-import se.leafcoders.rosette.controller.dto.ResourceTypeOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.ResourceTypeRepository;
+
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.resource.Resource;
+import se.leafcoders.rosette.endpoint.resource.ResourceService;
 
 @Service
 public class ResourceTypeService extends PersistenceService<ResourceType, ResourceTypeIn, ResourceTypeOut> {

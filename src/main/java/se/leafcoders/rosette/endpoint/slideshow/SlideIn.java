@@ -1,23 +1,22 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.time.LocalDateTime;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
-
-import lombok.Data;
-
-import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
-import se.leafcoders.rosette.persistence.validator.DateTimeAfter;
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.validator.DateTimeAfter;
 
 @DateTimeAfter(startDateTime = "startTime", endDateTime = "endTime", errorAt = "endTime")
 @JsonIgnoreProperties(ignoreUnknown = true)

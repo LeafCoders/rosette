@@ -1,19 +1,19 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.user;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.*;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isValidationError;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import se.leafcoders.rosette.controller.dto.UserIn;
-import se.leafcoders.rosette.data.UserData;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
 
-public class UsersControllerTest extends AbstractControllerTest {
+public class UserControllerTest extends AbstractControllerTest {
 
     private final CommonRequestTests crt = new CommonRequestTests(this, User.class);
 

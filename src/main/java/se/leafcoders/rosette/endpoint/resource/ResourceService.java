@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.resource;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,17 +8,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.controller.dto.ResourceIn;
-import se.leafcoders.rosette.controller.dto.ResourceOut;
-import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
-import se.leafcoders.rosette.controller.dto.UserRefOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.ResourceRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRefOut;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeService;
+import se.leafcoders.rosette.endpoint.user.UserRefOut;
+import se.leafcoders.rosette.endpoint.user.UserService;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @Service
 public class ResourceService extends PersistenceService<Resource, ResourceIn, ResourceOut> {

@@ -1,9 +1,10 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.group;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import se.leafcoders.rosette.persistence.model.Group;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface GroupRepository extends ModelRepository<Group> {

@@ -1,13 +1,14 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.asset;
 
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.core.exception.ApiString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data

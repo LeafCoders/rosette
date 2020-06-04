@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -47,27 +47,27 @@ import org.springframework.web.context.WebApplicationContext;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.IdResult;
-import se.leafcoders.rosette.IdResultHandler;
 import se.leafcoders.rosette.RosetteSettings;
-import se.leafcoders.rosette.controller.dto.AssetFolderIn;
-import se.leafcoders.rosette.data.UserData;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
-import se.leafcoders.rosette.persistence.model.Permission;
-import se.leafcoders.rosette.persistence.model.Persistable;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.repository.AssetFolderRepository;
-import se.leafcoders.rosette.persistence.repository.AssetRepository;
-import se.leafcoders.rosette.persistence.repository.PermissionRepository;
-import se.leafcoders.rosette.persistence.repository.UserRepository;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.asset.AssetRepository;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderIn;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderRepository;
+import se.leafcoders.rosette.endpoint.permission.Permission;
+import se.leafcoders.rosette.endpoint.permission.PermissionRepository;
+import se.leafcoders.rosette.endpoint.user.User;
+import se.leafcoders.rosette.endpoint.user.UserData;
+import se.leafcoders.rosette.endpoint.user.UserRepository;
+import se.leafcoders.rosette.test.IdResult;
+import se.leafcoders.rosette.test.IdResultHandler;
 
 @RequiredArgsConstructor
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 @Sql("/setupBeforeEachTest.sql")
-abstract class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
     public static final MediaType CONTENT_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype());
@@ -173,25 +173,27 @@ abstract class AbstractControllerTest {
     protected Permission givenPermissionForPublic(String patterns) {
         return permissionRepository.save(new Permission("For public access", Permission.LEVEL_PUBLIC, null, patterns));
     }
-    
-    protected Asset givenAssetInFolder(Long folderId, String fileName, String asFileName, String mimeType) throws Exception {
+
+    protected Asset givenAssetInFolder(Long folderId, String fileName, String asFileName, String mimeType)
+            throws Exception {
         createUploadUser();
 
         IdResult idResult = new IdResult();
         withUser(uploadUser, uploadFile(folderId, fileName, asFileName, mimeType))
-            .andExpect(status().isCreated())
-            .andDo(IdResultHandler.assignTo("$.id", idResult));
+                .andExpect(status().isCreated())
+                .andDo(IdResultHandler.assignTo("$.id", idResult));
         return assetRepository.findById(idResult.id).orElse(null);
     }
 
     protected AssetFolder givenAssetFolder(AssetFolderIn assetFolder) throws Exception {
         createUploadUser();
-        
+
         IdResult idResult = new IdResult();
-        withUser(uploadUser, post("/api/assetFolders").content(json(assetFolder)).contentType(AbstractControllerTest.CONTENT_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
-            .andDo(IdResultHandler.assignTo("$.id", idResult));
+        withUser(uploadUser,
+                post("/api/assetFolders").content(json(assetFolder)).contentType(AbstractControllerTest.CONTENT_JSON))
+                        .andExpect(status().isCreated())
+                        .andExpect(content().contentType(AbstractControllerTest.CONTENT_JSON))
+                        .andDo(IdResultHandler.assignTo("$.id", idResult));
         return assetFolderRepository.findById(idResult.id).orElse(null);
     }
 

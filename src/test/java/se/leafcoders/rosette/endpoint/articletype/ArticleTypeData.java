@@ -1,9 +1,7 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.articletype;
 
-import se.leafcoders.rosette.controller.dto.ArticleTypeIn;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
-import se.leafcoders.rosette.persistence.model.ResourceType;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
 
 public class ArticleTypeData {
 

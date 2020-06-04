@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.event;
 
-public class PermissionValueEvents extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
-    public PermissionValueEvents() {
+public class EventPermissionValue extends PermissionValue {
+
+    public EventPermissionValue() {
         super("events");
     }
 }

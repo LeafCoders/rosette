@@ -1,23 +1,27 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.file;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.common.io.Files;
+
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.common.io.Files;
+
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import se.leafcoders.rosette.RosetteSettings;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.Asset.AssetType;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.asset.Asset.AssetType;
 import se.leafcoders.rosette.util.FileByteRangeSupport;
 
 @Service

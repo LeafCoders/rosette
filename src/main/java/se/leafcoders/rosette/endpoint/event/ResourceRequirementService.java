@@ -1,16 +1,14 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
-import se.leafcoders.rosette.comparator.ResourceRequirementOutComparator;
-import se.leafcoders.rosette.controller.dto.ResourceRefOut;
-import se.leafcoders.rosette.controller.dto.ResourceRequirementOut;
-import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.persistence.model.ResourceRequirement;
-import se.leafcoders.rosette.persistence.repository.ResourceRequirementRepository;
+
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.endpoint.resource.ResourceRefOut;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRefOut;
 
 @Service
 public class ResourceRequirementService {

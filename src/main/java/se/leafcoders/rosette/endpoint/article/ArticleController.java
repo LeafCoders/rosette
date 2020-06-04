@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.article;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,23 +27,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.ArticleIn;
-import se.leafcoders.rosette.controller.dto.ArticleOut;
-import se.leafcoders.rosette.controller.dto.ArticlePublicOut;
-import se.leafcoders.rosette.controller.dto.ArticlesPublicOut;
-import se.leafcoders.rosette.controller.dto.ResourceOut;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.service.ArticleService;
-import se.leafcoders.rosette.persistence.service.AssetService;
-import se.leafcoders.rosette.persistence.service.ResourceService;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
+import se.leafcoders.rosette.endpoint.resource.ResourceOut;
+import se.leafcoders.rosette.endpoint.resource.ResourceService;
+import se.leafcoders.rosette.util.ClientServerTime;
 import se.leafcoders.rosette.util.IdToSlugConverter;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/articles", produces = "application/json")
-public class ArticlesController {
+public class ArticleController {
 
     private final ArticleService articleService;
     private final ResourceService resourceService;

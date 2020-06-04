@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.user;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -14,19 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.controller.dto.SignupUserIn;
-import se.leafcoders.rosette.controller.dto.UserIn;
-import se.leafcoders.rosette.controller.dto.UserOut;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.exception.SingleValidationException;
-import se.leafcoders.rosette.exception.ValidationError;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Consent;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.repository.ConsentRepository;
-import se.leafcoders.rosette.persistence.repository.UserRepository;
-import se.leafcoders.rosette.service.EmailTemplateService;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.exception.SingleValidationException;
+import se.leafcoders.rosette.core.exception.ValidationError;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.core.service.EmailTemplateService;
+import se.leafcoders.rosette.endpoint.auth.Consent;
+import se.leafcoders.rosette.endpoint.auth.ConsentRepository;
+import se.leafcoders.rosette.endpoint.auth.SignupUserIn;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @Service
 public class UserService extends PersistenceService<User, UserIn, UserOut> {

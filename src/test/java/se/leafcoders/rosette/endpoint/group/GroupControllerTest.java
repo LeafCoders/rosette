@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.group;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -6,21 +6,19 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
-import static se.leafcoders.rosette.matcher.Matchers.isValidationError;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isValidationError;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.controller.dto.GroupIn;
-import se.leafcoders.rosette.data.GroupData;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.model.Group;
-import se.leafcoders.rosette.persistence.repository.GroupRepository;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
 
-public class GroupsControllerTest extends AbstractControllerTest {
+public class GroupControllerTest extends AbstractControllerTest {
 
     @Autowired
     private GroupRepository groupRepository;

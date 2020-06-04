@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.eventtype;
 
 import java.util.Collection;
 
@@ -17,17 +17,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.EventTypeIn;
-import se.leafcoders.rosette.controller.dto.EventTypeOut;
-import se.leafcoders.rosette.controller.dto.ResourceTypeOut;
-import se.leafcoders.rosette.persistence.service.EventTypeService;
-import se.leafcoders.rosette.persistence.service.ResourceTypeService;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeOut;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/eventTypes", produces = "application/json")
-public class EventTypesController {
+public class EventTypeController {
 
     private final EventTypeService eventTypeService;
     private final ResourceTypeService resourceTypeService;

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.converter;
+package se.leafcoders.rosette.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

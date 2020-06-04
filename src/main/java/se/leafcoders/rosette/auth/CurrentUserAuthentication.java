@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import se.leafcoders.rosette.permission.PermissionTree;
+import se.leafcoders.rosette.core.permission.PermissionTree;
 
 public class CurrentUserAuthentication implements Authentication {
 

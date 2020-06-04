@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.permissionset;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -16,9 +16,10 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.permission.PermissionTreeHelper;
-import se.leafcoders.rosette.persistence.validator.ValidPermissions;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.permission.PermissionTreeHelper;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.core.validator.ValidPermissions;
 
 @Getter
 @Setter

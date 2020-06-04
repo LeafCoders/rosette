@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.service;
 
 import javax.transaction.Transactional;
 
@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.permission.PermissionValue;
-import se.leafcoders.rosette.service.SecurityService;
-import se.leafcoders.rosette.service.SseService;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.permission.PermissionValue;
+import se.leafcoders.rosette.core.service.SecurityService;
+import se.leafcoders.rosette.core.service.SseService;
 
 @RequiredArgsConstructor
 @Transactional

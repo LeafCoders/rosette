@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.auth;
+package se.leafcoders.rosette.endpoint.auth;
 
 import java.util.HashMap;
 
@@ -18,12 +18,12 @@ import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
 import se.leafcoders.rosette.auth.jwt.JwtAuthenticationService;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.repository.UserRepository;
-import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.service.SecurityService;
+import se.leafcoders.rosette.endpoint.user.UserRepository;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @RequiredArgsConstructor
 @RestController

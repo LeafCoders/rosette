@@ -1,7 +1,8 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.podcast;
 
 import org.springframework.stereotype.Repository;
-import se.leafcoders.rosette.persistence.model.Podcast;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface PodcastRepository extends ModelRepository<Podcast> {

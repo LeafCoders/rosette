@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.group;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,15 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
-import se.leafcoders.rosette.controller.dto.GroupIn;
-import se.leafcoders.rosette.controller.dto.GroupOut;
-import se.leafcoders.rosette.controller.dto.UserRefOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Group;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.repository.GroupRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.user.User;
+import se.leafcoders.rosette.endpoint.user.UserRefOut;
+import se.leafcoders.rosette.endpoint.user.UserService;
 
 @Service
 public class GroupService extends PersistenceService<Group, GroupIn, GroupOut> {

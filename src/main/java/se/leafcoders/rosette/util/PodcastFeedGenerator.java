@@ -9,14 +9,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.springframework.stereotype.Service;
-import se.leafcoders.rosette.controller.dto.ArticlePublicOut;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.Podcast;
-import se.leafcoders.rosette.persistence.service.AssetService;
+
+import se.leafcoders.rosette.endpoint.article.Article;
+import se.leafcoders.rosette.endpoint.article.ArticlePublicOut;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSerie;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
+import se.leafcoders.rosette.endpoint.podcast.Podcast;
 
 // https://cyber.harvard.edu/rss/rss.html
 // https://help.apple.com/itc/podcasts_connect/

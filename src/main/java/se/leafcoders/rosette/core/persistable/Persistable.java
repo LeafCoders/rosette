@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.core.persistable;
 
 import java.io.Serializable;
 import java.util.Objects;

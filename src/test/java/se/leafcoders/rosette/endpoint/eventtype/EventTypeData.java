@@ -1,7 +1,4 @@
-package se.leafcoders.rosette.data;
-
-import se.leafcoders.rosette.controller.dto.EventTypeIn;
-import se.leafcoders.rosette.persistence.model.EventType;
+package se.leafcoders.rosette.endpoint.eventtype;
 
 public class EventTypeData {
 

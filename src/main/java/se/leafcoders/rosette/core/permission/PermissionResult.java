@@ -1,10 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.core.permission;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
 
 public class PermissionResult {
 
@@ -27,7 +27,8 @@ public class PermissionResult {
 
     public void checkAndThrow() {
         if (!isPermitted()) {
-            throw new ForbiddenException(ApiError.MISSING_PERMISSION, permissionValues.stream().map(PermissionValue::toString).collect(Collectors.joining(", ")));
+            throw new ForbiddenException(ApiError.MISSING_PERMISSION,
+                    permissionValues.stream().map(PermissionValue::toString).collect(Collectors.joining(", ")));
         }
     }
 }

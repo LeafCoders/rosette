@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.auth;
+package se.leafcoders.rosette.endpoint.auth;
 
 import lombok.Data;
 

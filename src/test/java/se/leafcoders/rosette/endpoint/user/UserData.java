@@ -1,8 +1,6 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.user;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import se.leafcoders.rosette.controller.dto.UserIn;
-import se.leafcoders.rosette.persistence.model.User;
 
 public class UserData {
 

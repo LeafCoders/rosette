@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.slideshow;
 
-public class PermissionValueSlides extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
-    public PermissionValueSlides() {
+public class SlidePermissionValue extends PermissionValue {
+
+    public SlidePermissionValue() {
         super("slides");
     }
 }

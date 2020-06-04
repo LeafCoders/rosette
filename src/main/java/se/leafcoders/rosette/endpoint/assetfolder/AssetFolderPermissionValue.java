@@ -1,14 +1,16 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.assetfolder;
 
-public class PermissionValueAssetFolders extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
+
+public class AssetFolderPermissionValue extends PermissionValue {
 
     private static final String ACTION_MANAGE_ASSETS = "manageAssets";
 
-    public PermissionValueAssetFolders() {
+    public AssetFolderPermissionValue() {
         super("assetFolders");
     }
-    
-    public PermissionValueAssetFolders manageAssets() {
+
+    public AssetFolderPermissionValue manageAssets() {
         return withAction(ACTION_MANAGE_ASSETS);
     }
 }

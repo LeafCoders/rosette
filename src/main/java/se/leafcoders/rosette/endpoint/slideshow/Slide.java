@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.time.LocalDateTime;
 
@@ -20,10 +20,12 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
-import se.leafcoders.rosette.persistence.validator.DateTimeAfter;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.core.validator.DateTimeAfter;
+import se.leafcoders.rosette.endpoint.asset.Asset;
 
 @Getter
 @Setter

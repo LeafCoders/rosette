@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.converter;
+package se.leafcoders.rosette.core.converter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -19,11 +19,12 @@ public class RosetteDateTimeJsonSerializer extends StdSerializer<LocalDateTime> 
         super(LocalDateTime.class);
     }
 
-    public void serialize(LocalDateTime utcDateTime, JsonGenerator generator, SerializerProvider provider) throws IOException {
+    public void serialize(LocalDateTime utcDateTime, JsonGenerator generator, SerializerProvider provider)
+            throws IOException {
         LocalDateTime defaultDateTime = fromUtcToDefaultTimeZone(utcDateTime);
         generator.writeString(defaultDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
-    
+
     public static LocalDateTime fromUtcToDefaultTimeZone(LocalDateTime utcTime) {
         TimeZone home = TimeZone.getTimeZone("Europe/Stockholm");
 
@@ -32,11 +33,11 @@ public class RosetteDateTimeJsonSerializer extends StdSerializer<LocalDateTime> 
         LocalDateTime defaultDateTime = timezoneDateTime.toLocalDateTime();
         return defaultDateTime;
     }
-    
+
     public static Date defaultTimeZoneAsDate(LocalDateTime defaultDateTime) {
         TimeZone home = TimeZone.getTimeZone("Europe/Stockholm");
 
         return Date.from(defaultDateTime.atZone(home.toZoneId()).toInstant());
     }
-    
+
 }

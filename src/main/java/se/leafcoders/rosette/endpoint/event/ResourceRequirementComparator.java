@@ -1,7 +1,6 @@
-package se.leafcoders.rosette.comparator;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.util.Comparator;
-import se.leafcoders.rosette.persistence.model.ResourceRequirement;
 
 public class ResourceRequirementComparator implements Comparator<ResourceRequirement> {
 

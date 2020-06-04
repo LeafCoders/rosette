@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.service;
+package se.leafcoders.rosette.core.service;
 
 import java.text.MessageFormat;
 

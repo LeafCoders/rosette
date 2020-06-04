@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.resourcetype;
 
 import java.util.Collection;
 
@@ -18,17 +18,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.ResourceOut;
-import se.leafcoders.rosette.controller.dto.ResourceTypeIn;
-import se.leafcoders.rosette.controller.dto.ResourceTypeOut;
-import se.leafcoders.rosette.persistence.service.ResourceService;
-import se.leafcoders.rosette.persistence.service.ResourceTypeService;
+import se.leafcoders.rosette.endpoint.resource.ResourceOut;
+import se.leafcoders.rosette.endpoint.resource.ResourceService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/resourceTypes", produces = "application/json")
-public class ResourceTypesController {
+public class ResourceTypeController {
 
     private final ResourceTypeService resourceTypeService;
     private final ResourceService resourceService;

@@ -1,25 +1,24 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.permission;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.data.PermissionData;
-import se.leafcoders.rosette.data.PermissionSetData;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.persistence.model.Permission;
-import se.leafcoders.rosette.persistence.model.PermissionSet;
-import se.leafcoders.rosette.persistence.repository.PermissionRepository;
-import se.leafcoders.rosette.persistence.repository.PermissionSetRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSet;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetData;
+import se.leafcoders.rosette.endpoint.permissionset.PermissionSetRepository;
 
-public class PermissionsControllerPermissionSetsTest extends AbstractControllerTest {
+public class PermissionControllerPermissionSetTest extends AbstractControllerTest {
 
     @Autowired
     private PermissionRepository permissionRepository;

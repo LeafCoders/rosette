@@ -1,10 +1,9 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.article;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.service.AssetService;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
 
 public class ArticlesPublicOut extends ArrayList<ArticlePublicOut> {
 

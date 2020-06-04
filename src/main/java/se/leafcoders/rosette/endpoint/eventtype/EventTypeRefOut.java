@@ -1,7 +1,6 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.eventtype;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.model.EventType;
 
 @Data
 public class EventTypeRefOut {

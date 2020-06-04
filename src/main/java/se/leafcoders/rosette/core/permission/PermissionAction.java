@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.core.permission;
 
 public enum PermissionAction {
     CREATE("create"), READ("read"), UPDATE("update"), DELETE("delete"), PUBLIC("public");

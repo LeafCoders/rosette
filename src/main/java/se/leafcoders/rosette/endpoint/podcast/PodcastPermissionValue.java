@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.podcast;
 
-public class PermissionValuePodcasts extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
-    public PermissionValuePodcasts() {
+public class PodcastPermissionValue extends PermissionValue {
+
+    public PodcastPermissionValue() {
         super("podcasts");
     }
 }

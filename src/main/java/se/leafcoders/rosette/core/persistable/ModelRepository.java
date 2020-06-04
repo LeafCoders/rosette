@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.core.persistable;
 
 import java.util.List;
 import org.springframework.data.domain.Sort;

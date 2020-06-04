@@ -1,10 +1,8 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.articleserie;
 
-import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.HtmlContent;
+import se.leafcoders.rosette.core.persistable.HtmlContent;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
+import se.leafcoders.rosette.endpoint.asset.Asset;
 
 public class ArticleSerieData {
 

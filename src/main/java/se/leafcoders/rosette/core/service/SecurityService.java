@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.service;
+package se.leafcoders.rosette.core.service;
 
 import java.util.List;
 import java.util.Set;
@@ -17,12 +17,12 @@ import org.springframework.stereotype.Service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
-import se.leafcoders.rosette.exception.MultipleValidationException;
-import se.leafcoders.rosette.permission.PermissionResult;
-import se.leafcoders.rosette.permission.PermissionTree;
-import se.leafcoders.rosette.permission.PermissionTreeHelper;
-import se.leafcoders.rosette.permission.PermissionValue;
-import se.leafcoders.rosette.persistence.model.Persistable;
+import se.leafcoders.rosette.core.exception.MultipleValidationException;
+import se.leafcoders.rosette.core.permission.PermissionResult;
+import se.leafcoders.rosette.core.permission.PermissionTree;
+import se.leafcoders.rosette.core.permission.PermissionTreeHelper;
+import se.leafcoders.rosette.core.permission.PermissionValue;
+import se.leafcoders.rosette.core.persistable.Persistable;
 
 @RequiredArgsConstructor
 @Service

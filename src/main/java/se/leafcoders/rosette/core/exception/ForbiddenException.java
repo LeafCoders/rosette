@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.exception;
+package se.leafcoders.rosette.core.exception;
 
 public class ForbiddenException extends RuntimeException {
     private static final long serialVersionUID = 1L;
@@ -20,9 +20,10 @@ public class ForbiddenException extends RuntimeException {
         return reasonParams;
     }
 
-    public static <C, P> ForbiddenException dontBelongsTo(Class<C> childClass, Long childId, Class<P> parentClass, Long parentId) {
+    public static <C, P> ForbiddenException dontBelongsTo(Class<C> childClass, Long childId, Class<P> parentClass,
+            Long parentId) {
         return new ForbiddenException(
-            ApiError.CHILD_DONT_BELONG_TO, childClass.getSimpleName(), childId.toString(), parentClass.getSimpleName(), parentId.toString()
-        );
+                ApiError.CHILD_DONT_BELONG_TO, childClass.getSimpleName(), childId.toString(),
+                parentClass.getSimpleName(), parentId.toString());
     }
 }

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.core.persistable;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,20 +24,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.permission.PermissionAction;
-import se.leafcoders.rosette.permission.PermissionId;
-import se.leafcoders.rosette.permission.PermissionValue;
-import se.leafcoders.rosette.persistence.model.Persistable;
-import se.leafcoders.rosette.persistence.repository.ModelRepository;
-import se.leafcoders.rosette.service.SecurityService;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.core.permission.PermissionAction;
+import se.leafcoders.rosette.core.permission.PermissionId;
+import se.leafcoders.rosette.core.permission.PermissionValue;
+import se.leafcoders.rosette.core.service.SecurityService;
 
-abstract class PersistenceService<T extends Persistable, IN, OUT> {
+public abstract class PersistenceService<T extends Persistable, IN, OUT> {
 
     @Autowired
-    SecurityService securityService;
+    protected SecurityService securityService;
 
     protected final Class<T> entityClass;
     protected final ModelRepository<T> repository;

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.resource;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -6,24 +6,22 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static se.leafcoders.rosette.matcher.Matchers.isIdOf;
-import static se.leafcoders.rosette.matcher.Matchers.isValidationError;
+import static se.leafcoders.rosette.test.matcher.Matchers.isIdOf;
+import static se.leafcoders.rosette.test.matcher.Matchers.isValidationError;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.leafcoders.rosette.controller.dto.ResourceIn;
-import se.leafcoders.rosette.data.ResourceData;
-import se.leafcoders.rosette.data.ResourceTypeData;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.ResourceRepository;
-import se.leafcoders.rosette.persistence.repository.ResourceTypeRepository;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.endpoint.AbstractControllerTest;
+import se.leafcoders.rosette.endpoint.CommonRequestTests;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeData;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRepository;
 
-public class ResourcesControllerTest extends AbstractControllerTest {
+public class ResourceControllerTest extends AbstractControllerTest {
 
     @Autowired
     private ResourceRepository resourceRepository;

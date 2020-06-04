@@ -1,6 +1,4 @@
-package se.leafcoders.rosette.data;
-
-import se.leafcoders.rosette.controller.dto.AssetFolderIn;
+package se.leafcoders.rosette.endpoint.assetfolder;
 
 public class AssetFolderData {
 

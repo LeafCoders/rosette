@@ -1,6 +1,8 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.podcast;
 
 import lombok.Data;
+import se.leafcoders.rosette.endpoint.articletype.ArticleTypeRefOut;
+import se.leafcoders.rosette.endpoint.asset.AssetOut;
 
 @Data
 public class PodcastOut {

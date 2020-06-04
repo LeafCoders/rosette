@@ -1,32 +1,33 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.asset;
 
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import se.leafcoders.rosette.RosetteSettings;
-import se.leafcoders.rosette.controller.dto.AssetFileIn;
-import se.leafcoders.rosette.controller.dto.AssetIn;
-import se.leafcoders.rosette.controller.dto.AssetOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.exception.SingleValidationException;
-import se.leafcoders.rosette.exception.ValidationError;
-import se.leafcoders.rosette.permission.PermissionAction;
-import se.leafcoders.rosette.permission.PermissionId;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.Asset.AssetType;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
-import se.leafcoders.rosette.persistence.repository.AssetRepository;
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.core.exception.SingleValidationException;
+import se.leafcoders.rosette.core.exception.ValidationError;
+import se.leafcoders.rosette.core.permission.PermissionAction;
+import se.leafcoders.rosette.core.permission.PermissionId;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.asset.Asset.AssetType;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolderService;
+import se.leafcoders.rosette.endpoint.file.FileStorageService;
 import se.leafcoders.rosette.util.FileMetadataReader;
 
 @Service
@@ -111,7 +112,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
         dto.setMimeType(item.getMimeType());
         dto.setFileName(item.getFileName());
         dto.setUrl(urlOfAsset(item));
-        
+
         dto.setIsImageFile(item.isImageFile());
         dto.setIsAudioFile(item.isAudioFile());
         dto.setIsTextFile(item.isTextFile());
@@ -131,8 +132,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
         checkAnyPermission(
                 PermissionType.assets().create(),
-                PermissionType.assetFolders().manageAssets().forId(folderId)
-        );
+                PermissionType.assetFolders().manageAssets().forId(folderId));
 
         AssetFolder folder = assetFolderService.read(folderId, false);
         validateFolderExist(folder);
@@ -175,11 +175,11 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
         checkAnyPermission(
                 PermissionType.assets().update(),
-                PermissionType.assetFolders().manageAssets().forId(folderId)
-        );
+                PermissionType.assetFolders().manageAssets().forId(folderId));
 
         if (!existingAsset.isTextFile()) {
-            throw new SingleValidationException(new ValidationError("file", ApiString.FILE_ONLY_TEXTFILES_ARE_UPDATEABLE));
+            throw new SingleValidationException(
+                    new ValidationError("file", ApiString.FILE_ONLY_TEXTFILES_ARE_UPDATEABLE));
         }
         if (!existingAsset.getMimeType().equals(mimeType)) {
             throw new SingleValidationException(new ValidationError("file", ApiString.FILE_MIMETYPE_NOT_ALLOWED));
@@ -241,7 +241,7 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
     public String fileIdFromKeyAndFileName(String fileKey, String fileName) {
         return fileKey + "-" + fileName;
     }
-    
+
     private void validateFolderExist(AssetFolder folder) {
         if (!fileStorageService.folderExist(folder.getId())) {
             throw new NotFoundException(AssetFolder.class, folder.getId());

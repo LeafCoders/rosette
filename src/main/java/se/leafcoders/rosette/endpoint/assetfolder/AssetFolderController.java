@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.assetfolder;
 
 import java.util.Collection;
 
@@ -17,15 +17,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.AssetFolderIn;
-import se.leafcoders.rosette.controller.dto.AssetFolderOut;
-import se.leafcoders.rosette.persistence.service.AssetFolderService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/assetFolders", produces = "application/json")
-public class AssetFoldersController {
+public class AssetFolderController {
 
     private final AssetFolderService assetFolderService;
 

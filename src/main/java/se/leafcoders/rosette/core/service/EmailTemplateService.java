@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.service;
+package se.leafcoders.rosette.core.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import se.leafcoders.rosette.RosetteSettings;
-import se.leafcoders.rosette.controller.dto.SignupUserIn;
-import se.leafcoders.rosette.persistence.model.User;
-import se.leafcoders.rosette.persistence.service.MessageService;
+import se.leafcoders.rosette.endpoint.auth.SignupUserIn;
+import se.leafcoders.rosette.endpoint.message.MessageService;
+import se.leafcoders.rosette.endpoint.user.User;
 import se.leafcoders.rosette.util.HtmlSanitize;
 
 @RequiredArgsConstructor

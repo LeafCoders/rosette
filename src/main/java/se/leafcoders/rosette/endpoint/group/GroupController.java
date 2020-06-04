@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.group;
 
 import java.util.Collection;
 
@@ -18,17 +18,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.GroupIn;
-import se.leafcoders.rosette.controller.dto.GroupOut;
-import se.leafcoders.rosette.controller.dto.UserOut;
-import se.leafcoders.rosette.persistence.service.GroupService;
-import se.leafcoders.rosette.persistence.service.UserService;
+import se.leafcoders.rosette.endpoint.user.UserOut;
+import se.leafcoders.rosette.endpoint.user.UserService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/groups", produces = "application/json")
-public class GroupsController {
+public class GroupController {
 
     private final GroupService groupService;
     private final UserService userService;

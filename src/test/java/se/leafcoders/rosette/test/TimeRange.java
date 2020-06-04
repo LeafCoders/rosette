@@ -1,20 +1,20 @@
-package se.leafcoders.rosette;
+package se.leafcoders.rosette.test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 public class TimeRange {
-    
+
     private LocalDateTime start = null;
     private LocalDateTime end = null;
-    
+
     private TimeRange(LocalDateTime start) {
         this.start = ClientServerTime.clientToServer(start);
     }
-    
+
     public static TimeRange start(int weekDay, int hour, int minute) {
         LocalDate date = LocalDate.now().plusDays(weekDay - LocalDate.now().getDayOfWeek().getValue());
         return new TimeRange(LocalDateTime.of(date, LocalTime.of(hour, minute)));
@@ -29,12 +29,12 @@ public class TimeRange {
         this.end = this.start.plusMinutes(minuteOffset);
         return this;
     }
-    
+
     public TimeRange endAfterDays(int dayOffset) {
         this.end = this.start.plusDays(dayOffset);
         return this;
     }
-    
+
     public LocalDateTime getStart() {
         return start;
     }

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.article;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -6,20 +6,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
-
-import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.validator.StringEnumeration;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.validator.StringEnumeration;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data

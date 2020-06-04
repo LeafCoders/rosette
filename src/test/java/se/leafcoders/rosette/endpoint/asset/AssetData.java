@@ -1,7 +1,4 @@
-package se.leafcoders.rosette.data;
-
-import se.leafcoders.rosette.controller.dto.AssetIn;
-import se.leafcoders.rosette.persistence.model.Asset;
+package se.leafcoders.rosette.endpoint.asset;
 
 public class AssetData {
 

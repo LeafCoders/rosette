@@ -1,8 +1,6 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.slideshow;
 
-import se.leafcoders.rosette.controller.dto.SlideShowIn;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
-import se.leafcoders.rosette.persistence.model.SlideShow;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
 
 public class SlideShowData {
 

@@ -1,14 +1,17 @@
 package se.leafcoders.rosette.auth.jwt;
 
 import java.text.MessageFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import se.leafcoders.rosette.auth.CurrentUser;
 import se.leafcoders.rosette.auth.CurrentUserAuthentication;
 import se.leafcoders.rosette.auth.CurrentUserService;
-import se.leafcoders.rosette.persistence.model.User;
+import se.leafcoders.rosette.endpoint.user.User;
 
 public class JwtAuthenticationService {
 

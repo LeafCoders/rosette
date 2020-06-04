@@ -1,17 +1,18 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.message;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.MessageIn;
-import se.leafcoders.rosette.controller.dto.MessageOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Message;
-import se.leafcoders.rosette.persistence.repository.MessageRepository;
+
+import org.springframework.stereotype.Service;
+
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
 
 @Service
 public class MessageService extends PersistenceService<Message, MessageIn, MessageOut> {

@@ -1,12 +1,14 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.resource;
 
 import java.time.LocalDateTime;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import se.leafcoders.rosette.persistence.model.Resource;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface ResourceRepository extends ModelRepository<Resource> {

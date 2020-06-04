@@ -1,14 +1,11 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.permissionset;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.stereotype.Service;
 
-import se.leafcoders.rosette.controller.dto.PermissionSetIn;
-import se.leafcoders.rosette.controller.dto.PermissionSetOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.PermissionSet;
-import se.leafcoders.rosette.persistence.repository.PermissionSetRepository;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
 
 @Service
 public class PermissionSetService extends PersistenceService<PermissionSet, PermissionSetIn, PermissionSetOut> {

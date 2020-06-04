@@ -1,15 +1,16 @@
-package se.leafcoders.rosette.controller.dto;
-
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
-
-import lombok.Data;
+package se.leafcoders.rosette.endpoint.podcast;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.validator.IdAlias;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.validator.IdAlias;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data

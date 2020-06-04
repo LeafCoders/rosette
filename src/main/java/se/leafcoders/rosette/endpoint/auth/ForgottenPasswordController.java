@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller.auth;
+package se.leafcoders.rosette.endpoint.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.persistence.service.ForgottenPasswordService;
 
 @RequiredArgsConstructor
 @RestController

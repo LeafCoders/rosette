@@ -1,8 +1,9 @@
-package se.leafcoders.rosette.persistence.validator;
+package se.leafcoders.rosette.core.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import se.leafcoders.rosette.permission.PermissionTreeHelper;
+
+import se.leafcoders.rosette.core.permission.PermissionTreeHelper;
 
 /*
  * Validates that each permission in string are valid

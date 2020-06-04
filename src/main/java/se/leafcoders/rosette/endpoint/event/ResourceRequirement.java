@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +16,10 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.endpoint.resource.Resource;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
 
 @Getter
 @Setter

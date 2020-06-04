@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.file;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,17 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.AssetFileIn;
-import se.leafcoders.rosette.controller.dto.AssetOut;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.service.AssetService;
-import se.leafcoders.rosette.persistence.service.FileStorageService;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.asset.AssetFileIn;
+import se.leafcoders.rosette.endpoint.asset.AssetOut;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/files", produces = "application/json")
-public class FilesController {
+public class FileController {
 
     private final AssetService assetService;
     private final FileStorageService fileStorageService;

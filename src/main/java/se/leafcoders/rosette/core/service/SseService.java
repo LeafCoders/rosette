@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.service;
+package se.leafcoders.rosette.core.service;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.NonNull;
-import se.leafcoders.rosette.controller.dto.EventOut;
+import se.leafcoders.rosette.endpoint.event.EventOut;
 
 @Service
 public class SseService {

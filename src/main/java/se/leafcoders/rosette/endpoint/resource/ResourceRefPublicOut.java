@@ -1,7 +1,6 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.resource;
 
 import lombok.Getter;
-import se.leafcoders.rosette.persistence.model.Resource;
 import se.leafcoders.rosette.util.IdToSlugConverter;
 
 @Getter

@@ -1,17 +1,19 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.eventtype;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.EventTypeIn;
-import se.leafcoders.rosette.controller.dto.EventTypeOut;
-import se.leafcoders.rosette.controller.dto.ResourceTypeRefOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.EventType;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.EventTypeRepository;
+
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.ConnectedCrud;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeRefOut;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeService;
 
 @Service
 public class EventTypeService extends PersistenceService<EventType, EventTypeIn, EventTypeOut> {

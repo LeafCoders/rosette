@@ -4,22 +4,24 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.Before;
-import org.junit.Test;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
-import se.leafcoders.rosette.persistence.model.ArticleType;
-import se.leafcoders.rosette.persistence.model.ArticleType.RecordingStatus;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.HtmlContent;
-import se.leafcoders.rosette.persistence.model.Podcast;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.service.AssetService;
+import org.junit.Before;
+import org.junit.Test;
+
+import se.leafcoders.rosette.core.persistable.HtmlContent;
+import se.leafcoders.rosette.endpoint.article.Article;
+import se.leafcoders.rosette.endpoint.articleserie.ArticleSerie;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType;
+import se.leafcoders.rosette.endpoint.articletype.ArticleType.RecordingStatus;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
+import se.leafcoders.rosette.endpoint.podcast.Podcast;
+import se.leafcoders.rosette.endpoint.resource.Resource;
 
 public class PodcastFeedGeneratorTest {
 

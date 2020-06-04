@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.permission;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import se.leafcoders.rosette.persistence.model.Permission;
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface PermissionRepository extends ModelRepository<Permission> {

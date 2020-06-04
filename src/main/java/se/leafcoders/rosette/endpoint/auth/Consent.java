@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.auth;
 
 import java.time.LocalDateTime;
 
@@ -17,9 +17,10 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonDeserializer;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonDeserializer;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.persistable.Persistable;
 
 @Getter
 @Setter
@@ -33,8 +34,11 @@ public class Consent extends Persistable {
     public enum Type {
         SIGNUP
     };
-    public enum Source { WEBPAGE };
-    
+
+    public enum Source {
+        WEBPAGE
+    };
+
     @NotNull(message = ApiString.NOT_NULL)
     @Enumerated(EnumType.STRING)
     private Type type;
@@ -47,7 +51,7 @@ public class Consent extends Persistable {
     @JsonDeserialize(using = RosetteDateTimeJsonDeserializer.class)
     @JsonSerialize(using = RosetteDateTimeJsonSerializer.class)
     private LocalDateTime time;
-    
+
     @NotNull(message = ApiString.NOT_NULL)
     private Long userId;
 

@@ -1,17 +1,19 @@
-package se.leafcoders.rosette.persistence.repository;
+package se.leafcoders.rosette.endpoint.articleserie;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
+
+import se.leafcoders.rosette.core.persistable.ModelRepository;
 
 @Repository
 public interface ArticleSerieRepository extends ModelRepository<ArticleSerie> {
-    
+
     public List<ArticleSerie> findByArticleTypeIdOrderByLastUseTimeDesc(Long articleTypeId);
 
     @Transactional

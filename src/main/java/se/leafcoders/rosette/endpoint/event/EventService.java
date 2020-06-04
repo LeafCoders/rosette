@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.event;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,30 +7,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.EventIn;
-import se.leafcoders.rosette.controller.dto.EventOut;
-import se.leafcoders.rosette.controller.dto.EventTypeRefOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.permission.PermissionAction;
-import se.leafcoders.rosette.permission.PermissionId;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.permission.PermissionValue;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.Resource;
-import se.leafcoders.rosette.persistence.model.ResourceRequirement;
-import se.leafcoders.rosette.persistence.model.ResourceType;
-import se.leafcoders.rosette.persistence.repository.ArticleRepository;
-import se.leafcoders.rosette.persistence.repository.EventRepository;
-import se.leafcoders.rosette.persistence.repository.ResourceRequirementRepository;
-import se.leafcoders.rosette.service.SseService;
+
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.core.permission.PermissionAction;
+import se.leafcoders.rosette.core.permission.PermissionId;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.permission.PermissionValue;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.core.service.SseService;
+import se.leafcoders.rosette.endpoint.article.Article;
+import se.leafcoders.rosette.endpoint.article.ArticleRepository;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypeRefOut;
+import se.leafcoders.rosette.endpoint.eventtype.EventTypeService;
+import se.leafcoders.rosette.endpoint.resource.Resource;
+import se.leafcoders.rosette.endpoint.resource.ResourceService;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceTypeService;
 
 @Service
 public class EventService extends PersistenceService<Event, EventIn, EventOut> {

@@ -1,14 +1,15 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.eventtype;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
-
-import javax.validation.constraints.NotEmpty;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.validator.IdAlias;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.validator.IdAlias;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data

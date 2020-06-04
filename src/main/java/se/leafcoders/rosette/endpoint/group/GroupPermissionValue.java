@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.group;
 
-public class PermissionValueGroups extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
-    public PermissionValueGroups() {
+public class GroupPermissionValue extends PermissionValue {
+
+    public GroupPermissionValue() {
         super("groups");
     }
 }

@@ -1,14 +1,15 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.podcast;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.ArticleTypeRefOut;
-import se.leafcoders.rosette.controller.dto.PodcastIn;
-import se.leafcoders.rosette.controller.dto.PodcastOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.Podcast;
-import se.leafcoders.rosette.persistence.repository.PodcastRepository;
+
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.articletype.ArticleTypeRefOut;
+import se.leafcoders.rosette.endpoint.articletype.ArticleTypeService;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
 
 @Service
 public class PodcastService extends PersistenceService<Podcast, PodcastIn, PodcastOut> {

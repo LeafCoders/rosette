@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.articletype;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +15,11 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.validator.IdAlias;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.core.validator.IdAlias;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
+import se.leafcoders.rosette.endpoint.resourcetype.ResourceType;
 
 @Getter
 @Setter
@@ -30,7 +33,7 @@ public class ArticleType extends Persistable {
     public enum RecordingStatus {
         NOT_EXPECTED, EXPECTING_RECORDING, HAS_RECORDING
     };
-    
+
     @IdAlias
     @Column(nullable = false, unique = true)
     private String idAlias;
@@ -42,11 +45,11 @@ public class ArticleType extends Persistable {
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String newArticleTitle;
-    
+
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String articleSeriesTitle;
-    
+
     @NotEmpty(message = ApiString.STRING_NOT_EMPTY)
     @Length(max = 200, message = ApiString.STRING_MAX_200_CHARS)
     private String newArticleSerieTitle;

@@ -1,16 +1,18 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.articleserie;
 
 import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.ArticleSerieIn;
-import se.leafcoders.rosette.controller.dto.ArticleSerieOut;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.model.ArticleSerie;
-import se.leafcoders.rosette.persistence.model.HtmlContent;
-import se.leafcoders.rosette.persistence.repository.ArticleSerieRepository;
+
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.HtmlContent;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.articletype.ArticleTypeService;
+import se.leafcoders.rosette.endpoint.asset.AssetService;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @Service
 public class ArticleSerieService extends PersistenceService<ArticleSerie, ArticleSerieIn, ArticleSerieOut> {

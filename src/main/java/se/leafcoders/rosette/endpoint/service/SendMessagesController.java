@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.service;
 
 import java.text.MessageFormat;
 
@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.HelpRequestIn;
-import se.leafcoders.rosette.service.MailSenderService;
+import se.leafcoders.rosette.core.service.MailSenderService;
 import se.leafcoders.rosette.util.HtmlSanitize;
 
 @RequiredArgsConstructor

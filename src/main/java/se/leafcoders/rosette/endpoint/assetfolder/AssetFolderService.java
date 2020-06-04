@@ -1,18 +1,18 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.endpoint.assetfolder;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.leafcoders.rosette.controller.dto.AssetFolderIn;
-import se.leafcoders.rosette.controller.dto.AssetFolderOut;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.permission.PermissionType;
-import se.leafcoders.rosette.persistence.model.AssetFolder;
-import se.leafcoders.rosette.persistence.repository.AssetFolderRepository;
-import se.leafcoders.rosette.persistence.repository.AssetRepository;
+
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
+import se.leafcoders.rosette.core.permission.PermissionType;
+import se.leafcoders.rosette.core.persistable.PersistenceService;
+import se.leafcoders.rosette.endpoint.asset.AssetRepository;
+import se.leafcoders.rosette.endpoint.file.FileStorageService;
 
 @Service
 public class AssetFolderService extends PersistenceService<AssetFolder, AssetFolderIn, AssetFolderOut> {

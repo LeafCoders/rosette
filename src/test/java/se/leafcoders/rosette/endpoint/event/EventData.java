@@ -1,5 +1,4 @@
-package se.leafcoders.rosette.data;
-
+package se.leafcoders.rosette.endpoint.event;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -7,10 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.NonNull;
-import se.leafcoders.rosette.TimeRange;
-import se.leafcoders.rosette.controller.dto.EventIn;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.model.EventType;
+import se.leafcoders.rosette.endpoint.eventtype.EventType;
+import se.leafcoders.rosette.test.TimeRange;
 
 public class EventData {
 

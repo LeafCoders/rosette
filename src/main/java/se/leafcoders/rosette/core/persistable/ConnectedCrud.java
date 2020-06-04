@@ -1,11 +1,12 @@
-package se.leafcoders.rosette.persistence.service;
+package se.leafcoders.rosette.core.persistable;
 
 import java.util.List;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.repository.CrudRepository;
-import se.leafcoders.rosette.exception.ApiError;
-import se.leafcoders.rosette.exception.ForbiddenException;
-import se.leafcoders.rosette.persistence.model.Persistable;
+
+import se.leafcoders.rosette.core.exception.ApiError;
+import se.leafcoders.rosette.core.exception.ForbiddenException;
 
 public abstract class ConnectedCrud<P extends Persistable, C extends Persistable> {
 
@@ -14,10 +15,9 @@ public abstract class ConnectedCrud<P extends Persistable, C extends Persistable
     private final CrudRepository<P, Long> parentRepository;
 
     public ConnectedCrud(
-        PersistenceService<P, ?, ?> parentService,
-        PersistenceService<C, ?, ?> childService,
-        CrudRepository<P, Long> parentRepository
-    ) {
+            PersistenceService<P, ?, ?> parentService,
+            PersistenceService<C, ?, ?> childService,
+            CrudRepository<P, Long> parentRepository) {
         this.parentService = parentService;
         this.parentRepository = parentRepository;
         this.childService = childService;

@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.calendar;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -25,10 +25,10 @@ import biweekly.property.Description;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.persistence.converter.ClientServerTime;
-import se.leafcoders.rosette.persistence.converter.RosetteDateTimeJsonSerializer;
-import se.leafcoders.rosette.persistence.model.Event;
-import se.leafcoders.rosette.persistence.service.EventService;
+import se.leafcoders.rosette.core.converter.RosetteDateTimeJsonSerializer;
+import se.leafcoders.rosette.endpoint.event.Event;
+import se.leafcoders.rosette.endpoint.event.EventService;
+import se.leafcoders.rosette.util.ClientServerTime;
 
 @RequiredArgsConstructor
 @Transactional

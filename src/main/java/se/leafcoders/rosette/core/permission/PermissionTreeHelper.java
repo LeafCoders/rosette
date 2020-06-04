@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.core.permission;
 
 import java.util.ArrayList;
 import java.util.Arrays;

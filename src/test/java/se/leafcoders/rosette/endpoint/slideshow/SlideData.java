@@ -1,11 +1,9 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.time.LocalDateTime;
 
-import se.leafcoders.rosette.TimeRange;
-import se.leafcoders.rosette.controller.dto.SlideIn;
-import se.leafcoders.rosette.persistence.model.Asset;
-import se.leafcoders.rosette.persistence.model.Slide;
+import se.leafcoders.rosette.endpoint.asset.Asset;
+import se.leafcoders.rosette.test.TimeRange;
 
 public class SlideData {
 

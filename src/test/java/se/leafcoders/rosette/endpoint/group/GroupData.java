@@ -1,7 +1,4 @@
-package se.leafcoders.rosette.data;
-
-import se.leafcoders.rosette.controller.dto.GroupIn;
-import se.leafcoders.rosette.persistence.model.Group;
+package se.leafcoders.rosette.endpoint.group;
 
 public class GroupData {
 

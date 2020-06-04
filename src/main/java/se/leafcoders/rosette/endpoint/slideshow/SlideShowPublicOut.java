@@ -1,9 +1,8 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.util.List;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.model.SlideShow;
 
 @Data
 public class SlideShowPublicOut {

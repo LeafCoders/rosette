@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.exception;
+package se.leafcoders.rosette.core.exception;
 
 public class ExceptionError {
     private String error;

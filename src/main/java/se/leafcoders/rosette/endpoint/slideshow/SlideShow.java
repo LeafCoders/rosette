@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.persistence.model;
+package se.leafcoders.rosette.endpoint.slideshow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,10 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.leafcoders.rosette.exception.ApiString;
-import se.leafcoders.rosette.persistence.validator.IdAlias;
+import se.leafcoders.rosette.core.exception.ApiString;
+import se.leafcoders.rosette.core.persistable.Persistable;
+import se.leafcoders.rosette.core.validator.IdAlias;
+import se.leafcoders.rosette.endpoint.assetfolder.AssetFolder;
 
 @Getter
 @Setter

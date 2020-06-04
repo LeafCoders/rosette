@@ -1,8 +1,10 @@
-package se.leafcoders.rosette.permission;
+package se.leafcoders.rosette.endpoint.articleserie;
 
-public class PermissionValueArticleSeries extends PermissionValue {
+import se.leafcoders.rosette.core.permission.PermissionValue;
 
-    public PermissionValueArticleSeries() {
+public class ArticleSeriePermissionValue extends PermissionValue {
+
+    public ArticleSeriePermissionValue() {
         super("articleSeries");
     }
 }

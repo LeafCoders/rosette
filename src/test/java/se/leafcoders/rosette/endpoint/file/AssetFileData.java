@@ -1,6 +1,6 @@
-package se.leafcoders.rosette.data;
+package se.leafcoders.rosette.endpoint.file;
 
-import se.leafcoders.rosette.controller.dto.AssetFileIn;
+import se.leafcoders.rosette.endpoint.asset.AssetFileIn;
 
 public class AssetFileData {
 

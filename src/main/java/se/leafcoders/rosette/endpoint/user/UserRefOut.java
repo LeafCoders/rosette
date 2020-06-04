@@ -1,7 +1,6 @@
-package se.leafcoders.rosette.controller.dto;
+package se.leafcoders.rosette.endpoint.user;
 
 import lombok.Data;
-import se.leafcoders.rosette.persistence.model.User;
 
 @Data
 public class UserRefOut {

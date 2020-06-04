@@ -1,4 +1,4 @@
-package se.leafcoders.rosette.controller;
+package se.leafcoders.rosette.endpoint.podcast;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,20 +19,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.leafcoders.rosette.controller.dto.PodcastIn;
-import se.leafcoders.rosette.controller.dto.PodcastOut;
-import se.leafcoders.rosette.exception.NotFoundException;
-import se.leafcoders.rosette.persistence.model.Article;
-import se.leafcoders.rosette.persistence.model.Podcast;
-import se.leafcoders.rosette.persistence.service.ArticleService;
-import se.leafcoders.rosette.persistence.service.PodcastService;
+import se.leafcoders.rosette.core.exception.NotFoundException;
+import se.leafcoders.rosette.endpoint.article.Article;
+import se.leafcoders.rosette.endpoint.article.ArticleService;
 import se.leafcoders.rosette.util.PodcastFeedGenerator;
 
 @RequiredArgsConstructor
 @Transactional
 @RestController
 @RequestMapping(value = "api/podcasts", produces = "application/json")
-public class PodcastsController {
+public class PodcastController {
 
     private final PodcastService podcastService;
     private final ArticleService articleService;
