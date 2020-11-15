@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-  id "org.springframework.boot" version "2.2.6.RELEASE"
+  id "org.springframework.boot" version "2.3.3.RELEASE"
   id "io.spring.dependency-management" version "1.0.9.RELEASE"
   id "java"
 }
@@ -13,6 +13,7 @@ targetCompatibility = JavaVersion.VERSION_14
 bootJar {
   archiveBaseName = "rosette"
   archiveVersion =  "${project.version}-SNAPSHOT"
+  layered()
 }
 
 repositories {
@@ -23,9 +24,10 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.boot:spring-boot-starter-mail")
   implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
-  runtimeOnly("org.springframework.boot:spring-boot-devtools")
+  developmentOnly("org.springframework.boot:spring-boot-devtools")
   runtimeOnly("mysql:mysql-connector-java")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
@@ -40,16 +42,16 @@ dependencies {
   // Database migration
   implementation("org.flywaydb:flyway-core")
 
-  implementation("io.jsonwebtoken:jjwt:0.4")
+  implementation("io.jsonwebtoken:jjwt:0.9.1")
 
   // For ical feed
-  implementation("net.sf.biweekly:biweekly:0.6.2")
+  implementation("net.sf.biweekly:biweekly:0.6.3")
 
   // Google common libraries
   implementation("com.google.guava:guava:21.0")
 
   // Thumbnailator
-  implementation("net.coobird:thumbnailator:0.4.8")
+  implementation("net.coobird:thumbnailator:0.4.11")
 
   // MP3 audio support
   implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")

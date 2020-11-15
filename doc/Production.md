@@ -3,7 +3,7 @@
 Here are instructions of how to run Rosette in production mode
 
 
-## Build an run with docker
+## Build and run with docker
 
 Starts MySQL, Rosette and Cordate.
 

@@ -123,18 +123,23 @@ spring:
   profiles: development
 
 spring.output.ansi.enabled: ALWAYS # Enablecolor log output
-logging.file: "logfile.log"
 
-logging.level:
-  org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+logging:
+  file:
+    name: logfile_development.log
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
 
 ---
 spring:
   profiles: test
 
-logging.level:
-  org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
+logging:
+  file:
+    name: logfile_test.log
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
 
 spring.jpa:
   show-sql: true # Show log for each sql query
