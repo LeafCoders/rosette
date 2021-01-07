@@ -1,14 +1,18 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-  id "org.springframework.boot" version "2.3.3.RELEASE"
-  id "io.spring.dependency-management" version "1.0.9.RELEASE"
+  id "org.springframework.boot" version "2.4.0"
+  id "io.spring.dependency-management" version "1.0.10.RELEASE"
   id "java"
 }
 
 group = "se.leafcoders"
-sourceCompatibility = JavaVersion.VERSION_14
-targetCompatibility = JavaVersion.VERSION_14
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(14)
+  }
+}
 
 bootJar {
   archiveBaseName = "rosette"
@@ -86,5 +90,5 @@ task buildImage() {
 }
 
 wrapper {
-  gradleVersion = "6.3"
+  gradleVersion = "6.7"
 }

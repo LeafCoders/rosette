@@ -23,6 +23,9 @@ When you need start the container again (after computer reboot) just run `docker
 
 1. Install latest `Visual Studio Code` from https://code.visualstudio.com
 2. Install the workspace recommended extensions. Go to `Extensions` and search for `@recommended` to see the extensions.
+3. Configure Java runtime with command `>Java: Configure Java Runtime`.  
+   Click at `User Setting` at first row, then `Edit in settings.json`.  
+   Enter property `"java.home": "/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home"` if you are running Mac OS.
 
 
 ### FakeSMTP
