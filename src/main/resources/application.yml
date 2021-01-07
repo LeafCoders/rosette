@@ -60,7 +60,7 @@ logging.level:
 #  se.leafcoders.rosette: ERROR
 
 spring.datasource:
-  url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?useSSL=${DATABASE_USE_SSL}
+  url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}${DATABASE_CONNECT_PROPERTIES}
   username: ${DATABASE_USERNAME}
   password: ${DATABASE_PASSWORD}
 

@@ -31,7 +31,7 @@ delete from permissions;
 delete from permissionsets;
 
 delete from group_users;
-delete from groups;
+delete from groups_table;
 
 delete from users;
 

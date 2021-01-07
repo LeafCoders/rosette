@@ -27,7 +27,7 @@ import se.leafcoders.rosette.endpoint.user.User;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "groups")
+@Table(name = "groups_table")
 public class Group extends Persistable {
 
     private static final long serialVersionUID = 3945087664808860374L;

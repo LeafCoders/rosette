@@ -39,7 +39,27 @@ Rosette specific properties are descried here:
 Read more about other configuration properties in https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html
 
 
-## Migrate data
+## Repair database migration with FlyWay
+
+Sometimes it is necessary to change an old FlyWay migration (even if you shouldn't do that).
+An example is when we changed MySQL version from 5.7 to 8.0.
+We had to rename the table `groups` because that name was introduces as a reserved keyword in MySql 8.0.2.
+The migration `V0001_InitalSetup.sql` had to be modified for development setup to work with MySQL 8.
+
+If the application fails to start with the following exception `FlywayValidateException: Validate failed: Migrations have failed validation`.
+The you need to repair the FlyWay history table.
+Follow these steps.
+
+1. Install FlyWay command line tool
+1. Find the jar file `rosette.jar` for the current version of Rosette
+1. Run `flyway -user=root -password=root -url=jdbc:mysql://localhost:3306/test -jarDirs=pathTo/rosetteJarDir -locations=classpath:BOOT-INF/classes/db/migration validate`
+   It shall show the error `Migration checksum mismatch for migration version ...``
+1. Run `flyway -user=root -password=root -url=jdbc:mysql://localhost:3306/test -jarDirs=pathTo/rosetteJarDir -locations=classpath:BOOT-INF/classes/db/migration repair`
+   It shall show the success message `Repairing Schema History table for version ...`
+1. Start the application again
+
+
+## Migrate data from other system
 
 Rosette Manager is a static web application that can be used to import data from other system. It's located in `setup/manager`
 

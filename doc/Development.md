@@ -9,12 +9,12 @@
 
 ### Docker
 
-1. Install `Docker x.x.x` from x
-2. Create and run docker container with `docker run --name=mysql --env="MYSQL_ROOT_PASSWORD=root" --publish 3306:3306 -d mysql:5.7.21`
+1. Install `Docker Desktop 3.x.x` from https://www.docker.com/products/docker-desktop
+2. Create and run docker container with `docker run --name=mysql --env="MYSQL_ROOT_PASSWORD=root" --publish 3306:3306 -d mysql:8.0.22`
 3. Run from a terminal: `docker exec -it mysql /bin/bash` to enter the running docker image
 4. Start mysql with `mysql -uroot -proot`
 5. Create the test database with `create database test;`
-6. From Visual Studio Code, open `SeetTest.java` and run the `seed` test to setup the database tables.
+6. From Visual Studio Code, open `SeedTest.java` and run the `seed` test to setup the database tables.
 
 When you need start the container again (after computer reboot) just run `docker run mysql`
 

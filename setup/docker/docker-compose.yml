@@ -2,7 +2,7 @@ version: '3'
 
 services: 
   mysql-database:
-    image: mysql:5.7.21
+    image: mysql:8.0.22
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -24,7 +24,7 @@ services:
       - DATABASE_HOST=mysql-database
       - DATABASE_PORT=3306
       - DATABASE_NAME=rosette-db
-      - DATABASE_USE_SSL=false
+      - DATABASE_CONNECT_PROPERTIES=?useSSL=false&allowPublicKeyRetrieval=true
       - DATABASE_USERNAME=dbuser
       - DATABASE_PASSWORD=dbpassword
       - MAIL_HOST=
