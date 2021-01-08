@@ -13,7 +13,8 @@ create table articles (
 	articleserie_id bigint not null,
 	time datetime not null,
 	title varchar(200) not null,
-	content varchar(10000),
+	content_raw text,
+	content_html text,
 	event_id bigint,
 	recording_id bigint,
 	
@@ -25,7 +26,8 @@ create table articleseries (
 	version integer not null,
 	id_alias varchar(32) not null,
 	articletype_id bigint not null,
-	content varchar(10000),
+	content_raw text,
+	content_html text,
 	image_id bigint not null,
 	title varchar(200) not null,
 
@@ -118,7 +120,7 @@ create table group_users (
 	constraint uk_group_users unique (group_id, user_id)
 );
 
-create table groups (
+create table groups_table (
 	id bigint not null auto_increment,
 	version integer not null,
 	id_alias varchar(32) not null,
@@ -266,7 +268,7 @@ alter table eventtype_resourcetypes add constraint fk_eventtype_resourcetypes_re
 alter table eventtype_resourcetypes add constraint fk_eventtype_resourcetypes_eventtypeid foreign key (eventtype_id) references eventtypes (id);
 
 alter table group_users add constraint fk_group_users_userid foreign key (user_id) references users (id);
-alter table group_users add constraint fk_group_users_groupid foreign key (group_id) references groups (id);
+alter table group_users add constraint fk_group_users_groupid foreign key (group_id) references groups_table (id);
 
 alter table podcasts add constraint fk_podcasts_articletypeid foreign key (articletype_id) references articletypes (id);
 alter table podcasts add constraint fk_podcasts_imageid foreign key (image_id) references assets (id);
