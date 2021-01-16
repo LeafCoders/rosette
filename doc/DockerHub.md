@@ -30,6 +30,7 @@ services:
     ports:
       - 80:9000
     environment:
+      - SPRING_PROFILES_ACTIVE=production # IMPORTANT! Default is development
       - DATABASE_HOST=mysql-database
       - DATABASE_PORT=3306
       - DATABASE_NAME=rosette-db

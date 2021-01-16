@@ -2,9 +2,9 @@
 
 ## Development setup
 
-### Java 14 JDK (AdoptOpenJDK HotSpot)
+### Java 15 JDK (Liberica JDK)
 
-1. Install `Java 14` from https://adoptopenjdk.net/?variant=openjdk14&jvmVariant=hotspot
+1. Install `Java 15 JDK` from https://bell-sw.com/pages/downloads/#/java-15-current
 
 
 ### Docker
@@ -24,8 +24,18 @@ When you need start the container again (after computer reboot) just run `docker
 1. Install latest `Visual Studio Code` from https://code.visualstudio.com
 2. Install the workspace recommended extensions. Go to `Extensions` and search for `@recommended` to see the extensions.
 3. Configure Java runtime with command `>Java: Configure Java Runtime`.  
-   Click at `User Setting` at first row, then `Edit in settings.json`.  
-   Enter property `"java.home": "/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home"` if you are running Mac OS.
+   The tab `Project JDKs` shall have `rosette, 15, Gradle` at `Workspace Overview`.
+   The tab `Java Tooling Runtime` shall have a `JDK 15` selected from you local machine.
+   The tab `Installed JDKs` lists your installed JDKs. Verify that a JDK for Java 15 i listed here.
+
+#### Gradle build vs Java Tooling build
+
+The `build.gradle` file defines this project.
+Everything that is required to build the project is available though that file.
+Visual Studio Code use a plugin for Java to compile, run application and run tests.
+Gradle and Java Tooling puts the build output in different directories. Gradle at `/build` and Java Tooling at `/bin`.
+
+Clean Gradle output with gradle task `gradle clean`. Clean Java Toolkit output with command `>Java: Force Java Compilation` (select Full).
 
 
 ### FakeSMTP

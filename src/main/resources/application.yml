@@ -47,8 +47,8 @@ management:
 
 
 ---
-spring:
-  profiles: production
+spring.config:
+  activate.on-profile: production
 
 server:
   port: 9000 # Shall be set with environment variable PORT
@@ -88,8 +88,8 @@ rosette:
 
 
 ---
-spring:
-  profiles: development, test
+spring.config:
+  activate.on-profile: development, test
 
 server:
   port: 9000
@@ -108,6 +108,9 @@ spring.mail:
     mail.smtp.auth: false
     mail.smtp.starttls.enable: false
 
+spring.devtools:
+  add-properties: false
+
 rosette:
   jwtSecretToken: developmentSimpleJwtSecretToken
   defaultMailFrom: no-reply@localhost
@@ -119,8 +122,8 @@ rosette:
 
 
 ---
-spring:
-  profiles: development
+spring.config:
+  activate.on-profile: development
 
 spring.output.ansi.enabled: ALWAYS # Enablecolor log output
 
@@ -129,11 +132,12 @@ logging:
     name: logfile_development.log
   level:
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    web: DEBUG
 
 
 ---
-spring:
-  profiles: test
+spring.config:
+  activate.on-profile: test
 
 logging:
   file:

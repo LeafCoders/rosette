@@ -8,7 +8,8 @@ Here are instructions of how to run Rosette in production mode
 Starts MySQL, Rosette and Cordate.
 
 1. Update `rosette` version `x.yy` in `gradle.properties`
-1. Build a docker image of `rosette` with: `./gradlew buildImage` (from folder `/rosette`)
+1. Run `./gradlew clean` (from folder `/rosette`) to clean the build folder
+1. Build a docker image of `rosette` with: `./gradlew bootBuildImage` (from folder `/rosette`)
 1. Build a docker image of `cordate` with: `docker build --no-cache -t leafcoders/cordate:x.yy .` (from folder `/cordate`)
 1. Copy `setup/docker/start_all.sh` and `setup/docker/docker-compose.yml` to a folder.
 1. Edit `start_all.sh` and enter your own values.
