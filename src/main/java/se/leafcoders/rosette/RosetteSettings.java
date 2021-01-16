@@ -37,4 +37,7 @@ public class RosetteSettings {
 
     @Pattern(regexp = "(http|https):\\/\\/.*\\/", message = "Must start with 'http://' or 'https://' and end with a '/'")
     private String cordateUrl;
+
+    @Pattern(regexp = "^(info|validate|migrate|repair|^)$", message = "Must match any of 'info', 'validate', 'migrate', 'repair' or empty (defaults to 'migrate').")
+    private String flywayCommand;
 }

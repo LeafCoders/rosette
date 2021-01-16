@@ -50,13 +50,11 @@ If the application fails to start with the following exception `FlywayValidateEx
 The you need to repair the FlyWay history table.
 Follow these steps.
 
-1. Install FlyWay command line tool
-1. Find the jar file `rosette.jar` for the current version of Rosette
-1. Run `flyway -user=root -password=root -url=jdbc:mysql://localhost:3306/test -jarDirs=pathTo/rosetteJarDir -locations=classpath:BOOT-INF/classes/db/migration validate`
-   It shall show the error `Migration checksum mismatch for migration version ...``
-1. Run `flyway -user=root -password=root -url=jdbc:mysql://localhost:3306/test -jarDirs=pathTo/rosetteJarDir -locations=classpath:BOOT-INF/classes/db/migration repair`
-   It shall show the success message `Repairing Schema History table for version ...`
-1. Start the application again
+1. Set the property `rosette.flyway-command` to `repair`
+1. Start Rosette application.
+   It shall show the success message `Repairing Schema History table for version ...` but the application will exit with an exception.
+   Rosette application will only start if the property is empty or `migrate`.
+1. Remove the property and start Rosette application again.
 
 
 ## Migrate data from other system
