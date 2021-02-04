@@ -43,7 +43,8 @@ public class CalendarController {
         List<Event> events = getEvents(eventTypeId);
 
         ICalendar ical = new ICalendar();
-        TimezoneAssignment defaultTimezone = TimezoneAssignment.download(TimeZone.getDefault(), false);
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Stockholm"); // Add to setting if use outside Sweden
+        TimezoneAssignment defaultTimezone = TimezoneAssignment.download(timeZone, false);
         ical.getTimezoneInfo().setDefaultTimezone(defaultTimezone);
 
         Iterator<Event> iterEvent = events.iterator();
