@@ -244,7 +244,11 @@ public class AssetService extends PersistenceService<Asset, AssetIn, AssetOut> {
 
     private void validateFolderExist(AssetFolder folder) {
         if (!fileStorageService.folderExist(folder.getId())) {
-            throw new NotFoundException(AssetFolder.class, folder.getId());
+            // Try to create the folder.
+            // It might failed the first time due to missing permissions. See documentation.
+            if (!fileStorageService.createFolder(folder.getId())) {
+                throw new NotFoundException(AssetFolder.class, folder.getId());
+            }
         }
     }
 

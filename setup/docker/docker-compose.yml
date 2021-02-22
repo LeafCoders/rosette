@@ -37,14 +37,15 @@ services:
       - MAIL_SMTP_SSL_TRUST=
       - MAIL_TEST_CONNECTION=true # Assert mail connectivity at startup
       - MAIL_DEBUG=false
+      - LOGGING_FILE_PATH=logs # Logs are written to file /workspace/logs/spring.log inside the container
       - ROSETTE_JWTSECRET=${ROSETTE_JWTSECRET:?Must specify ROSETTE_JWTSECRET in environment} # Must at least be 10 chars
-      - ROSETTE_FILES_FOLDER=/var/lib/rosette # Local folder where the application may store files in
+      - ROSETTE_FILES_FOLDER=/home/cnb/rosette # Local folder where the application may store files in
       - ROSETTE_DEFAULT_MAIL_FROM= # Default mail from address
       - ROSETTE_ADMIN_MAIL_TO= # Mail address to administrator
       - ROSETTE_URL=${ROSETTE_URL:?Must specify ROSETTE_URL in environment} # Public url to rosette server
       - CORDATE_URL=${CORDATE_URL:?Must specify CORDATE_URL in environment} # Public url to cordate client    
     volumes:
-      - rosette-files:/var/lib/rosette
+      - rosette-files:/home/cnb/rosette
 
   cordate-client:
     image: leafcoders/cordate:0.1
